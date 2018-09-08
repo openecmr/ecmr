@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:clm64053="urn:un:unece:uncefact:codelist:standard:UNECE:DeliveryTermsCode:2010"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="urn:un:unece:uncefact:codelist:standard:UNECE:DeliveryTermsCode:2010"
+    elementFormDefault="qualified"
+    version="1.0">
+  <xs:simpleType name="DeliveryTermsCodeContentType">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="1"/>
+      <xs:enumeration value="2"/>
+      <xs:enumeration value="CFR"/>
+      <xs:enumeration value="CIF"/>
+      <xs:enumeration value="CIP"/>
+      <xs:enumeration value="CPT"/>
+      <xs:enumeration value="DAP"/>
+      <xs:enumeration value="DAT"/>
+      <xs:enumeration value="DDP"/>
+      <xs:enumeration value="EXW"/>
+      <xs:enumeration value="FAS"/>
+      <xs:enumeration value="FCA"/>
+      <xs:enumeration value="FOB"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:clm63035ChargePaying="urn:un:unece:uncefact:codelist:standard:UNECE:PartyRoleCode_ChargePaying:D16B"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="urn:un:unece:uncefact:codelist:standard:UNECE:PartyRoleCode_ChargePaying:D16B"
+    elementFormDefault="qualified"
+    version="1.4">
+  <xs:simpleType name="PartyRoleCodeChargePayingContentType">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="AB"/>
+      <xs:enumeration value="AE"/>
+      <xs:enumeration value="AF"/>
+      <xs:enumeration value="AH"/>
+      <xs:enumeration value="AQ"/>
+      <xs:enumeration value="AR"/>
+      <xs:enumeration value="AT"/>
+      <xs:enumeration value="AU"/>
+      <xs:enumeration value="CA"/>
+      <xs:enumeration value="CG"/>
+      <xs:enumeration value="CN"/>
+      <xs:enumeration value="CPD"/>
+      <xs:enumeration value="CX"/>
+      <xs:enumeration value="CZ"/>
+      <xs:enumeration value="DGB"/>
+      <xs:enumeration value="EX"/>
+      <xs:enumeration value="FW"/>
+      <xs:enumeration value="GS"/>
+      <xs:enumeration value="IM"/>
+      <xs:enumeration value="IV"/>
+      <xs:enumeration value="PE"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:rsm="urn:un:unece:uncefact:data:standard:eCMR:1"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:qdt="urn:un:unece:uncefact:data:Standard:QualifiedDataType:101"
+    xmlns:ram="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:101"
+    xmlns:udt="urn:un:unece:uncefact:data:standard:UnqualifiedDataType:21"
+    targetNamespace="urn:un:unece:uncefact:data:standard:eCMR:1"
+    elementFormDefault="qualified"
+    version="1.0">
+  <xs:import namespace="urn:un:unece:uncefact:data:Standard:QualifiedDataType:101" schemaLocation="eCMR_1p0_urn_un_unece_uncefact_data_Standard_QualifiedDataType_101.xsd"/>
+  <xs:import namespace="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:101" schemaLocation="eCMR_1p0_urn_un_unece_uncefact_data_standard_ReusableAggregateBusinessInformationEntity_101.xsd"/>
+  <xs:import namespace="urn:un:unece:uncefact:data:standard:UnqualifiedDataType:21" schemaLocation="eCMR_1p0_urn_un_unece_uncefact_data_standard_UnqualifiedDataType_21.xsd"/>
+  <xs:element name="eCMR" type="rsm:eCMRType"/>
+  <xs:complexType name="eCMRType">
+    <xs:annotation>
+      <xs:documentation source="BN/BN">e-CMR Master Message</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="ExchangedDocumentContext" type="ram:ExchangedDocumentContextType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation source="BN/BN">Document Context</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ExchangedDocument" type="ram:ExchangedDocumentType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation source="BN/BN">eCMR Header Details</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="SpecifiedSupplyChainConsignment" type="ram:SupplyChainConsignmentType">
+        <xs:annotation>
+          <xs:documentation source="BN/BN">Road Consignment</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

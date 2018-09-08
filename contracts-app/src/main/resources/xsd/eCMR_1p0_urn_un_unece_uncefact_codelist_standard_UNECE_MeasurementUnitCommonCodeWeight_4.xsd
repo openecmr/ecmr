@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:clm6Recommendation20Weight="urn:un:unece:uncefact:codelist:standard:UNECE:MeasurementUnitCommonCodeWeight:4"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="urn:un:unece:uncefact:codelist:standard:UNECE:MeasurementUnitCommonCodeWeight:4"
+    elementFormDefault="qualified"
+    version="1.1">
+  <xs:simpleType name="MeasurementUnitCommonCodeWeightContentType">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="KGM"/>
+      <xs:enumeration value="TNE"/>
+      <xs:minLength value="1"/>
+      <xs:maxLength value="3"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

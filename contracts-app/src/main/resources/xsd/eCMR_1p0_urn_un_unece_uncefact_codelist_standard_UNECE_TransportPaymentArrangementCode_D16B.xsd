@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:clm64237TransportPaymentArrangementCode="urn:un:unece:uncefact:codelist:standard:UNECE:TransportPaymentArrangementCode:D16B"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="urn:un:unece:uncefact:codelist:standard:UNECE:TransportPaymentArrangementCode:D16B"
+    elementFormDefault="qualified"
+    version="1.1">
+  <xs:simpleType name="TransportPaymentArrangementCodeContentType">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="A"/>
+      <xs:enumeration value="B"/>
+      <xs:enumeration value="C"/>
+      <xs:enumeration value="P"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>
