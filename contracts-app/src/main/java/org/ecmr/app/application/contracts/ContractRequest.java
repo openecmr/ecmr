@@ -1,10 +1,10 @@
-package org.ecmr.app.application.contracts.data;
+package org.ecmr.app.application.contracts;
 
-import org.ecmr.app.domain.contracts.*;
+import org.ecmr.app.domain.contracts.Consignment;
+import org.ecmr.app.domain.contracts.Location;
+import org.ecmr.app.domain.contracts.TradeParty;
 
-public class ContractData {
-    private ContractId contractId;
-    private Issuer issuer;
+public class ContractRequest {
     private TradeParty consignor;
     private TradeParty consignee;
     private TradeParty carrier;
@@ -12,20 +12,13 @@ public class ContractData {
     private Location deliveryLocation;
     private Consignment consignment;
 
-    public ContractId getContractId() {
-        return contractId;
-    }
-
-    public void setContractId(ContractId contractId) {
-        this.contractId = contractId;
-    }
-
-    public Issuer getIssuer() {
-        return issuer;
-    }
-
-    public void setIssuer(Issuer issuer) {
-        this.issuer = issuer;
+    public ContractRequest(TradeParty consignor, TradeParty consignee, TradeParty carrier, Location despatchLocation, Location deliveryLocation, Consignment consignment) {
+        this.consignor = consignor;
+        this.consignee = consignee;
+        this.carrier = carrier;
+        this.despatchLocation = despatchLocation;
+        this.deliveryLocation = deliveryLocation;
+        this.consignment = consignment;
     }
 
     public TradeParty getConsignor() {

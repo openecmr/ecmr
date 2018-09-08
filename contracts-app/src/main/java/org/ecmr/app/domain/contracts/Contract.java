@@ -21,10 +21,6 @@ public class Contract {
         this.consignment = consignment;
     }
 
-    public void setContractId(ContractId contractId) {
-        this.contractId = contractId;
-    }
-
     public TradeParty getConsignor() {
         return consignor;
     }

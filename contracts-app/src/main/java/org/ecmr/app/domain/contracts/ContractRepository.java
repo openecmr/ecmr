@@ -6,4 +6,8 @@ public interface ContractRepository {
     void save(Contract contract);
 
     List<Contract> findByIssuer(Issuer issuer);
+
+    ContractId nextId();
+
+    Contract findById(ContractId contractId);
 }
