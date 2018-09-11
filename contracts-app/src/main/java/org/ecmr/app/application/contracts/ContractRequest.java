@@ -21,6 +21,10 @@ public class ContractRequest {
         this.consignment = consignment;
     }
 
+    ContractRequest() {
+
+    }
+
     public TradeParty getConsignor() {
         return consignor;
     }

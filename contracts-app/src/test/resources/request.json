@@ -1,0 +1,20 @@
+{
+  "consignor": {
+    "name": "C. Consignor"
+  },
+  "consignee": {
+    "namee": "C. Consignor"
+  },
+  "carrier": {
+    "name": "C. Consignor"
+  },
+  "despatchLocation": {
+    "address": "Van Straten\nHoogstraat 1\n1234 AA Vlaardingen"
+  },
+  "deliveryLocation": {
+    "address": "De Hoog\nVierstraat 5\n4321 AA\nHouten"
+  },
+  "consignment": {
+    "description": "40 stacks of hay\n20 pallets of rice\n40 stacks of hay\n20 pallets of rice\n40 stacks of hay\n20 pallets of rice"
+  }
+}

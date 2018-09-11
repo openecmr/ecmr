@@ -22,4 +22,8 @@ public class Issuer {
 
         return Objects.hash(identity);
     }
+
+    public String getIdentity() {
+        return identity;
+    }
 }

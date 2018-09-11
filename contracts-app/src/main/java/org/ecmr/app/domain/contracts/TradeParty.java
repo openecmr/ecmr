@@ -9,6 +9,10 @@ public class TradeParty {
         this.name = name;
     }
 
+    public TradeParty() {
+
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -21,5 +25,13 @@ public class TradeParty {
     public int hashCode() {
 
         return Objects.hash(name);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

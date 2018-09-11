@@ -1,11 +1,13 @@
 package org.ecmr.app.application.contracts;
 
 import org.ecmr.app.domain.contracts.*;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Controller
+@RestController("contracts")
 public class ContractsResource {
     private ContractRepository contractRepository;
     private IssuerService issuerService;
@@ -15,6 +17,7 @@ public class ContractsResource {
         this.issuerService = issuerService;
     }
 
+    @PostMapping
     public String createContract(ContractRequest request) {
         Issuer issuer = getIssuer();
 
@@ -29,6 +32,7 @@ public class ContractsResource {
         return contractId.getId();
     }
 
+    @GetMapping
     public List<Contract> listContractsForIssuer() {
         Issuer issuer = getIssuer();
 
