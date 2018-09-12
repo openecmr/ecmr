@@ -7,6 +7,9 @@ public class Location {
         this.address = address;
     }
 
+    public Location() {
+    }
+
     public String getAddress() {
         return address;
     }

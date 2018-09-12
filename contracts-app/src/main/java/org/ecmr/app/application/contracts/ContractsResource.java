@@ -3,6 +3,7 @@ package org.ecmr.app.application.contracts;
 import org.ecmr.app.domain.contracts.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -18,7 +19,7 @@ public class ContractsResource {
     }
 
     @PostMapping
-    public String createContract(ContractRequest request) {
+    public String createContract(@RequestBody ContractRequest request) {
         Issuer issuer = getIssuer();
 
         ContractId contractId = contractRepository.nextId();

@@ -7,6 +7,9 @@ public class Consignment {
         this.description = description;
     }
 
+    public Consignment() {
+    }
+
     public String getDescription() {
         return description;
     }

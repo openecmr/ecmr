@@ -2,6 +2,7 @@ package org.ecmr.app.application.contracts;
 
 import org.ecmr.app.domain.contracts.*;
 import org.ecmr.app.port.adapter.persistence.mem.MemContractRepository;
+import org.ecmr.app.port.adapter.service.mock.MockIssuerService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

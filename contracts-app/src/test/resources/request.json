@@ -3,10 +3,10 @@
     "name": "C. Consignor"
   },
   "consignee": {
-    "namee": "C. Consignor"
+    "name": "C. Consignee"
   },
   "carrier": {
-    "name": "C. Consignor"
+    "name": "C. Carrier"
   },
   "despatchLocation": {
     "address": "Van Straten\nHoogstraat 1\n1234 AA Vlaardingen"
