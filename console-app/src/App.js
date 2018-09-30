@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
-import {Icon, List, Table, Card, Container, Header} from 'semantic-ui-react'
+import {Table, Container, Header} from 'semantic-ui-react'
 
 class App extends Component {
     constructor(props) {
@@ -38,7 +37,7 @@ class App extends Component {
     renderConsignmentNotes() {
         return (
             this.state.notes.map((e) =>
-                <Table.Row key={e.contractId}>
+                <Table.Row key={e.contractId.id}>
                     <Table.Cell verticalAlign="top">{e.consignor.name}</Table.Cell>
                     <Table.Cell verticalAlign="top">{e.carrier.name}</Table.Cell>
                     <Table.Cell verticalAlign="top">{e.consignee.name}</Table.Cell>
@@ -53,12 +52,15 @@ class App extends Component {
     }
 
     componentDidMount() {
-        fetch("http://localhost:8080/contracts")
+        var headers = new Headers();
+        headers.append("Accept", "application/vnd.ecmr-contract.v1+json");
+        fetch("http://localhost:9876/contracts", {
+            headers: headers
+        })
             .then(res => res.json())
             .then((result) => {
-                console.log(result);
                 this.setState({
-                    notes: result
+                    notes: result.results
                 });
             });
     }
