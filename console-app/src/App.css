@@ -27,6 +27,6 @@
   to { transform: rotate(360deg); }
 }
 
-.App-text-with-newlines {
-  white-space: pre;
+.no-wrap {
+  white-space: nowrap;
 }

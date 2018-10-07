@@ -1,68 +1,48 @@
 import React, { Component } from 'react';
 import './App.css';
-import {Table, Container, Header} from 'semantic-ui-react'
+import {Container, Grid, Header, Menu} from "semantic-ui-react";
+import Transports from "./Transports";
+
 
 class App extends Component {
-    constructor(props) {
-        super(props);
+    state = { activeItem: 'account' }
 
-        this.state = {
-            notes: []
-        };
+    handleItemClick() {
+
     }
 
     render() {
+        const { activeItem } = this.state;
+
         return (
-            <Container>
-                <Header as='h2'>Consignment notes</Header>
-                <Table className="App-text-with-newlines" selectable>
-                    <Table.Header>
-                        <Table.Row>
-                            <Table.HeaderCell>Consignor</Table.HeaderCell>
-                            <Table.HeaderCell>Carrier</Table.HeaderCell>
-                            <Table.HeaderCell>Consignee</Table.HeaderCell>
-                            <Table.HeaderCell>Pick-up place</Table.HeaderCell>
-                            <Table.HeaderCell>Place of positioning</Table.HeaderCell>
-                            <Table.HeaderCell>Consignment</Table.HeaderCell>
-                        </Table.Row>
-                    </Table.Header>
-                    <Table.Body>
-                        {this.renderConsignmentNotes()}
-                    </Table.Body>
-                </Table>
-            </Container>
+
+                <Grid columns={2} container style={{ padding: '1em 0em' }}>
+                    <Grid.Row>
+                        <Grid.Column>
+                            <Header as={'h2'}>e-CMR console app</Header>
+                        </Grid.Column>
+                    </Grid.Row>
+                    <Grid.Row>
+                        <Grid.Column width={3}>
+                            <Menu vertical secondary>
+                                <Menu.Item
+                                    name='consignments'
+                                    active={activeItem === 'account'}
+                                    onClick={this.handleItemClick}
+                                />
+                                <Menu.Item
+                                    name='settings'
+                                    active={activeItem === 'settings'}
+                                    onClick={this.handleItemClick}
+                                />
+                            </Menu>
+                        </Grid.Column>
+                        <Grid.Column width={13}>
+                            <Transports/>
+                        </Grid.Column>
+                    </Grid.Row>
+                </Grid>
         );
-    }
-
-    renderConsignmentNotes() {
-        return (
-            this.state.notes.map((e) =>
-                <Table.Row key={e.contractId.id}>
-                    <Table.Cell verticalAlign="top">{e.consignor.name}</Table.Cell>
-                    <Table.Cell verticalAlign="top">{e.carrier.name}</Table.Cell>
-                    <Table.Cell verticalAlign="top">{e.consignee.name}</Table.Cell>
-                    <Table.Cell verticalAlign="top">{e.despatchLocation.address}</Table.Cell>
-                    <Table.Cell verticalAlign="top">{e.deliveryLocation.address}</Table.Cell>
-                    <Table.Cell verticalAlign="top">
-                        <div>{e.consignment.description}</div>
-                    </Table.Cell>
-                </Table.Row>
-            )
-        )
-    }
-
-    componentDidMount() {
-        var headers = new Headers();
-        headers.append("Accept", "application/vnd.ecmr-contract.v1+json");
-        fetch("http://localhost:9876/contracts", {
-            headers: headers
-        })
-            .then(res => res.json())
-            .then((result) => {
-                this.setState({
-                    notes: result.results
-                });
-            });
     }
 }
 
