@@ -15,6 +15,24 @@ class AddressCell extends Component {
     }
 }
 
+class ConsignmentCell extends Component {
+    render() {
+        return (
+            <Table.Cell verticalAlign="top" width="5">
+                {this.props.loads.map((e) => [e.quantity, e.category, e.description].join(" ")).join(" ")}
+            </Table.Cell>
+        )
+    }
+}
+
+class TextCell extends Component {
+    render() {
+        return (
+            <Table.Cell width="1" verticalAlign="top">{this.props.text}</Table.Cell>
+        )
+    }
+}
+
 class Transports extends Component {
     constructor(props) {
         super(props);
@@ -58,29 +76,21 @@ class Transports extends Component {
         );
     }
 
-    renderConsignment(loads) {
-        return (
-            <Table.Cell verticalAlign="top" width="5">
-                {loads.map((e) => [e.quantity, e.category, e.description].join(" ")).join(" ")}
-            </Table.Cell>
-        )
-    }
-
     renderConsignmentNotes() {
         return (
             this.state.notes.map((e) =>
                 <Table.Row key={e.contractId.id}>
-                    <Table.Cell width="1" verticalAlign="top">{e.sequentialId.id}</Table.Cell>
-                    <Table.Cell width="1" verticalAlign="top">{e.references.carrier}</Table.Cell>
-                    <Table.Cell width="1" verticalAlign="top">{e.status}</Table.Cell>
+                    <TextCell text={e.sequentialId.id}/>
+                    <TextCell text={e.references.carrier}/>
+                    <TextCell text={e.status}/>
                     <AddressCell address={e.pickup.address}/>
-                    <Table.Cell width="1" verticalAlign="top">{e.pickup.arrivalDate}</Table.Cell>
+                    <TextCell text={e.pickup.arrivalDate}/>
                     <AddressCell address={e.delivery.address}/>
-                    <Table.Cell width="1" verticalAlign="top">{e.delivery.arrivalDate}</Table.Cell>
+                    <TextCell text={e.delivery.arrivalDate}/>
                     <AddressCell address={e.shipper.address}/>
-                    <Table.Cell width="1" verticalAlign="top"><div className="no-wrap">{e.driver.name}</div></Table.Cell>
-                    <Table.Cell width="1" verticalAlign="top">&nbsp;</Table.Cell>
-                    {this.renderConsignment(e.loads)}
+                    <TextCell text={e.driver.name}/>
+                    <TextCell text={''}/>
+                    <ConsignmentCell loads={e.loads}/>
                 </Table.Row>
             )
         )
