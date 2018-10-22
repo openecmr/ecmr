@@ -1,6 +1,7 @@
 import {Component} from "react";
 import React from "react";
 import {Button, Container, Header, Icon, Table} from "semantic-ui-react";
+import {Link} from "react-router-dom";
 
 var MOCK_DATA_SOURCE = true;
 
@@ -49,9 +50,11 @@ class Transports extends Component {
                     <Table.Header>
                         <Table.Row>
                             <Table.HeaderCell colSpan='11'>
-                                <Button floated='right' icon labelPosition='left' primary size='small'>
-                                    <Icon name='plus' /> New transport
-                                </Button>
+                                <Link to={"/transports/new"}>
+                                    <Button floated='right' icon labelPosition='left' primary size='small'>
+                                        <Icon name='plus' /> New transport
+                                    </Button>
+                                </Link>
                             </Table.HeaderCell>
                         </Table.Row>
                         <Table.Row>

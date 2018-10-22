@@ -3,6 +3,7 @@ import './App.css';
 import {Container, Grid, Header, Menu} from "semantic-ui-react";
 import Transports from "./Transports";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import NewTransport from "./NewTransport";
 
 
 class App extends Component {
@@ -31,7 +32,8 @@ class App extends Component {
                             </Menu>
                         </Grid.Column>
                         <Grid.Column width={13}>
-                            <Route exact path="/transports" component={Transports} />
+                            <Route exact path="/transports" component={Transports}/>
+                            <Route exact path="/transports/new" component={NewTransport}/>
                         </Grid.Column>
                     </Grid.Row>
                 </Grid>
