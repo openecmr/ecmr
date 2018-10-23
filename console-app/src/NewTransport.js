@@ -82,8 +82,37 @@ class Trailer extends Component {
     }
 }
 
-
 class NewTransport extends Component {
+    static form = [
+        {
+            section: 'Carrier',
+            items: [
+                {label: 'Carrier', icon: 'truck', form: <Carrier />},
+                {label: 'Driver', icon: 'user', form: <Driver />},
+                {label: 'Vehicle license plate', icon: 'truck'},
+                {label: 'Trailer license plate', icon: 'truck'}
+            ]
+        },
+        {
+            section: 'Shipper',
+            items: [
+                {label: 'Shipper', icon: 'building'}
+            ]
+        },
+        {
+            section: 'Pickup',
+            items: [
+                {label: 'Pickup', icon: 'sign-out'}
+            ]
+        },
+        {
+            section: 'Delivery',
+            items: [
+                {label: 'Delivery', icon: 'sign-in'}
+            ]
+        }
+    ];
+
     constructor(props) {
         super(props);
 
@@ -92,6 +121,23 @@ class NewTransport extends Component {
     }
 
     render() {
+        const menu = NewTransport.form.map((section) => {
+            const buttons = section.items.map((item) =>
+                <Button toggle={true}
+                        content={item.label}
+                        icon={item.icon}
+                        labelPosition='left'
+                        onClick={() => this.activate(item.form)}/>);
+
+            return ([
+                    <Header as={'h3'}>{section.section}</Header>,
+                    <Button.Group vertical fluid>
+                        {buttons}
+                    </Button.Group>
+                    ]
+            );
+        });
+
         return (
                 <Grid columns={2} container style={{ padding: '1em 0em' }}>
                     <Grid.Row>
@@ -102,28 +148,11 @@ class NewTransport extends Component {
                     <Grid.Row>
                         <Grid.Column width={6}>
                             <Segment>
-                                <Header as={'h3'}>Carrier</Header>
-                                <Button.Group vertical fluid>
-                                    <Button toggle={true} active={true} onClick={() => this.activate('carrier')}>Carrier</Button>
-                                    <Button onClick={() => this.activate('driver')}>Driver</Button>
-                                    <Button onClick={() => this.activate('vehicleLicensePlate')}>Vehicle license plate</Button>
-                                    <Button onClick={() => this.activate('trailerLicensePlate')}>Trailer license plate</Button>
-                                </Button.Group>
+                                { menu }
 
-                                <Header as={'h3'}>Shipper</Header>
-                                <Button.Group vertical fluid>
-                                    <Button>Shipper</Button>
-                                </Button.Group>
-
-                                <Header as={'h3'}>Pickup</Header>
-                                <Button.Group vertical fluid>
-                                    <Button>Shipper</Button>
-                                </Button.Group>
-
-                                <Header as={'h3'}>Delivery</Header>
-                                <Button.Group vertical fluid>
-                                    <Button>Delivery</Button>
-                                </Button.Group>
+                                <Divider />
+                                <Button floated={"right"}>Save</Button>
+                                <Divider clearing hidden fitted />
                             </Segment>
                         </Grid.Column>
                         <Grid.Column width={1}>
@@ -131,7 +160,7 @@ class NewTransport extends Component {
                         </Grid.Column>
                         <Grid.Column width={9}>
                             <Segment>
-                                {this.renderActiveItem()}
+                                {this.state.activeItem}
                             </Segment>
                         </Grid.Column>
                     </Grid.Row>
@@ -140,24 +169,11 @@ class NewTransport extends Component {
     }
 
     activate(item) {
-        this.setState({'activeItem': item});
-    }
-
-    renderActiveItem() {
-        console.log(this.state.activeItem);
-
-        switch(this.state.activeItem) {
-            case 'carrier':
-                return <Carrier/>;
-            case 'driver':
-                return <Driver/>;
-            case 'vehicleLicensePlate':
-                return <Vehicle/>;
-            case 'trailerLicensePlate':
-                return <Trailer/>;
-            default:
-                return;
+        if (!item) {
+            return;
         }
+
+        this.setState({'activeItem': item});
     }
 }
 
