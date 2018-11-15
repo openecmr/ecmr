@@ -3,6 +3,12 @@ import {Button, Menu, Container, Divider, Grid, Header, Icon, Label, Segment, Ta
 import React from "react";
 
 class Driver extends Component {
+    constructor(props) {
+        super(props);
+
+        this.handleInput = this.handleInput.bind(this);
+    }
+
     render() {
         return (
             <Container>
@@ -10,15 +16,31 @@ class Driver extends Component {
                 <Form>
                     <Form.Field>
                         <label>Name</label>
-                        <input placeholder='Name' />
+                        <Form.Input onChange={this.handleInput}  placeholder='Name' name='name' value={this.props.value.name}/>
                     </Form.Field>
                 </Form>
             </Container>
         );
     }
+
+    handleInput(event) {
+        const target = event.target;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
+        const name = target.name;
+
+        const newFormState = Object.assign({}, this.props.value, {[name]: value});
+
+        this.props.onChange(newFormState);
+    }
 }
 
 class Carrier extends Component {
+    constructor(props) {
+        super(props);
+
+        this.handleInput = this.handleInput.bind(this);
+    }
+
     render() {
         return (
             <Container>
@@ -26,11 +48,11 @@ class Carrier extends Component {
                 <Form>
                     <Form.Field>
                         <label>Name</label>
-                        <input />
+                        <Form.Input onChange={this.handleInput} name="name" value={this.props.value.name}/>
                     </Form.Field>
                     <Form.Field>
                         <label>Postal code</label>
-                        <input />
+                        <Form.Input onChange={this.handleInput} name="postalCode" value={this.props.value.postalCode}/>
                     </Form.Field>
                     <Form.Field>
                         <label>Address</label>
@@ -47,6 +69,16 @@ class Carrier extends Component {
                 </Form>
             </Container>
         );
+    }
+
+    handleInput(event) {
+        const target = event.target;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
+        const name = target.name;
+
+        const newFormState = Object.assign({}, this.props.value, {[name]: value});
+
+        this.props.onChange(newFormState);
     }
 }
 
@@ -83,60 +115,86 @@ class Trailer extends Component {
 }
 
 class NewTransport extends Component {
-    static form = [
-        {
-            section: 'Carrier',
-            items: [
-                {label: 'Carrier', icon: 'truck', form: <Carrier />},
-                {label: 'Driver', icon: 'user', form: <Driver />},
-                {label: 'Vehicle license plate', icon: 'truck'},
-                {label: 'Trailer license plate', icon: 'truck'}
-            ]
-        },
-        {
-            section: 'Shipper',
-            items: [
-                {label: 'Shipper', icon: 'building'}
-            ]
-        },
-        {
-            section: 'Pickup',
-            items: [
-                {label: 'Pickup', icon: 'sign-out'}
-            ]
-        },
-        {
-            section: 'Delivery',
-            items: [
-                {label: 'Delivery', icon: 'sign-in'}
-            ]
-        }
-    ];
-
     constructor(props) {
         super(props);
 
         this.state = {
+            carrier: {
+                name: '',
+                postalCode: ''
+            },
+            driver: {
+                name: ''
+            }
         };
+
+        this.updateCarrier = this.updateCarrier.bind(this);
+        this.updateDriver = this.updateDriver.bind(this);
+
+    }
+
+    updateCarrier(carrier) {
+        this.setState({
+            'carrier': Object.assign({}, this.state.carrier, carrier)
+        })
+    }
+
+    updateDriver(driver) {
+        this.setState({
+            'driver': Object.assign({}, this.state.driver, driver)
+        })
     }
 
     render() {
-        const menu = NewTransport.form.map((section) => {
+        let form = [
+            {
+                section: 'Carrier',
+                items: [
+                    {label: 'Carrier', icon: 'truck', form: () => <Carrier onChange={this.updateCarrier} value={this.state.carrier} />},
+                    {label: 'Driver', icon: 'user', form: () => <Driver onChange={this.updateDriver} value={this.state.driver} />},
+                    {label: 'Vehicle license plate', icon: 'truck'},
+                    {label: 'Trailer license plate', icon: 'truck'}
+                ]
+            },
+            {
+                section: 'Shipper',
+                items: [
+                    {label: 'Shipper', icon: 'building'}
+                ]
+            },
+            {
+                section: 'Pickup',
+                items: [
+                    {label: 'Pickup', icon: 'sign-out'}
+                ]
+            },
+            {
+                section: 'Delivery',
+                items: [
+                    {label: 'Delivery', icon: 'sign-in'}
+                ]
+            }
+        ];
+
+        const menu = form.map((section) => {
             const buttons = section.items.map((item) =>
                 <Button toggle={true}
+                        key={item.label}
                         content={item.label}
                         icon={item.icon}
                         labelPosition='left'
-                        onClick={() => this.activate(item.form)}/>);
+                        onClick={() => this.activate(item)}/>);
 
-            return ([
-                    <Header as={'h3'}>{section.section}</Header>,
-                    <Button.Group vertical fluid>
-                        {buttons}
-                    </Button.Group>
-                    ]
+            return (<Segment key={section.section}>
+                        <Header as={'h3'}>{section.section}</Header>
+                        <Button.Group vertical fluid>
+                            {buttons}
+                        </Button.Group>
+                    </Segment>
             );
         });
+
+        let activeForm = this.state.form ? this.state.form() : null;
 
         return (
                 <Grid columns={2} container style={{ padding: '1em 0em' }}>
@@ -160,7 +218,7 @@ class NewTransport extends Component {
                         </Grid.Column>
                         <Grid.Column width={9}>
                             <Segment>
-                                {this.state.activeItem}
+                                {activeForm}
                             </Segment>
                         </Grid.Column>
                     </Grid.Row>
@@ -173,7 +231,7 @@ class NewTransport extends Component {
             return;
         }
 
-        this.setState({'activeItem': item});
+        this.setState({'form': item.form});
     }
 }
 
