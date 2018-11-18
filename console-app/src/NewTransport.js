@@ -2,22 +2,32 @@ import {Component} from "react";
 import {Button, Menu, Container, Divider, Grid, Header, Icon, Label, Segment, Tab, Form} from "semantic-ui-react";
 import React from "react";
 
-class Driver extends Component {
+class NewTransportForm extends Component {
     constructor(props) {
         super(props);
 
         this.handleInput = this.handleInput.bind(this);
     }
 
+    renderField(label, field) {
+        return (
+            <Form.Field key={this.item++}>
+                <label>{label}</label>
+                <Form.Input onChange={this.handleInput} name={field} value={this.props.value[field]}/>
+            </Form.Field>
+        );
+    }
+
+    renderFields() {
+        this.item = 0;
+    }
+
     render() {
         return (
             <Container>
-                <Header as={'h3'}>Enter driver information</Header>
+                <Header as={'h3'}>{this.label}</Header>
                 <Form>
-                    <Form.Field>
-                        <label>Name</label>
-                        <Form.Input onChange={this.handleInput}  placeholder='Name' name='name' value={this.props.value.name}/>
-                    </Form.Field>
+                    {this.renderFields()}
                 </Form>
             </Container>
         );
@@ -34,83 +44,89 @@ class Driver extends Component {
     }
 }
 
-class Carrier extends Component {
+class Carrier extends NewTransportForm {
     constructor(props) {
         super(props);
 
-        this.handleInput = this.handleInput.bind(this);
+        this.label = "Enter carrier information";
     }
 
-    render() {
+    renderFields() {
+        super.renderFields();
+
         return (
-            <Container>
-                <Header as={'h3'}>Enter carrier information</Header>
-                <Form>
-                    <Form.Field>
-                        <label>Name</label>
-                        <Form.Input onChange={this.handleInput} name="name" value={this.props.value.name}/>
-                    </Form.Field>
-                    <Form.Field>
-                        <label>Postal code</label>
-                        <Form.Input onChange={this.handleInput} name="postalCode" value={this.props.value.postalCode}/>
-                    </Form.Field>
-                    <Form.Field>
-                        <label>Address</label>
-                        <input />
-                    </Form.Field>
-                    <Form.Field>
-                        <label>City</label>
-                        <input  />
-                    </Form.Field>
-                    <Form.Field>
-                        <label>Country</label>
-                        <input />
-                    </Form.Field>
-                </Form>
-            </Container>
-        );
-    }
-
-    handleInput(event) {
-        const target = event.target;
-        const value = target.type === 'checkbox' ? target.checked : target.value;
-        const name = target.name;
-
-        const newFormState = Object.assign({}, this.props.value, {[name]: value});
-
-        this.props.onChange(newFormState);
+            [this.renderField("Name", "name"),
+                this.renderField("Postal code", "postalCode"),
+                this.renderField("Address", "address"),
+                this.renderField("City", "city"),
+                this.renderField("Country", "country")])
     }
 }
 
-class Vehicle extends Component {
-    render() {
+class Shipper extends NewTransportForm {
+    constructor(props) {
+        super(props);
+
+        this.label = "Enter carrier information";
+    }
+
+    renderFields() {
+        super.renderFields();
+
         return (
-            <Container>
-                <Header as={'h3'}>Enter carrier information</Header>
-                <Form>
-                    <Form.Field>
-                        <label>Vehicle license plate</label>
-                        <input />
-                    </Form.Field>
-                </Form>
-            </Container>
-        )
+            [this.renderField("Name", "name"),
+                this.renderField("Postal code", "postalCode"),
+                this.renderField("Address", "address"),
+                this.renderField("City", "city"),
+                this.renderField("Country", "country")])
     }
 }
 
-class Trailer extends Component {
-    render() {
-        return (
-            <Container>
-                <Header as={'h3'}>Enter carrier information</Header>
-                <Form>
-                    <Form.Field>
-                        <label>Trailer license plate</label>
-                        <input />
-                    </Form.Field>
-                </Form>
-            </Container>
-        )
+class Driver extends NewTransportForm {
+    constructor(props) {
+        super(props);
+
+        this.label = "Enter driver information";
+    }
+
+    renderFields() {
+        super.renderFields();
+
+        return ([
+           this.renderField("Name", "name")
+        ]);
+    }
+}
+
+class Vehicle extends NewTransportForm {
+    constructor(props) {
+        super(props);
+
+        this.label = "Enter vehicle information";
+    }
+
+    renderFields() {
+        super.renderFields();
+
+        return ([
+            this.renderField("Vehicle license plate", "licensePlate")
+        ]);
+    }
+}
+
+class Trailer extends NewTransportForm {
+    constructor(props) {
+        super(props);
+
+        this.label = "Enter trailer information";
+    }
+
+    renderFields() {
+        super.renderFields();
+
+        return ([
+            this.renderField("Trailer license plate", "licensePlate")
+        ]);
     }
 }
 
@@ -118,48 +134,20 @@ class NewTransport extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-            carrier: {
-                name: '',
-                postalCode: ''
-            },
-            driver: {
-                name: ''
-            }
-        };
-
-        this.updateCarrier = this.updateCarrier.bind(this);
-        this.updateDriver = this.updateDriver.bind(this);
-
-    }
-
-    updateCarrier(carrier) {
-        this.setState({
-            'carrier': Object.assign({}, this.state.carrier, carrier)
-        })
-    }
-
-    updateDriver(driver) {
-        this.setState({
-            'driver': Object.assign({}, this.state.driver, driver)
-        })
-    }
-
-    render() {
-        let form = [
+        this.form = [
             {
                 section: 'Carrier',
                 items: [
-                    {label: 'Carrier', icon: 'truck', form: () => <Carrier onChange={this.updateCarrier} value={this.state.carrier} />},
-                    {label: 'Driver', icon: 'user', form: () => <Driver onChange={this.updateDriver} value={this.state.driver} />},
-                    {label: 'Vehicle license plate', icon: 'truck'},
-                    {label: 'Trailer license plate', icon: 'truck'}
+                    {label: 'Carrier', icon: 'truck', form: () => <Carrier onChange={this.updateItem('carrier')} value={this.state.carrier} />},
+                    {label: 'Driver', icon: 'user', form: () => <Driver onChange={this.updateItem('driver')} value={this.state.driver} />},
+                    {label: 'Vehicle license plate', icon: 'truck', form: () => <Vehicle onChange={this.updateItem('vehicle')} value={this.state.vehicle}/>},
+                    {label: 'Trailer license plate', icon: 'truck', form: () => <Trailer onChange={this.updateItem('trailer')} value={this.state.trailer}/>}
                 ]
             },
             {
                 section: 'Shipper',
                 items: [
-                    {label: 'Shipper', icon: 'building'}
+                    {label: 'Shipper', icon: 'building', form: () => <Shipper onChange={this.updateItem('shipper')} value={this.state.shipper} />}
                 ]
             },
             {
@@ -176,10 +164,46 @@ class NewTransport extends Component {
             }
         ];
 
-        const menu = form.map((section) => {
+        this.state = {
+            selectedLabel: this.form[0].items[0].label,
+            form: this.form[0].items[0].form,
+            carrier: {
+                name: '',
+                postalCode: ''
+            },
+            driver: {
+                name: ''
+            },
+            trailer: {
+                licensePlate: ''
+            },
+            vehicle: {
+                licensePlate: ''
+            },
+            shipper: {
+            }
+
+        };
+    }
+
+    updateItem(item) {
+        let func = (value) => {
+            let newState = {
+            };
+            newState[item] = Object.assign({}, this.state[item], value);
+            this.setState(newState)
+        };
+
+        func.bind(this);
+        return func;
+    }
+
+    render() {
+        const menu = this.form.map((section) => {
             const buttons = section.items.map((item) =>
                 <Button toggle={true}
                         key={item.label}
+                        active={item.label === this.state.selectedLabel}
                         content={item.label}
                         icon={item.icon}
                         labelPosition='left'
@@ -231,7 +255,10 @@ class NewTransport extends Component {
             return;
         }
 
-        this.setState({'form': item.form});
+        this.setState({
+            'form': item.form,
+            'selectedLabel': item.label
+        });
     }
 }
 
