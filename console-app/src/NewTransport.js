@@ -1,5 +1,18 @@
-import {Component} from "react";
-import {Button, Menu, Container, Divider, Grid, Header, Icon, Label, Segment, Tab, Form} from "semantic-ui-react";
+import {Component, Fragment} from "react";
+import {
+    Button,
+    Menu,
+    Container,
+    Divider,
+    Grid,
+    Header,
+    Icon,
+    Label,
+    Segment,
+    Tab,
+    Form,
+    Modal, List
+} from "semantic-ui-react";
 import React from "react";
 
 class NewTransportForm extends Component {
@@ -12,8 +25,7 @@ class NewTransportForm extends Component {
     renderField(label, field) {
         return (
             <Form.Field key={this.item++}>
-                <label>{label}</label>
-                <Form.Input onChange={this.handleInput} name={field} value={this.props.value[field]}/>
+                <Form.Input onChange={this.handleInput} name={field} value={this.props.value[field]} label={label}/>
             </Form.Field>
         );
     }
@@ -67,18 +79,114 @@ class Shipper extends NewTransportForm {
     constructor(props) {
         super(props);
 
-        this.label = "Enter carrier information";
+        this.label = "Enter shipper information";
     }
 
     renderFields() {
         super.renderFields();
 
         return (
-            [this.renderField("Name", "name"),
-                this.renderField("Postal code", "postalCode"),
-                this.renderField("Address", "address"),
-                this.renderField("City", "city"),
-                this.renderField("Country", "country")])
+            <Fragment>
+                {this.renderField("Name", "name")}
+                {this.renderField("Postal code", "postalCode")}
+                {this.renderField("Address", "address")}
+                {this.renderField("City", "city")}
+                {this.renderField("Country", "country")}
+            </Fragment>
+        )
+    }
+}
+
+class Pickup extends NewTransportForm {
+    state = { modalOpen: false }
+    constructor(props) {
+        super(props);
+
+        this.label = "Add a loading point";
+    }
+
+    handleChangeForLoad = (e, { name, value }) => {
+        this.setState({ [name]: value });
+    };
+
+    renderFields() {
+        super.renderFields();
+
+        let times = [
+            {
+                "text": "00:00",
+                "value": "00:00"
+            }
+        ];
+
+        return (
+            <Fragment>
+                {this.renderField("Name", "name")}
+                {this.renderField("Postal code", "postalCode")}
+                {this.renderField("Address", "address")}
+                {this.renderField("City", "city")}
+                {this.renderField("Country", "country")}
+                <Form.Field key={"pickup"}>
+                    <label>Planned pickup date</label>
+                    <Form.Group inline >
+                        <Form.Input label="On" onChange={this.handleInput} name="pickupDate" value={this.props.value["pickupDate"]} width={8}/>
+                    </Form.Group>
+                    <Form.Group inline >
+                        <Form.Select label="Between" options={times} fluid onChange={this.handleInput} name="pickupTimeBegin" value={this.props.value["pickupTimeBegin"]}/>
+                        <Form.Select label="and" options={times} fluid onChange={this.handleInput} name="pickupTimeEnd" value={this.props.value["pickupTimeEnd"]}/>
+                    </Form.Group>
+                </Form.Field>
+                <Header as={'h3'} key={"header"}>Loads</Header>
+                {this.showLoad()}
+                {this.renderLoads()}
+            </Fragment>
+        );
+    }
+
+    showLoad() {
+        const trigger = <Button content={"Add a load"} icon={"plus square"} labelPosition={"left"} onClick={() => this.setState({ modalOpen: true })}/>;
+
+        return (<Modal key={"showLoad"} open={this.state.modalOpen}  trigger={trigger} size='small'>
+            <Header icon={"plus square"} content={"Add load"} />
+            <Modal.Content>
+                <Form id={"item"}>
+                    <Form.Input label='Category' type='input' name={"category"} onChange={this.handleChangeForLoad}/>
+                    <Form.Input label='Quantity' type='input' name={"quantity"} onChange={this.handleChangeForLoad}/>
+                    <Form.Input label='Description' type='input' name={"description"} onChange={this.handleChangeForLoad}/>
+                </Form>
+            </Modal.Content>
+            <Modal.Actions>
+                <Button color='red' inverted>
+                    <Icon name='remove' /> Cancel
+                </Button>
+                <Button color='green' inverted onClick={() => this.addLoad()}>
+                    <Icon name='checkmark' /> Add load
+                </Button>
+            </Modal.Actions>
+        </Modal>);
+    }
+
+    addLoad() {
+        this.setState({modalOpen: false});
+        this.props.onLoadAdded(this.state);
+    }
+
+    renderLoads() {
+        return (
+            <List divided relaxed>
+                {
+                    this.props.loads.map(load => {
+                        return (<List.Item key={load.description}>
+                            <List.Icon name='archive' size='large' verticalAlign='middle' />
+                            <List.Content>
+                                <List.Header as='a'>{load.quantity} {load.category}</List.Header>
+                                <List.Description as='a'>{load.description}</List.Description>
+                            </List.Content>
+                        </List.Item>);
+                    })
+                }
+            </List>
+        )
     }
 }
 
@@ -138,28 +246,28 @@ class NewTransport extends Component {
             {
                 section: 'Carrier',
                 items: [
-                    {label: 'Carrier', icon: 'truck', form: () => <Carrier onChange={this.updateItem('carrier')} value={this.state.carrier} />},
-                    {label: 'Driver', icon: 'user', form: () => <Driver onChange={this.updateItem('driver')} value={this.state.driver} />},
-                    {label: 'Vehicle license plate', icon: 'truck', form: () => <Vehicle onChange={this.updateItem('vehicle')} value={this.state.vehicle}/>},
-                    {label: 'Trailer license plate', icon: 'truck', form: () => <Trailer onChange={this.updateItem('trailer')} value={this.state.trailer}/>}
+                    {label: 'Carrier', icon: 'truck', form: () => <Carrier onChange={this.createOnUpdateFor('carrier')} value={this.state.carrier} />},
+                    {label: 'Driver', icon: 'user', form: () => <Driver onChange={this.createOnUpdateFor('driver')} value={this.state.driver} />},
+                    {label: 'Vehicle license plate', icon: 'truck', form: () => <Vehicle onChange={this.createOnUpdateFor('vehicle')} value={this.state.vehicle}/>},
+                    {label: 'Trailer license plate', icon: 'truck', form: () => <Trailer onChange={this.createOnUpdateFor('trailer')} value={this.state.trailer}/>}
                 ]
             },
             {
                 section: 'Shipper',
                 items: [
-                    {label: 'Shipper', icon: 'building', form: () => <Shipper onChange={this.updateItem('shipper')} value={this.state.shipper} />}
+                    {label: 'Shipper', icon: 'building', form: () => <Shipper onChange={this.createOnUpdateFor('shipper')} value={this.state.shipper} />}
                 ]
             },
             {
                 section: 'Pickup',
                 items: [
-                    {label: 'Pickup', icon: 'sign-out'}
+                    {label: 'Pickup', icon: 'sign-out', form: () => <Pickup onChange={this.createOnUpdateFor('pickup')} onLoadAdded={(load) => this.onLoadAdded(load)} value={this.state.pickup} loads={this.state.loads}/> }
                 ]
             },
             {
                 section: 'Delivery',
                 items: [
-                    {label: 'Delivery', icon: 'sign-in'}
+                    {label: 'Delivery', icon: 'sign-in', form: () => <Shipper onChange={this.createOnUpdateFor('delivery')} value={this.state.delivery} />}
                 ]
             }
         ];
@@ -168,25 +276,32 @@ class NewTransport extends Component {
             selectedLabel: this.form[0].items[0].label,
             form: this.form[0].items[0].form,
             carrier: {
-                name: '',
-                postalCode: ''
             },
             driver: {
-                name: ''
             },
             trailer: {
-                licensePlate: ''
             },
             vehicle: {
-                licensePlate: ''
             },
             shipper: {
-            }
+            },
+            delivery: {
+            },
+            pickup: {
+            },
+            loads: [
+            ]
 
         };
     }
 
-    updateItem(item) {
+    onLoadAdded(load) {
+        this.setState(prevState => ({
+            loads: [...prevState.loads, load]
+        }))
+    }
+
+    createOnUpdateFor(item) {
         let func = (value) => {
             let newState = {
             };
