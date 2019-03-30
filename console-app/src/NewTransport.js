@@ -15,6 +15,29 @@ import {
 } from "semantic-ui-react";
 import React from "react";
 
+import Amplify, { Analytics, Storage, API, graphqlOperation } from 'aws-amplify';
+
+const listContracts = `query listContracts {
+  listContracts {
+    items {
+      id
+      name
+      description
+    }
+  }
+}`;
+
+const addContract = `mutation createContract($consignment:Contract) {
+  createTodo(input:{
+    name:$name
+    description:$description
+  }){
+    id
+    name
+    description
+  }
+}`;
+
 class NewTransportForm extends Component {
     constructor(props) {
         super(props);

@@ -1,0 +1,5 @@
+{
+    "tableName": "consignment-notes",
+    "partitionKeyName": "id",
+    "partitionKeyType": "S"
+}

@@ -1,0 +1,93 @@
+{
+	"providers": {
+		"awscloudformation": {
+			"AuthRoleName": "consoleapp-20190102133243-authRole",
+			"UnauthRoleArn": "arn:aws:iam::173648348160:role/consoleapp-20190102133243-unauthRole",
+			"AuthRoleArn": "arn:aws:iam::173648348160:role/consoleapp-20190102133243-authRole",
+			"Region": "eu-central-1",
+			"DeploymentBucketName": "consoleapp-20190102133243-deployment",
+			"UnauthRoleName": "consoleapp-20190102133243-unauthRole",
+			"StackName": "consoleapp-20190102133243",
+			"StackId": "arn:aws:cloudformation:eu-central-1:173648348160:stack/consoleapp-20190102133243/80d21c80-0e8a-11e9-bd55-02625fbcaeee"
+		}
+	},
+	"storage": {
+		"ecmrdb": {
+			"service": "DynamoDB",
+			"providerPlugin": "awscloudformation",
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/consoleapp-20190102133243-deployment/amplify-cfn-templates/storage/ecmrdb-cloudformation-template.json",
+				"logicalId": "storageecmrdb"
+			},
+			"lastPushTimeStamp": "2019-01-02T15:43:03.808Z",
+			"output": {
+				"PartitionKeyName": "id",
+				"Region": "eu-central-1",
+				"Arn": "arn:aws:dynamodb:eu-central-1:173648348160:table/consignment-notes",
+				"PartitionKeyType": "S",
+				"Name": "consignment-notes"
+			},
+			"lastPushDirHash": "lNUFTka/Bc3rsQzr1T+l2J2JgFU="
+		}
+	},
+	"hosting": {
+		"S3AndCloudFront": {
+			"service": "S3AndCloudFront",
+			"providerPlugin": "awscloudformation",
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/consoleapp-20190102133243-deployment/amplify-cfn-templates/hosting/template.json",
+				"logicalId": "hostingS3AndCloudFront"
+			},
+			"lastPushTimeStamp": "2019-01-02T15:43:03.808Z",
+			"output": {
+				"S3BucketSecureURL": "https://ecmr-console-app.s3.amazonaws.com",
+				"WebsiteURL": "http://ecmr-console-app.s3-website.eu-central-1.amazonaws.com",
+				"Region": "eu-central-1",
+				"HostingBucketName": "ecmr-console-app"
+			},
+			"lastPushDirHash": "2M9gL3xcimtSi3mTa1B9e4B/jt8="
+		}
+	},
+	"auth": {
+		"cognito88e1166d": {
+			"service": "Cognito",
+			"providerPlugin": "awscloudformation",
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/consoleapp-20190102133243-deployment/amplify-cfn-templates/auth/cognito88e1166d-cloudformation-template.yml",
+				"logicalId": "authcognito88e1166d"
+			},
+			"lastPushTimeStamp": "2019-01-02T15:43:03.809Z",
+			"output": {
+				"AppClientSecret": "1tn6qpf28vlcmtsfvrn40t1tn478l90cgc3n6ai1qn7pvutrgveu",
+				"UserPoolId": "eu-central-1_Ai4du5la5",
+				"AppClientIDWeb": "18bdqfpdm5i9siskv1sfl75j77",
+				"AppClientID": "77d8srjnfe6bfam03denafv9l9",
+				"IdentityPoolId": "eu-central-1:75903d70-171b-4873-8384-e1f4c59820e1",
+				"IdentityPoolName": "cognito88e1166d_identitypool_88e1166d",
+				"UserPoolName": "cognito88e1166d_userpool_88e1166d"
+			},
+			"lastPushDirHash": "0ZqGcj4ETpm141x/Y7k0TB0N7IM="
+		}
+	},
+	"api": {
+		"ecmr": {
+			"service": "AppSync",
+			"providerPlugin": "awscloudformation",
+			"output": {
+				"securityType": "AMAZON_COGNITO_USER_POOLS",
+				"GraphQLAPIIdOutput": "6m2clahxuvg65e5esdv6y6nd3u",
+				"GraphQLAPIEndpointOutput": "https://s5qjr3vjcfd5ndcd3sqkdvrnf4.appsync-api.eu-central-1.amazonaws.com/graphql",
+				"GraphQLAPIKeyOutput": "da2-glzsq6aq3bcx7d4v7lpynl3mse",
+				"AuthCognitoUserPoolIdOutput": "eu-central-1_Ai4du5la5",
+				"AuthCognitoUserPoolNativeClientId": "See UserPool: eu-central-1_Ai4du5la5",
+				"AuthCognitoUserPoolJSClientId": "See UserPool: eu-central-1_Ai4du5la5"
+			},
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/consoleapp-20190102133243-deployment/amplify-cfn-templates/api/cloudformation-template.json",
+				"logicalId": "apiecmr"
+			},
+			"lastPushTimeStamp": "2019-01-02T15:43:05.828Z",
+			"lastPushDirHash": "YFxlXCtsmGkc9vMt6IK1l3aUppI="
+		}
+	}
+}

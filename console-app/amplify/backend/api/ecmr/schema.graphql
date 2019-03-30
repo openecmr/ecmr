@@ -1,0 +1,68 @@
+#type Task
+#  @model
+#  @auth(rules: [
+#      {allow: groups, groups: ["Managers"], queries: null, mutations: [create, update, delete]},
+#      {allow: groups, groups: ["Employees"], queries: [get, list], mutations: null}
+#    ])
+#{
+#  id: ID!
+#  title: String!
+#  description: String
+#  status: String
+#}
+#type PrivateNote
+#  @model
+#  @auth(rules: [{allow: owner}])
+#{
+#  id: ID!
+#  content: String!
+#}
+enum ContractStatus {
+    DRAFT
+    PICKUP,
+    IN_PROGRESS,
+    DONE
+}
+
+type Contract @model {
+    id: ID!
+    sequentialId: String!
+    status: ContractStatus!
+    shipper: Address
+    carrier: Address
+    delivery: Address
+    arrivalDate: String
+    deliveryDate: String
+    pickup: Address
+    loads: [Load]!
+    driver: Driver
+    vehicle: Vehicle
+    references: Reference
+}
+
+type Address {
+    name: String
+    postalCode: String
+    address: String
+    city: String
+    country: String
+}
+
+type Load {
+    category: String
+    quantity: String
+    description: String
+}
+
+type Driver {
+    name: String!
+}
+
+type Reference {
+    carrier: String
+}
+
+type Vehicle {
+    trailer: String
+    truck: String
+}
