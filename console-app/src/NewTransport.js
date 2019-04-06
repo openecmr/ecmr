@@ -14,29 +14,8 @@ import {
     Modal, List
 } from "semantic-ui-react";
 import React from "react";
-
 import Amplify, { Analytics, Storage, API, graphqlOperation } from 'aws-amplify';
-
-const listContracts = `query listContracts {
-  listContracts {
-    items {
-      id
-      name
-      description
-    }
-  }
-}`;
-
-const addContract = `mutation createContract($consignment:Contract) {
-  createTodo(input:{
-    name:$name
-    description:$description
-  }){
-    id
-    name
-    description
-  }
-}`;
+import MutationCreateContract from "./graphql/MutationCreateContract"
 
 class NewTransportForm extends Component {
     constructor(props) {
@@ -371,7 +350,7 @@ class NewTransport extends Component {
                                 { menu }
 
                                 <Divider />
-                                <Button floated={"right"}>Save</Button>
+                                <Button floated={"right"} onClick={() => this.save()}>Save</Button>
                                 <Divider clearing hidden fitted />
                             </Segment>
                         </Grid.Column>
@@ -386,6 +365,10 @@ class NewTransport extends Component {
                     </Grid.Row>
                 </Grid>
         )
+    }
+
+    save() {
+        API.graphql(graphqlOperation(MutationCreateContract, {input: this.state}));
     }
 
     activate(item) {

@@ -5,6 +5,12 @@ import Transports from "./Transports";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import NewTransport from "./NewTransport";
 
+import Amplify from 'aws-amplify';
+import awsmobile from './aws-exports';
+import { withAuthenticator } from 'aws-amplify-react';
+
+Amplify.configure(awsmobile);
+
 
 class App extends Component {
     render() {
@@ -41,5 +47,4 @@ class App extends Component {
         );
     }
 }
-
-export default App;
+export default withAuthenticator(App, true);
