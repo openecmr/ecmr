@@ -44,10 +44,8 @@ export const getContract = `query GetContract($id: ID!) {
     driver {
       name
     }
-    vehicle {
-      trailer
-      truck
-    }
+    trailer
+    truck
     references {
       carrier
     }
@@ -102,10 +100,8 @@ export const listContracts = `query ListContracts(
       driver {
         name
       }
-      vehicle {
-        trailer
-        truck
-      }
+      trailer
+      truck
       references {
         carrier
       }

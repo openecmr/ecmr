@@ -3,8 +3,8 @@
 
 export type CreateContractInput = {
   id?: string | null,
-  sequentialId: string,
-  status: ContractStatus,
+  sequentialId?: string | null,
+  status?: ContractStatus | null,
   shipper?: AddressInput | null,
   carrier?: AddressInput | null,
   delivery?: AddressInput | null,
@@ -13,7 +13,8 @@ export type CreateContractInput = {
   pickup?: AddressInput | null,
   loads: Array< LoadInput | null >,
   driver?: DriverInput | null,
-  vehicle?: VehicleInput | null,
+  trailer?: string | null,
+  truck?: string | null,
   references?: ReferenceInput | null,
 };
 
@@ -43,11 +44,6 @@ export type DriverInput = {
   name: string,
 };
 
-export type VehicleInput = {
-  trailer?: string | null,
-  truck?: string | null,
-};
-
 export type ReferenceInput = {
   carrier?: string | null,
 };
@@ -64,7 +60,8 @@ export type UpdateContractInput = {
   pickup?: AddressInput | null,
   loads?: Array< LoadInput | null > | null,
   driver?: DriverInput | null,
-  vehicle?: VehicleInput | null,
+  trailer?: string | null,
+  truck?: string | null,
   references?: ReferenceInput | null,
 };
 
@@ -77,6 +74,8 @@ export type ModelContractFilterInput = {
   sequentialId?: ModelStringFilterInput | null,
   arrivalDate?: ModelStringFilterInput | null,
   deliveryDate?: ModelStringFilterInput | null,
+  trailer?: ModelStringFilterInput | null,
+  truck?: ModelStringFilterInput | null,
   and?: Array< ModelContractFilterInput | null > | null,
   or?: Array< ModelContractFilterInput | null > | null,
   not?: ModelContractFilterInput | null,
@@ -115,9 +114,9 @@ export type CreateContractMutationVariables = {
 export type CreateContractMutation = {
   createContract:  {
     __typename: "Contract",
-    id: string,
-    sequentialId: string,
-    status: ContractStatus,
+    id: string | null,
+    sequentialId: string | null,
+    status: ContractStatus | null,
     shipper:  {
       __typename: "Address",
       name: string | null,
@@ -162,11 +161,8 @@ export type CreateContractMutation = {
       __typename: "Driver",
       name: string,
     } | null,
-    vehicle:  {
-      __typename: "Vehicle",
-      trailer: string | null,
-      truck: string | null,
-    } | null,
+    trailer: string | null,
+    truck: string | null,
     references:  {
       __typename: "Reference",
       carrier: string | null,
@@ -181,9 +177,9 @@ export type UpdateContractMutationVariables = {
 export type UpdateContractMutation = {
   updateContract:  {
     __typename: "Contract",
-    id: string,
-    sequentialId: string,
-    status: ContractStatus,
+    id: string | null,
+    sequentialId: string | null,
+    status: ContractStatus | null,
     shipper:  {
       __typename: "Address",
       name: string | null,
@@ -228,11 +224,8 @@ export type UpdateContractMutation = {
       __typename: "Driver",
       name: string,
     } | null,
-    vehicle:  {
-      __typename: "Vehicle",
-      trailer: string | null,
-      truck: string | null,
-    } | null,
+    trailer: string | null,
+    truck: string | null,
     references:  {
       __typename: "Reference",
       carrier: string | null,
@@ -247,9 +240,9 @@ export type DeleteContractMutationVariables = {
 export type DeleteContractMutation = {
   deleteContract:  {
     __typename: "Contract",
-    id: string,
-    sequentialId: string,
-    status: ContractStatus,
+    id: string | null,
+    sequentialId: string | null,
+    status: ContractStatus | null,
     shipper:  {
       __typename: "Address",
       name: string | null,
@@ -294,11 +287,8 @@ export type DeleteContractMutation = {
       __typename: "Driver",
       name: string,
     } | null,
-    vehicle:  {
-      __typename: "Vehicle",
-      trailer: string | null,
-      truck: string | null,
-    } | null,
+    trailer: string | null,
+    truck: string | null,
     references:  {
       __typename: "Reference",
       carrier: string | null,
@@ -313,9 +303,9 @@ export type GetContractQueryVariables = {
 export type GetContractQuery = {
   getContract:  {
     __typename: "Contract",
-    id: string,
-    sequentialId: string,
-    status: ContractStatus,
+    id: string | null,
+    sequentialId: string | null,
+    status: ContractStatus | null,
     shipper:  {
       __typename: "Address",
       name: string | null,
@@ -360,11 +350,8 @@ export type GetContractQuery = {
       __typename: "Driver",
       name: string,
     } | null,
-    vehicle:  {
-      __typename: "Vehicle",
-      trailer: string | null,
-      truck: string | null,
-    } | null,
+    trailer: string | null,
+    truck: string | null,
     references:  {
       __typename: "Reference",
       carrier: string | null,
@@ -383,9 +370,9 @@ export type ListContractsQuery = {
     __typename: "ModelContractConnection",
     items:  Array< {
       __typename: "Contract",
-      id: string,
-      sequentialId: string,
-      status: ContractStatus,
+      id: string | null,
+      sequentialId: string | null,
+      status: ContractStatus | null,
       shipper:  {
         __typename: "Address",
         name: string | null,
@@ -430,11 +417,8 @@ export type ListContractsQuery = {
         __typename: "Driver",
         name: string,
       } | null,
-      vehicle:  {
-        __typename: "Vehicle",
-        trailer: string | null,
-        truck: string | null,
-      } | null,
+      trailer: string | null,
+      truck: string | null,
       references:  {
         __typename: "Reference",
         carrier: string | null,
@@ -447,9 +431,9 @@ export type ListContractsQuery = {
 export type OnCreateContractSubscription = {
   onCreateContract:  {
     __typename: "Contract",
-    id: string,
-    sequentialId: string,
-    status: ContractStatus,
+    id: string | null,
+    sequentialId: string | null,
+    status: ContractStatus | null,
     shipper:  {
       __typename: "Address",
       name: string | null,
@@ -494,11 +478,8 @@ export type OnCreateContractSubscription = {
       __typename: "Driver",
       name: string,
     } | null,
-    vehicle:  {
-      __typename: "Vehicle",
-      trailer: string | null,
-      truck: string | null,
-    } | null,
+    trailer: string | null,
+    truck: string | null,
     references:  {
       __typename: "Reference",
       carrier: string | null,
@@ -509,9 +490,9 @@ export type OnCreateContractSubscription = {
 export type OnUpdateContractSubscription = {
   onUpdateContract:  {
     __typename: "Contract",
-    id: string,
-    sequentialId: string,
-    status: ContractStatus,
+    id: string | null,
+    sequentialId: string | null,
+    status: ContractStatus | null,
     shipper:  {
       __typename: "Address",
       name: string | null,
@@ -556,11 +537,8 @@ export type OnUpdateContractSubscription = {
       __typename: "Driver",
       name: string,
     } | null,
-    vehicle:  {
-      __typename: "Vehicle",
-      trailer: string | null,
-      truck: string | null,
-    } | null,
+    trailer: string | null,
+    truck: string | null,
     references:  {
       __typename: "Reference",
       carrier: string | null,
@@ -571,9 +549,9 @@ export type OnUpdateContractSubscription = {
 export type OnDeleteContractSubscription = {
   onDeleteContract:  {
     __typename: "Contract",
-    id: string,
-    sequentialId: string,
-    status: ContractStatus,
+    id: string | null,
+    sequentialId: string | null,
+    status: ContractStatus | null,
     shipper:  {
       __typename: "Address",
       name: string | null,
@@ -618,11 +596,8 @@ export type OnDeleteContractSubscription = {
       __typename: "Driver",
       name: string,
     } | null,
-    vehicle:  {
-      __typename: "Vehicle",
-      trailer: string | null,
-      truck: string | null,
-    } | null,
+    trailer: string | null,
+    truck: string | null,
     references:  {
       __typename: "Reference",
       carrier: string | null,

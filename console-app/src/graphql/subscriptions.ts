@@ -44,10 +44,8 @@ export const onCreateContract = `subscription OnCreateContract {
     driver {
       name
     }
-    vehicle {
-      trailer
-      truck
-    }
+    trailer
+    truck
     references {
       carrier
     }
@@ -97,10 +95,8 @@ export const onUpdateContract = `subscription OnUpdateContract {
     driver {
       name
     }
-    vehicle {
-      trailer
-      truck
-    }
+    trailer
+    truck
     references {
       carrier
     }
@@ -150,10 +146,8 @@ export const onDeleteContract = `subscription OnDeleteContract {
     driver {
       name
     }
-    vehicle {
-      trailer
-      truck
-    }
+    trailer
+    truck
     references {
       carrier
     }

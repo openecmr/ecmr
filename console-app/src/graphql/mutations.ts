@@ -44,10 +44,8 @@ export const createContract = `mutation CreateContract($input: CreateContractInp
     driver {
       name
     }
-    vehicle {
-      trailer
-      truck
-    }
+    trailer
+    truck
     references {
       carrier
     }
@@ -97,10 +95,8 @@ export const updateContract = `mutation UpdateContract($input: UpdateContractInp
     driver {
       name
     }
-    vehicle {
-      trailer
-      truck
-    }
+    trailer
+    truck
     references {
       carrier
     }
@@ -150,10 +146,8 @@ export const deleteContract = `mutation DeleteContract($input: DeleteContractInp
     driver {
       name
     }
-    vehicle {
-      trailer
-      truck
-    }
+    trailer
+    truck
     references {
       carrier
     }

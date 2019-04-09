@@ -44,10 +44,8 @@ mutation CreateContract($input: CreateContractInput!) {
     driver {
       name
     }
-    vehicle {
-      trailer
-      truck
-    }
+    trailer
+    truck
     references {
       carrier
     }

@@ -170,7 +170,9 @@ class Pickup extends NewTransportForm {
 
     addLoad() {
         this.setState({modalOpen: false});
-        this.props.onLoadAdded(this.state);
+        const load = { ...this.state };
+        delete load.modalOpen;
+        this.props.onLoadAdded(load);
     }
 
     renderLoads() {
@@ -250,7 +252,7 @@ class NewTransport extends Component {
                 items: [
                     {label: 'Carrier', icon: 'truck', form: () => <Carrier onChange={this.createOnUpdateFor('carrier')} value={this.state.carrier} />},
                     {label: 'Driver', icon: 'user', form: () => <Driver onChange={this.createOnUpdateFor('driver')} value={this.state.driver} />},
-                    {label: 'Vehicle license plate', icon: 'truck', form: () => <Vehicle onChange={this.createOnUpdateFor('vehicle')} value={this.state.vehicle}/>},
+                    {label: 'Vehicle license plate', icon: 'truck', form: () => <Vehicle onChange={this.createOnUpdateFor('truck')} value={this.state.truck}/>},
                     {label: 'Trailer license plate', icon: 'truck', form: () => <Trailer onChange={this.createOnUpdateFor('trailer')} value={this.state.trailer}/>}
                 ]
             },
@@ -283,7 +285,7 @@ class NewTransport extends Component {
             },
             trailer: {
             },
-            vehicle: {
+            truck: {
             },
             shipper: {
             },
@@ -368,7 +370,10 @@ class NewTransport extends Component {
     }
 
     save() {
-        API.graphql(graphqlOperation(MutationCreateContract, {input: this.state}));
+        const input = { ...this.state };
+        delete input.selectedLabel;
+        delete input.form;
+        API.graphql(graphqlOperation(MutationCreateContract, {input: input}));
     }
 
     activate(item) {

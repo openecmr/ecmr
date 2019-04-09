@@ -25,9 +25,9 @@ enum ContractStatus {
 }
 
 type Contract @model {
-    id: ID!
-    sequentialId: String!
-    status: ContractStatus!
+    id: ID
+    sequentialId: String
+    status: ContractStatus
     shipper: Address
     carrier: Address
     delivery: Address
@@ -36,7 +36,8 @@ type Contract @model {
     pickup: Address
     loads: [Load]!
     driver: Driver
-    vehicle: Vehicle
+    trailer: String
+    truck: String
     references: Reference
 }
 
@@ -60,9 +61,4 @@ type Driver {
 
 type Reference {
     carrier: String
-}
-
-type Vehicle {
-    trailer: String
-    truck: String
 }
