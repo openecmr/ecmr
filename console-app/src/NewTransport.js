@@ -370,7 +370,10 @@ class NewTransport extends Component {
     }
 
     save() {
-        const input = { ...this.state };
+        const input = {
+            ...this.state,
+            status: 'DRAFT'
+        };
         delete input.selectedLabel;
         delete input.form;
         API.graphql(graphqlOperation(MutationCreateContract, {input: input}));

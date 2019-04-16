@@ -2,15 +2,20 @@ import {Component} from "react";
 import React from "react";
 import {Button, Container, Header, Icon, Table} from "semantic-ui-react";
 import {Link} from "react-router-dom";
+import QueryContract from "./graphql/QueryContract";
+import Amplify, { Analytics, Storage, API, graphqlOperation } from 'aws-amplify';
 
-var MOCK_DATA_SOURCE = true;
+
+var MOCK_DATA_SOURCE = false;
 
 class AddressCell extends Component {
     render() {
+        const address = this.props.address || {};
+
         return (
             <Table.Cell verticalAlign="top" width="1">
-                <div className="no-wrap">{this.props.address.name}</div>
-                <div className="no-wrap">{this.props.address.postalCode} {this.props.address.city}</div>
+                <div className="no-wrap">{address.name}</div>
+                <div className="no-wrap">{address.postalCode} {address.city}</div>
             </Table.Cell>
         )
     }
@@ -82,16 +87,16 @@ class Transports extends Component {
     renderConsignmentNotes() {
         return (
             this.state.notes.map((e) =>
-                <Table.Row key={e.contractId.id}>
-                    <TextCell text={e.sequentialId.id}/>
-                    <TextCell text={e.references.carrier}/>
+                <Table.Row key={e.id}>
+                    <TextCell text={e.id.substring(0, 8)}/>
+                    <TextCell text={e.references ? e.references.carrier : null}/>
                     <TextCell text={e.status}/>
-                    <AddressCell address={e.pickup.address}/>
-                    <TextCell text={e.pickup.arrivalDate}/>
-                    <AddressCell address={e.delivery.address}/>
-                    <TextCell text={e.delivery.arrivalDate}/>
-                    <AddressCell address={e.shipper.address}/>
-                    <TextCell text={e.driver.name}/>
+                    <AddressCell address={e.pickup}/>
+                    <TextCell text={e.pickup ? e.pickup.arrivalDate : null}/>
+                    <AddressCell address={e.delivery}/>
+                    <TextCell text={e.delivery ? e.delivery.arrivalDate : null}/>
+                    <AddressCell address={e.shipper}/>
+                    <TextCell text={e.driver ? e.driver.name : null}/>
                     <TextCell text={''}/>
                     <ConsignmentCell loads={e.loads}/>
                 </Table.Row>
@@ -103,8 +108,15 @@ class Transports extends Component {
         if (MOCK_DATA_SOURCE) {
             this.retrieveMock();
         } else {
-            this.retrieveReal();
+            this.retrieveAppSync();
         }
+    }
+
+    async retrieveAppSync() {
+        const contracts = await API.graphql(graphqlOperation(QueryContract));
+        this.setState({
+            notes: contracts.data.listContracts.items
+        });
     }
 
     retrieveReal() {
