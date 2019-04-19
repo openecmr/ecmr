@@ -1,13 +1,10 @@
 {
+    "DynamoDBBillingMode": "PROVISIONED",
     "AppSyncApiName": "ecmr",
     "AuthCognitoUserPoolId": {
         "Fn::GetAtt": [
             "authcognito88e1166d",
             "Outputs.UserPoolId"
         ]
-    },
-    "schemaGraphql": "s3://consoleapp-20190102133243-deployment/amplify-appsync-files/schema.graphql.1554842108069",
-    "ResolverBucket": "consoleapp-20190102133243-deployment",
-    "ResolverRootKey": "amplify-appsync-files",
-    "DeploymentTimestamp": "1554842108069"
+    }
 }
