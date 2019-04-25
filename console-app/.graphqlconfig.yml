@@ -2,13 +2,13 @@ projects:
   ecmr:
     schemaPath: src/graphql/schema.json
     includes:
-      - src/graphql/**/*.ts
+      - src/graphql/**/*.js
     excludes:
       - amplify/**
     extensions:
       amplify:
-        codeGenTarget: typescript
-        generatedFileName: src/API.ts
+        codeGenTarget: javascript
+        generatedFileName: ''
         docsFilePath: src/graphql
         graphQLApiId: 6m2clahxuvg65e5esdv6y6nd3u
       endpoints:

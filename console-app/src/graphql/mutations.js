@@ -1,10 +1,11 @@
-// tslint:disable
+// eslint-disable
 // this is an auto generated file. This will be overwritten
 
 export const createContract = `mutation CreateContract($input: CreateContractInput!) {
   createContract(input: $input) {
     id
-    sequentialId
+    owner
+    carrierUsername
     status
     shipper {
       name
@@ -55,7 +56,8 @@ export const createContract = `mutation CreateContract($input: CreateContractInp
 export const updateContract = `mutation UpdateContract($input: UpdateContractInput!) {
   updateContract(input: $input) {
     id
-    sequentialId
+    owner
+    carrierUsername
     status
     shipper {
       name
@@ -106,7 +108,8 @@ export const updateContract = `mutation UpdateContract($input: UpdateContractInp
 export const deleteContract = `mutation DeleteContract($input: DeleteContractInput!) {
   deleteContract(input: $input) {
     id
-    sequentialId
+    owner
+    carrierUsername
     status
     shipper {
       name

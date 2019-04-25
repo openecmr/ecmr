@@ -24,9 +24,15 @@ enum ContractStatus {
     DONE
 }
 
-type Contract @model {
+type Contract @model
+    @auth(rules: [
+        { allow: owner },
+        { allow: owner, ownerField: "carrierUsername", operations: [read] }
+    ])
+{
     id: ID
-    sequentialId: String
+    owner: String
+    carrierUsername: String
     status: ContractStatus
     shipper: Address
     carrier: Address

@@ -15,7 +15,7 @@ import {
 } from "semantic-ui-react";
 import React from "react";
 import Amplify, { Analytics, Storage, API, graphqlOperation } from 'aws-amplify';
-import MutationCreateContract from "./graphql/MutationCreateContract"
+import * as mutations from './graphql/mutations'
 
 class NewTransportForm extends Component {
     constructor(props) {
@@ -69,7 +69,8 @@ class Carrier extends NewTransportForm {
         super.renderFields();
 
         return (
-            [this.renderField("Name", "name"),
+            [   this.renderField("Username", "username"),
+                this.renderField("Name", "name"),
                 this.renderField("Postal code", "postalCode"),
                 this.renderField("Address", "address"),
                 this.renderField("City", "city"),
@@ -369,14 +370,23 @@ class NewTransport extends Component {
         )
     }
 
-    save() {
+    async save() {
         const input = {
             ...this.state,
-            status: 'DRAFT'
+            status: 'DRAFT',
+            carrierUsername: this.state.carrier.username
         };
         delete input.selectedLabel;
         delete input.form;
-        API.graphql(graphqlOperation(MutationCreateContract, {input: input}));
+        delete input.pickup.pickupDate;
+        delete input.carrier.username;
+
+        try {
+            await API.graphql(graphqlOperation(mutations.createContract, {input: input}));
+            this.props.history.push('/transports')
+        } catch (ex) {
+            console.log(ex);
+        }
     }
 
     activate(item) {

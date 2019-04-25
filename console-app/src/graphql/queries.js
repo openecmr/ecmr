@@ -1,10 +1,11 @@
-// tslint:disable
+// eslint-disable
 // this is an auto generated file. This will be overwritten
 
 export const getContract = `query GetContract($id: ID!) {
   getContract(id: $id) {
     id
-    sequentialId
+    owner
+    carrierUsername
     status
     shipper {
       name
@@ -60,7 +61,8 @@ export const listContracts = `query ListContracts(
   listContracts(filter: $filter, limit: $limit, nextToken: $nextToken) {
     items {
       id
-      sequentialId
+      owner
+      carrierUsername
       status
       shipper {
         name

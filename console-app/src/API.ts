@@ -3,7 +3,8 @@
 
 export type CreateContractInput = {
   id?: string | null,
-  sequentialId?: string | null,
+  owner?: string | null,
+  carrierUsername?: string | null,
   status?: ContractStatus | null,
   shipper?: AddressInput | null,
   carrier?: AddressInput | null,
@@ -50,7 +51,8 @@ export type ReferenceInput = {
 
 export type UpdateContractInput = {
   id: string,
-  sequentialId?: string | null,
+  owner?: string | null,
+  carrierUsername?: string | null,
   status?: ContractStatus | null,
   shipper?: AddressInput | null,
   carrier?: AddressInput | null,
@@ -71,7 +73,9 @@ export type DeleteContractInput = {
 
 export type ModelContractFilterInput = {
   id?: ModelIDFilterInput | null,
-  sequentialId?: ModelStringFilterInput | null,
+  owner?: ModelStringFilterInput | null,
+  carrierUsername?: ModelStringFilterInput | null,
+  status?: ModelContractStatusFilterInput | null,
   arrivalDate?: ModelStringFilterInput | null,
   deliveryDate?: ModelStringFilterInput | null,
   trailer?: ModelStringFilterInput | null,
@@ -107,6 +111,11 @@ export type ModelStringFilterInput = {
   beginsWith?: string | null,
 };
 
+export type ModelContractStatusFilterInput = {
+  eq?: ContractStatus | null,
+  ne?: ContractStatus | null,
+};
+
 export type CreateContractMutationVariables = {
   input: CreateContractInput,
 };
@@ -115,7 +124,8 @@ export type CreateContractMutation = {
   createContract:  {
     __typename: "Contract",
     id: string | null,
-    sequentialId: string | null,
+    owner: string | null,
+    carrierUsername: string | null,
     status: ContractStatus | null,
     shipper:  {
       __typename: "Address",
@@ -178,7 +188,8 @@ export type UpdateContractMutation = {
   updateContract:  {
     __typename: "Contract",
     id: string | null,
-    sequentialId: string | null,
+    owner: string | null,
+    carrierUsername: string | null,
     status: ContractStatus | null,
     shipper:  {
       __typename: "Address",
@@ -241,7 +252,8 @@ export type DeleteContractMutation = {
   deleteContract:  {
     __typename: "Contract",
     id: string | null,
-    sequentialId: string | null,
+    owner: string | null,
+    carrierUsername: string | null,
     status: ContractStatus | null,
     shipper:  {
       __typename: "Address",
@@ -304,7 +316,8 @@ export type GetContractQuery = {
   getContract:  {
     __typename: "Contract",
     id: string | null,
-    sequentialId: string | null,
+    owner: string | null,
+    carrierUsername: string | null,
     status: ContractStatus | null,
     shipper:  {
       __typename: "Address",
@@ -371,7 +384,8 @@ export type ListContractsQuery = {
     items:  Array< {
       __typename: "Contract",
       id: string | null,
-      sequentialId: string | null,
+      owner: string | null,
+      carrierUsername: string | null,
       status: ContractStatus | null,
       shipper:  {
         __typename: "Address",
@@ -432,7 +446,8 @@ export type OnCreateContractSubscription = {
   onCreateContract:  {
     __typename: "Contract",
     id: string | null,
-    sequentialId: string | null,
+    owner: string | null,
+    carrierUsername: string | null,
     status: ContractStatus | null,
     shipper:  {
       __typename: "Address",
@@ -491,7 +506,8 @@ export type OnUpdateContractSubscription = {
   onUpdateContract:  {
     __typename: "Contract",
     id: string | null,
-    sequentialId: string | null,
+    owner: string | null,
+    carrierUsername: string | null,
     status: ContractStatus | null,
     shipper:  {
       __typename: "Address",
@@ -550,7 +566,8 @@ export type OnDeleteContractSubscription = {
   onDeleteContract:  {
     __typename: "Contract",
     id: string | null,
-    sequentialId: string | null,
+    owner: string | null,
+    carrierUsername: string | null,
     status: ContractStatus | null,
     shipper:  {
       __typename: "Address",

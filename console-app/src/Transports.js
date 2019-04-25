@@ -2,7 +2,7 @@ import {Component} from "react";
 import React from "react";
 import {Button, Container, Header, Icon, Table} from "semantic-ui-react";
 import {Link} from "react-router-dom";
-import QueryContract from "./graphql/QueryContract";
+import * as queries from "./graphql/queries";
 import Amplify, { Analytics, Storage, API, graphqlOperation } from 'aws-amplify';
 
 
@@ -113,7 +113,7 @@ class Transports extends Component {
     }
 
     async retrieveAppSync() {
-        const contracts = await API.graphql(graphqlOperation(QueryContract));
+        const contracts = await API.graphql(graphqlOperation(queries.listContracts));
         this.setState({
             notes: contracts.data.listContracts.items
         });
