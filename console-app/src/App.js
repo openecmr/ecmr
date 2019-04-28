@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
-import {Container, Grid, Header, Menu} from "semantic-ui-react";
+import {Grid, Header, Menu} from "semantic-ui-react";
 import Transports from "./Transports";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import NewTransport from "./NewTransport";

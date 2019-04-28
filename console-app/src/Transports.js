@@ -1,9 +1,9 @@
 import {Component} from "react";
 import React from "react";
-import {Button, Container, Header, Icon, Table} from "semantic-ui-react";
+import {Button, Container, Icon, Table} from "semantic-ui-react";
 import {Link} from "react-router-dom";
 import * as queries from "./graphql/queries";
-import Amplify, { Analytics, Storage, API, graphqlOperation } from 'aws-amplify';
+import { API, graphqlOperation } from 'aws-amplify';
 import moment from 'moment';
 
 var MOCK_DATA_SOURCE = false;
@@ -44,7 +44,7 @@ class IdCell extends Component {
         const text = this.props.id.substring(0, 8);
         return (
             <Table.Cell width="1" verticalAlign="top">
-                <Link to={"/transports/" + this.props.id}>{text}</Link>
+                <Link to={`/transports/${this.props.id}`}>{text}</Link>
             </Table.Cell>
         )
     }
@@ -132,20 +132,6 @@ class Transports extends Component {
         this.setState({
             notes: contracts
         });
-    }
-
-    retrieveReal() {
-        var headers = new Headers();
-        headers.append("Accept", "application/vnd.ecmr-contract.v1+json");
-        fetch("http://localhost:9876/contracts", {
-            headers: headers
-        })
-            .then(res => res.json())
-            .then((result) => {
-                this.setState({
-                    notes: result.results
-                });
-            });
     }
 
     retrieveMock() {
