@@ -4,7 +4,7 @@ import {Button, Container, Header, Icon, Table} from "semantic-ui-react";
 import {Link} from "react-router-dom";
 import * as queries from "./graphql/queries";
 import Amplify, { Analytics, Storage, API, graphqlOperation } from 'aws-amplify';
-
+import moment from 'moment';
 
 var MOCK_DATA_SOURCE = false;
 
@@ -39,6 +39,17 @@ class TextCell extends Component {
     }
 }
 
+class IdCell extends Component {
+    render() {
+        const text = this.props.id.substring(0, 8);
+        return (
+            <Table.Cell width="1" verticalAlign="top">
+                <Link to={"/transports/" + this.props.id}>{text}</Link>
+            </Table.Cell>
+        )
+    }
+}
+
 class Transports extends Component {
     constructor(props) {
         super(props);
@@ -54,8 +65,8 @@ class Transports extends Component {
                 <Table className="App-text-with-newlines" selectable compact='very'>
                     <Table.Header>
                         <Table.Row>
-                            <Table.HeaderCell colSpan='11'>
-                                <Link to={"/transports/new"}>
+                            <Table.HeaderCell colSpan='12'>
+                                <Link to={"/transports-new"}>
                                     <Button floated='right' icon labelPosition='left' primary size='small'>
                                         <Icon name='plus' /> New transport
                                     </Button>
@@ -63,6 +74,7 @@ class Transports extends Component {
                             </Table.HeaderCell>
                         </Table.Row>
                         <Table.Row>
+                            <Table.HeaderCell>Updated</Table.HeaderCell>
                             <Table.HeaderCell>Number</Table.HeaderCell>
                             <Table.HeaderCell>Carrier reference</Table.HeaderCell>
                             <Table.HeaderCell>Status</Table.HeaderCell>
@@ -88,7 +100,8 @@ class Transports extends Component {
         return (
             this.state.notes.map((e) =>
                 <Table.Row key={e.id}>
-                    <TextCell text={e.id.substring(0, 8)}/>
+                    <TextCell text={moment(e.updatedAt).format("ll")}/>
+                    <IdCell id={e.id}/>
                     <TextCell text={e.references ? e.references.carrier : null}/>
                     <TextCell text={e.status}/>
                     <AddressCell address={e.pickup}/>
@@ -113,9 +126,11 @@ class Transports extends Component {
     }
 
     async retrieveAppSync() {
-        const contracts = await API.graphql(graphqlOperation(queries.listContracts));
+        const response = await API.graphql(graphqlOperation(queries.listContracts));
+        const contracts = response.data.listContracts.items.sort((a, b) => a.updatedAt < b.updatedAt ? 1 : -1);
+
         this.setState({
-            notes: contracts.data.listContracts.items
+            notes: contracts
         });
     }
 

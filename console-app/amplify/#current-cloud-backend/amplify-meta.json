@@ -19,7 +19,7 @@
 				"s3TemplateURL": "https://s3.amazonaws.com/consoleapp-20190102133243-deployment/amplify-cfn-templates/storage/ecmrdb-cloudformation-template.json",
 				"logicalId": "storageecmrdb"
 			},
-			"lastPushTimeStamp": "2019-04-19T20:43:57.844Z",
+			"lastPushTimeStamp": "2019-04-28T13:57:20.174Z",
 			"output": {
 				"PartitionKeyName": "id",
 				"Region": "eu-central-1",
@@ -38,7 +38,7 @@
 				"s3TemplateURL": "https://s3.amazonaws.com/consoleapp-20190102133243-deployment/amplify-cfn-templates/hosting/template.json",
 				"logicalId": "hostingS3AndCloudFront"
 			},
-			"lastPushTimeStamp": "2019-04-19T20:43:57.845Z",
+			"lastPushTimeStamp": "2019-04-28T13:57:20.175Z",
 			"output": {
 				"S3BucketSecureURL": "https://ecmr-console-app.s3.amazonaws.com",
 				"WebsiteURL": "http://ecmr-console-app.s3-website.eu-central-1.amazonaws.com",
@@ -56,7 +56,7 @@
 				"s3TemplateURL": "https://s3.amazonaws.com/consoleapp-20190102133243-deployment/amplify-cfn-templates/auth/cognito88e1166d-cloudformation-template.yml",
 				"logicalId": "authcognito88e1166d"
 			},
-			"lastPushTimeStamp": "2019-04-19T20:43:57.846Z",
+			"lastPushTimeStamp": "2019-04-28T13:57:20.175Z",
 			"output": {
 				"AppClientSecret": "1tn6qpf28vlcmtsfvrn40t1tn478l90cgc3n6ai1qn7pvutrgveu",
 				"UserPoolId": "eu-central-1_Ai4du5la5",
@@ -86,8 +86,8 @@
 				"s3TemplateURL": "https://s3.amazonaws.com/consoleapp-20190102133243-deployment/amplify-cfn-templates/api/cloudformation-template.json",
 				"logicalId": "apiecmr"
 			},
-			"lastPushTimeStamp": "2019-04-19T20:43:59.299Z",
-			"lastPushDirHash": "UVxR1p44CMI/lyNUsW1CbDrP6bs="
+			"lastPushTimeStamp": "2019-04-28T13:57:21.001Z",
+			"lastPushDirHash": "hQP2oaRdunUbaZaOmhoh6XymwR4="
 		}
 	}
 }

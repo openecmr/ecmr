@@ -45,6 +45,8 @@ type Contract @model
     trailer: String
     truck: String
     references: Reference
+    updatedAt: String!
+    createdAt: String!
 }
 
 type Address {

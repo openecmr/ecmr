@@ -8,6 +8,7 @@ import NewTransport from "./NewTransport";
 import Amplify from 'aws-amplify';
 import awsmobile from './aws-exports';
 import { withAuthenticator } from 'aws-amplify-react';
+import Transport from "./Transport";
 
 Amplify.configure(awsmobile);
 
@@ -16,7 +17,7 @@ class App extends Component {
     render() {
         return (
             <Router>
-                <Grid columns={2} container style={{ padding: '1em 0em' }}>
+                <Grid columns={2} stackable container style={{ padding: '1em 0em' }}>
                     <Grid.Row>
                         <Grid.Column>
                             <Header as={'h2'}>e-CMR console app</Header>
@@ -39,7 +40,8 @@ class App extends Component {
                         </Grid.Column>
                         <Grid.Column width={13}>
                             <Route exact path="/transports" component={Transports}/>
-                            <Route exact path="/transports/new" component={NewTransport}/>
+                            <Route exact path="/transports-new" component={NewTransport}/>
+                            <Route exact path="/transports/:id" component={Transport}/>
                         </Grid.Column>
                     </Grid.Row>
                 </Grid>

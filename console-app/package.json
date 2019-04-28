@@ -10,6 +10,7 @@
     "aws-amplify": "^1.1.24",
     "aws-amplify-react": "^2.3.4",
     "graphql-tag": "^2.10.1",
+    "moment": "^2.24.0",
     "react": "^16.5.0",
     "react-dom": "^16.5.0",
     "react-router-dom": "^4.3.1",

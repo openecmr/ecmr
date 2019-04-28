@@ -1,21 +1,20 @@
 import {Component, Fragment} from "react";
 import {
     Button,
-    Menu,
     Container,
     Divider,
     Grid,
     Header,
     Icon,
-    Label,
     Segment,
-    Tab,
     Form,
     Modal, List
 } from "semantic-ui-react";
 import React from "react";
-import Amplify, { Analytics, Storage, API, graphqlOperation } from 'aws-amplify';
+import { API, graphqlOperation } from 'aws-amplify';
 import * as mutations from './graphql/mutations'
+import moment from "moment";
+import Message from "semantic-ui-react/dist/commonjs/collections/Message/Message";
 
 class NewTransportForm extends Component {
     constructor(props) {
@@ -341,7 +340,7 @@ class NewTransport extends Component {
         let activeForm = this.state.form ? this.state.form() : null;
 
         return (
-                <Grid columns={2} container style={{ padding: '1em 0em' }}>
+                <Grid columns={2} container stackable style={{ padding: '1em 0em' }}>
                     <Grid.Row>
                         <Grid.Column>
                             <Header as={'h2'}>New A -> B Transport</Header>
@@ -353,6 +352,13 @@ class NewTransport extends Component {
                                 { menu }
 
                                 <Divider />
+                                {this.state.error && <Message
+                                    error
+                                    header='Error'
+                                    list={[
+                                        this.state.error
+                                    ]}
+                                />}
                                 <Button floated={"right"} onClick={() => this.save()}>Save</Button>
                                 <Divider clearing hidden fitted />
                             </Segment>
@@ -380,12 +386,17 @@ class NewTransport extends Component {
         delete input.form;
         delete input.pickup.pickupDate;
         delete input.carrier.username;
+        let now = moment().toISOString();
+        input.updatedAt = now;
+        input.createdAt = now;
 
         try {
             await API.graphql(graphqlOperation(mutations.createContract, {input: input}));
             this.props.history.push('/transports')
         } catch (ex) {
-            console.log(ex);
+            this.setState({
+                error: JSON.stringify(ex)
+            })
         }
     }
 

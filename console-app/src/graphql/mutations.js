@@ -50,6 +50,8 @@ export const createContract = `mutation CreateContract($input: CreateContractInp
     references {
       carrier
     }
+    updatedAt
+    createdAt
   }
 }
 `;
@@ -102,6 +104,8 @@ export const updateContract = `mutation UpdateContract($input: UpdateContractInp
     references {
       carrier
     }
+    updatedAt
+    createdAt
   }
 }
 `;
@@ -154,6 +158,8 @@ export const deleteContract = `mutation DeleteContract($input: DeleteContractInp
     references {
       carrier
     }
+    updatedAt
+    createdAt
   }
 }
 `;

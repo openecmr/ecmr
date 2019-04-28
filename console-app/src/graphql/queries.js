@@ -50,6 +50,8 @@ export const getContract = `query GetContract($id: ID!) {
     references {
       carrier
     }
+    updatedAt
+    createdAt
   }
 }
 `;
@@ -107,6 +109,8 @@ export const listContracts = `query ListContracts(
       references {
         carrier
       }
+      updatedAt
+      createdAt
     }
     nextToken
   }

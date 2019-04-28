@@ -1,7 +1,165 @@
-"use strict";
-// tslint:disable
+// eslint-disable
 // this is an auto generated file. This will be overwritten
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.onCreateContract = "subscription OnCreateContract {\n  onCreateContract {\n    id\n    owner\n    carrierUsername\n    status\n    shipper {\n      name\n      postalCode\n      address\n      city\n      country\n    }\n    carrier {\n      name\n      postalCode\n      address\n      city\n      country\n    }\n    delivery {\n      name\n      postalCode\n      address\n      city\n      country\n    }\n    arrivalDate\n    deliveryDate\n    pickup {\n      name\n      postalCode\n      address\n      city\n      country\n    }\n    loads {\n      category\n      quantity\n      description\n    }\n    driver {\n      name\n    }\n    trailer\n    truck\n    references {\n      carrier\n    }\n  }\n}\n";
-exports.onUpdateContract = "subscription OnUpdateContract {\n  onUpdateContract {\n    id\n    owner\n    carrierUsername\n    status\n    shipper {\n      name\n      postalCode\n      address\n      city\n      country\n    }\n    carrier {\n      name\n      postalCode\n      address\n      city\n      country\n    }\n    delivery {\n      name\n      postalCode\n      address\n      city\n      country\n    }\n    arrivalDate\n    deliveryDate\n    pickup {\n      name\n      postalCode\n      address\n      city\n      country\n    }\n    loads {\n      category\n      quantity\n      description\n    }\n    driver {\n      name\n    }\n    trailer\n    truck\n    references {\n      carrier\n    }\n  }\n}\n";
-exports.onDeleteContract = "subscription OnDeleteContract {\n  onDeleteContract {\n    id\n    owner\n    carrierUsername\n    status\n    shipper {\n      name\n      postalCode\n      address\n      city\n      country\n    }\n    carrier {\n      name\n      postalCode\n      address\n      city\n      country\n    }\n    delivery {\n      name\n      postalCode\n      address\n      city\n      country\n    }\n    arrivalDate\n    deliveryDate\n    pickup {\n      name\n      postalCode\n      address\n      city\n      country\n    }\n    loads {\n      category\n      quantity\n      description\n    }\n    driver {\n      name\n    }\n    trailer\n    truck\n    references {\n      carrier\n    }\n  }\n}\n";
+
+export const onCreateContract = `subscription OnCreateContract {
+  onCreateContract {
+    id
+    owner
+    carrierUsername
+    status
+    shipper {
+      name
+      postalCode
+      address
+      city
+      country
+    }
+    carrier {
+      name
+      postalCode
+      address
+      city
+      country
+    }
+    delivery {
+      name
+      postalCode
+      address
+      city
+      country
+    }
+    arrivalDate
+    deliveryDate
+    pickup {
+      name
+      postalCode
+      address
+      city
+      country
+    }
+    loads {
+      category
+      quantity
+      description
+    }
+    driver {
+      name
+    }
+    trailer
+    truck
+    references {
+      carrier
+    }
+    updatedAt
+    createdAt
+  }
+}
+`;
+export const onUpdateContract = `subscription OnUpdateContract {
+  onUpdateContract {
+    id
+    owner
+    carrierUsername
+    status
+    shipper {
+      name
+      postalCode
+      address
+      city
+      country
+    }
+    carrier {
+      name
+      postalCode
+      address
+      city
+      country
+    }
+    delivery {
+      name
+      postalCode
+      address
+      city
+      country
+    }
+    arrivalDate
+    deliveryDate
+    pickup {
+      name
+      postalCode
+      address
+      city
+      country
+    }
+    loads {
+      category
+      quantity
+      description
+    }
+    driver {
+      name
+    }
+    trailer
+    truck
+    references {
+      carrier
+    }
+    updatedAt
+    createdAt
+  }
+}
+`;
+export const onDeleteContract = `subscription OnDeleteContract {
+  onDeleteContract {
+    id
+    owner
+    carrierUsername
+    status
+    shipper {
+      name
+      postalCode
+      address
+      city
+      country
+    }
+    carrier {
+      name
+      postalCode
+      address
+      city
+      country
+    }
+    delivery {
+      name
+      postalCode
+      address
+      city
+      country
+    }
+    arrivalDate
+    deliveryDate
+    pickup {
+      name
+      postalCode
+      address
+      city
+      country
+    }
+    loads {
+      category
+      quantity
+      description
+    }
+    driver {
+      name
+    }
+    trailer
+    truck
+    references {
+      carrier
+    }
+    updatedAt
+    createdAt
+  }
+}
+`;
