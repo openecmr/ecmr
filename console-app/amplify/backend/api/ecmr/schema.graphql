@@ -59,7 +59,7 @@ type Address {
 
 type Load {
     category: String
-    quantity: String
+    quantity: Int
     description: String
 }
 
