@@ -14,6 +14,8 @@ const MainNavigator = createStackNavigator({
     Transport: {screen: Transport}
 });
 
+const navigationPersistenceKey = __DEV__ ? "NavigationStateDEV" : null;
 const App = createAppContainer(MainNavigator);
+const AppWithPersistence = () => <App persistenceKey={navigationPersistenceKey}/>;
 
-export default withAuthenticator(App, true);
+export default withAuthenticator(AppWithPersistence);

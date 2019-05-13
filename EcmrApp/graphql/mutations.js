@@ -52,6 +52,16 @@ export const createContract = `mutation CreateContract($input: CreateContractInp
     }
     updatedAt
     createdAt
+    events {
+      author {
+        username
+      }
+      type
+      site
+      createdAt
+      latitude
+      longitude
+    }
   }
 }
 `;
@@ -106,6 +116,16 @@ export const updateContract = `mutation UpdateContract($input: UpdateContractInp
     }
     updatedAt
     createdAt
+    events {
+      author {
+        username
+      }
+      type
+      site
+      createdAt
+      latitude
+      longitude
+    }
   }
 }
 `;
@@ -160,6 +180,16 @@ export const deleteContract = `mutation DeleteContract($input: DeleteContractInp
     }
     updatedAt
     createdAt
+    events {
+      author {
+        username
+      }
+      type
+      site
+      createdAt
+      latitude
+      longitude
+    }
   }
 }
 `;

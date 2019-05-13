@@ -47,6 +47,7 @@ type Contract @model
     references: Reference
     updatedAt: String!
     createdAt: String!
+    events: [Event]
 }
 
 type Address {
@@ -59,7 +60,7 @@ type Address {
 
 type Load {
     category: String
-    quantity: String
+    quantity: Int
     description: String
 }
 
@@ -69,4 +70,24 @@ type Driver {
 
 type Reference {
     carrier: String
+}
+
+enum EventType {
+    ArrivalOnSite,
+    LoadingComplete,
+    UnloadingComplete,
+    DepartureFromSite
+}
+
+type Author {
+    username: String!
+}
+
+type Event {
+    author: Author!
+    type: EventType!
+    site: String
+    createdAt: String!
+    latitude: Float
+    longitude: Float
 }

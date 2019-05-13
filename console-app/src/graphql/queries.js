@@ -52,6 +52,16 @@ export const getContract = `query GetContract($id: ID!) {
     }
     updatedAt
     createdAt
+    events {
+      author {
+        username
+      }
+      type
+      site
+      createdAt
+      latitude
+      longitude
+    }
   }
 }
 `;
@@ -111,6 +121,16 @@ export const listContracts = `query ListContracts(
       }
       updatedAt
       createdAt
+      events {
+        author {
+          username
+        }
+        type
+        site
+        createdAt
+        latitude
+        longitude
+      }
     }
     nextToken
   }

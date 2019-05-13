@@ -52,6 +52,16 @@ export const onCreateContract = `subscription OnCreateContract {
     }
     updatedAt
     createdAt
+    events {
+      author {
+        username
+      }
+      type
+      site
+      createdAt
+      latitude
+      longitude
+    }
   }
 }
 `;
@@ -106,6 +116,16 @@ export const onUpdateContract = `subscription OnUpdateContract {
     }
     updatedAt
     createdAt
+    events {
+      author {
+        username
+      }
+      type
+      site
+      createdAt
+      latitude
+      longitude
+    }
   }
 }
 `;
@@ -160,6 +180,16 @@ export const onDeleteContract = `subscription OnDeleteContract {
     }
     updatedAt
     createdAt
+    events {
+      author {
+        username
+      }
+      type
+      site
+      createdAt
+      latitude
+      longitude
+    }
   }
 }
 `;

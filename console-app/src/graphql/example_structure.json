@@ -1,0 +1,1209 @@
+{
+  "uid": "ad6bf836-c747-11e8-b8eb-02edb6f9b971",
+  "sequential_id": 155992,
+  "created": "2018-10-03T20:05:30.110542Z",
+  "updated": "2018-11-21T11:09:45.279872Z",
+  "remote_id": "",
+  "carrier_address": {
+    "pk": 1153056,
+    "name": "Berend Transport",
+    "address": "Industriestraat 5",
+    "city": "Groningen",
+    "postcode": "4434 AA",
+    "country": "NL",
+    "latitude": 53.2111547,
+    "longitude": 6.5027044,
+    "coords_validated": false,
+    "is_carrier": true,
+    "is_shipper": false,
+    "is_origin": false,
+    "is_destination": false,
+    "company": {
+      "pk": 132827,
+      "name": "Berend Transport",
+      "phone_number": null,
+      "email": null,
+      "siren": "",
+      "trade_number": "",
+      "vat_number": "",
+      "settings": {
+        "signature_process": "skippable_electronic_signature",
+        "cmr_only": false,
+        "print_mode": false,
+        "special_agreements": "",
+        "contract_html": "",
+        "stamp": null,
+        "logo": null,
+        "tracking_page_logo": null
+      }
+    },
+    "original": 1153017
+  },
+  "created_by": {
+    "pk": 83190,
+    "name": "Gmail",
+    "remote_id": "",
+    "trade_number": "233434324",
+    "settings_contract_html": "",
+    "settings_logo": null,
+    "settings_tracking_page_logo": null,
+    "settings_print_mode": false
+  },
+  "created_device": null,
+  "creation_method": "",
+  "is_order": true,
+  "archived_by": [],
+  "invite_code": "REBPZB",
+  "deliveries": [
+    {
+      "uid": "adc47984-c747-11e8-b8eb-02edb6f9b971",
+      "sequential_id": 171352,
+      "remote_id": "",
+      "tracking_id": "ADC47C-D6C747",
+      "origin": {
+        "uid": "1538596263193842DABE3",
+        "address": {
+          "pk": 1153046,
+          "name": "Gmail",
+          "address": "Tooroplaan 116",
+          "city": "Vlaardingen",
+          "postcode": "3141JT",
+          "country": "NL",
+          "latitude": null,
+          "longitude": null,
+          "coords_validated": false,
+          "is_carrier": true,
+          "is_shipper": true,
+          "is_origin": true,
+          "is_destination": false,
+          "company": {
+            "pk": 83190,
+            "name": "Gmail",
+            "remote_id": "",
+            "trade_number": "233434324",
+            "settings_contract_html": "",
+            "settings_logo": null,
+            "settings_tracking_page_logo": null,
+            "settings_print_mode": false
+          },
+          "original": 97838
+        },
+        "arrival_date": "2018-10-03",
+        "date_exact": true,
+        "arrival_time_min": "01:00",
+        "arrival_time_max": "01:00",
+        "signature_process": "sign_on_glass",
+        "loading_instructions": "",
+        "unloading_instructions": "",
+        "reference": ""
+      },
+      "destination": {
+        "uid": "ad884d88-c747-11e8-b8eb-02edb6f9b971",
+        "address": {
+          "pk": 1153047,
+          "name": "Bloemenzaak 2",
+          "address": "Floris de Vijdelaan",
+          "city": "312",
+          "postcode": "1234",
+          "country": "FR",
+          "latitude": null,
+          "longitude": null,
+          "coords_validated": false,
+          "is_carrier": false,
+          "is_shipper": false,
+          "is_origin": false,
+          "is_destination": true,
+          "company": {
+            "pk": 132829,
+            "name": "Bloemenzaak 2",
+            "remote_id": "",
+            "trade_number": "",
+            "settings_contract_html": "",
+            "settings_logo": null,
+            "settings_tracking_page_logo": null,
+            "settings_print_mode": false
+          },
+          "original": 1153036
+        },
+        "arrival_date": "2018-10-03",
+        "date_exact": true,
+        "arrival_time_min": null,
+        "arrival_time_max": null,
+        "signature_process": "sign_on_glass",
+        "loading_instructions": "",
+        "unloading_instructions": "",
+        "reference": ""
+      },
+      "shipper_address": {
+        "pk": 1153048,
+        "name": "Gmail",
+        "address": "Tooroplaan 116",
+        "city": "Vlaardingen",
+        "postcode": "3141JT",
+        "country": "NL",
+        "latitude": null,
+        "longitude": null,
+        "coords_validated": false,
+        "is_carrier": true,
+        "is_shipper": true,
+        "is_origin": true,
+        "is_destination": false,
+        "company": {
+          "pk": 83190,
+          "name": "Gmail",
+          "remote_id": "",
+          "trade_number": "233434324",
+          "settings_contract_html": "",
+          "settings_logo": null,
+          "settings_tracking_page_logo": null,
+          "settings_print_mode": false
+        },
+        "original": 97838
+      },
+      "loads": [
+        {
+          "uid": "add3fe9a-c747-11e8-b8eb-02edb6f9b971",
+          "remote_id": "",
+          "description": "bloemen",
+          "weight": "222",
+          "height": null,
+          "width": null,
+          "length": null,
+          "pallet_format": "",
+          "volume": "",
+          "volume_unit": "m3",
+          "linear_meters": "",
+          "quantity": 22,
+          "category": "pallets",
+          "dangerous_goods_category": "",
+          "complementary_information": "",
+          "container_number": "",
+          "tare_weight": "",
+          "container_seal_number": "",
+          "refrigerated": false,
+          "temperature": "",
+          "steres": null
+        }
+      ],
+      "tracking_contacts": [
+        {
+          "uid": "ad689196-c747-11e8-b8eb-02edb6f9b971",
+          "contact": {
+            "uid": "6f1a6cf6-4c73-11e8-83a8-4e53d0829ea3",
+            "created": "2018-04-30T12:38:50.376058Z",
+            "company": {
+              "pk": 83190,
+              "name": "Gmail",
+              "remote_id": "",
+              "trade_number": "233434324",
+              "settings_contract_html": "",
+              "settings_logo": null,
+              "settings_tracking_page_logo": null,
+              "settings_print_mode": false
+            },
+            "created_by": 83190,
+            "first_name": "",
+            "last_name": "",
+            "email": "",
+            "phone_number": "",
+            "fax_number": ""
+          },
+          "subscribed_to_status_updates": false
+        },
+        {
+          "uid": "ad690d88-c747-11e8-b8eb-02edb6f9b971",
+          "contact": {
+            "uid": "08702218-c746-11e8-b74b-6e05480e7331",
+            "created": "2018-10-03T19:53:43.800772Z",
+            "company": {
+              "pk": 132827,
+              "name": "Berend Transport",
+              "remote_id": "",
+              "trade_number": "",
+              "settings_contract_html": "",
+              "settings_logo": null,
+              "settings_tracking_page_logo": null,
+              "settings_print_mode": false
+            },
+            "created_by": 83190,
+            "first_name": "Berend",
+            "last_name": "Transport",
+            "email": "bschlarmann+berend@gmail.com",
+            "phone_number": "",
+            "fax_number": ""
+          },
+          "subscribed_to_status_updates": false
+        }
+      ],
+      "shipper_reference": "",
+      "multiple_rounds": false
+    },
+    {
+      "uid": "ad99ffce-c747-11e8-b8eb-02edb6f9b971",
+      "sequential_id": 171351,
+      "remote_id": "",
+      "tracking_id": "AD9A03-2AC747",
+      "origin": {
+        "uid": "1538596263193842DABE3",
+        "address": {
+          "pk": 1153046,
+          "name": "Gmail",
+          "address": "Tooroplaan 116",
+          "city": "Vlaardingen",
+          "postcode": "3141JT",
+          "country": "NL",
+          "latitude": null,
+          "longitude": null,
+          "coords_validated": false,
+          "is_carrier": true,
+          "is_shipper": true,
+          "is_origin": true,
+          "is_destination": false,
+          "company": {
+            "pk": 83190,
+            "name": "Gmail",
+            "remote_id": "",
+            "trade_number": "233434324",
+            "settings_contract_html": "",
+            "settings_logo": null,
+            "settings_tracking_page_logo": null,
+            "settings_print_mode": false
+          },
+          "original": 97838
+        },
+        "arrival_date": "2018-10-03",
+        "date_exact": true,
+        "arrival_time_min": "01:00",
+        "arrival_time_max": "01:00",
+        "signature_process": "sign_on_glass",
+        "loading_instructions": "",
+        "unloading_instructions": "",
+        "reference": ""
+      },
+      "destination": {
+        "uid": "153859626319380HJRYg1",
+        "address": {
+          "pk": 1153044,
+          "name": "Bloemenzaak",
+          "address": "Dirk de Derdelaan",
+          "city": "Vlaardingen",
+          "postcode": "1234AA",
+          "country": "FR",
+          "latitude": null,
+          "longitude": null,
+          "coords_validated": false,
+          "is_carrier": false,
+          "is_shipper": false,
+          "is_origin": false,
+          "is_destination": true,
+          "company": {
+            "pk": 132828,
+            "name": "Bloemenzaak",
+            "remote_id": "",
+            "trade_number": "",
+            "settings_contract_html": "",
+            "settings_logo": null,
+            "settings_tracking_page_logo": null,
+            "settings_print_mode": false
+          },
+          "original": 1153019
+        },
+        "arrival_date": "2018-10-03",
+        "date_exact": true,
+        "arrival_time_min": null,
+        "arrival_time_max": null,
+        "signature_process": "sign_on_glass",
+        "loading_instructions": "",
+        "unloading_instructions": "",
+        "reference": ""
+      },
+      "shipper_address": {
+        "pk": 1153045,
+        "name": "Gmail",
+        "address": "Tooroplaan 116",
+        "city": "Vlaardingen",
+        "postcode": "3141JT",
+        "country": "NL",
+        "latitude": null,
+        "longitude": null,
+        "coords_validated": false,
+        "is_carrier": true,
+        "is_shipper": true,
+        "is_origin": true,
+        "is_destination": false,
+        "company": {
+          "pk": 83190,
+          "name": "Gmail",
+          "remote_id": "",
+          "trade_number": "233434324",
+          "settings_contract_html": "",
+          "settings_logo": null,
+          "settings_tracking_page_logo": null,
+          "settings_print_mode": false
+        },
+        "original": 97838
+      },
+      "loads": [
+        {
+          "uid": "adabad82-c747-11e8-b8eb-02edb6f9b971",
+          "remote_id": "",
+          "description": "rakhyvel",
+          "weight": "5",
+          "height": null,
+          "width": null,
+          "length": null,
+          "pallet_format": "",
+          "volume": "",
+          "volume_unit": "m3",
+          "linear_meters": "",
+          "quantity": 2,
+          "category": "pallets",
+          "dangerous_goods_category": "",
+          "complementary_information": "",
+          "container_number": "",
+          "tare_weight": "",
+          "container_seal_number": "",
+          "refrigerated": true,
+          "temperature": "2",
+          "steres": null
+        }
+      ],
+      "tracking_contacts": [
+        {
+          "uid": "ad663068-c747-11e8-b8eb-02edb6f9b971",
+          "contact": {
+            "uid": "6f1a6cf6-4c73-11e8-83a8-4e53d0829ea3",
+            "created": "2018-04-30T12:38:50.376058Z",
+            "company": {
+              "pk": 83190,
+              "name": "Gmail",
+              "remote_id": "",
+              "trade_number": "233434324",
+              "settings_contract_html": "",
+              "settings_logo": null,
+              "settings_tracking_page_logo": null,
+              "settings_print_mode": false
+            },
+            "created_by": 83190,
+            "first_name": "",
+            "last_name": "",
+            "email": "",
+            "phone_number": "",
+            "fax_number": ""
+          },
+          "subscribed_to_status_updates": false
+        },
+        {
+          "uid": "ad66b13c-c747-11e8-b8eb-02edb6f9b971",
+          "contact": {
+            "uid": "08702218-c746-11e8-b74b-6e05480e7331",
+            "created": "2018-10-03T19:53:43.800772Z",
+            "company": {
+              "pk": 132827,
+              "name": "Berend Transport",
+              "remote_id": "",
+              "trade_number": "",
+              "settings_contract_html": "",
+              "settings_logo": null,
+              "settings_tracking_page_logo": null,
+              "settings_print_mode": false
+            },
+            "created_by": 83190,
+            "first_name": "Berend",
+            "last_name": "Transport",
+            "email": "bschlarmann+berend@gmail.com",
+            "phone_number": "",
+            "fax_number": ""
+          },
+          "subscribed_to_status_updates": false
+        }
+      ],
+      "shipper_reference": "",
+      "multiple_rounds": false
+    }
+  ],
+  "segments": [
+    {
+      "uid": "ad8c27dc-c747-11e8-b8eb-02edb6f9b971",
+      "remote_id": "",
+      "trucker": {
+        "pk": 128093,
+        "display_name": "Jean Paul Van Der Berend",
+        "user": 135079,
+        "remote_id": ""
+      },
+      "origin": {
+        "uid": "153859626319380HJRYg1",
+        "address": {
+          "pk": 1153044,
+          "name": "Bloemenzaak",
+          "address": "Dirk de Derdelaan",
+          "city": "Vlaardingen",
+          "postcode": "1234AA",
+          "country": "FR",
+          "latitude": null,
+          "longitude": null,
+          "coords_validated": false,
+          "is_carrier": false,
+          "is_shipper": false,
+          "is_origin": false,
+          "is_destination": true,
+          "company": {
+            "pk": 132828,
+            "name": "Bloemenzaak",
+            "remote_id": "",
+            "trade_number": "",
+            "settings_contract_html": "",
+            "settings_logo": null,
+            "settings_tracking_page_logo": null,
+            "settings_print_mode": false
+          },
+          "original": 1153019
+        },
+        "arrival_date": "2018-10-03",
+        "date_exact": true,
+        "arrival_time_min": null,
+        "arrival_time_max": null,
+        "signature_process": "sign_on_glass",
+        "loading_instructions": "",
+        "unloading_instructions": "",
+        "reference": ""
+      },
+      "destination": {
+        "uid": "ad884d88-c747-11e8-b8eb-02edb6f9b971",
+        "address": {
+          "pk": 1153047,
+          "name": "Bloemenzaak 2",
+          "address": "Floris de Vijdelaan",
+          "city": "312",
+          "postcode": "1234",
+          "country": "FR",
+          "latitude": null,
+          "longitude": null,
+          "coords_validated": false,
+          "is_carrier": false,
+          "is_shipper": false,
+          "is_origin": false,
+          "is_destination": true,
+          "company": {
+            "pk": 132829,
+            "name": "Bloemenzaak 2",
+            "remote_id": "",
+            "trade_number": "",
+            "settings_contract_html": "",
+            "settings_logo": null,
+            "settings_tracking_page_logo": null,
+            "settings_print_mode": false
+          },
+          "original": 1153036
+        },
+        "arrival_date": "2018-10-03",
+        "date_exact": true,
+        "arrival_time_min": null,
+        "arrival_time_max": null,
+        "signature_process": "sign_on_glass",
+        "loading_instructions": "",
+        "unloading_instructions": "",
+        "reference": ""
+      },
+      "vehicle": {
+        "pk": 228654,
+        "carrier": 132827,
+        "category": "unknown",
+        "payload": null,
+        "width": null,
+        "length": null,
+        "height": null,
+        "has_hatch": false,
+        "has_mounted_forklift": false,
+        "has_crane": false,
+        "has_moving_floor": false,
+        "has_straps": false,
+        "has_square": false,
+        "license_plate": "42228",
+        "created": "2018-10-03T20:19:20.837443Z"
+      },
+      "trailers": [],
+      "sort_order": 1
+    },
+    {
+      "uid": "ad7a73a2-c747-11e8-b8eb-02edb6f9b971",
+      "remote_id": "",
+      "trucker": {
+        "pk": 128093,
+        "display_name": "Jean Paul Van Der Berend",
+        "user": 135079,
+        "remote_id": ""
+      },
+      "origin": {
+        "uid": "1538596263193842DABE3",
+        "address": {
+          "pk": 1153046,
+          "name": "Gmail",
+          "address": "Tooroplaan 116",
+          "city": "Vlaardingen",
+          "postcode": "3141JT",
+          "country": "NL",
+          "latitude": null,
+          "longitude": null,
+          "coords_validated": false,
+          "is_carrier": true,
+          "is_shipper": true,
+          "is_origin": true,
+          "is_destination": false,
+          "company": {
+            "pk": 83190,
+            "name": "Gmail",
+            "remote_id": "",
+            "trade_number": "233434324",
+            "settings_contract_html": "",
+            "settings_logo": null,
+            "settings_tracking_page_logo": null,
+            "settings_print_mode": false
+          },
+          "original": 97838
+        },
+        "arrival_date": "2018-10-03",
+        "date_exact": true,
+        "arrival_time_min": "01:00",
+        "arrival_time_max": "01:00",
+        "signature_process": "sign_on_glass",
+        "loading_instructions": "",
+        "unloading_instructions": "",
+        "reference": ""
+      },
+      "destination": {
+        "uid": "153859626319380HJRYg1",
+        "address": {
+          "pk": 1153044,
+          "name": "Bloemenzaak",
+          "address": "Dirk de Derdelaan",
+          "city": "Vlaardingen",
+          "postcode": "1234AA",
+          "country": "FR",
+          "latitude": null,
+          "longitude": null,
+          "coords_validated": false,
+          "is_carrier": false,
+          "is_shipper": false,
+          "is_origin": false,
+          "is_destination": true,
+          "company": {
+            "pk": 132828,
+            "name": "Bloemenzaak",
+            "remote_id": "",
+            "trade_number": "",
+            "settings_contract_html": "",
+            "settings_logo": null,
+            "settings_tracking_page_logo": null,
+            "settings_print_mode": false
+          },
+          "original": 1153019
+        },
+        "arrival_date": "2018-10-03",
+        "date_exact": true,
+        "arrival_time_min": null,
+        "arrival_time_max": null,
+        "signature_process": "sign_on_glass",
+        "loading_instructions": "",
+        "unloading_instructions": "",
+        "reference": ""
+      },
+      "vehicle": {
+        "pk": 228653,
+        "carrier": 132827,
+        "category": "unknown",
+        "payload": null,
+        "width": null,
+        "length": null,
+        "height": null,
+        "has_hatch": false,
+        "has_mounted_forklift": false,
+        "has_crane": false,
+        "has_moving_floor": false,
+        "has_straps": false,
+        "has_square": false,
+        "license_plate": "42228",
+        "created": "2018-10-03T20:14:22.562307Z"
+      },
+      "trailers": [],
+      "sort_order": 0
+    }
+  ],
+  "status": "done",
+  "status_updates": [
+    {
+      "uid": "ad708fea-c747-11e8-b8eb-02edb6f9b971",
+      "created": "2018-10-03T20:05:30.124406Z",
+      "created_device": null,
+      "creation_method": "auto",
+      "category": "created",
+      "author": {
+        "display_name": "Bob Schlarmann",
+        "company": 83190,
+        "pk": 130430
+      },
+      "content": "",
+      "content_signatory": "",
+      "target": null,
+      "site": null,
+      "delivery": null,
+      "segment": null,
+      "transport": "ad6bf836-c747-11e8-b8eb-02edb6f9b971",
+      "holder_exchanges": [],
+      "signature": null,
+      "latitude": null,
+      "longitude": null,
+      "update_details": null
+    },
+    {
+      "uid": "ad7d6774-c747-11e8-b8eb-02edb6f9b971",
+      "created": "2018-10-03T20:05:30.208574Z",
+      "created_device": null,
+      "creation_method": "auto",
+      "category": "assigned",
+      "author": {
+        "display_name": "Bob Schlarmann",
+        "company": 83190,
+        "pk": 130430
+      },
+      "content": "",
+      "content_signatory": "",
+      "target": {
+        "display_name": "Jean Paul Van Der Berend",
+        "company": 132827,
+        "pk": 135079
+      },
+      "site": null,
+      "delivery": null,
+      "segment": "ad7a73a2-c747-11e8-b8eb-02edb6f9b971",
+      "transport": "ad6bf836-c747-11e8-b8eb-02edb6f9b971",
+      "holder_exchanges": [],
+      "signature": null,
+      "latitude": null,
+      "longitude": null,
+      "update_details": null
+    },
+    {
+      "uid": "ad8f0c90-c747-11e8-b8eb-02edb6f9b971",
+      "created": "2018-10-03T20:05:30.324239Z",
+      "created_device": null,
+      "creation_method": "auto",
+      "category": "assigned",
+      "author": {
+        "display_name": "Bob Schlarmann",
+        "company": 83190,
+        "pk": 130430
+      },
+      "content": "",
+      "content_signatory": "",
+      "target": {
+        "display_name": "Jean Paul Van Der Berend",
+        "company": 132827,
+        "pk": 135079
+      },
+      "site": null,
+      "delivery": null,
+      "segment": "ad8c27dc-c747-11e8-b8eb-02edb6f9b971",
+      "transport": "ad6bf836-c747-11e8-b8eb-02edb6f9b971",
+      "holder_exchanges": [],
+      "signature": null,
+      "latitude": null,
+      "longitude": null,
+      "update_details": null
+    },
+    {
+      "uid": "1538597513135079UdvbHsP",
+      "created": "2018-10-03T20:11:53.575653Z",
+      "created_device": "2018-10-03T20:11:53.832000Z",
+      "creation_method": "auto",
+      "category": "acknowledged",
+      "author": {
+        "display_name": "Jean Paul Van Der Berend",
+        "company": 132827,
+        "pk": 135079
+      },
+      "content": "",
+      "content_signatory": "",
+      "target": null,
+      "site": null,
+      "delivery": null,
+      "segment": null,
+      "transport": "ad6bf836-c747-11e8-b8eb-02edb6f9b971",
+      "holder_exchanges": [],
+      "signature": null,
+      "latitude": null,
+      "longitude": null,
+      "update_details": null
+    },
+    {
+      "uid": "1538597614135079l8lzk1h",
+      "created": "2018-10-03T20:13:35.031430Z",
+      "created_device": "2018-10-03T20:13:34.998000Z",
+      "creation_method": "trucker",
+      "category": "on_loading_site",
+      "author": {
+        "display_name": "Jean Paul Van Der Berend",
+        "company": 132827,
+        "pk": 135079
+      },
+      "content": "",
+      "content_signatory": "",
+      "target": null,
+      "site": "1538596263193842DABE3",
+      "delivery": null,
+      "segment": null,
+      "transport": "ad6bf836-c747-11e8-b8eb-02edb6f9b971",
+      "holder_exchanges": [],
+      "signature": null,
+      "latitude": 51.9169172,
+      "longitude": 4.2634085,
+      "update_details": null
+    },
+    {
+      "uid": "eb440a4e-c748-11e8-a228-02edb6f9b971",
+      "created": "2018-10-03T20:14:23.348146Z",
+      "created_device": null,
+      "creation_method": "auto",
+      "category": "updated",
+      "author": {
+        "display_name": "Jean Paul Van Der Berend",
+        "company": 132827,
+        "pk": 135079
+      },
+      "content": "",
+      "content_signatory": "",
+      "target": null,
+      "site": null,
+      "delivery": null,
+      "segment": "ad7a73a2-c747-11e8-b8eb-02edb6f9b971",
+      "transport": "ad6bf836-c747-11e8-b8eb-02edb6f9b971",
+      "holder_exchanges": [],
+      "signature": null,
+      "latitude": null,
+      "longitude": null,
+      "update_details": {
+        "segments": [
+          {
+            "vehicle": {
+              "new": "42228",
+              "old": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "uid": "f69ad3f0-c748-11e8-ac51-e6b014e7fda0",
+      "created": "2018-10-03T20:14:42.371825Z",
+      "created_device": null,
+      "creation_method": "auto",
+      "category": "updated",
+      "author": {
+        "display_name": "Jean Paul Van Der Berend",
+        "company": 132827,
+        "pk": 135079
+      },
+      "content": "",
+      "content_signatory": "",
+      "target": null,
+      "site": null,
+      "delivery": "adc47984-c747-11e8-b8eb-02edb6f9b971",
+      "segment": null,
+      "transport": "ad6bf836-c747-11e8-b8eb-02edb6f9b971",
+      "holder_exchanges": [],
+      "signature": null,
+      "latitude": null,
+      "longitude": null,
+      "update_details": {}
+    },
+    {
+      "uid": "f78d5198-c748-11e8-b9de-e6b014e7fda0",
+      "created": "2018-10-03T20:14:43.961007Z",
+      "created_device": null,
+      "creation_method": "auto",
+      "category": "updated",
+      "author": {
+        "display_name": "Jean Paul Van Der Berend",
+        "company": 132827,
+        "pk": 135079
+      },
+      "content": "",
+      "content_signatory": "",
+      "target": null,
+      "site": null,
+      "delivery": "ad99ffce-c747-11e8-b8eb-02edb6f9b971",
+      "segment": null,
+      "transport": "ad6bf836-c747-11e8-b8eb-02edb6f9b971",
+      "holder_exchanges": [],
+      "signature": null,
+      "latitude": null,
+      "longitude": null,
+      "update_details": {}
+    },
+    {
+      "uid": "1538597759135079bgTJVUj",
+      "created": "2018-10-03T20:16:00.843100Z",
+      "created_device": "2018-10-03T20:15:59.902000Z",
+      "creation_method": "trucker",
+      "category": "loading_complete",
+      "author": {
+        "display_name": "Jean Paul Van Der Berend",
+        "company": 132827,
+        "pk": 135079
+      },
+      "content": "",
+      "content_signatory": "",
+      "target": null,
+      "site": "1538596263193842DABE3",
+      "delivery": null,
+      "segment": null,
+      "transport": "ad6bf836-c747-11e8-b8eb-02edb6f9b971",
+      "holder_exchanges": [
+        {
+          "category": "pallets",
+          "retrieved": 5,
+          "delivered": 0
+        }
+      ],
+      "signature": {
+        "uid": "1538597760135079rStJbrd",
+        "status_update": "1538597759135079bgTJVUj",
+        "created": "2018-10-03T20:16:01.522700Z",
+        "created_device": "2018-10-03T20:16:00.056000Z",
+        "signatory": null,
+        "signatory_name": "",
+        "trucker_name": "Jean Paul Van Der Berend",
+        "signature_trucker": null,
+        "signature_signatory": null,
+        "signatory_signed_at": "2018-10-03T20:16:00.056000Z",
+        "signature_image_trucker": "https://storage.googleapis.com/dashdoc-media/media/truckers/447bd3b0-4928-40e6-b860-5a039fdfec43.png",
+        "signature_image_signatory": "https://storage.googleapis.com/dashdoc-media/media/shipments/580742b9-3e70-44a3-8527-bfc80d3647e2.png",
+        "signature_method": "sign_on_glass",
+        "code": "",
+        "checksum": ""
+      },
+      "latitude": 51.9165971,
+      "longitude": 4.2633857,
+      "update_details": null
+    },
+    {
+      "uid": "1538597847135079Gjan34w",
+      "created": "2018-10-03T20:17:26.988883Z",
+      "created_device": "2018-10-03T20:17:27.110000Z",
+      "creation_method": "trucker",
+      "category": "on_unloading_site",
+      "author": {
+        "display_name": "Jean Paul Van Der Berend",
+        "company": 132827,
+        "pk": 135079
+      },
+      "content": "",
+      "content_signatory": "",
+      "target": null,
+      "site": "153859626319380HJRYg1",
+      "delivery": null,
+      "segment": null,
+      "transport": "ad6bf836-c747-11e8-b8eb-02edb6f9b971",
+      "holder_exchanges": [],
+      "signature": null,
+      "latitude": 51.9168352,
+      "longitude": 4.2635103,
+      "update_details": null
+    },
+    {
+      "uid": "1538597899135079esfS6Mf",
+      "created": "2018-10-03T20:18:20.300257Z",
+      "created_device": "2018-10-03T20:18:19.902000Z",
+      "creation_method": "trucker",
+      "category": "unloading_complete",
+      "author": {
+        "display_name": "Jean Paul Van Der Berend",
+        "company": 132827,
+        "pk": 135079
+      },
+      "content": "",
+      "content_signatory": "",
+      "target": null,
+      "site": "153859626319380HJRYg1",
+      "delivery": null,
+      "segment": null,
+      "transport": "ad6bf836-c747-11e8-b8eb-02edb6f9b971",
+      "holder_exchanges": [],
+      "signature": {
+        "uid": "1538597900135079i2zLAW2",
+        "status_update": "1538597899135079esfS6Mf",
+        "created": "2018-10-03T20:18:21.010171Z",
+        "created_device": "2018-10-03T20:18:20.055000Z",
+        "signatory": null,
+        "signatory_name": "Petwr Van ska",
+        "trucker_name": "Jean Paul Van Der Berend",
+        "signature_trucker": null,
+        "signature_signatory": null,
+        "signatory_signed_at": "2018-10-03T20:18:20.055000Z",
+        "signature_image_trucker": "https://storage.googleapis.com/dashdoc-media/media/truckers/447bd3b0-4928-40e6-b860-5a039fdfec43.png",
+        "signature_image_signatory": "https://storage.googleapis.com/dashdoc-media/media/shipments/e8e46b44-79a6-4519-b294-016baffcf077.png",
+        "signature_method": "sign_on_glass",
+        "code": "",
+        "checksum": ""
+      },
+      "latitude": 51.916645,
+      "longitude": 4.2633406,
+      "update_details": null
+    },
+    {
+      "uid": "1538597937135079uIO3Qku",
+      "created": "2018-10-03T20:18:57.805961Z",
+      "created_device": "2018-10-03T20:18:57.931000Z",
+      "creation_method": "trucker",
+      "category": "on_unloading_site",
+      "author": {
+        "display_name": "Jean Paul Van Der Berend",
+        "company": 132827,
+        "pk": 135079
+      },
+      "content": "",
+      "content_signatory": "",
+      "target": null,
+      "site": "ad884d88-c747-11e8-b8eb-02edb6f9b971",
+      "delivery": null,
+      "segment": null,
+      "transport": "ad6bf836-c747-11e8-b8eb-02edb6f9b971",
+      "holder_exchanges": [],
+      "signature": null,
+      "latitude": 51.9170612,
+      "longitude": 4.2635695,
+      "update_details": null
+    },
+    {
+      "uid": "9d126662-c749-11e8-bbb0-02edb6f9b971",
+      "created": "2018-10-03T20:19:21.657255Z",
+      "created_device": null,
+      "creation_method": "auto",
+      "category": "updated",
+      "author": {
+        "display_name": "Jean Paul Van Der Berend",
+        "company": 132827,
+        "pk": 135079
+      },
+      "content": "",
+      "content_signatory": "",
+      "target": null,
+      "site": null,
+      "delivery": null,
+      "segment": "ad8c27dc-c747-11e8-b8eb-02edb6f9b971",
+      "transport": "ad6bf836-c747-11e8-b8eb-02edb6f9b971",
+      "holder_exchanges": [],
+      "signature": null,
+      "latitude": null,
+      "longitude": null,
+      "update_details": {
+        "segments": [
+          {
+            "vehicle": {
+              "new": "42228",
+              "old": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "uid": "9f6ee5de-c749-11e8-b74b-6e05480e7331",
+      "created": "2018-10-03T20:19:25.618878Z",
+      "created_device": null,
+      "creation_method": "auto",
+      "category": "updated",
+      "author": {
+        "display_name": "Jean Paul Van Der Berend",
+        "company": 132827,
+        "pk": 135079
+      },
+      "content": "",
+      "content_signatory": "",
+      "target": null,
+      "site": null,
+      "delivery": "adc47984-c747-11e8-b8eb-02edb6f9b971",
+      "segment": null,
+      "transport": "ad6bf836-c747-11e8-b8eb-02edb6f9b971",
+      "holder_exchanges": [],
+      "signature": null,
+      "latitude": null,
+      "longitude": null,
+      "update_details": {}
+    },
+    {
+      "uid": "1538598008135079bqHERwR",
+      "created": "2018-10-03T20:20:08.912018Z",
+      "created_device": "2018-10-03T20:20:08.539000Z",
+      "creation_method": "trucker",
+      "category": "unloading_complete",
+      "author": {
+        "display_name": "Jean Paul Van Der Berend",
+        "company": 132827,
+        "pk": 135079
+      },
+      "content": "",
+      "content_signatory": "",
+      "target": null,
+      "site": "ad884d88-c747-11e8-b8eb-02edb6f9b971",
+      "delivery": null,
+      "segment": null,
+      "transport": "ad6bf836-c747-11e8-b8eb-02edb6f9b971",
+      "holder_exchanges": [],
+      "signature": {
+        "uid": "1538598008135079OwogDvX",
+        "status_update": "1538598008135079bqHERwR",
+        "created": "2018-10-03T20:20:10.515026Z",
+        "created_device": "2018-10-03T20:20:08.657000Z",
+        "signatory": null,
+        "signatory_name": "Bleo m n 2 Zaak",
+        "trucker_name": "Jean Paul Van Der Berend",
+        "signature_trucker": null,
+        "signature_signatory": null,
+        "signatory_signed_at": "2018-10-03T20:20:08.657000Z",
+        "signature_image_trucker": "https://storage.googleapis.com/dashdoc-media/media/truckers/447bd3b0-4928-40e6-b860-5a039fdfec43.png",
+        "signature_image_signatory": "https://storage.googleapis.com/dashdoc-media/media/shipments/7731a2ec-f37b-47f3-8db8-843a57a56630.png",
+        "signature_method": "sign_on_glass",
+        "code": "",
+        "checksum": ""
+      },
+      "latitude": 51.9166033,
+      "longitude": 4.2633759,
+      "update_details": null
+    },
+    {
+      "uid": "b93f5f16-c749-11e8-ac51-e6b014e7fda0",
+      "created": "2018-10-03T20:20:08.928105Z",
+      "created_device": null,
+      "creation_method": "",
+      "category": "done",
+      "author": {
+        "display_name": "Bob Schlarmann",
+        "company": 83190,
+        "pk": 130430
+      },
+      "content": "",
+      "content_signatory": "",
+      "target": null,
+      "site": null,
+      "delivery": null,
+      "segment": null,
+      "transport": "ad6bf836-c747-11e8-b8eb-02edb6f9b971",
+      "holder_exchanges": [],
+      "signature": null,
+      "latitude": null,
+      "longitude": null,
+      "update_details": null
+    },
+    {
+      "uid": "e6370802-c749-11e8-b9de-e6b014e7fda0",
+      "created": "2018-10-03T20:21:24.371007Z",
+      "created_device": null,
+      "creation_method": "auto",
+      "category": "updated",
+      "author": {
+        "display_name": "Bob Schlarmann",
+        "company": 83190,
+        "pk": 130430
+      },
+      "content": "",
+      "content_signatory": "",
+      "target": null,
+      "site": null,
+      "delivery": null,
+      "segment": null,
+      "transport": "ad6bf836-c747-11e8-b8eb-02edb6f9b971",
+      "holder_exchanges": [],
+      "signature": null,
+      "latitude": null,
+      "longitude": null,
+      "update_details": {
+        "carrier_address": {
+          "new": "Tooroplaan 116 3141JT NL (Gmail)",
+          "old": "Industriestraat 5 4434 AA NL (Berend Transport)"
+        }
+      }
+    },
+    {
+      "uid": "f88d2054-c749-11e8-b74b-6e05480e7331",
+      "created": "2018-10-03T20:21:55.134203Z",
+      "created_device": null,
+      "creation_method": "auto",
+      "category": "updated",
+      "author": {
+        "display_name": "Bob Schlarmann",
+        "company": 83190,
+        "pk": 130430
+      },
+      "content": "",
+      "content_signatory": "",
+      "target": null,
+      "site": null,
+      "delivery": null,
+      "segment": null,
+      "transport": "ad6bf836-c747-11e8-b8eb-02edb6f9b971",
+      "holder_exchanges": [],
+      "signature": null,
+      "latitude": null,
+      "longitude": null,
+      "update_details": {
+        "carrier_address": {
+          "new": "Industriestraat 5 4434 AA NL (Berend Transport)",
+          "old": "Tooroplaan 116 3141JT NL (Gmail)"
+        }
+      }
+    }
+  ],
+  "has_observations": false,
+  "messages": [
+    {
+      "uid": "f39f0248-ed7d-11e8-8dd4-0242ac110007",
+      "created": "2018-11-21T11:09:44.878444Z",
+      "created_device": null,
+      "creation_method": "manager",
+      "author": {
+        "display_name": "Bob Schlarmann",
+        "company": 83190,
+        "pk": 130430
+      },
+      "type": "note",
+      "document_title": null,
+      "document_type": "",
+      "document": null,
+      "visibility_level": "own_company_only_except_truckers",
+      "is_attached_to_cmr": false,
+      "transport": "ad6bf836-c747-11e8-b8eb-02edb6f9b971",
+      "message": "test",
+      "delivery": null
+    }
+  ],
+  "requested_vehicle": "",
+  "documents": [
+    {
+      "pk": 79699,
+      "file_updated_date": "2018-11-21T11:09:46.197638Z",
+      "delivery": "adc47984-c747-11e8-b8eb-02edb6f9b971",
+      "category": "cmr",
+      "name": "Document",
+      "file": "https://www.dashdoc.eu/shipments/documents/af470e52-c747-11e8-9b6e-c230635f24c6"
+    },
+    {
+      "pk": 79698,
+      "file_updated_date": "2018-11-21T11:09:46.177621Z",
+      "delivery": "ad99ffce-c747-11e8-b8eb-02edb6f9b971",
+      "category": "cmr",
+      "name": "Document",
+      "file": "https://www.dashdoc.eu/shipments/documents/af062bda-c747-11e8-bbaa-32cebb8b9dde"
+    }
+  ],
+  "carrier_reference": "5552",
+  "price": null,
+  "references": [
+    {
+      "company_id": 132827,
+      "reference": "5552",
+      "role": "carrier"
+    }
+  ]
+}

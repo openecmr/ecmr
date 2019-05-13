@@ -181,7 +181,7 @@
 						]
 					},
 					"S3DeploymentBucket": "consoleapp-20190102133243-deployment",
-					"S3DeploymentRootKey": "amplify-appsync-files/8516a8d26a244693d12661df0acb60f0fc762f7c",
+					"S3DeploymentRootKey": "amplify-appsync-files/536346c422d54424f85026a1ec0f5d2801a00238",
 					"env": "NONE"
 				}
 			}
