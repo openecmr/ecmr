@@ -78,7 +78,10 @@ class Transport extends Component {
     }
 
     confirmLoading() {
-        const {navigation} = this.props;
+        const {navigate} = this.props.navigation;
+        navigate('ConfirmLoading', {
+            item: this.state
+        });
     }
 
     confirmNotifyArrival() {
