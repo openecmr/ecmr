@@ -8,6 +8,7 @@ import Transport from "./Transport";
 import ConfirmLoading from "./ConfirmLoading";
 import SignSelection from "./SignSelection";
 import Signature from "./Signature";
+import CaptureSignature from "./CaptureSignature";
 
 Amplify.configure(awsmobile);
 
@@ -17,7 +18,8 @@ const MainNavigator = createStackNavigator({
     Transport: {screen: Transport},
     ConfirmLoading: {screen: ConfirmLoading},
     SignSelection: {screen: SignSelection},
-    Signature: {screen: Signature}
+    Signature: {screen: Signature},
+    CaptureSignature: {screen: CaptureSignature}
 });
 
 const navigationPersistenceKey = __DEV__ ? "NavigationStateDEV" : null;

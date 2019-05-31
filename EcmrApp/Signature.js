@@ -51,21 +51,20 @@ class Signature extends Component {
                 <MyText style={{fontWeight: 'bold', marginTop: 5}}>Signatory observations:</MyText>
                 <MyText style={{marginLeft: 10}}>No observations</MyText>
 
-                <SignatureCapture
-                    style={{flex:1, borderWidth: 1, borderColor: '#000033', padding: 5, margin: 5}}
-                    ref="sign"
-                    saveImageFileInExtStorage={false}
-                    showNativeButtons={false}
-                    showTitleLabel={false}
-                    showBorder={true}
-                    viewMode={"portrait"}/>
-
                 <View style={{flexDirection: 'row', margin: 10, marginTop: 5, position: 'absolute', bottom: 0, left: 10}}>
                     <Button containerStyle={{flex: 1, marginRight: 15}} buttonStyle={{height: 60}} title={"Add observations"}/>
-                    <Button containerStyle={{flex: 1}} title={"Sign"} buttonStyle={{height: 60, backgroundColor: 'rgb(60,176,60)'}}/>
+                    <Button containerStyle={{flex: 1}} title={"Sign"} buttonStyle={{height: 60, backgroundColor: 'rgb(60,176,60)'}}
+                            onPress={() => this.captureSignature()}/>
                 </View>
             </View>
         )
+    }
+
+    captureSignature() {
+        const {navigate} = this.props.navigation;
+        navigate('CaptureSignature', {
+            item: this.state.contract
+        });
     }
 }
 

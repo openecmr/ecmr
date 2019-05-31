@@ -61,6 +61,19 @@ export const onCreateContract = `subscription OnCreateContract {
       createdAt
       latitude
       longitude
+      signature {
+        method
+        signatureImageDriver {
+          bucket
+          region
+          key
+        }
+        signatureImageSignatory {
+          bucket
+          region
+          key
+        }
+      }
     }
   }
 }
@@ -125,6 +138,19 @@ export const onUpdateContract = `subscription OnUpdateContract {
       createdAt
       latitude
       longitude
+      signature {
+        method
+        signatureImageDriver {
+          bucket
+          region
+          key
+        }
+        signatureImageSignatory {
+          bucket
+          region
+          key
+        }
+      }
     }
   }
 }
@@ -189,6 +215,19 @@ export const onDeleteContract = `subscription OnDeleteContract {
       createdAt
       latitude
       longitude
+      signature {
+        method
+        signatureImageDriver {
+          bucket
+          region
+          key
+        }
+        signatureImageSignatory {
+          bucket
+          region
+          key
+        }
+      }
     }
   }
 }

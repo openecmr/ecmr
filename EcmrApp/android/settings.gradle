@@ -1,4 +1,6 @@
 rootProject.name = 'EcmrApp'
+include ':react-native-uuid-generator'
+project(':react-native-uuid-generator').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-uuid-generator/android')
 include ':react-native-signature-capture'
 project(':react-native-signature-capture').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-signature-capture/android')
 include ':react-native-gesture-handler'
