@@ -19,7 +19,7 @@
 				"s3TemplateURL": "https://s3.amazonaws.com/consoleapp-20190102133243-deployment/amplify-cfn-templates/storage/ecmrdb-cloudformation-template.json",
 				"logicalId": "storageecmrdb"
 			},
-			"lastPushTimeStamp": "2019-05-13T10:22:51.898Z",
+			"lastPushTimeStamp": "2019-05-31T20:45:41.012Z",
 			"output": {
 				"PartitionKeyName": "id",
 				"Region": "eu-central-1",
@@ -28,6 +28,20 @@
 				"Name": "consignment-notes"
 			},
 			"lastPushDirHash": "Nb5+l8+b7Z9aKMCz19FGcuizYgE="
+		},
+		"s3881577a8": {
+			"service": "S3",
+			"providerPlugin": "awscloudformation",
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/consoleapp-20190102133243-deployment/amplify-cfn-templates/storage/s3-cloudformation-template.json",
+				"logicalId": "storages3881577a8"
+			},
+			"lastPushTimeStamp": "2019-05-31T20:45:41.014Z",
+			"output": {
+				"BucketName": "consoleapp878f602f853546e3ba49e8455ce9d894",
+				"Region": "eu-central-1"
+			},
+			"lastPushDirHash": "+LM817k0bidqIY9VD7Gd58+98pY="
 		}
 	},
 	"hosting": {
@@ -38,7 +52,7 @@
 				"s3TemplateURL": "https://s3.amazonaws.com/consoleapp-20190102133243-deployment/amplify-cfn-templates/hosting/template.json",
 				"logicalId": "hostingS3AndCloudFront"
 			},
-			"lastPushTimeStamp": "2019-05-13T10:22:51.899Z",
+			"lastPushTimeStamp": "2019-05-31T20:45:41.013Z",
 			"output": {
 				"S3BucketSecureURL": "https://ecmr-console-app.s3.amazonaws.com",
 				"WebsiteURL": "http://ecmr-console-app.s3-website.eu-central-1.amazonaws.com",
@@ -56,7 +70,7 @@
 				"s3TemplateURL": "https://s3.amazonaws.com/consoleapp-20190102133243-deployment/amplify-cfn-templates/auth/cognito88e1166d-cloudformation-template.yml",
 				"logicalId": "authcognito88e1166d"
 			},
-			"lastPushTimeStamp": "2019-05-13T10:22:51.900Z",
+			"lastPushTimeStamp": "2019-05-31T20:45:41.014Z",
 			"output": {
 				"AppClientSecret": "1tn6qpf28vlcmtsfvrn40t1tn478l90cgc3n6ai1qn7pvutrgveu",
 				"UserPoolId": "eu-central-1_Ai4du5la5",
@@ -66,7 +80,7 @@
 				"IdentityPoolName": "cognito88e1166d_identitypool_88e1166d",
 				"UserPoolName": "cognito88e1166d_userpool_88e1166d"
 			},
-			"lastPushDirHash": "DfnAOjceAXLWdrkaDq2doKG5SGI="
+			"lastPushDirHash": "ZQOvDSpYTYC2pxqkckdV+KkrrVI="
 		}
 	},
 	"api": {
@@ -86,8 +100,8 @@
 				"s3TemplateURL": "https://s3.amazonaws.com/consoleapp-20190102133243-deployment/amplify-cfn-templates/api/cloudformation-template.json",
 				"logicalId": "apiecmr"
 			},
-			"lastPushTimeStamp": "2019-05-13T10:22:53.487Z",
-			"lastPushDirHash": "1VWdohdn2gCZimPo8CSb+W7ZGqg="
+			"lastPushTimeStamp": "2019-05-31T20:45:41.014Z",
+			"lastPushDirHash": "1b8d5S4lUJn+jCii6If0BX7Uxbg="
 		}
 	}
 }

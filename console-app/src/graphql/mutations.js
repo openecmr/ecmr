@@ -61,6 +61,19 @@ export const createContract = `mutation CreateContract($input: CreateContractInp
       createdAt
       latitude
       longitude
+      signature {
+        method
+        signatureImageDriver {
+          bucket
+          region
+          key
+        }
+        signatureImageSignatory {
+          bucket
+          region
+          key
+        }
+      }
     }
   }
 }
@@ -125,6 +138,19 @@ export const updateContract = `mutation UpdateContract($input: UpdateContractInp
       createdAt
       latitude
       longitude
+      signature {
+        method
+        signatureImageDriver {
+          bucket
+          region
+          key
+        }
+        signatureImageSignatory {
+          bucket
+          region
+          key
+        }
+      }
     }
   }
 }
@@ -189,6 +215,19 @@ export const deleteContract = `mutation DeleteContract($input: DeleteContractInp
       createdAt
       latitude
       longitude
+      signature {
+        method
+        signatureImageDriver {
+          bucket
+          region
+          key
+        }
+        signatureImageSignatory {
+          bucket
+          region
+          key
+        }
+      }
     }
   }
 }

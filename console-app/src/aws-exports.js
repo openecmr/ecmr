@@ -9,6 +9,8 @@ const awsmobile = {
             "region": "eu-central-1"
         }
     ],
+    "aws_user_files_s3_bucket": "consoleapp878f602f853546e3ba49e8455ce9d894",
+    "aws_user_files_s3_bucket_region": "eu-central-1",
     "aws_content_delivery_bucket": "ecmr-console-app",
     "aws_content_delivery_bucket_region": "eu-central-1",
     "aws_content_delivery_url": "http://ecmr-console-app.s3-website.eu-central-1.amazonaws.com",
@@ -19,7 +21,8 @@ const awsmobile = {
     "oauth": {},
     "aws_appsync_graphqlEndpoint": "https://s5qjr3vjcfd5ndcd3sqkdvrnf4.appsync-api.eu-central-1.amazonaws.com/graphql",
     "aws_appsync_region": "eu-central-1",
-    "aws_appsync_authenticationType": "AMAZON_COGNITO_USER_POOLS"
+    "aws_appsync_authenticationType": "AMAZON_COGNITO_USER_POOLS",
+    "aws_appsync_apiKey": "da2-glzsq6aq3bcx7d4v7lpynl3mse"
 };
 
 

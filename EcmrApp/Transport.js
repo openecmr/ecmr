@@ -8,6 +8,7 @@ import * as queries from "./graphql/queries";
 import * as mutations from "./graphql/mutations";
 import moment from "moment";
 import { Auth } from 'aws-amplify';
+import {S3Image} from "aws-amplify-react-native";
 
 const Header = ({children}) => <MyText style={{backgroundColor: 'rgb(240,240,240)', fontWeight: 'bold', padding: 15, paddingLeft: 10}}>{children}</MyText>;
 
@@ -29,7 +30,7 @@ class Transport extends Component {
 
         const total = 5;
 
-        const actions = ['ArrivalOnSite', 'LoadingComplete', 'DepartureFromSite'];
+        const actions = ['ArrivalOnSite', 'LoadingComplete', /*'DepartureFromSite'*/];
         const events = (item.events || []).filter(e => e.site === "pickup" && actions.indexOf(e.type) !== -1).map(e => e.type);
         actions.splice(0, events.length === 0 ? 0 : actions.indexOf(events[events.length - 1]) + 1);
         const firstAction = actions.length === 0 ? '' : actions[0];
@@ -48,10 +49,16 @@ class Transport extends Component {
                 <View style={{backgroundColor: 'rgb(240,240,240)', padding: 10}}>
                     {firstAction === 'ArrivalOnSite' && <Button title={"Notify arrival at unloading site"} color={"rgb(60,176,60)"} onPress={() => this.confirmNotifyArrival()}/>}
                     {firstAction === 'LoadingComplete' && <Button title={"Confirm loading"} color={"rgb(60,176,60)"} onPress={() => this.confirmLoading()}/>}
+                    {!firstAction &&
+                        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                            <Icon color={'rgb(5, 172, 5)'} size={30} name='check-circle'/>
+                            <Text style={{color: 'rgb(5, 172, 5)', fontWeight: 'bold', paddingLeft: 5}}>Activity done</Text>
+                        </View>
+                    }
                 </View>
                 <Header>Activity feed</Header>
                 <FlatList
-                    data={item.events}
+                    data={[...item.events].reverse()}
                     extraData={this.state}
                     keyExtractor={(item, index) => String(index)}
                     renderItem={({item}) =>
@@ -59,6 +66,11 @@ class Transport extends Component {
                             <Text style={{fontSize: 12}}>{moment(item.createdAt).format('llll')}</Text>
 
                             <MyText>{this.eventText(item)}</MyText>
+
+                            {
+                                item.type === 'LoadingComplete' &&
+                                    <S3Image style={{height: 100, width: 50}} imgKey={item.signature.signatureImageSignatory.key} />
+                            }
                         </View>)
                     }
                 />

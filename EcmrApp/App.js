@@ -11,7 +11,7 @@ import Signature from "./Signature";
 import CaptureSignature from "./CaptureSignature";
 
 Amplify.configure(awsmobile);
-
+Amplify.Logger.LOG_LEVEL = 'DEBUG';
 
 const MainNavigator = createStackNavigator({
     Transports: {screen: Transports},

@@ -9,6 +9,11 @@
             "UnauthRoleName": "consoleapp-20190102133243-unauthRole",
             "StackName": "consoleapp-20190102133243",
             "StackId": "arn:aws:cloudformation:eu-central-1:173648348160:stack/consoleapp-20190102133243/80d21c80-0e8a-11e9-bd55-02625fbcaeee"
+        },
+        "categories": {
+            "auth": {
+                "cognito88e1166d": {}
+            }
         }
     }
 }

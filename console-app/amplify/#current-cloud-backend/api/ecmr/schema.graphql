@@ -17,6 +17,13 @@
 #  id: ID!
 #  content: String!
 #}
+
+type S3Object {
+    bucket: String!
+    region: String!
+    key: String!
+}
+
 enum ContractStatus {
     DRAFT
     PICKUP,
@@ -27,7 +34,7 @@ enum ContractStatus {
 type Contract @model
     @auth(rules: [
         { allow: owner },
-        { allow: owner, ownerField: "carrierUsername", operations: [read] }
+        { allow: owner, ownerField: "carrierUsername", operations: [read, update] }
     ])
 {
     id: ID
@@ -83,6 +90,16 @@ type Author {
     username: String!
 }
 
+enum SignatureMethod {
+    SIGN_ON_GLASS, PGP, NO_SIGNATORY
+}
+
+type Signature {
+    method: SignatureMethod!,
+    signatureImageDriver: S3Object,
+    signatureImageSignatory: S3Object
+}
+
 type Event {
     author: Author!
     type: EventType!
@@ -90,4 +107,5 @@ type Event {
     createdAt: String!
     latitude: Float
     longitude: Float
+    signature: Signature
 }

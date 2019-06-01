@@ -73,8 +73,7 @@ class CaptureSignature extends Component {
 
             try {
                 await API.graphql(graphqlOperation(mutations.updateContract, {input: contract}));
-                const {navigate} = this.props.navigation;
-                navigate('Transports');
+                this.props.navigation.popToTop();
             } catch (ex) {
                 console.warn(ex);
             }

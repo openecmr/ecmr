@@ -90,6 +90,39 @@
 				}
 			}
 		},
+		"storages3881577a8": {
+			"Type": "AWS::CloudFormation::Stack",
+			"Properties": {
+				"TemplateURL": "https://s3.amazonaws.com/consoleapp-20190102133243-deployment/amplify-cfn-templates/storage/s3-cloudformation-template.json",
+				"Parameters": {
+					"bucketName": "consoleapp878f602f853546e3ba49e8455ce9d894",
+					"authPolicyName": "s3_amplify_881577a8",
+					"unauthPolicyName": "s3_amplify_881577a8",
+					"authRoleName": {
+						"Ref": "AuthRoleName"
+					},
+					"unauthRoleName": {
+						"Ref": "UnauthRoleName"
+					},
+					"selectedGuestPermissions": "s3:GetObject,s3:ListBucket",
+					"selectedAuthenticatedPermissions": "s3:PutObject,s3:GetObject,s3:ListBucket",
+					"s3PermissionsAuthenticatedPublic": "s3:PutObject,s3:GetObject",
+					"s3PublicPolicy": "Public_policy_f6a3403b",
+					"s3PermissionsAuthenticatedUploads": "s3:PutObject",
+					"s3UploadsPolicy": "Uploads_policy_f6a3403b",
+					"s3PermissionsAuthenticatedProtected": "s3:PutObject,s3:GetObject",
+					"s3ProtectedPolicy": "Protected_policy_dd4fe8f8",
+					"s3PermissionsAuthenticatedPrivate": "s3:PutObject,s3:GetObject",
+					"s3PrivatePolicy": "Private_policy_dd4fe8f8",
+					"AuthenticatedAllowList": "ALLOW",
+					"s3ReadPolicy": "read_policy_f6a3403b",
+					"s3PermissionsGuestPublic": "s3:GetObject",
+					"s3PermissionsGuestUploads": "DISALLOW",
+					"GuestAllowList": "ALLOW",
+					"env": "NONE"
+				}
+			}
+		},
 		"hostingS3AndCloudFront": {
 			"Type": "AWS::CloudFormation::Stack",
 			"Properties": {
@@ -105,27 +138,8 @@
 			"Properties": {
 				"TemplateURL": "https://s3.amazonaws.com/consoleapp-20190102133243-deployment/amplify-cfn-templates/auth/cognito88e1166d-cloudformation-template.yml",
 				"Parameters": {
-					"authRoleName": {
-						"Ref": "AuthRoleName"
-					},
-					"unauthRoleName": {
-						"Ref": "UnauthRoleName"
-					},
-					"authRoleArn": {
-						"Fn::GetAtt": [
-							"AuthRole",
-							"Arn"
-						]
-					},
-					"unauthRoleArn": {
-						"Fn::GetAtt": [
-							"UnauthRole",
-							"Arn"
-						]
-					},
 					"identityPoolName": "cognito88e1166d_identitypool_88e1166d",
-					"allowUnauthenticatedIdentities": false,
-					"thirdPartyAuth": false,
+					"allowUnauthenticatedIdentities": true,
 					"lambdaLogPolicy": "cognito88e1166d_lambda_log_policy",
 					"openIdLambdaRoleName": "cognito88e1166d_openid_lambda_role",
 					"openIdRolePolicy": "cognito88e1166d_openid_pass_role_policy",
@@ -149,6 +163,7 @@
 					"userpoolClientName": "cognito88e1166d_app_client",
 					"userpoolClientGenerateSecret": true,
 					"userpoolClientRefreshTokenValidity": 30,
+					"userpoolClientWriteAttributes": "email",
 					"userpoolClientReadAttributes": "email",
 					"mfaLambdaRole": "cognito88e1166d_totp_lambda_role",
 					"mfaLambdaLogPolicy": "cognito88e1166d_totp_lambda_log_policy",
@@ -158,6 +173,25 @@
 					"userpoolClientLogPolicy": "cognito88e1166d_userpoolclient_lambda_log_policy",
 					"userpoolClientLambdaPolicy": "cognito88e1166d_userpoolclient_lambda_iam_policy",
 					"userpoolClientSetAttributes": false,
+					"authRoleName": {
+						"Ref": "AuthRoleName"
+					},
+					"unauthRoleName": {
+						"Ref": "UnauthRoleName"
+					},
+					"authRoleArn": {
+						"Fn::GetAtt": [
+							"AuthRole",
+							"Arn"
+						]
+					},
+					"unauthRoleArn": {
+						"Fn::GetAtt": [
+							"UnauthRole",
+							"Arn"
+						]
+					},
+					"thirdPartyAuth": false,
 					"useDefault": "default",
 					"unAuthRoleName": "consoleapp-20190102133243-unauthRole",
 					"unAuthRoleArn": "arn:aws:iam::173648348160:role/consoleapp-20190102133243-unauthRole",
@@ -181,7 +215,7 @@
 						]
 					},
 					"S3DeploymentBucket": "consoleapp-20190102133243-deployment",
-					"S3DeploymentRootKey": "amplify-appsync-files/536346c422d54424f85026a1ec0f5d2801a00238",
+					"S3DeploymentRootKey": "amplify-appsync-files/9ad1f4999242cf4309506073a3ca9a61a27e5041",
 					"env": "NONE"
 				}
 			}

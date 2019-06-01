@@ -61,6 +61,19 @@ export const getContract = `query GetContract($id: ID!) {
       createdAt
       latitude
       longitude
+      signature {
+        method
+        signatureImageDriver {
+          bucket
+          region
+          key
+        }
+        signatureImageSignatory {
+          bucket
+          region
+          key
+        }
+      }
     }
   }
 }
@@ -130,6 +143,19 @@ export const listContracts = `query ListContracts(
         createdAt
         latitude
         longitude
+        signature {
+          method
+          signatureImageDriver {
+            bucket
+            region
+            key
+          }
+          signatureImageSignatory {
+            bucket
+            region
+            key
+          }
+        }
       }
     }
     nextToken

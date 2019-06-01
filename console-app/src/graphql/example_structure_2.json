@@ -1,0 +1,708 @@
+{
+  "uid": "1538595491130430Dqeg9Nq",
+  "sequential_id": 155985,
+  "created": "2018-10-03T19:38:12.038764Z",
+  "updated": "2019-06-01T12:39:15.055845Z",
+  "remote_id": "",
+  "carrier_address": {
+    "pk": 2468132,
+    "name": "Berend Transport",
+    "address": "Industriestraat 5",
+    "city": "Groningen",
+    "postcode": "4434 AA",
+    "country": "NL",
+    "latitude": 53.2111547,
+    "longitude": 6.5027044,
+    "coords_validated": false,
+    "is_demo": false,
+    "is_carrier": true,
+    "is_shipper": false,
+    "is_origin": false,
+    "is_destination": false,
+    "company": {
+      "pk": 132827,
+      "name": "Berend Transport",
+      "phone_number": null,
+      "email": null,
+      "siren": "",
+      "trade_number": "",
+      "vat_number": "",
+      "settings": {
+        "signature_process": "skippable_electronic_signature",
+        "cmr_only": false,
+        "print_mode": false,
+        "special_agreements": "",
+        "contract_html": "",
+        "stamp": null,
+        "logo": null,
+        "tracking_page_logo": null
+      }
+    },
+    "original": 1153017
+  },
+  "created_by": {
+    "pk": 83190,
+    "name": "Gmail",
+    "remote_id": "",
+    "trade_number": "233434324",
+    "settings_contract_html": "",
+    "settings_logo": null,
+    "settings_tracking_page_logo": null,
+    "settings_print_mode": false
+  },
+  "created_device": "2018-10-03T19:38:11.746000Z",
+  "creation_method": "",
+  "is_order": true,
+  "archived_by": [],
+  "invite_code": "REUYSG",
+  "deliveries": [
+    {
+      "uid": "1538595491130430TqFsSbR",
+      "sequential_id": 171344,
+      "remote_id": "",
+      "tracking_id": "DD31E3-C2C743",
+      "origin": {
+        "uid": "15385954911304307Nut0o5",
+        "address": {
+          "pk": 1152990,
+          "name": "Gmail",
+          "address": "Tooroplaan 116",
+          "city": "Vlaardingen",
+          "postcode": "3141JT",
+          "country": "NL",
+          "latitude": null,
+          "longitude": null,
+          "coords_validated": false,
+          "is_demo": false,
+          "is_carrier": true,
+          "is_shipper": true,
+          "is_origin": false,
+          "is_destination": false,
+          "company": {
+            "pk": 83190,
+            "name": "Gmail",
+            "remote_id": "",
+            "trade_number": "233434324",
+            "settings_contract_html": "",
+            "settings_logo": null,
+            "settings_tracking_page_logo": null,
+            "settings_print_mode": false
+          },
+          "original": 97838
+        },
+        "arrival_date": null,
+        "date_exact": true,
+        "arrival_time_min": null,
+        "arrival_time_max": null,
+        "signature_process": "sign_on_glass",
+        "loading_instructions": "",
+        "unloading_instructions": "",
+        "reference": ""
+      },
+      "destination": {
+        "uid": "1538595491130430DvkzXX7",
+        "address": {
+          "pk": 1152991,
+          "name": "Peron (Exemple)",
+          "address": "6 Rue du Petit Bois",
+          "city": "Suzannecourt",
+          "postcode": "52300",
+          "country": "FR",
+          "latitude": 48.446425,
+          "longitude": 5.167064,
+          "coords_validated": false,
+          "is_demo": true,
+          "is_carrier": false,
+          "is_shipper": false,
+          "is_origin": false,
+          "is_destination": true,
+          "company": {
+            "pk": 83194,
+            "name": "Peron (Exemple)",
+            "remote_id": "",
+            "trade_number": "",
+            "settings_contract_html": "",
+            "settings_logo": null,
+            "settings_tracking_page_logo": null,
+            "settings_print_mode": false
+          },
+          "original": 97842
+        },
+        "arrival_date": null,
+        "date_exact": true,
+        "arrival_time_min": null,
+        "arrival_time_max": null,
+        "signature_process": "sign_on_glass",
+        "loading_instructions": "",
+        "unloading_instructions": "",
+        "reference": ""
+      },
+      "shipper_address": {
+        "pk": 1152992,
+        "name": "Gmail",
+        "address": "Tooroplaan 116",
+        "city": "Vlaardingen",
+        "postcode": "3141JT",
+        "country": "NL",
+        "latitude": null,
+        "longitude": null,
+        "coords_validated": false,
+        "is_demo": false,
+        "is_carrier": true,
+        "is_shipper": true,
+        "is_origin": false,
+        "is_destination": false,
+        "company": {
+          "pk": 83190,
+          "name": "Gmail",
+          "remote_id": "",
+          "trade_number": "233434324",
+          "settings_contract_html": "",
+          "settings_logo": null,
+          "settings_tracking_page_logo": null,
+          "settings_print_mode": false
+        },
+        "original": 97838
+      },
+      "loads": [
+        {
+          "uid": "dd43fd00-c743-11e8-b3a8-6e05480e7331",
+          "remote_id": "",
+          "description": "thingd",
+          "weight": "3000",
+          "height": null,
+          "width": null,
+          "length": null,
+          "pallet_format": "",
+          "volume": "",
+          "volume_unit": "m3",
+          "linear_meters": "",
+          "quantity": 5,
+          "category": "pallets",
+          "dangerous_goods_category": "",
+          "complementary_information": "",
+          "container_number": "",
+          "tare_weight": "",
+          "container_seal_number": "",
+          "refrigerated": true,
+          "temperature": "30",
+          "steres": null
+        },
+        {
+          "uid": "cc8fb280-c9a0-11e8-8cea-0242ac110007",
+          "remote_id": "",
+          "description": "TV van Philips",
+          "weight": "6",
+          "height": null,
+          "width": null,
+          "length": null,
+          "pallet_format": "",
+          "volume": "6",
+          "volume_unit": "m3",
+          "linear_meters": "",
+          "quantity": null,
+          "category": "bulk",
+          "dangerous_goods_category": "",
+          "complementary_information": "ewqewq",
+          "container_number": "",
+          "tare_weight": "",
+          "container_seal_number": "ewqeqw",
+          "refrigerated": false,
+          "temperature": "",
+          "steres": null
+        }
+      ],
+      "tracking_contacts": [],
+      "shipper_reference": "",
+      "multiple_rounds": false
+    }
+  ],
+  "segments": [
+    {
+      "uid": "1538595491130430fHMC1lP",
+      "remote_id": "",
+      "trucker": {
+        "pk": 125856,
+        "display_name": "Bob Schlarmann",
+        "user": 130430,
+        "remote_id": ""
+      },
+      "origin": {
+        "uid": "15385954911304307Nut0o5",
+        "address": {
+          "pk": 1152990,
+          "name": "Gmail",
+          "address": "Tooroplaan 116",
+          "city": "Vlaardingen",
+          "postcode": "3141JT",
+          "country": "NL",
+          "latitude": null,
+          "longitude": null,
+          "coords_validated": false,
+          "is_demo": false,
+          "is_carrier": true,
+          "is_shipper": true,
+          "is_origin": false,
+          "is_destination": false,
+          "company": {
+            "pk": 83190,
+            "name": "Gmail",
+            "remote_id": "",
+            "trade_number": "233434324",
+            "settings_contract_html": "",
+            "settings_logo": null,
+            "settings_tracking_page_logo": null,
+            "settings_print_mode": false
+          },
+          "original": 97838
+        },
+        "arrival_date": null,
+        "date_exact": true,
+        "arrival_time_min": null,
+        "arrival_time_max": null,
+        "signature_process": "sign_on_glass",
+        "loading_instructions": "",
+        "unloading_instructions": "",
+        "reference": ""
+      },
+      "destination": {
+        "uid": "1538595491130430DvkzXX7",
+        "address": {
+          "pk": 1152991,
+          "name": "Peron (Exemple)",
+          "address": "6 Rue du Petit Bois",
+          "city": "Suzannecourt",
+          "postcode": "52300",
+          "country": "FR",
+          "latitude": 48.446425,
+          "longitude": 5.167064,
+          "coords_validated": false,
+          "is_demo": true,
+          "is_carrier": false,
+          "is_shipper": false,
+          "is_origin": false,
+          "is_destination": true,
+          "company": {
+            "pk": 83194,
+            "name": "Peron (Exemple)",
+            "remote_id": "",
+            "trade_number": "",
+            "settings_contract_html": "",
+            "settings_logo": null,
+            "settings_tracking_page_logo": null,
+            "settings_print_mode": false
+          },
+          "original": 97842
+        },
+        "arrival_date": null,
+        "date_exact": true,
+        "arrival_time_min": null,
+        "arrival_time_max": null,
+        "signature_process": "sign_on_glass",
+        "loading_instructions": "",
+        "unloading_instructions": "",
+        "reference": ""
+      },
+      "vehicle": {
+        "pk": 379845,
+        "carrier": 83190,
+        "category": "unknown",
+        "payload": null,
+        "width": null,
+        "length": null,
+        "height": null,
+        "has_hatch": false,
+        "has_mounted_forklift": false,
+        "has_crane": false,
+        "has_moving_floor": false,
+        "has_straps": false,
+        "has_square": false,
+        "license_plate": "336E920",
+        "created": "2019-04-28T20:39:25.726164Z"
+      },
+      "trailers": [
+        {
+          "pk": 141735,
+          "carrier": 83190,
+          "license_plate": "LD3G471",
+          "created": "2018-10-03T19:38:12.183607Z"
+        }
+      ],
+      "sort_order": 0
+    }
+  ],
+  "status": "loading_complete",
+  "status_updates": [
+    {
+      "uid": "dd129a62-c743-11e8-b3a8-6e05480e7331",
+      "created": "2018-10-03T19:38:12.052339Z",
+      "created_device": null,
+      "creation_method": "auto",
+      "category": "created",
+      "author": {
+        "display_name": "Bob Schlarmann",
+        "company": 83190,
+        "pk": 130430
+      },
+      "content": "",
+      "content_signatory": "",
+      "target": null,
+      "site": null,
+      "delivery": null,
+      "segment": null,
+      "transport": "1538595491130430Dqeg9Nq",
+      "holder_exchanges": [],
+      "signature": null,
+      "latitude": null,
+      "longitude": null,
+      "update_details": null
+    },
+    {
+      "uid": "dd24fd10-c743-11e8-b3a8-6e05480e7331",
+      "created": "2018-10-03T19:38:12.172831Z",
+      "created_device": null,
+      "creation_method": "auto",
+      "category": "assigned",
+      "author": {
+        "display_name": "Bob Schlarmann",
+        "company": 83190,
+        "pk": 130430
+      },
+      "content": "",
+      "content_signatory": "",
+      "target": {
+        "display_name": "Bob Schlarmann",
+        "company": 83190,
+        "pk": 130430
+      },
+      "site": null,
+      "delivery": null,
+      "segment": "1538595491130430fHMC1lP",
+      "transport": "1538595491130430Dqeg9Nq",
+      "holder_exchanges": [],
+      "signature": null,
+      "latitude": null,
+      "longitude": null,
+      "update_details": null
+    },
+    {
+      "uid": "15385955181304303vkrNJZ",
+      "created": "2018-10-03T19:38:38.171982Z",
+      "created_device": "2018-10-03T19:38:38.360000Z",
+      "creation_method": "auto",
+      "category": "acknowledged",
+      "author": {
+        "display_name": "Bob Schlarmann",
+        "company": 83190,
+        "pk": 130430
+      },
+      "content": "",
+      "content_signatory": "",
+      "target": null,
+      "site": null,
+      "delivery": null,
+      "segment": null,
+      "transport": "1538595491130430Dqeg9Nq",
+      "holder_exchanges": [],
+      "signature": null,
+      "latitude": null,
+      "longitude": null,
+      "update_details": null
+    },
+    {
+      "uid": "cca94d14-c9a0-11e8-b73d-0242ac110007",
+      "created": "2018-10-06T19:48:30.040302Z",
+      "created_device": null,
+      "creation_method": "auto",
+      "category": "updated",
+      "author": {
+        "display_name": "Bob Schlarmann",
+        "company": 83190,
+        "pk": 130430
+      },
+      "content": "",
+      "content_signatory": "",
+      "target": null,
+      "site": null,
+      "delivery": "1538595491130430TqFsSbR",
+      "segment": null,
+      "transport": "1538595491130430Dqeg9Nq",
+      "holder_exchanges": [],
+      "signature": null,
+      "latitude": null,
+      "longitude": null,
+      "update_details": {
+        "deliveries": [
+          {
+            "loads": [
+              {
+                "new": "bulk, TV van Philips, 6kg",
+                "old": null
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "uid": "b69eeec6-69f5-11e9-9f87-0242ac110007",
+      "created": "2019-04-28T20:39:26.329014Z",
+      "created_device": null,
+      "creation_method": "auto",
+      "category": "updated",
+      "author": {
+        "display_name": "Bob Schlarmann",
+        "company": 83190,
+        "pk": 130430
+      },
+      "content": "",
+      "content_signatory": "",
+      "target": null,
+      "site": null,
+      "delivery": null,
+      "segment": "1538595491130430fHMC1lP",
+      "transport": "1538595491130430Dqeg9Nq",
+      "holder_exchanges": [],
+      "signature": null,
+      "latitude": null,
+      "longitude": null,
+      "update_details": {
+        "segments": [
+          {
+            "vehicle": {
+              "new": "336E920",
+              "old": "DGL07GN"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "uid": "abc8f24a-7563-11e9-8af9-0242ac110007",
+      "created": "2019-05-13T09:44:15.580010Z",
+      "created_device": null,
+      "creation_method": "auto",
+      "category": "updated",
+      "author": {
+        "display_name": "Bob Schlarmann",
+        "company": 83190,
+        "pk": 130430
+      },
+      "content": "",
+      "content_signatory": "",
+      "target": null,
+      "site": null,
+      "delivery": null,
+      "segment": null,
+      "transport": "1538595491130430Dqeg9Nq",
+      "holder_exchanges": [],
+      "signature": null,
+      "latitude": null,
+      "longitude": null,
+      "update_details": {
+        "carrier_address": {
+          "new": "Industriestraat 5 4434 AA NL (Berend Transport)",
+          "old": "Tooroplaan 116 3141JT NL (Gmail)"
+        }
+      }
+    },
+    {
+      "uid": "1559392486130430K2PWWlu",
+      "created": "2019-06-01T12:34:46.803266Z",
+      "created_device": "2019-06-01T12:34:46.408000Z",
+      "creation_method": "trucker",
+      "category": "on_loading_site",
+      "author": {
+        "display_name": "Bob Schlarmann",
+        "company": 83190,
+        "pk": 130430
+      },
+      "content": "",
+      "content_signatory": "",
+      "target": null,
+      "site": "15385954911304307Nut0o5",
+      "delivery": null,
+      "segment": null,
+      "transport": "1538595491130430Dqeg9Nq",
+      "holder_exchanges": [],
+      "signature": null,
+      "latitude": 51.9166686,
+      "longitude": 4.2634366,
+      "update_details": null
+    },
+    {
+      "uid": "b6a536e4-8469-11e9-935d-0242ac110007",
+      "created": "2019-06-01T12:35:18.222784Z",
+      "created_device": null,
+      "creation_method": "auto",
+      "category": "updated",
+      "author": {
+        "display_name": "Bob Schlarmann",
+        "company": 83190,
+        "pk": 130430
+      },
+      "content": "",
+      "content_signatory": "",
+      "target": null,
+      "site": null,
+      "delivery": "1538595491130430TqFsSbR",
+      "segment": null,
+      "transport": "1538595491130430Dqeg9Nq",
+      "holder_exchanges": [],
+      "signature": null,
+      "latitude": null,
+      "longitude": null,
+      "update_details": {}
+    },
+    {
+      "uid": "1559392585130430STTBOzu",
+      "created": "2019-06-01T12:36:26.730306Z",
+      "created_device": "2019-06-01T12:36:25.594000Z",
+      "creation_method": "trucker",
+      "category": "loading_complete",
+      "author": {
+        "display_name": "Bob Schlarmann",
+        "company": 83190,
+        "pk": 130430
+      },
+      "content": "Erm",
+      "content_signatory": "Neen dis goe",
+      "target": null,
+      "site": "15385954911304307Nut0o5",
+      "delivery": null,
+      "segment": null,
+      "transport": "1538595491130430Dqeg9Nq",
+      "holder_exchanges": [],
+      "signature": {
+        "uid": "1559392585130430d5iY3Op",
+        "status_update": "1559392585130430STTBOzu",
+        "created": "2019-06-01T12:36:27.541327Z",
+        "created_device": "2019-06-01T12:36:25.768000Z",
+        "signatory": null,
+        "signatory_name": "",
+        "trucker_name": "Bob Schlarmann",
+        "signature_trucker": null,
+        "signature_signatory": null,
+        "signatory_signed_at": "2019-06-01T12:36:25.768000Z",
+        "signature_image_trucker": "https://storage.googleapis.com/dashdoc-media/media/truckers/6349fca8-0e19-46c6-8265-e5ccca6b5f6c.png",
+        "signature_image_signatory": "https://storage.googleapis.com/dashdoc-media/media/shipments/a5ea5108-73a0-46cc-8eaf-af784d5b264b.png",
+        "signature_method": "sign_on_glass",
+        "code": "",
+        "checksum": ""
+      },
+      "latitude": 51.9168213,
+      "longitude": 4.2633905,
+      "update_details": null
+    },
+    {
+      "uid": "1559392710130430nXWPYui",
+      "created": "2019-06-01T12:38:30.957272Z",
+      "created_device": "2019-06-01T12:38:30.487000Z",
+      "creation_method": "trucker",
+      "category": "on_unloading_site",
+      "author": {
+        "display_name": "Bob Schlarmann",
+        "company": 83190,
+        "pk": 130430
+      },
+      "content": "",
+      "content_signatory": "",
+      "target": null,
+      "site": "1538595491130430DvkzXX7",
+      "delivery": null,
+      "segment": null,
+      "transport": "1538595491130430Dqeg9Nq",
+      "holder_exchanges": [],
+      "signature": null,
+      "latitude": 51.9168373,
+      "longitude": 4.2632718,
+      "update_details": null
+    },
+    {
+      "uid": "4356224a-846a-11e9-b643-0242ac110007",
+      "created": "2019-06-01T12:39:14.263352Z",
+      "created_device": null,
+      "creation_method": "manager",
+      "category": "on_loading_site",
+      "author": {
+        "display_name": "Bob Schlarmann",
+        "company": 83190,
+        "pk": 130430
+      },
+      "content": "",
+      "content_signatory": "",
+      "target": null,
+      "site": "15385954911304307Nut0o5",
+      "delivery": null,
+      "segment": null,
+      "transport": "1538595491130430Dqeg9Nq",
+      "holder_exchanges": [],
+      "signature": null,
+      "latitude": null,
+      "longitude": null,
+      "update_details": null
+    },
+    {
+      "uid": "4393793e-846a-11e9-b0a9-0242ac110007",
+      "created": "2019-06-01T12:39:14.665318Z",
+      "created_device": null,
+      "creation_method": "manager",
+      "category": "loading_complete",
+      "author": {
+        "display_name": "Bob Schlarmann",
+        "company": 83190,
+        "pk": 130430
+      },
+      "content": "",
+      "content_signatory": "",
+      "target": null,
+      "site": "15385954911304307Nut0o5",
+      "delivery": null,
+      "segment": null,
+      "transport": "1538595491130430Dqeg9Nq",
+      "holder_exchanges": [],
+      "signature": null,
+      "latitude": null,
+      "longitude": null,
+      "update_details": null
+    }
+  ],
+  "has_observations": true,
+  "messages": [
+    {
+      "uid": "945e3762-8469-11e9-86ec-0242ac110007",
+      "created": "2019-06-01T12:34:20.715063Z",
+      "created_device": null,
+      "creation_method": "manager",
+      "author": {
+        "display_name": "Bob Schlarmann",
+        "company": 83190,
+        "pk": 130430
+      },
+      "type": "note",
+      "document_title": null,
+      "document_type": "",
+      "document": null,
+      "visibility_level": "own_company_only_except_truckers",
+      "is_attached_to_cmr": false,
+      "transport": "1538595491130430Dqeg9Nq",
+      "message": "test",
+      "delivery": "1538595491130430TqFsSbR"
+    }
+  ],
+  "requested_vehicle": "",
+  "documents": [
+    {
+      "pk": 79693,
+      "file_updated_date": "2019-06-01T12:39:18.575776Z",
+      "delivery": "1538595491130430TqFsSbR",
+      "category": "cmr",
+      "name": "Document",
+      "file": "https://www.dashdoc.eu/shipments/documents/de6d2562-c743-11e8-8700-c230635f24c6"
+    }
+  ],
+  "carrier_reference": "",
+  "price": null,
+  "requires_washing": false,
+  "references": []
+}
