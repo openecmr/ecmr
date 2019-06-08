@@ -8,7 +8,7 @@ import {MyText, Address} from './Components';
 
 class Transports extends Component {
     static navigationOptions = ({ navigation, screenProps }) => ({
-        title: 'EcmrApp'
+        title: 'Open e-CMR'
     });
 
     constructor(props) {
