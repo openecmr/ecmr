@@ -16,7 +16,8 @@ class Transports extends Component {
 
         this.state = {
             contracts: [],
-            sortedContracts: []
+            sortedContracts: [],
+            refreshing: false
         };
     }
 
@@ -27,7 +28,7 @@ class Transports extends Component {
             <View style={{flex: 1, flexDirection: 'column', backgroundColor: 'white', elevation: 5, marginBottom: 10}}>
                 <View style={{flex: 1, flexDirection: 'row', backgroundColor: 'rgb(225,236,254)', paddingTop: 10, paddingBottom: 10}}>
                     <MyText style={{flex: 2, fontWeight: 'bold', paddingRight: 5, paddingLeft: 5, paddingTop: 5, paddingBottom: 5}}>TRANSPORT {item.id.substring(0, 8)}</MyText>
-                    <MyText style={{flex: 1, textAlign: 'center', color: 'white', fontWeight: 'bold', right: 5, paddingRight: 5, paddingLeft: 5, paddingTop: 5, paddingBottom: 5, borderRadius: 15, backgroundColor: 'rgb(60, 167, 60)'}}>loading complete</MyText>
+                    <MyText style={{flex: 1, textAlign: 'center', color: 'white', fontWeight: 'bold', right: 5, paddingRight: 5, paddingLeft: 5, paddingTop: 5, paddingBottom: 5, borderRadius: 15, backgroundColor: 'rgb(60, 167, 60)'}}>{this.progressText(item)}</MyText>
                 </View>
                 <TouchableOpacity onPress={() => this.open(item)}>
                     <View style={{flex: 1, padding: 5, paddingLeft: 10, paddingRight: 10, elevation: 1, backgroundColor: 'white'}}>
@@ -61,10 +62,24 @@ class Transports extends Component {
         });
     }
 
+    progressText(item) {
+        const labels = {
+            Acknowledged: "acknowledged",
+            ArrivalOnSite: "arrived on site",
+            LoadingComplete: "loading complete"
+        };
+        const actions = ['Acknowledged', 'ArrivalOnSite', 'LoadingComplete', /*'DepartureFromSite'*/];
+        const events = (item.events || []).filter(e => e.site === "pickup" && actions.indexOf(e.type) !== -1).map(e => e.type);
+        const state = events.length === 0 ? actions[0] : events[events.length - 1];
+        return labels[state];
+    }
+
     render() {
         return (
             <View style={styles.container}>
                 <SectionList
+                    onRefresh={() => this.onRefresh()}
+                    refreshing={this.state.refreshing}
                     sections={this.state.sortedContracts}
                     renderItem={({item}) => this.renderItem(item)}
                     renderSectionHeader={({section}) => <Text style={styles.sectionHeader}>{section.title ? section.title : "unknown date"}</Text>}
@@ -74,9 +89,27 @@ class Transports extends Component {
         );
     }
 
+    async onRefresh() {
+        this.setState({
+            refreshing: true
+        });
+        await this.componentDidMount();
+        this.setState({
+            refreshing: false
+        });
+    }
+
     async componentDidMount() {
         const response = await API.graphql(graphqlOperation(queries.listContracts));
-        const contracts = response.data.listContracts.items.sort((a, b) => a.arrivalDate < b.arrivalDate ? 1 : -1);
+        const contracts = response.data.listContracts.items.sort((a, b) => {
+            const first = (a.arrivalDate || "").localeCompare(b.arrivalDate || "");
+            if (first === 0) {
+                return a.createdAt.localeCompare(b.createdAt);
+            } else {
+                return first;
+            }
+        });
+        contracts.reverse();
         const groupedContracts = contracts.reduce((acc, contract) => {
             const arrivalDate = contract.arrivalDate;
             if (acc[arrivalDate]) {

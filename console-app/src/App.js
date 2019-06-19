@@ -40,6 +40,7 @@ class App extends Component {
                         </Grid.Column>
                         <Grid.Column width={13}>
                             <Route exact path="/transports" component={Transports}/>
+                            <Route exact path="/transports-new/:copy_id" component={NewTransport}/>
                             <Route exact path="/transports-new" component={NewTransport}/>
                             <Route exact path="/transports/:id" component={Transport}/>
                         </Grid.Column>

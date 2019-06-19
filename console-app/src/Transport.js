@@ -76,6 +76,10 @@ class Transport extends Component {
                         <Icon name='delete' />
                         Delete
                     </Button>
+                    <Button onClick={() => this.copy()}>
+                        <Icon name='copy' />
+                        Copy
+                    </Button>
                 </Button.Group>
                 <Header as={'h1'}>
                     <Header.Content>Transport {contract.id.substring(0,8)}</Header.Content>
@@ -110,6 +114,11 @@ class Transport extends Component {
             </Container>
 
         );
+    }
+
+    copy() {
+        const {history} = this.props;
+        history.push('/transports-new/' + this.state.contract.id);
     }
 
     async delete() {

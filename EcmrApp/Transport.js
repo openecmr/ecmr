@@ -58,7 +58,7 @@ class Transport extends Component {
                 </View>
                 <Header>Activity feed</Header>
                 <FlatList
-                    data={[...item.events].reverse()}
+                    data={[...item.events || []].reverse()}
                     extraData={this.state}
                     keyExtractor={(item, index) => String(index)}
                     renderItem={({item}) =>

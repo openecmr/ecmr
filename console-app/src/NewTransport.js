@@ -13,6 +13,7 @@ import {
 import React from "react";
 import { API, graphqlOperation } from 'aws-amplify';
 import * as mutations from './graphql/mutations'
+import * as queries from "./graphql/queries";
 import moment from "moment";
 import Message from "semantic-ui-react/dist/commonjs/collections/Message/Message";
 
@@ -297,6 +298,29 @@ class NewTransport extends Component {
             ]
 
         };
+
+        const copyId = this.props.match.params.copy_id;
+        if (copyId) {
+            this.copyFromExisting(copyId);
+        }
+    }
+
+    async copyFromExisting(id) {
+        const response = await API.graphql(graphqlOperation(queries.getContract, {
+            "id": id
+        }));
+        const contract = response.data.getContract;
+
+        this.setState({
+            carrier: contract.carrier,
+            driver: contract.driver,
+            trailer: contract.trailer,
+            truck: contract.truck,
+            shipper: contract.shipper,
+            delivery: contract.delivery,
+            pickup: contract.pickup,
+            loads: contract.loads
+        });
     }
 
     onLoadAdded(load) {
@@ -380,7 +404,8 @@ class NewTransport extends Component {
         const input = {
             ...this.state,
             status: 'DRAFT',
-            carrierUsername: this.state.carrier.username
+            carrierUsername: this.state.carrier.username,
+            arrivalDate: this.state.pickup.pickupDate
         };
         delete input.selectedLabel;
         delete input.form;
