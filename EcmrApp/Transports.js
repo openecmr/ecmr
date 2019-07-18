@@ -1,10 +1,9 @@
 import {Component} from "react";
 import {SectionList, StyleSheet, Text, View, TouchableOpacity} from "react-native";
-import Icon from "react-native-vector-icons/FontAwesome";
 import React from "react";
 import * as queries from "./graphql/queries";
 import { API, graphqlOperation } from 'aws-amplify';
-import {MyText, Address} from './Components';
+import {MyText, Address, Packages} from './Components';
 
 class Transports extends Component {
     static navigationOptions = ({ navigation, screenProps }) => ({
@@ -22,33 +21,26 @@ class Transports extends Component {
     }
 
     renderItem(item) {
-        const total = item.loads.reduce((acc, load) => acc + (load.quantity ? Number(load.quantity) : 0), 0);
+        const total = item.loads.reduce((acc, load) => acc + (load.quantity ? load.quantity : 0), 0);
 
         return (
-            <View style={{flex: 1, flexDirection: 'column', backgroundColor: 'white', elevation: 5, marginBottom: 10}}>
-                <View style={{flex: 1, flexDirection: 'row', backgroundColor: 'rgb(225,236,254)', paddingTop: 10, paddingBottom: 10}}>
-                    <MyText style={{flex: 2, fontWeight: 'bold', paddingRight: 5, paddingLeft: 5, paddingTop: 5, paddingBottom: 5}}>TRANSPORT {item.id.substring(0, 8)}</MyText>
-                    <MyText style={{flex: 1, textAlign: 'center', color: 'white', fontWeight: 'bold', right: 5, paddingRight: 5, paddingLeft: 5, paddingTop: 5, paddingBottom: 5, borderRadius: 15, backgroundColor: 'rgb(60, 167, 60)'}}>{this.progressText(item)}</MyText>
+            <View style={styles.card}>
+                <View style={styles.transportCardHeader}>
+                    <MyText style={styles.transportCardHeaderId}>TRANSPORT {item.id.substring(0, 8)}</MyText>
+                    <MyText style={styles.transportCardHeaderProgress}>{this.progressText(item)}</MyText>
                 </View>
                 <TouchableOpacity onPress={() => this.open(item)}>
-                    <View style={{flex: 1, padding: 5, paddingLeft: 10, paddingRight: 10, elevation: 1, backgroundColor: 'white'}}>
-                        <MyText style={{fontWeight: 'bold', textTransform: 'uppercase'}}>pickup</MyText>
+                    <View style={styles.transportCardPart}>
+                        <MyText style={styles.upperCaseLabel}>pickup</MyText>
                         <Address address={item.pickup}/>
-
-                        <View style={{flex: 1, flexDirection: 'row', paddingTop: 10}}>
-                            <Icon name="dropbox" style={{flex: 1, color: 'rgb(0, 115, 209)'}} size={30} />
-                            <MyText style={{flex: 8}}>{total} packages</MyText>
-                        </View>
+                        <Packages total={total}/>
                     </View>
                 </TouchableOpacity>
                 <TouchableOpacity>
-                    <View style={{flex: 1, padding: 5, paddingLeft: 10, paddingRight: 10}}>
-                        <MyText style={{fontWeight: 'bold', textTransform: 'uppercase'}}>delivery</MyText>
+                    <View style={styles.transportCardPart}>
+                        <MyText style={styles.upperCaseLabel}>delivery</MyText>
                         <Address address={item.delivery}/>
-                        <View style={{flex: 1, flexDirection: 'row', paddingTop: 10}}>
-                            <Icon name="dropbox" style={{flex: 1, color: 'rgb(0, 115, 209)'}} size={30} />
-                            <MyText style={{flex: 8}}>{total} packages</MyText>
-                        </View>
+                        <Packages total={total}/>
                     </View>
                 </TouchableOpacity>
             </View>
@@ -152,11 +144,57 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.20,
         shadowRadius: 1.41,
-        elevation: 2
+        elevation: 2,
+        color: 'black'
     },
     item: {
         padding: 10,
         fontSize: 18,
         height: 44,
     },
+    card: {
+        backgroundColor: 'white',
+        elevation: 5,
+        marginBottom: 10
+    },
+    transportCardHeader: {
+        flexDirection: 'row',
+        backgroundColor: 'rgb(225,236,254)',
+        paddingTop: 10,
+        paddingBottom: 10
+    },
+    transportCardHeaderId: {
+        flex: 2,
+        fontWeight: 'bold',
+        paddingRight: 5,
+        paddingLeft: 10,
+        paddingTop: 5,
+        paddingBottom: 5
+    },
+    transportCardHeaderProgress: {
+        flex: 1,
+        textAlign: 'center',
+        color: 'white',
+        fontWeight: 'bold',
+        right: 10,
+        borderRadius: 15,
+        backgroundColor: 'rgb(60, 167, 60)',
+
+        paddingRight: 5,
+        paddingLeft: 5,
+        paddingTop: 5,
+        paddingBottom: 5,
+    },
+    transportCardPart: {
+        flex: 1,
+        padding: 5,
+        paddingLeft: 10,
+        paddingRight: 10,
+        elevation: 1,
+        backgroundColor: 'white'
+    },
+    upperCaseLabel: {
+        fontWeight: 'bold',
+        textTransform: 'uppercase'
+    }
 });

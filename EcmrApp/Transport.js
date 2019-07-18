@@ -10,7 +10,16 @@ import moment from "moment";
 import { Auth } from 'aws-amplify';
 import {S3Image} from "aws-amplify-react-native";
 
-const Header = ({children}) => <MyText style={{backgroundColor: 'rgb(240,240,240)', fontWeight: 'bold', padding: 15, paddingLeft: 10}}>{children}</MyText>;
+const Header = ({children}) => <MyText style={styles.header}>{children}</MyText>;
+
+const Package = ({total}) =>
+    <View style={styles.package}>
+        <Icon name="dropbox" style={styles.packageIcon} size={30} />
+        <MyText style={styles.packageText}>{total} packages</MyText>
+    </View>;
+
+const activityDoneColor = 'rgb(5, 172, 5)';
+const actionButtonColor = 'rgb(60,176,60)';
 
 class Transport extends Component {
     static navigationOptions = ({ navigation, screenProps }) => ({
@@ -29,47 +38,50 @@ class Transport extends Component {
         }
 
         const total = 5;
-
-        const actions = ['ArrivalOnSite', 'LoadingComplete', /*'DepartureFromSite'*/];
-        const events = (item.events || []).filter(e => e.site === "pickup" && actions.indexOf(e.type) !== -1).map(e => e.type);
+        const site = this.props.site;
+        const direction = site === 'pickup' ? "loading" : "unloading";
+        const actions = site === 'pickup' ?
+            ['ArrivalOnSite', 'LoadingComplete', /*'DepartureFromSite'*/] :
+            ['ArrivalOnSite', 'UnloadingComplete'];
+        const events = (item.events || []).filter(e => e.site === site && actions.indexOf(e.type) !== -1).map(e => e.type);
         actions.splice(0, events.length === 0 ? 0 : actions.indexOf(events[events.length - 1]) + 1);
         const firstAction = actions.length === 0 ? '' : actions[0];
 
         return (
-            <View style={{backgroundColor: 'white'}}>
+            <View style={styles.transport}>
                 <Header>Details</Header>
-                <Address address={item.pickup}
-                    style={{borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: 'black', padding: 10}}
-                />
+                <Address address={item.pickup} style={styles.address} />
 
-                <View style={{flexDirection: 'row', padding: 10}}>
-                    <Icon name="dropbox" style={{flex: 1, color: 'rgb(0, 115, 209)'}} size={30} />
-                    <MyText style={{flex: 8}}>{total} packages</MyText>
-                </View>
-                <View style={{backgroundColor: 'rgb(240,240,240)', padding: 10}}>
-                    {firstAction === 'ArrivalOnSite' && <Button title={"Notify arrival at unloading site"} color={"rgb(60,176,60)"} onPress={() => this.confirmNotifyArrival()}/>}
-                    {firstAction === 'LoadingComplete' && <Button title={"Confirm loading"} color={"rgb(60,176,60)"} onPress={() => this.confirmLoading()}/>}
+                <Package total={total} />
+
+                <View style={styles.action}>
+                    {firstAction === 'ArrivalOnSite' && <Button title={`Notify arrival at ${direction} site`} color={actionButtonColor} onPress={() => this.confirmNotifyArrival()}/>}
+                    {firstAction === 'LoadingComplete' && <Button title={`Confirm ${direction}`} color={actionButtonColor} onPress={() => this.confirmLoading()}/>}
                     {!firstAction &&
                         <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                            <Icon color={'rgb(5, 172, 5)'} size={30} name='check-circle'/>
-                            <Text style={{color: 'rgb(5, 172, 5)', fontWeight: 'bold', paddingLeft: 5}}>Activity done</Text>
+                            <Icon color={activityDoneColor} size={30} name='check-circle'/>
+                            <Text style={styles.activityDoneText}>Activity done</Text>
                         </View>
                     }
                 </View>
+
                 <Header>Activity feed</Header>
                 <FlatList
                     data={[...item.events || []].reverse()}
                     extraData={this.state}
                     keyExtractor={(item, index) => String(index)}
                     renderItem={({item}) =>
-                        (<View style={{padding: 10, borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: 'black'}}>
+                        (<View style={styles.activityItemContainer}>
                             <Text style={{fontSize: 12}}>{moment(item.createdAt).format('llll')}</Text>
 
                             <MyText>{this.eventText(item)}</MyText>
 
                             {
                                 item.type === 'LoadingComplete' &&
-                                    <S3Image style={{height: 100, width: 50}} imgKey={item.signature.signatureImageSignatory.key} />
+                                    <S3Image style={{width: 150, height: 150}}
+                                             resizeMode={'center'}
+                                             level={"public"}
+                                             imgKey={item.signature.signatureImageSignatory.key} />
                             }
                         </View>)
                     }
@@ -129,7 +141,6 @@ class Transport extends Component {
             }
         });
 
-
         try {
             await API.graphql(graphqlOperation(mutations.updateContract, {input: item}));
             this.props.navigation.setParams({
@@ -146,5 +157,50 @@ class Transport extends Component {
         this.setState(item);
     }
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+    },
+    transport: {
+        backgroundColor: 'white'
+    },
+    header: {
+        backgroundColor: 'rgb(240,240,240)',
+        fontWeight: 'bold',
+        padding: 15,
+        paddingLeft: 10
+    },
+    address: {
+        borderBottomWidth: StyleSheet.hairlineWidth,
+        borderBottomColor: 'black',
+        padding: 10
+    },
+    package: {
+        flexDirection: 'row',
+        padding: 10
+    },
+    packageIcon: {
+        flex: 1,
+        color: 'rgb(0, 115, 209)'
+    },
+    packageText: {
+        flex: 8
+    },
+    action: {
+        backgroundColor: 'rgb(240,240,240)',
+        padding: 10
+    },
+    activityDoneText: {
+        color: activityDoneColor,
+        fontWeight: 'bold',
+        paddingLeft: 5
+    },
+    activityItemContainer: {
+        padding: 10,
+        borderBottomWidth: StyleSheet.hairlineWidth,
+        borderBottomColor: 'black'
+    }
+});
 
 export default Transport;

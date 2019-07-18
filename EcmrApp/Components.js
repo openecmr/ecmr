@@ -15,7 +15,15 @@ const Address = ({address, style, hideIcon}) => (
     </View>
 );
 
+const Packages = ({total}) => (
+    <View style={{flexDirection: 'row', paddingTop: 10}}>
+        <Icon name="dropbox" style={{flex: 1, color: 'rgb(0, 115, 209)'}} size={30} />
+        <MyText style={{flex: 8}}>{total} packages</MyText>
+    </View>
+);
+
 export {
     MyText,
-    Address
+    Address,
+    Packages
 };
