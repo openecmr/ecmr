@@ -22,13 +22,22 @@ const activityDoneColor = 'rgb(5, 172, 5)';
 const actionButtonColor = 'rgb(60,176,60)';
 
 class Transport extends Component {
-    static navigationOptions = ({ navigation, screenProps }) => ({
-        title: 'Pickup: ' + navigation.getParam('item').pickup.name
-    });
+    static navigationOptions = ({ navigation, screenProps }) => {
+        const site = navigation.getParam('site');
+        const item = navigation.getParam('item');
+        return {
+            title: site + ': ' + item[site].name
+        }
+    };
 
     constructor(props) {
         super(props);
-        this.state = {};
+
+        const { navigation } = this.props;
+
+        this.state = {
+            'site': navigation.getParam('site')
+        };
     }
 
     render() {
@@ -38,7 +47,7 @@ class Transport extends Component {
         }
 
         const total = 5;
-        const site = this.props.site;
+        const site = this.state.site;
         const direction = site === 'pickup' ? "loading" : "unloading";
         const actions = site === 'pickup' ?
             ['ArrivalOnSite', 'LoadingComplete', /*'DepartureFromSite'*/] :
@@ -50,13 +59,13 @@ class Transport extends Component {
         return (
             <View style={styles.transport}>
                 <Header>Details</Header>
-                <Address address={item.pickup} style={styles.address} />
+                <Address address={item[site]} style={styles.address} />
 
                 <Package total={total} />
 
                 <View style={styles.action}>
                     {firstAction === 'ArrivalOnSite' && <Button title={`Notify arrival at ${direction} site`} color={actionButtonColor} onPress={() => this.confirmNotifyArrival()}/>}
-                    {firstAction === 'LoadingComplete' && <Button title={`Confirm ${direction}`} color={actionButtonColor} onPress={() => this.confirmLoading()}/>}
+                    {(firstAction === 'LoadingComplete' || firstAction === 'UnloadingComplete') && <Button title={`Confirm ${direction}`} color={actionButtonColor} onPress={() => this.confirmLoading()}/>}
                     {!firstAction &&
                         <View style={{flexDirection: 'row', alignItems: 'center'}}>
                             <Icon color={activityDoneColor} size={30} name='check-circle'/>
@@ -93,9 +102,11 @@ class Transport extends Component {
     eventText(event) {
         switch (event.type) {
             case 'ArrivalOnSite':
-                return `${event.author.username} arrived on loading site.`;
+                return `${event.author.username} arrived on ${event.site} site.`;
             case 'LoadingComplete':
                 return `${event.author.username} completed the loading.`;
+            case 'UnloadingComplete':
+                return `${event.author.username} completed the unloading.`;
             default:
                 return `${event.author.username} completed ${event.type}`;
         }
@@ -134,7 +145,7 @@ class Transport extends Component {
         }
         item.events.push({
             type: 'ArrivalOnSite',
-            site: "pickup",
+            site: this.state.site,
             createdAt: now,
             author: {
                 username: user.username

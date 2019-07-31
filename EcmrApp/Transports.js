@@ -29,14 +29,14 @@ class Transports extends Component {
                     <MyText style={styles.transportCardHeaderId}>TRANSPORT {item.id.substring(0, 8)}</MyText>
                     <MyText style={styles.transportCardHeaderProgress}>{this.progressText(item)}</MyText>
                 </View>
-                <TouchableOpacity onPress={() => this.open(item)}>
+                <TouchableOpacity onPress={() => this.open(item, 'pickup')}>
                     <View style={styles.transportCardPart}>
                         <MyText style={styles.upperCaseLabel}>pickup</MyText>
                         <Address address={item.pickup}/>
                         <Packages total={total}/>
                     </View>
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => this.open(item, 'delivery')}>
                     <View style={styles.transportCardPart}>
                         <MyText style={styles.upperCaseLabel}>delivery</MyText>
                         <Address address={item.delivery}/>
@@ -47,10 +47,11 @@ class Transports extends Component {
         );
     }
 
-    open(item) {
+    open(item, site) {
         const {navigate} = this.props.navigation;
         navigate('Transport', {
-            item: item
+            item: item,
+            site: site
         });
     }
 
