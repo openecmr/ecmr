@@ -9,7 +9,8 @@ class SignSelection extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            contract: props.navigation.getParam("item")
+            contract: props.navigation.getParam("item"),
+            site: props.navigation.getParam("site")
         };
     }
 
@@ -36,7 +37,8 @@ class SignSelection extends Component {
     signOnPhone() {
         const {navigate} = this.props.navigation;
         navigate('Signature', {
-            item: this.state.contract
+            item: this.state.contract,
+            site: this.state.site
         });
     }
 }

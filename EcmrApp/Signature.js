@@ -14,6 +14,7 @@ class Signature extends Component {
         super(props);
         this.state = {
             contract: props.navigation.getParam("item"),
+            site: props.navigation.getParam("site")
         };
     }
 
@@ -63,7 +64,8 @@ class Signature extends Component {
     captureSignature() {
         const {navigate} = this.props.navigation;
         navigate('CaptureSignature', {
-            item: this.state.contract
+            item: this.state.contract,
+            site: this.state.site
         });
     }
 }

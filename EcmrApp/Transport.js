@@ -41,8 +41,8 @@ class Transport extends Component {
     }
 
     render() {
-        const item = this.state;
-        if (!item.id) {
+        const item = this.state.item;
+        if (!item || !item.id) {
             return <MyText>Loading...</MyText>
         }
 
@@ -55,6 +55,8 @@ class Transport extends Component {
         const events = (item.events || []).filter(e => e.site === site && actions.indexOf(e.type) !== -1).map(e => e.type);
         actions.splice(0, events.length === 0 ? 0 : actions.indexOf(events[events.length - 1]) + 1);
         const firstAction = actions.length === 0 ? '' : actions[0];
+
+        const relevantItems = [...item.events || []].filter(e => e.site === site).reverse();
 
         return (
             <View style={styles.transport}>
@@ -76,7 +78,7 @@ class Transport extends Component {
 
                 <Header>Activity feed</Header>
                 <FlatList
-                    data={[...item.events || []].reverse()}
+                    data={relevantItems}
                     extraData={this.state}
                     keyExtractor={(item, index) => String(index)}
                     renderItem={({item}) =>
@@ -115,7 +117,8 @@ class Transport extends Component {
     confirmLoading() {
         const {navigate} = this.props.navigation;
         navigate('ConfirmLoading', {
-            item: this.state
+            item: this.state.item,
+            site: this.state.site
         });
     }
 
@@ -165,7 +168,9 @@ class Transport extends Component {
 
     async componentDidMount() {
         const item = this.props.navigation.getParam('item');
-        this.setState(item);
+        this.setState({
+            item: item
+        });
     }
 }
 

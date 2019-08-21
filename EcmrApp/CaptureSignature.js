@@ -16,6 +16,7 @@ class CaptureSignature extends Component {
         super(props);
         this.state = {
             contract: props.navigation.getParam("item"),
+            site: props.navigation.getParam("site")
         };
     }
 
@@ -54,7 +55,7 @@ class CaptureSignature extends Component {
 
             const event = {
                 type: 'LoadingComplete',
-                site: "pickup",
+                site: this.state.site,
                 createdAt: now,
                 author: {
                     username: user.username

@@ -13,6 +13,7 @@ class ConfirmLoading extends Component {
         super(props);
         this.state = {
             contract: props.navigation.getParam("item"),
+            site: props.navigation.getParam("site"),
             loadConfirmed: {}
         };
     }
@@ -79,7 +80,8 @@ class ConfirmLoading extends Component {
         if (ready) {
             const {navigate} = this.props.navigation;
             navigate('SignSelection', {
-                item: this.state.contract
+                item: this.state.contract,
+                site: this.state.site
             });
         }
     }
