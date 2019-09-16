@@ -1,9 +1,8 @@
-import {Component} from "react";
-import {SectionList, StyleSheet, Text, View, TouchableOpacity} from "react-native";
-import React from "react";
+import React, {Component} from "react";
+import {SectionList, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import * as queries from "./graphql/queries";
-import { API, graphqlOperation } from 'aws-amplify';
-import {MyText, Address, Packages} from './Components';
+import {API, graphqlOperation} from 'aws-amplify';
+import {Address, MyText, Packages} from './Components';
 
 class Transports extends Component {
     static navigationOptions = ({ navigation, screenProps }) => ({
@@ -59,12 +58,24 @@ class Transports extends Component {
         const labels = {
             Acknowledged: "acknowledged",
             ArrivalOnSite: "arrived on site",
-            LoadingComplete: "loading complete"
+            LoadingComplete: "loading complete",
+            UnloadingComplete: "done"
         };
-        const actions = ['Acknowledged', 'ArrivalOnSite', 'LoadingComplete', /*'DepartureFromSite'*/];
-        const events = (item.events || []).filter(e => e.site === "pickup" && actions.indexOf(e.type) !== -1).map(e => e.type);
-        const state = events.length === 0 ? actions[0] : events[events.length - 1];
+        const deliveryState = this.determineActionDelivery(item);
+        const state = deliveryState ? deliveryState : this.determineActionPickup(item);
         return labels[state];
+    }
+
+    determineActionDelivery(item) {
+        const actions = ['Acknowledged', 'ArrivalOnSite', 'UnloadingComplete'];
+        const events = (item.events || []).filter(e => e.site === "delivery" && actions.indexOf(e.type) !== -1).map(e => e.type);
+        return events.length === 0 ? null : events[events.length - 1];
+    }
+
+    determineActionPickup(item) {
+        const actions = ['Acknowledged', 'ArrivalOnSite', 'LoadingComplete'];
+        const events = (item.events || []).filter(e => e.site === "pickup" && actions.indexOf(e.type) !== -1).map(e => e.type);
+        return events.length === 0 ? actions[0] : events[events.length - 1];
     }
 
     render() {

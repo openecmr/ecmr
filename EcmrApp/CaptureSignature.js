@@ -54,7 +54,7 @@ class CaptureSignature extends Component {
             const user = await Auth.currentAuthenticatedUser();
 
             const event = {
-                type: 'LoadingComplete',
+                type: this.state.site === 'pickup' ? 'LoadingComplete' : 'UnloadingComplete',
                 site: this.state.site,
                 createdAt: now,
                 author: {
@@ -71,6 +71,7 @@ class CaptureSignature extends Component {
             };
             const contract = {...this.state.contract};
             contract.events.push(event);
+            contract.status = this.state.site === 'pickup' ? 'IN_PROGRESS' : 'DONE';
 
             try {
                 await API.graphql(graphqlOperation(mutations.updateContract, {input: contract}));
