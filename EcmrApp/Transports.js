@@ -1,8 +1,9 @@
 import React, {Component} from "react";
-import {SectionList, StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import {SectionList, StyleSheet, Text, TouchableOpacity, View, Dimensions} from "react-native";
 import * as queries from "./graphql/queries";
 import {API, graphqlOperation} from 'aws-amplify';
 import {Address, MyText, Packages} from './Components';
+import {SceneMap, TabView} from "react-native-tab-view";
 
 class Transports extends Component {
     static navigationOptions = ({ navigation, screenProps }) => ({
@@ -13,10 +14,45 @@ class Transports extends Component {
         super(props);
 
         this.state = {
-            contracts: [],
-            sortedContracts: [],
+            index: 0,
+            routes: [
+                { key: 'open', title: 'Pending' },
+                { key: 'done', title: 'Done' }
+            ],
+
+            ongoingContracts: [],
+            doneContracts: [],
             refreshing: false
         };
+    }
+
+    render() {
+        return (
+            <TabView
+                navigationState={this.state}
+                renderScene={SceneMap({
+                    open: () => this.renderItems(this.state.ongoingContracts),
+                    done: () => this.renderItems(this.state.doneContracts)
+                })}
+                onIndexChange={index => this.setState({ index })}
+                initialLayout={{ width: Dimensions.get('window').width }}
+            />
+        );
+    }
+
+    renderItems(contracts) {
+        return (
+            <View style={styles.container}>
+                <SectionList
+                    onRefresh={() => this.onRefresh()}
+                    refreshing={this.state.refreshing}
+                    sections={contracts}
+                    renderItem={({item}) => this.renderItem(item)}
+                    renderSectionHeader={({section}) => <Text style={styles.sectionHeader}>{section.title ? section.title : "unknown date"}</Text>}
+                    keyExtractor={(item, index) => index}
+                />
+            </View>
+        );
     }
 
     renderItem(item) {
@@ -78,21 +114,6 @@ class Transports extends Component {
         return events.length === 0 ? actions[0] : events[events.length - 1];
     }
 
-    render() {
-        return (
-            <View style={styles.container}>
-                <SectionList
-                    onRefresh={() => this.onRefresh()}
-                    refreshing={this.state.refreshing}
-                    sections={this.state.sortedContracts}
-                    renderItem={({item}) => this.renderItem(item)}
-                    renderSectionHeader={({section}) => <Text style={styles.sectionHeader}>{section.title ? section.title : "unknown date"}</Text>}
-                    keyExtractor={(item, index) => index}
-                />
-            </View>
-        );
-    }
-
     async onRefresh() {
         this.setState({
             refreshing: true
@@ -114,6 +135,16 @@ class Transports extends Component {
             }
         });
         contracts.reverse();
+        const ongoingContracts = this.groupByDate(contracts.filter(c => c.status !== 'DONE'));
+        const doneContracts = this.groupByDate(contracts.filter(c => c.status === 'DONE'));
+
+        this.setState({
+            ongoingContracts: ongoingContracts,
+            doneContracts: doneContracts
+        });
+    }
+
+    groupByDate(contracts) {
         const groupedContracts = contracts.reduce((acc, contract) => {
             const arrivalDate = contract.arrivalDate;
             if (acc[arrivalDate]) {
@@ -127,11 +158,7 @@ class Transports extends Component {
             return acc;
         }, {});
         const sortedContracts = Array.from(Object.values(groupedContracts));
-
-        this.setState({
-            contracts: contracts,
-            sortedContracts: sortedContracts
-        });
+        return sortedContracts;
     }
 }
 

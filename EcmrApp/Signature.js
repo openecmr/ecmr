@@ -1,7 +1,6 @@
 import {Component} from "react";
-import {FlatList, SectionList, StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import {Alert, FlatList, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import React from "react";
-import Icon from "react-native-vector-icons/FontAwesome";
 import {Address, MyText} from "./Components";
 import {Button, CheckBox} from "react-native-elements";
 
@@ -27,12 +26,13 @@ class Signature extends Component {
 
 
                 <CheckBox
+                    onPress={() => this.toggleAgreeWithInformation()}
                     title={'I agree with this information'}
                     containerStyle={{backgroundColor: 'white', marginTop: 10}}
                     center
-                    checkedIcon='dot-circle-o'
-                    uncheckedIcon='circle-o'
-                    checked={this.state.checked}
+                    checkedIcon='check-square'
+                    uncheckedIcon='square'
+                    checked={this.state.agree}
                 />
 
                 <MyText style={{fontWeight: 'bold'}}>Loads:</MyText>
@@ -61,7 +61,25 @@ class Signature extends Component {
         )
     }
 
+    toggleAgreeWithInformation() {
+        this.setState({
+            agree: !this.state.agree
+        })
+    }
+
     captureSignature() {
+        if (!this.state.agree) {
+            Alert.alert(
+                'Agree with information',
+                'In order to sign you must agree with the provided information',
+                [
+                    {text: 'OK'}
+                ],
+                {cancelable: true}
+            );
+            return;
+        }
+
         const {navigate} = this.props.navigation;
         navigate('CaptureSignature', {
             item: this.state.contract,
