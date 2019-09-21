@@ -24,7 +24,16 @@ class Transports extends Component {
             doneContracts: [],
             refreshing: false
         };
+
+        this.navigationEventSubscription = this.props.navigation.addListener(
+            'willFocus',
+            payload => {
+                this.onRefresh();
+            }
+        );
     }
+
+
 
     render() {
         return (
@@ -118,13 +127,17 @@ class Transports extends Component {
         this.setState({
             refreshing: true
         });
-        await this.componentDidMount();
+        await this.loadData();
         this.setState({
             refreshing: false
         });
     }
 
-    async componentDidMount() {
+    componentWillUnmount() {
+        this.navigationEventSubscription.remove();
+    }
+
+    async loadData() {
         const response = await API.graphql(graphqlOperation(queries.listContracts));
         const contracts = response.data.listContracts.items.sort((a, b) => {
             const first = (a.arrivalDate || "").localeCompare(b.arrivalDate || "");
