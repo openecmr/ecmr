@@ -35,8 +35,11 @@ class Transport extends Component {
 
         const { navigation } = this.props;
 
+        const item = this.props.navigation.getParam('item');
+
         this.state = {
-            'site': navigation.getParam('site')
+            'site': navigation.getParam('site'),
+            'item': item
         };
     }
 
@@ -160,17 +163,36 @@ class Transport extends Component {
             this.props.navigation.setParams({
                 item: item
             });
-            this.setState(item);
+            this.setState({
+                item: item
+            });
         } catch (ex) {
             console.log(ex);
         }
     }
 
-    async componentDidMount() {
-        const item = this.props.navigation.getParam('item');
+    async refresh() {
+        const id = this.state.item.id;
+
+        const response = await API.graphql(graphqlOperation(queries.getContract, {
+            id: id
+        }));
         this.setState({
-            item: item
-        });
+            item: response.data.getContract
+        })
+    }
+
+    componentWillUnmount() {
+        this.navigationEventSubscription.remove();
+    }
+
+    componentWillMount() {
+        this.navigationEventSubscription = this.props.navigation.addListener(
+            'willFocus',
+            payload => {
+                this.refresh();
+            }
+        );
     }
 }
 

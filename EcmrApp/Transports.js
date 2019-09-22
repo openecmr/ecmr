@@ -100,15 +100,27 @@ class Transports extends Component {
     }
 
     progressText(item) {
-        const labels = {
+        const pickupLabels = {
             Acknowledged: "acknowledged",
-            ArrivalOnSite: "arrived on site",
+            ArrivalOnSite: "arrived on pickup site",
             LoadingComplete: "loading complete",
             UnloadingComplete: "done"
         };
+
+        const deliveryLabels = {
+            Acknowledged: "acknowledged",
+            ArrivalOnSite: "arrived on delivery site",
+            LoadingComplete: "unloading complete",
+            UnloadingComplete: "done"
+        };
+
         const deliveryState = this.determineActionDelivery(item);
-        const state = deliveryState ? deliveryState : this.determineActionPickup(item);
-        return labels[state];
+        if (deliveryState) {
+            return deliveryLabels[deliveryState];
+        } else {
+            const pickupState = this.determineActionPickup(item);
+            return pickupLabels[pickupState];
+        }
     }
 
     determineActionDelivery(item) {
