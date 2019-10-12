@@ -1,9 +1,0 @@
-{
-    "Migration": {
-        "V1": {
-            "Resources": [
-                "ContractTable"
-            ]
-        }
-    }
-}

@@ -1,32 +1,25 @@
 {
-	"storage": {
-		"ecmrdb": {
-			"service": "DynamoDB",
-			"providerPlugin": "awscloudformation"
-		},
-		"s3881577a8": {
-			"service": "S3",
-			"providerPlugin": "awscloudformation"
-		}
-	},
-	"hosting": {
-		"S3AndCloudFront": {
-			"service": "S3AndCloudFront",
-			"providerPlugin": "awscloudformation"
-		}
-	},
 	"auth": {
-		"cognito88e1166d": {
+		"openecmr291ad5fc": {
 			"service": "Cognito",
-			"providerPlugin": "awscloudformation"
+			"providerPlugin": "awscloudformation",
+			"dependsOn": []
 		}
 	},
 	"api": {
-		"ecmr": {
+		"openecmr": {
 			"service": "AppSync",
 			"providerPlugin": "awscloudformation",
 			"output": {
-				"securityType": "AMAZON_COGNITO_USER_POOLS"
+				"authConfig": {
+					"additionalAuthenticationProviders": [],
+					"defaultAuthentication": {
+						"authenticationType": "AMAZON_COGNITO_USER_POOLS",
+						"userPoolConfig": {
+							"userPoolId": "authopenecmr291ad5fc"
+						}
+					}
+				}
 			}
 		}
 	}

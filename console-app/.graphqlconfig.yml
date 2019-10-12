@@ -1,14 +1,15 @@
 projects:
-  ecmr:
+  openecmr:
     schemaPath: src/graphql/schema.json
     includes:
       - src/graphql/**/*.js
     excludes:
-      - amplify/**
+      - ./amplify/**
     extensions:
       amplify:
         codeGenTarget: javascript
         generatedFileName: ''
         docsFilePath: src/graphql
-        graphQLApiId: 6m2clahxuvg65e5esdv6y6nd3u
-        maxDepth: 6
+extensions:
+  amplify:
+    version: 3

@@ -1,18 +1,18 @@
 {
-    "NONE": {
+    "test": {
         "awscloudformation": {
-            "AuthRoleName": "consoleapp-20190102133243-authRole",
-            "UnauthRoleArn": "arn:aws:iam::173648348160:role/consoleapp-20190102133243-unauthRole",
-            "AuthRoleArn": "arn:aws:iam::173648348160:role/consoleapp-20190102133243-authRole",
+            "AuthRoleName": "open-ecmr-test-20191012210608-authRole",
+            "UnauthRoleArn": "arn:aws:iam::173648348160:role/open-ecmr-test-20191012210608-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::173648348160:role/open-ecmr-test-20191012210608-authRole",
             "Region": "eu-central-1",
-            "DeploymentBucketName": "consoleapp-20190102133243-deployment",
-            "UnauthRoleName": "consoleapp-20190102133243-unauthRole",
-            "StackName": "consoleapp-20190102133243",
-            "StackId": "arn:aws:cloudformation:eu-central-1:173648348160:stack/consoleapp-20190102133243/80d21c80-0e8a-11e9-bd55-02625fbcaeee"
+            "DeploymentBucketName": "open-ecmr-test-20191012210608-deployment",
+            "UnauthRoleName": "open-ecmr-test-20191012210608-unauthRole",
+            "StackName": "open-ecmr-test-20191012210608",
+            "StackId": "arn:aws:cloudformation:eu-central-1:173648348160:stack/open-ecmr-test-20191012210608/58f65e10-ed23-11e9-b439-06ec4fc9a1c4"
         },
         "categories": {
             "auth": {
-                "cognito88e1166d": {}
+                "openecmr291ad5fc": {}
             }
         }
     }
