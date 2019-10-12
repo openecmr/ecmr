@@ -4,6 +4,13 @@ import * as queries from "./graphql/queries";
 import {API, graphqlOperation} from 'aws-amplify';
 import {Address, MyText, Packages} from './Components';
 import {SceneMap, TabView} from "react-native-tab-view";
+import ContractModel from "./ContractModel";
+
+const NoContracts = () =>
+    <View style={{justifyContent: 'center', alignItems: 'center', flex: 1, paddingTop: 40}}>
+        <MyText>All done, no pending contracts assigned to you.</MyText>
+    </View>
+;
 
 class Transports extends Component {
     static navigationOptions = ({ navigation, screenProps }) => ({
@@ -53,6 +60,7 @@ class Transports extends Component {
         return (
             <View style={styles.container}>
                 <SectionList
+                    ListEmptyComponent={<NoContracts/>}
                     onRefresh={() => this.onRefresh()}
                     refreshing={this.state.refreshing}
                     sections={contracts}
@@ -64,8 +72,8 @@ class Transports extends Component {
         );
     }
 
-    renderItem(item) {
-        const total = item.loads.reduce((acc, load) => acc + (load.quantity ? load.quantity : 0), 0);
+    renderItem(contract) {
+        const item = new ContractModel(contract);
 
         return (
             <View style={styles.card}>
@@ -77,14 +85,14 @@ class Transports extends Component {
                     <View style={styles.transportCardPart}>
                         <MyText style={styles.upperCaseLabel}>pickup</MyText>
                         <Address address={item.pickup}/>
-                        <Packages total={total}/>
+                        <Packages total={item.total()}/>
                     </View>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => this.open(item, 'delivery')}>
                     <View style={styles.transportCardPart}>
                         <MyText style={styles.upperCaseLabel}>delivery</MyText>
                         <Address address={item.delivery}/>
-                        <Packages total={total}/>
+                        <Packages total={item.total()}/>
                     </View>
                 </TouchableOpacity>
             </View>

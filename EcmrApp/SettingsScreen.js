@@ -20,7 +20,7 @@ class SettingsScreen extends Component {
     async logout() {
         const {navigate} = this.props.navigation;
         await Auth.signOut();
-        this.props.screenProps.onStateChange('signIn',{});
+        this.props.onStateChange('signIn',{});
     }
 }
 

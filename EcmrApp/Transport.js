@@ -2,13 +2,14 @@ import {Component} from "react";
 import React from "react";
 import {Alert, SectionList, StyleSheet, Text, View, Button, FlatList} from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
-import {Address, MyText} from "./Components";
+import {Address, MyText, Packages} from "./Components";
 import { API, graphqlOperation } from 'aws-amplify';
 import * as queries from "./graphql/queries";
 import * as mutations from "./graphql/mutations";
 import moment from "moment";
 import { Auth } from 'aws-amplify';
 import {S3Image} from "aws-amplify-react-native";
+import ContractModel from "./ContractModel";
 
 const Header = ({children}) => <MyText style={styles.header}>{children}</MyText>;
 
@@ -44,12 +45,12 @@ class Transport extends Component {
     }
 
     render() {
-        const item = this.state.item;
-        if (!item || !item.id) {
+        const contract = this.state.item;
+        if (!contract || !contract.id) {
             return <MyText>Loading...</MyText>
         }
 
-        const total = 5;
+        const item = new ContractModel(contract);
         const site = this.state.site;
         const direction = site === 'pickup' ? "loading" : "unloading";
         const actions = site === 'pickup' ?
@@ -66,7 +67,7 @@ class Transport extends Component {
                 <Header>Details</Header>
                 <Address address={item[site]} style={styles.address} />
 
-                <Package total={total} />
+                <Package total={item.total()} />
 
                 <View style={styles.action}>
                     {firstAction === 'ArrivalOnSite' && <Button title={`Notify arrival at ${direction} site`} color={actionButtonColor} onPress={() => this.confirmNotifyArrival()}/>}

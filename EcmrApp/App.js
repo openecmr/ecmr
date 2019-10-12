@@ -25,7 +25,7 @@ const MainNavigator = createStackNavigator({
 
 const TabNavigator = createBottomTabNavigator({
     Home: MainNavigator,
-    Settings: SettingsScreen
+    Settings: withAuthenticator(SettingsScreen)
 });
 
 
