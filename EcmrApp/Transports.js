@@ -3,7 +3,7 @@ import {SectionList, StyleSheet, Text, TouchableOpacity, View, Dimensions} from 
 import * as queries from "./graphql/queries";
 import {API, graphqlOperation} from 'aws-amplify';
 import {Address, MyText, Packages} from './Components';
-import {SceneMap, TabView} from "react-native-tab-view";
+import {SceneMap, TabBar, TabView} from "react-native-tab-view";
 import ContractModel from "./ContractModel";
 
 const NoContracts = () =>
@@ -51,7 +51,18 @@ class Transports extends Component {
                     done: () => this.renderItems(this.state.doneContracts)
                 })}
                 onIndexChange={index => this.setState({ index })}
-                initialLayout={{ width: Dimensions.get('window').width }}
+                initialLayout={{
+                    width: Dimensions.get('window').width
+                }}
+                renderTabBar={props =>
+                    <TabBar
+                        {...props}
+                        indicatorStyle={{ backgroundColor: 'rgb(0,115,209)' }}
+                        style={{ backgroundColor: 'rgb(245,245,245)' }}
+                        activeColor={'rgb(0,115,209)'}
+                        inactiveColor={'rgb(0,115,209)'}
+                    />
+                }
             />
         );
     }

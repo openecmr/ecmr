@@ -20,7 +20,7 @@
 				"s3TemplateURL": "https://s3.amazonaws.com/open-ecmr-test-20191012210608-deployment/amplify-cfn-templates/auth/openecmr291ad5fc-cloudformation-template.yml",
 				"logicalId": "authopenecmr291ad5fc"
 			},
-			"lastPushTimeStamp": "2019-10-12T19:17:05.132Z",
+			"lastPushTimeStamp": "2019-10-16T19:16:05.351Z",
 			"output": {
 				"AppClientSecret": "ve3agm7q8ubevaj89t98nh7rsc2ljevt06pfpsn8419fgtb8b5s",
 				"UserPoolId": "eu-central-1_J9qnpMhwK",
@@ -54,8 +54,24 @@
 				"s3TemplateURL": "https://s3.amazonaws.com/open-ecmr-test-20191012210608-deployment/amplify-cfn-templates/api/cloudformation-template.json",
 				"logicalId": "apiopenecmr"
 			},
-			"lastPushTimeStamp": "2019-10-12T19:17:06.823Z",
+			"lastPushTimeStamp": "2019-10-16T19:16:05.352Z",
 			"lastPushDirHash": "xQ+Y08kLMsHKQstWcqMEAlEyWUM="
+		}
+	},
+	"storage": {
+		"s3fc765d1d": {
+			"service": "S3",
+			"providerPlugin": "awscloudformation",
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/open-ecmr-test-20191012210608-deployment/amplify-cfn-templates/storage/s3-cloudformation-template.json",
+				"logicalId": "storages3fc765d1d"
+			},
+			"lastPushTimeStamp": "2019-10-16T19:16:05.356Z",
+			"output": {
+				"BucketName": "open-ecmr93dbc7ab44f644ad9ce36cae0ceb6317-test",
+				"Region": "eu-central-1"
+			},
+			"lastPushDirHash": "cNVvWZcAVbv/u/nKRyrlCGT/9YM="
 		}
 	}
 }
