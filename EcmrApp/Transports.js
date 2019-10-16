@@ -12,6 +12,9 @@ const NoContracts = () =>
     </View>
 ;
 
+const tabIndicatorColor = 'rgb(0,115,209)';
+const tabBackgroundColor = 'rgb(245,245,245)';
+
 class Transports extends Component {
     static navigationOptions = ({ navigation, screenProps }) => ({
         title: 'Open e-CMR'
@@ -40,8 +43,6 @@ class Transports extends Component {
         );
     }
 
-
-
     render() {
         return (
             <TabView
@@ -57,10 +58,10 @@ class Transports extends Component {
                 renderTabBar={props =>
                     <TabBar
                         {...props}
-                        indicatorStyle={{ backgroundColor: 'rgb(0,115,209)' }}
-                        style={{ backgroundColor: 'rgb(245,245,245)' }}
-                        activeColor={'rgb(0,115,209)'}
-                        inactiveColor={'rgb(0,115,209)'}
+                        indicatorStyle={{ backgroundColor: tabIndicatorColor }}
+                        style={{ backgroundColor: tabBackgroundColor }}
+                        activeColor={tabIndicatorColor}
+                        inactiveColor={tabIndicatorColor}
                     />
                 }
             />
