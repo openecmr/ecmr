@@ -1,0 +1,32 @@
+{
+	"auth": {
+		"openecmr83cee658": {
+			"service": "Cognito",
+			"providerPlugin": "awscloudformation",
+			"dependsOn": []
+		}
+	},
+	"api": {
+		"openecmr": {
+			"service": "AppSync",
+			"providerPlugin": "awscloudformation",
+			"output": {
+				"authConfig": {
+					"additionalAuthenticationProviders": [],
+					"defaultAuthentication": {
+						"authenticationType": "AMAZON_COGNITO_USER_POOLS",
+						"userPoolConfig": {
+							"userPoolId": "authopenecmr83cee658"
+						}
+					}
+				}
+			}
+		}
+	},
+	"storage": {
+		"attachments": {
+			"service": "S3",
+			"providerPlugin": "awscloudformation"
+		}
+	}
+}
