@@ -8,8 +8,9 @@ projects:
     extensions:
       amplify:
         codeGenTarget: javascript
-        generatedFileName: src/API.js
+        generatedFileName: ''
         docsFilePath: src/graphql
+        maxDepth: 5
 extensions:
   amplify:
     version: 3

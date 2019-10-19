@@ -63,6 +63,16 @@ export const onCreateContract = `subscription OnCreateContract($owner: String!) 
       longitude
       signature {
         method
+        signatureImageDriver {
+          bucket
+          region
+          key
+        }
+        signatureImageSignatory {
+          bucket
+          region
+          key
+        }
       }
     }
   }
@@ -130,6 +140,16 @@ export const onUpdateContract = `subscription OnUpdateContract($owner: String!, 
       longitude
       signature {
         method
+        signatureImageDriver {
+          bucket
+          region
+          key
+        }
+        signatureImageSignatory {
+          bucket
+          region
+          key
+        }
       }
     }
   }
@@ -197,6 +217,16 @@ export const onDeleteContract = `subscription OnDeleteContract($owner: String!) 
       longitude
       signature {
         method
+        signatureImageDriver {
+          bucket
+          region
+          key
+        }
+        signatureImageSignatory {
+          bucket
+          region
+          key
+        }
       }
     }
   }

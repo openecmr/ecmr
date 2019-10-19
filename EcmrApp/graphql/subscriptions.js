@@ -1,8 +1,8 @@
-// eslint-disable
+/* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const onCreateContract = `subscription OnCreateContract {
-  onCreateContract {
+export const onCreateContract = `subscription OnCreateContract($owner: String!) {
+  onCreateContract(owner: $owner) {
     id
     owner
     carrierUsername
@@ -78,8 +78,8 @@ export const onCreateContract = `subscription OnCreateContract {
   }
 }
 `;
-export const onUpdateContract = `subscription OnUpdateContract {
-  onUpdateContract {
+export const onUpdateContract = `subscription OnUpdateContract($owner: String!, $carrierUsername: String!) {
+  onUpdateContract(owner: $owner, carrierUsername: $carrierUsername) {
     id
     owner
     carrierUsername
@@ -155,8 +155,8 @@ export const onUpdateContract = `subscription OnUpdateContract {
   }
 }
 `;
-export const onDeleteContract = `subscription OnDeleteContract {
-  onDeleteContract {
+export const onDeleteContract = `subscription OnDeleteContract($owner: String!) {
+  onDeleteContract(owner: $owner) {
     id
     owner
     carrierUsername
