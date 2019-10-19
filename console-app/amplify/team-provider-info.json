@@ -15,5 +15,22 @@
                 "openecmr6a39137d": {}
             }
         }
+    },
+    "dev": {
+        "awscloudformation": {
+            "AuthRoleName": "open-ecmr-dev-20191019163936-authRole",
+            "UnauthRoleArn": "arn:aws:iam::173648348160:role/open-ecmr-dev-20191019163936-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::173648348160:role/open-ecmr-dev-20191019163936-authRole",
+            "Region": "eu-central-1",
+            "DeploymentBucketName": "open-ecmr-dev-20191019163936-deployment",
+            "UnauthRoleName": "open-ecmr-dev-20191019163936-unauthRole",
+            "StackName": "open-ecmr-dev-20191019163936",
+            "StackId": "arn:aws:cloudformation:eu-central-1:173648348160:stack/open-ecmr-dev-20191019163936/464fb260-f27e-11e9-8558-0a62f85f92f4"
+        },
+        "categories": {
+            "auth": {
+                "openecmr6a39137d": {}
+            }
+        }
     }
 }
