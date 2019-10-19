@@ -1,0 +1,19 @@
+{
+    "master": {
+        "awscloudformation": {
+            "AuthRoleName": "open-ecmr-master-20191019155657-authRole",
+            "UnauthRoleArn": "arn:aws:iam::173648348160:role/open-ecmr-master-20191019155657-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::173648348160:role/open-ecmr-master-20191019155657-authRole",
+            "Region": "eu-central-1",
+            "DeploymentBucketName": "open-ecmr-master-20191019155657-deployment",
+            "UnauthRoleName": "open-ecmr-master-20191019155657-unauthRole",
+            "StackName": "open-ecmr-master-20191019155657",
+            "StackId": "arn:aws:cloudformation:eu-central-1:173648348160:stack/open-ecmr-master-20191019155657/508101e0-f278-11e9-92b0-06bc90058f1a"
+        },
+        "categories": {
+            "auth": {
+                "openecmr6a39137d": {}
+            }
+        }
+    }
+}

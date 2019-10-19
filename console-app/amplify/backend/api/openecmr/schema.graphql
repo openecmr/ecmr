@@ -1,0 +1,111 @@
+#type Task
+#  @model
+#  @auth(rules: [
+#      {allow: groups, groups: ["Managers"], queries: null, mutations: [create, update, delete]},
+#      {allow: groups, groups: ["Employees"], queries: [get, list], mutations: null}
+#    ])
+#{
+#  id: ID!
+#  title: String!
+#  description: String
+#  status: String
+#}
+#type PrivateNote
+#  @model
+#  @auth(rules: [{allow: owner}])
+#{
+#  id: ID!
+#  content: String!
+#}
+
+type S3Object {
+    bucket: String!
+    region: String!
+    key: String!
+}
+
+enum ContractStatus {
+    DRAFT
+    PICKUP,
+    IN_PROGRESS,
+    DONE
+}
+
+type Contract @model
+    @auth(rules: [
+        { allow: owner },
+        { allow: owner, ownerField: "carrierUsername", operations: [read, update] }
+    ])
+{
+    id: ID
+    owner: String
+    carrierUsername: String
+    status: ContractStatus
+    shipper: Address
+    carrier: Address
+    delivery: Address
+    arrivalDate: String
+    deliveryDate: String
+    pickup: Address
+    loads: [Load]!
+    driver: Driver
+    trailer: String
+    truck: String
+    references: Reference
+    updatedAt: String!
+    createdAt: String!
+    events: [Event]
+}
+
+type Address {
+    name: String
+    postalCode: String
+    address: String
+    city: String
+    country: String
+}
+
+type Load {
+    category: String
+    quantity: Int
+    description: String
+}
+
+type Driver {
+    name: String!
+}
+
+type Reference {
+    carrier: String
+}
+
+enum EventType {
+    ArrivalOnSite,
+    LoadingComplete,
+    UnloadingComplete,
+    DepartureFromSite
+}
+
+type Author {
+    username: String!
+}
+
+enum SignatureMethod {
+    SIGN_ON_GLASS, PGP, NO_SIGNATORY
+}
+
+type Signature {
+    method: SignatureMethod!,
+    signatureImageDriver: S3Object,
+    signatureImageSignatory: S3Object
+}
+
+type Event {
+    author: Author!
+    type: EventType!
+    site: String
+    createdAt: String!
+    latitude: Float
+    longitude: Float
+    signature: Signature
+}
