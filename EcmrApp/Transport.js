@@ -1,6 +1,6 @@
 import {Component} from "react";
 import React from "react";
-import {Alert, SectionList, StyleSheet, Text, View, Button, FlatList} from "react-native";
+import {Alert, SectionList, StyleSheet, Text, View, Button, FlatList, ScrollView} from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import {Address, MyText, Packages} from "./Components";
 import { API, graphqlOperation } from 'aws-amplify';
@@ -63,7 +63,7 @@ class Transport extends Component {
         const relevantItems = [...item.events || []].filter(e => e.site === site).reverse();
 
         return (
-            <View style={styles.transport}>
+            <ScrollView style={styles.transport}>
                 <Header>Details</Header>
                 <Address address={item[site]} style={styles.address} />
 
@@ -90,9 +90,8 @@ class Transport extends Component {
                             <Text style={{fontSize: 12}}>{moment(item.createdAt).format('llll')}</Text>
 
                             <MyText>{this.eventText(item)}</MyText>
-
                             {
-                                item.type === 'LoadingComplete' &&
+                                (item.type === 'UnloadingComplete' || item.type === 'LoadingComplete') &&
                                     <S3Image style={{width: 150, height: 150}}
                                              resizeMode={'center'}
                                              level={"public"}
@@ -101,7 +100,7 @@ class Transport extends Component {
                         </View>)
                     }
                 />
-            </View>
+            </ScrollView>
         );
     }
 
