@@ -7,7 +7,7 @@ import {
     Header,
     Icon,
     Step,
-    List, Table, Label, Divider, Segment
+    List, Table, Label, Divider, Segment, Comment
 } from "semantic-ui-react";
 import { API, graphqlOperation } from 'aws-amplify';
 import moment from 'moment';
@@ -34,6 +34,41 @@ const Address = ({address, label, icon}) => (
             </List.Item>
         </List>
     </Container>);
+
+const eventText = (event) => {
+    switch (event.type) {
+        case 'ArrivalOnSite':
+            return `arrived on ${event.site} site.`;
+        case 'LoadingComplete':
+            return `completed the loading.`;
+        case 'UnloadingComplete':
+            return `completed the unloading.`;
+        default:
+            return `completed ${event.type}`;
+    }
+};
+
+const Events = ({events}) => (
+    <Container>
+        <Comment.Group>
+            <Header as={'h4'}>Events</Header>
+            {
+                events.map(event => (
+                    <Comment>
+
+                        <Comment.Content>
+                            <Comment.Author as={'a'}>{event.author.username}</Comment.Author>
+                            <Comment.Metadata>
+                                <div>{moment(event.createdAt).format('llll')}</div>
+                            </Comment.Metadata>
+                            <Comment.Text>{eventText(event)}</Comment.Text>
+                        </Comment.Content>
+                    </Comment>
+                ))
+            }
+        </Comment.Group>
+    </Container>
+);
 
 class Transport extends Component {
     constructor(props) {
@@ -152,6 +187,20 @@ class Transport extends Component {
                         </Grid.Row>
                     </Grid>
                 </Segment>
+                <Grid columns={2}>
+                    <Grid.Row>
+                        <Grid.Column>
+                            <Segment>
+                                <Header as={'h4'}>Documents and photos</Header>
+                            </Segment>
+                        </Grid.Column>
+                        <Grid.Column>
+                            <Segment>
+                                <Events events={contract.events}/>
+                            </Segment>
+                        </Grid.Column>
+                    </Grid.Row>
+                </Grid>
             </Container>
 
         );
