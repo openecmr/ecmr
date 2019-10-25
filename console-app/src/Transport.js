@@ -13,6 +13,7 @@ import { API, graphqlOperation } from 'aws-amplify';
 import moment from 'moment';
 import * as queries from "./graphql/queries";
 import * as mutations from "./graphql/mutations";
+import {S3Image} from "aws-amplify-react";
 
 const Address = ({address, label, icon}) => (
     <Container>
@@ -61,7 +62,17 @@ const Events = ({events}) => (
                             <Comment.Metadata>
                                 <div>{moment(event.createdAt).format('llll')}</div>
                             </Comment.Metadata>
-                            <Comment.Text>{eventText(event)}</Comment.Text>
+                            <Comment.Text>
+                                {eventText(event)}
+                                {
+                                    (event.type === 'UnloadingComplete' || event.type === 'LoadingComplete') &&
+                                    <S3Image
+                                             theme={{ photoImg: { width: '100px', height: '100px' } }}
+                                             resizeMode={'center'}
+                                             level={"public"}
+                                             imgKey={event.signature.signatureImageSignatory.key} />
+                                }
+                            </Comment.Text>
                         </Comment.Content>
                     </Comment>
                 ))
