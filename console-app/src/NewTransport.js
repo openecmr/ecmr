@@ -100,6 +100,35 @@ class Shipper extends NewTransportForm {
     }
 }
 
+class Delivery extends NewTransportForm {
+    constructor(props) {
+        super(props);
+
+        this.label = "Enter delivery address";
+    }
+
+    renderFields() {
+        super.renderFields();
+
+        return (
+            <Fragment>
+                {this.renderField("Name", "name")}
+                {this.renderField("Postal code", "postalCode")}
+                {this.renderField("Address", "address")}
+                {this.renderField("City", "city")}
+                {this.renderField("Country", "country")}
+
+                <Form.Field key={"pickup"}>
+                    <label>Planned delivery date</label>
+                    <Form.Group inline >
+                        <Form.Input label="On" onChange={this.handleInput} name="deliveryDate" value={this.props.value["deliveryDate"]} type={'date'} width={8}/>
+                    </Form.Group>
+                </Form.Field>
+            </Fragment>
+        )
+    }
+}
+
 class Pickup extends NewTransportForm {
     state = { modalOpen: false }
     constructor(props) {
@@ -132,11 +161,7 @@ class Pickup extends NewTransportForm {
                 <Form.Field key={"pickup"}>
                     <label>Planned pickup date</label>
                     <Form.Group inline >
-                        <Form.Input label="On" onChange={this.handleInput} name="pickupDate" value={this.props.value["pickupDate"]} width={8}/>
-                    </Form.Group>
-                    <Form.Group inline >
-                        <Form.Select label="Between" options={times} fluid onChange={this.handleInput} name="pickupTimeBegin" value={this.props.value["pickupTimeBegin"]}/>
-                        <Form.Select label="and" options={times} fluid onChange={this.handleInput} name="pickupTimeEnd" value={this.props.value["pickupTimeEnd"]}/>
+                        <Form.Input label="On" onChange={this.handleInput} name="pickupDate" value={this.props.value["pickupDate"]} type={'date'} width={8}/>
                     </Form.Group>
                 </Form.Field>
                 <Header as={'h3'} key={"header"}>Loads</Header>
@@ -266,13 +291,13 @@ class NewTransport extends Component {
             {
                 section: 'Pickup',
                 items: [
-                    {label: 'Pickup', icon: 'sign-out', form: () => <Pickup onChange={this.createOnUpdateFor('pickup')} onLoadAdded={(load) => this.onLoadAdded(load)} value={this.state.pickup} loads={this.state.loads}/> }
+                    {label: 'Pickup', icon: 'sign-out', form: () => <Pickup onChange={this.createOnUpdateFor('pickup', this.copyDateToDelivery)} onLoadAdded={(load) => this.onLoadAdded(load)} value={this.state.pickup} loads={this.state.loads}/> }
                 ]
             },
             {
                 section: 'Delivery',
                 items: [
-                    {label: 'Delivery', icon: 'sign-in', form: () => <Shipper onChange={this.createOnUpdateFor('delivery')} value={this.state.delivery} />}
+                    {label: 'Delivery', icon: 'sign-in', form: () => <Delivery onChange={this.createOnUpdateFor('delivery')} value={this.state.delivery} />}
                 ]
             }
         ];
@@ -305,6 +330,17 @@ class NewTransport extends Component {
         }
     }
 
+    copyDateToDelivery(newState) {
+        if (newState.pickupDate && !this.state.delivery.deliveryDate) {
+            this.setState({
+                delivery: {
+                    ...this.state.delivery,
+                    deliveryDate: newState.pickupDate
+                }
+            })
+        }
+    }
+
     async copyFromExisting(id) {
         const response = await API.graphql(graphqlOperation(queries.getContract, {
             "id": id
@@ -312,13 +348,22 @@ class NewTransport extends Component {
         const contract = response.data.getContract;
 
         this.setState({
-            carrier: contract.carrier,
+            carrier: {
+                ...contract.carrier,
+                username: contract.carrierUsername
+            },
             driver: contract.driver,
             trailer: contract.trailer,
             truck: contract.truck,
             shipper: contract.shipper,
-            delivery: contract.delivery,
-            pickup: contract.pickup,
+            delivery: {
+                ...contract.delivery,
+                deliveryDate: contract.deliveryDate
+            },
+            pickup: {
+                ...contract.pickup,
+                pickupDate: contract.arrivalDate
+            },
             loads: contract.loads
         });
     }
@@ -329,11 +374,16 @@ class NewTransport extends Component {
         }))
     }
 
-    createOnUpdateFor(item) {
+    createOnUpdateFor(item, customCallback) {
         let func = (value) => {
             let newState = {
             };
             newState[item] = Object.assign({}, this.state[item], value);
+
+            if (customCallback) {
+                customCallback.call(this, newState[item]);
+            }
+
             this.setState(newState)
         };
 
@@ -405,11 +455,14 @@ class NewTransport extends Component {
             ...this.state,
             status: 'DRAFT',
             carrierUsername: this.state.carrier.username,
-            arrivalDate: this.state.pickup.pickupDate
+            arrivalDate: this.state.pickup.pickupDate,
+            deliveryDate: this.state.delivery.deliveryDate,
+            events: []
         };
         delete input.selectedLabel;
         delete input.form;
         delete input.pickup.pickupDate;
+        delete input.delivery.deliveryDate;
         delete input.carrier.username;
         let now = moment().toISOString();
         input.updatedAt = now;
