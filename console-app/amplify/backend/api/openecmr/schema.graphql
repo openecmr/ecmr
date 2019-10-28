@@ -26,9 +26,10 @@ type S3Object {
 
 enum ContractStatus {
     DRAFT
-    PICKUP,
+    CREATED,
     IN_PROGRESS,
-    DONE
+    DONE,
+    ARCHIVED
 }
 
 type Contract @model

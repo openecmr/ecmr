@@ -133,10 +133,10 @@ class Transport extends Component {
                 </Header>
 
                 <Step.Group>
-                    <Step content='Created' active/>
-                    <Step content='Ongoing' />
-                    <Step content='Done' />
-                    <Step content='Archived' />
+                    <Step content='Created' active={contract.status === 'CREATED' || contract.status === 'DRAFT'}/>
+                    <Step content='Ongoing'  active={contract.status === 'IN_PROGRESS'} />
+                    <Step content='Done'  active={contract.status === 'DONE'} />
+                    <Step content='Archived'  active={contract.status === 'ARCHIVED'}/>
                 </Step.Group>
                 <Segment>
                 <Grid columns={3}>
