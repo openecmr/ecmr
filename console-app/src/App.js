@@ -9,11 +9,12 @@ import Amplify from 'aws-amplify';
 import awsmobile from './aws-exports';
 import { withAuthenticator } from 'aws-amplify-react';
 import Transport from "./Transport";
+import style from "./Style"
 
 Amplify.configure(awsmobile);
 
 const AppMenu = withRouter(({location}) => (
-    <Menu fluid vertical tabular>
+    <Menu vertical fixed={'left'} style={style.appMenu}>
         {console.log(location)}
         <Menu.Item
             name='consignments'
@@ -35,28 +36,20 @@ class App extends Component {
             <Router>
                 <div>
                     <Menu fixed='top' inverted>
-                        <Container>
-                            <Menu.Item as='a' header>
-                                <Image size='mini' src='/logo.png' style={{ marginRight: '1.5em' }} />
-                                Open e-CMR
-                            </Menu.Item>
-                        </Container>
+                        <Menu.Item as='a' header>
+                            <Image size='mini' src='/logo.png' style={{ marginRight: '1.5em' }} />
+                            Open e-CMR
+                        </Menu.Item>
                     </Menu>
-                    <Container style={{paddingTop: '75px'}}>
-                        <Grid columns={2} stackable>
-                            <Grid.Row>
-                                <Grid.Column width={3}>
-                                    <AppMenu/>
-                                </Grid.Column>
-                                <Grid.Column width={13}>
-                                    <Route exact path="/transports" component={Transports}/>
-                                    <Route exact path="/transports-new/:copy_id" component={NewTransport}/>
-                                    <Route exact path="/transports-new" component={NewTransport}/>
-                                    <Route exact path="/transports/:id" component={Transport}/>
-                                </Grid.Column>
-                            </Grid.Row>
-                        </Grid>
-                    </Container>
+
+                    <AppMenu/>
+
+                    <div style={style.content}>
+                        <Route exact path="/transports" component={Transports}/>
+                        <Route exact path="/transports-new/:copy_id" component={NewTransport}/>
+                        <Route exact path="/transports-new" component={NewTransport}/>
+                        <Route exact path="/transports/:id" component={Transport}/>
+                    </div>
                 </div>
             </Router>
         );

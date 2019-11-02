@@ -61,7 +61,7 @@ class Transports extends Component {
 
     render() {
         return (
-            <Container>
+
                 <Table className="App-text-with-newlines" selectable compact='very'>
                     <Table.Header>
                         <Table.Row>
@@ -92,7 +92,6 @@ class Transports extends Component {
                         {this.renderConsignmentNotes()}
                     </Table.Body>
                 </Table>
-            </Container>
         );
     }
 
