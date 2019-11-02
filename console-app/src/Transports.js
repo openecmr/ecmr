@@ -1,6 +1,6 @@
 import {Component} from "react";
 import React from "react";
-import {Button, Container, Icon, Table} from "semantic-ui-react";
+import {Button, Container, Icon, Progress, Table} from "semantic-ui-react";
 import {Link} from "react-router-dom";
 import * as queries from "./graphql/queries";
 import { API, graphqlOperation } from 'aws-amplify';
@@ -50,6 +50,43 @@ class IdCell extends Component {
     }
 }
 
+const StatusMappings = {
+    DRAFT: {
+        progress: 0,
+        label: 'draft',
+        color: 'grey'
+    },
+    CREATED: {
+        progress: 33,
+        label: 'ready',
+        color: 'blue'
+    },
+    IN_PROGRESS: {
+        progress: 66,
+        label: 'ongoing',
+        color: 'orange'
+    },
+    DONE: {
+        progress: 100,
+        label: 'completed',
+        color: 'green'
+    },
+    ARCHIVED: {
+        progress: 100,
+        label: 'archived',
+        color: 'grey'
+    }
+};
+
+const Status = ({status, updatedAt}) => {
+    const statusMapping = StatusMappings[status];
+    return <Table.Cell width={2}>
+        <Progress percent={statusMapping.progress} size='tiny' color={statusMapping.color}>
+            {statusMapping.label}
+        </Progress>
+    </Table.Cell>
+};
+
 class Transports extends Component {
     constructor(props) {
         super(props);
@@ -74,7 +111,6 @@ class Transports extends Component {
                             </Table.HeaderCell>
                         </Table.Row>
                         <Table.Row>
-                            <Table.HeaderCell>Updated</Table.HeaderCell>
                             <Table.HeaderCell>Number</Table.HeaderCell>
                             <Table.HeaderCell>Carrier reference</Table.HeaderCell>
                             <Table.HeaderCell>Status</Table.HeaderCell>
@@ -99,10 +135,10 @@ class Transports extends Component {
         return (
             this.state.notes.map((e) =>
                 <Table.Row key={e.id}>
-                    <TextCell text={moment(e.updatedAt).format("ll")}/>
+                    {/*<TextCell text={moment(e.updatedAt).format("ll")}/>*/}
                     <IdCell id={e.id}/>
                     <TextCell text={e.references ? e.references.carrier : null}/>
-                    <TextCell text={e.status}/>
+                    <Status status={e.status} lastUpdate={e.updatedAt}/>
                     <AddressCell address={e.pickup}/>
                     <TextCell text={e.pickup ? e.pickup.arrivalDate : null}/>
                     <AddressCell address={e.delivery}/>
