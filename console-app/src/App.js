@@ -17,9 +17,15 @@ const AppMenu = withRouter(({location}) => (
     <Menu vertical fixed={'left'} style={style.appMenu}>
         {console.log(location)}
         <Menu.Item
-            name='consignments'
+            name='transports'
             to={'/transports'}
             active={location.pathname.startsWith('/transports')}
+            as={Link}
+        />
+        <Menu.Item
+            name='Address book'
+            active={location.pathname.startsWith('/addressbook')}
+            to={'/addressbook'}
             as={Link}
         />
         <Menu.Item

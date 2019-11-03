@@ -1,4 +1,5 @@
 import {Component, Fragment} from "react";
+import _ from 'lodash';
 import {
     Button,
     Container,
@@ -8,7 +9,7 @@ import {
     Icon,
     Segment,
     Form,
-    Modal, List
+    Modal, List, Search
 } from "semantic-ui-react";
 import React from "react";
 import { API, graphqlOperation } from 'aws-amplify';
@@ -58,25 +59,126 @@ class NewTransportForm extends Component {
     }
 }
 
-class Carrier extends NewTransportForm {
+class AddressPicker extends Component {
+    initialState = {
+        isLoading: false,
+        results: [],
+        value: ''
+    };
+
+    source = [
+        {
+            "name": "Kling LLC",
+            "postalCode": "5442 FX",
+            "address": "Tooroplaan 116",
+            "city": "Maassluis",
+            "country": "Nederland"
+        }
+    ];
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            ...this.initialState
+        };
+    }
+
+    render() {
+        const { isLoading, value, results } = this.state;
+        const { address } = this.props;
+
+        console.log(address);
+
+        return (
+            <div>
+                <Search
+                    showNoResults={true}
+                    placeholder={"Name of carrier"}
+                    loading={isLoading}
+                    onResultSelect={(e, res) => this.handleResultSelect(e, res)}
+                    onSearchChange={_.debounce((e, arg) => this.handleSearchChange(e, arg), 500, {
+                        leading: true,
+                    })}
+                    results={results}
+                    value={value}
+                    title={'Search'}
+                    resultRenderer={this.resultRenderer}
+                    {...this.props}
+                />
+                {address && (
+                    <List>
+                        <List.Item>
+                            <List.Content><strong>{address.name}</strong></List.Content>
+                        </List.Item>
+                        <List.Item>
+                            <List.Content>{address.address}</List.Content>
+                        </List.Item>
+                        <List.Item>
+                            <List.Content>{address.postalCode} {address.city}, {address.country}</List.Content>
+                        </List.Item>
+                    </List>)}
+            </div>
+        )
+    }
+
+    resultRenderer({ name, address, postalCode, cityName }) {
+        return ([
+            <div key='content' className='content'>
+                <div className='title'>{name}</div>
+                <div className='description'>{address} {postalCode} {cityName}</div>
+            </div>
+        ]);
+    }
+
+    handleResultSelect(e, { result }) {
+        this.props.addressSelected(result);
+    }
+
+    handleSearchChange(e, { value }) {
+        this.setState({
+            isLoading: true,
+            value
+        });
+
+
+
+        setTimeout(() => {
+            console.log(this.state);
+            if (this.state.value.length < 1) {
+                return this.setState({
+                    ...this.initialState
+                });
+            }
+
+            const re = new RegExp(_.escapeRegExp(this.state.value), 'i');
+            const isMatch = (result) => re.test(result.name);
+
+            this.setState({
+                isLoading: false,
+                results: _.filter(this.source, isMatch),
+            })
+        }, 300)
+    }
+}
+
+class Carrier extends Component {
     constructor(props) {
         super(props);
 
-        this.label = "Enter carrier information";
+        this.state = {
+
+        };
     }
 
-    renderFields() {
-        super.renderFields();
-
-        return (
-            [   this.renderField("Username", "username"),
-                this.renderField("Name", "name"),
-                this.renderField("Postal code", "postalCode"),
-                this.renderField("Address", "address"),
-                this.renderField("City", "city"),
-                this.renderField("Country", "country")])
+    render() {
+        return (<div>
+            <Header as={'h3'}>Enter carrier information</Header>
+            <AddressPicker addressSelected={(selected) => {this.setState({address: selected})}} address={this.state.address}/>
+        </div>);
     }
 }
+
+
 
 class Shipper extends NewTransportForm {
     constructor(props) {

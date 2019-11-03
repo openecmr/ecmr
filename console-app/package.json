@@ -11,6 +11,7 @@
     "aws-amplify": "^1.2.2",
     "aws-amplify-react": "^2.5.3",
     "graphql-tag": "^2.10.1",
+    "lodash": "^4.17.15",
     "moment": "^2.24.0",
     "react": "^16.5.0",
     "react-dom": "^16.5.0",
