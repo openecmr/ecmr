@@ -91,13 +91,14 @@ class AddressPicker extends Component {
 
         return (
             <div>
+                <Button basic compact style={{marginLeft: '100px', marginBottom: '5px'}} as={'a'} icon='plus square' onClick={() => this.props.addItem()} content={'Add new contact'} size={'mini'}/>
                 <Search
                     showNoResults={true}
                     placeholder={"Name of carrier"}
                     loading={isLoading}
-                    onResultSelect={(e, res) => this.handleResultSelect(e, res)}
+                    onResultSelect={(e, data) => this.handleResultSelect(e, data)}
                     onSearchChange={_.debounce((e, arg) => this.handleSearchChange(e, arg), 500, {
-                        leading: true,
+                        leading: true
                     })}
                     results={results}
                     value={value}
@@ -121,17 +122,13 @@ class AddressPicker extends Component {
         )
     }
 
-    resultRenderer({ name, address, postalCode, cityName }) {
-        return ([
-            <div key='content' className='content'>
-                <div className='title'>{name}</div>
-                <div className='description'>{address} {postalCode} {cityName}</div>
-            </div>
-        ]);
-    }
 
     handleResultSelect(e, { result }) {
-        this.props.addressSelected(result);
+        this.props.addressSelected(result.item);
+
+        this.setState({
+            ...this.initialState
+        });
     }
 
     handleSearchChange(e, { value }) {
@@ -139,8 +136,6 @@ class AddressPicker extends Component {
             isLoading: true,
             value
         });
-
-
 
         setTimeout(() => {
             console.log(this.state);
@@ -155,11 +150,39 @@ class AddressPicker extends Component {
 
             this.setState({
                 isLoading: false,
-                results: _.filter(this.source, isMatch),
+                results: _.filter(this.source, isMatch)
+                    .map(item => ({
+                        title: item.name,
+                        description: `${item.address} ${item.postalCode}, ${item.cityName}`,
+                        item: item
+                    })),
             })
         }, 300)
     }
 }
+
+const AddAddressModal = ({show, add}) => {
+    return (<Modal key={"showLoad"} open={show} size='small'>
+        <Header icon={"plus square"} content={"Add address"} />
+        <Modal.Content>
+            <Form id={"item"}>
+                <Form.Input label='Name' type='input' name={"name"} placeholder={"The Trucking Company"}/>
+                <Form.Input label='Address' type='input' name={"address"} placeholder={"22 Oxford street"}/>
+                <Form.Input label='Postal code' type='input' name={"postalCode"} placeholder={"23411"}/>
+                <Form.Input label='City' type='input' name={"city"} placeholder={"London"}/>
+                <Form.Input label='Country' type='input' name={"country"} placeholder={"United Kingdom"}/>
+            </Form>
+        </Modal.Content>
+        <Modal.Actions>
+            <Button color='red' inverted>
+                <Icon name='remove' /> Cancel
+            </Button>
+            <Button color='green' inverted onClick={() => add()}>
+                <Icon name='checkmark' /> Add address
+            </Button>
+        </Modal.Actions>
+    </Modal>)
+};
 
 class Carrier extends Component {
     constructor(props) {
@@ -173,8 +196,19 @@ class Carrier extends Component {
     render() {
         return (<div>
             <Header as={'h3'}>Enter carrier information</Header>
-            <AddressPicker addressSelected={(selected) => {this.setState({address: selected})}} address={this.state.address}/>
+            <AddressPicker addressSelected={(selected) => {this.setState({address: selected})}}
+                           address={this.state.address}
+                           addItem={() => this.addItem()} />
+           <AddAddressModal show={this.state.addingItem} add={() => this.close()}/>
         </div>);
+    }
+
+    close() {
+        this.setState({addingItem: false});
+    }
+
+    addItem() {
+        this.setState({addingItem: true});
     }
 }
 
