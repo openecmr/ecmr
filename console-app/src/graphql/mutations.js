@@ -232,3 +232,39 @@ export const deleteContract = `mutation DeleteContract($input: DeleteContractInp
   }
 }
 `;
+export const createContact = `mutation CreateContact($input: CreateContactInput!) {
+  createContact(input: $input) {
+    id
+    owner
+    name
+    postalCode
+    address
+    city
+    country
+  }
+}
+`;
+export const updateContact = `mutation UpdateContact($input: UpdateContactInput!) {
+  updateContact(input: $input) {
+    id
+    owner
+    name
+    postalCode
+    address
+    city
+    country
+  }
+}
+`;
+export const deleteContact = `mutation DeleteContact($input: DeleteContactInput!) {
+  deleteContact(input: $input) {
+    id
+    owner
+    name
+    postalCode
+    address
+    city
+    country
+  }
+}
+`;

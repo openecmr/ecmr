@@ -232,3 +232,39 @@ export const onDeleteContract = `subscription OnDeleteContract($owner: String!) 
   }
 }
 `;
+export const onCreateContact = `subscription OnCreateContact($owner: String!) {
+  onCreateContact(owner: $owner) {
+    id
+    owner
+    name
+    postalCode
+    address
+    city
+    country
+  }
+}
+`;
+export const onUpdateContact = `subscription OnUpdateContact($owner: String!) {
+  onUpdateContact(owner: $owner) {
+    id
+    owner
+    name
+    postalCode
+    address
+    city
+    country
+  }
+}
+`;
+export const onDeleteContact = `subscription OnDeleteContact($owner: String!) {
+  onDeleteContact(owner: $owner) {
+    id
+    owner
+    name
+    postalCode
+    address
+    city
+    country
+  }
+}
+`;

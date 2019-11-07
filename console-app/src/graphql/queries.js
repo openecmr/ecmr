@@ -162,3 +162,34 @@ export const listContracts = `query ListContracts(
   }
 }
 `;
+export const getContact = `query GetContact($id: ID!) {
+  getContact(id: $id) {
+    id
+    owner
+    name
+    postalCode
+    address
+    city
+    country
+  }
+}
+`;
+export const listContacts = `query ListContacts(
+  $filter: ModelContactFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listContacts(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      owner
+      name
+      postalCode
+      address
+      city
+      country
+    }
+    nextToken
+  }
+}
+`;

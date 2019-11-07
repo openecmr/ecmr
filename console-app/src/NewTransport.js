@@ -66,21 +66,21 @@ class AddressPicker extends Component {
         value: ''
     };
 
-    source = [
-        {
-            "name": "Kling LLC",
-            "postalCode": "5442 FX",
-            "address": "Tooroplaan 116",
-            "city": "Maassluis",
-            "country": "Nederland"
-        }
-    ];
-
     constructor(props) {
         super(props);
         this.state = {
-            ...this.initialState
+            ...this.initialState,
+            source: []
         };
+
+        this.loadContacts();
+    }
+
+    async loadContacts() {
+        const response = await API.graphql(graphqlOperation(queries.listContacts));
+        this.setState({
+            source: response.data.listContacts.items
+        });
     }
 
     render() {
@@ -132,32 +132,24 @@ class AddressPicker extends Component {
     }
 
     handleSearchChange(e, { value }) {
+        if (value.length < 1) {
+            return this.setState({
+                ...this.initialState
+            });
+        }
+
+        const re = new RegExp(_.escapeRegExp(this.state.value), 'i');
+        const isMatch = (result) => re.test(result.name);
+
         this.setState({
-            isLoading: true,
-            value
-        });
-
-        setTimeout(() => {
-            console.log(this.state);
-            if (this.state.value.length < 1) {
-                return this.setState({
-                    ...this.initialState
-                });
-            }
-
-            const re = new RegExp(_.escapeRegExp(this.state.value), 'i');
-            const isMatch = (result) => re.test(result.name);
-
-            this.setState({
-                isLoading: false,
-                results: _.filter(this.source, isMatch)
-                    .map(item => ({
-                        title: item.name,
-                        description: `${item.address} ${item.postalCode}, ${item.cityName}`,
-                        item: item
-                    })),
-            })
-        }, 300)
+            value,
+            results: _.filter(this.state.source, isMatch)
+                .map(item => ({
+                    title: item.name,
+                    description: `${item.address} ${item.postalCode}, ${item.cityName}`,
+                    item: item
+                })),
+        })
     }
 }
 

@@ -55,11 +55,26 @@ type Contract @model
     references: Reference
     updatedAt: String!
     createdAt: String!
-    events: [Event]
+    events: [Event]!
 }
 
 type Address {
     name: String
+    postalCode: String
+    address: String
+    city: String
+    country: String
+}
+
+type Contact
+    @model
+    @auth(rules: [
+        { allow: owner
+    }])
+{
+    id: ID
+    owner: String
+    name: String!
     postalCode: String
     address: String
     city: String
