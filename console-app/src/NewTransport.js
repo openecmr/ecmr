@@ -104,7 +104,6 @@ class AddressPicker extends Component {
                     value={value}
                     title={'Search'}
                     resultRenderer={this.resultRenderer}
-                    {...this.props}
                 />
                 {address && (
                     <List>
@@ -143,7 +142,8 @@ class AddressPicker extends Component {
 
         this.setState({
             value,
-            results: _.filter(this.state.source, isMatch)
+            results: this.state.source
+                .filter(isMatch)
                 .map(item => ({
                     title: item.name,
                     description: `${item.address} ${item.postalCode}, ${item.cityName}`,
@@ -188,8 +188,8 @@ class Carrier extends Component {
     render() {
         return (<div>
             <Header as={'h3'}>Enter carrier information</Header>
-            <AddressPicker addressSelected={(selected) => {this.setState({address: selected})}}
-                           address={this.state.address}
+            <AddressPicker addressSelected={(selected) => {this.props.onChange(selected)}}
+                           address={this.props.value}
                            addItem={() => this.addItem()} />
            <AddAddressModal show={this.state.addingItem} add={() => this.close()}/>
         </div>);
@@ -404,7 +404,8 @@ class NewTransport extends Component {
             {
                 section: 'Carrier',
                 items: [
-                    {label: 'Carrier', icon: 'truck', form: () => <Carrier onChange={this.createOnUpdateFor('carrier')} value={this.state.carrier} />},
+                    {label: 'Carrier', icon: 'truck', form: () =>
+                            <Carrier onChange={(address) => this.setState({'carrier' : address})} value={this.state.carrier} />},
                     {label: 'Driver', icon: 'user', form: () => <Driver onChange={this.createOnUpdateFor('driver')} value={this.state.driver} />},
                     {label: 'Vehicle license plate', icon: 'truck', form: () => <Vehicle onChange={this.createOnUpdateFor('truck')} value={this.state.truck}/>},
                     {label: 'Trailer license plate', icon: 'truck', form: () => <Trailer onChange={this.createOnUpdateFor('trailer')} value={this.state.trailer}/>}
@@ -433,8 +434,6 @@ class NewTransport extends Component {
         this.state = {
             selectedLabel: this.form[0].items[0].label,
             form: this.form[0].items[0].form,
-            carrier: {
-            },
             driver: {
             },
             trailer: {
