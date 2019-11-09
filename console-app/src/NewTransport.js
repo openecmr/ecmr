@@ -90,11 +90,12 @@ class AddressPicker extends Component {
         console.log(address);
 
         return (
-            <div>
-                <Button basic compact style={{marginLeft: '100px', marginBottom: '5px'}} as={'a'} icon='plus square' onClick={() => this.props.addItem()} content={'Add new contact'} size={'mini'}/>
+            <div style={{marginBottom: '15px'}}>
+                <Button basic compact style={{marginLeft: '100px', marginBottom: '5px'}} as={'a'} icon='plus square'
+                        onClick={() => this.addItem()} content={'Add new contact'} size={'mini'}/>
                 <Search
                     showNoResults={true}
-                    placeholder={"Name of carrier"}
+                    placeholder={"Name of contact"}
                     loading={isLoading}
                     onResultSelect={(e, data) => this.handleResultSelect(e, data)}
                     onSearchChange={_.debounce((e, arg) => this.handleSearchChange(e, arg), 500, {
@@ -114,17 +115,24 @@ class AddressPicker extends Component {
                             <List.Content>{address.address}</List.Content>
                         </List.Item>
                         <List.Item>
-                            <List.Content>{address.postalCode} {address.city}, {address.country}</List.Content>
+                            <List.Content>{address.postalCode} {address.city}{address.country && `, ${address.country}`}</List.Content>
                         </List.Item>
                     </List>)}
+                    <AddAddressModal show={this.state.addingItem} add={() => this.close()}/>
             </div>
         )
     }
 
 
     handleResultSelect(e, { result }) {
-        this.props.addressSelected(result.item);
-
+        const address = {
+            name: result.item.name,
+            address: result.item.address,
+            postalCode: result.item.postalCode,
+            city: result.item.city,
+            country: result.item.country
+        };
+        this.props.addressSelected(address);
         this.setState({
             ...this.initialState
         });
@@ -150,6 +158,14 @@ class AddressPicker extends Component {
                     item: item
                 })),
         })
+    }
+
+    close() {
+        this.setState({addingItem: false});
+    }
+
+    addItem() {
+        this.setState({addingItem: true});
     }
 }
 
@@ -179,28 +195,15 @@ const AddAddressModal = ({show, add}) => {
 class Carrier extends Component {
     constructor(props) {
         super(props);
-
-        this.state = {
-
-        };
     }
 
     render() {
         return (<div>
             <Header as={'h3'}>Enter carrier information</Header>
-            <AddressPicker addressSelected={(selected) => {this.props.onChange(selected)}}
-                           address={this.props.value}
-                           addItem={() => this.addItem()} />
-           <AddAddressModal show={this.state.addingItem} add={() => this.close()}/>
+            <AddressPicker addressSelected={(selected) => {this.props.onAddressChange(selected)}}
+                           address={this.props.address} />
+
         </div>);
-    }
-
-    close() {
-        this.setState({addingItem: false});
-    }
-
-    addItem() {
-        this.setState({addingItem: true});
     }
 }
 
@@ -209,22 +212,15 @@ class Carrier extends Component {
 class Shipper extends NewTransportForm {
     constructor(props) {
         super(props);
-
-        this.label = "Enter shipper information";
     }
 
-    renderFields() {
-        super.renderFields();
+    render() {
+        return (<div>
+            <Header as={'h3'}>Enter shipper information</Header>
+            <AddressPicker addressSelected={(selected) => {this.props.onAddressChange(selected)}}
+                           address={this.props.address} />
 
-        return (
-            <Fragment>
-                {this.renderField("Name", "name")}
-                {this.renderField("Postal code", "postalCode")}
-                {this.renderField("Address", "address")}
-                {this.renderField("City", "city")}
-                {this.renderField("Country", "country")}
-            </Fragment>
-        )
+        </div>);
     }
 }
 
@@ -240,11 +236,8 @@ class Delivery extends NewTransportForm {
 
         return (
             <Fragment>
-                {this.renderField("Name", "name")}
-                {this.renderField("Postal code", "postalCode")}
-                {this.renderField("Address", "address")}
-                {this.renderField("City", "city")}
-                {this.renderField("Country", "country")}
+                <AddressPicker addressSelected={(selected) => {this.props.onAddressChange(selected)}}
+                               address={this.props.address} />
 
                 <Form.Field key={"pickup"}>
                     <label>Planned delivery date</label>
@@ -281,11 +274,9 @@ class Pickup extends NewTransportForm {
 
         return (
             <Fragment>
-                {this.renderField("Name", "name")}
-                {this.renderField("Postal code", "postalCode")}
-                {this.renderField("Address", "address")}
-                {this.renderField("City", "city")}
-                {this.renderField("Country", "country")}
+                <AddressPicker addressSelected={(selected) => {this.props.onAddressChange(selected)}}
+                               address={this.props.address} />
+
                 <Form.Field key={"pickup"}>
                     <label>Planned pickup date</label>
                     <Form.Group inline >
@@ -405,7 +396,10 @@ class NewTransport extends Component {
                 section: 'Carrier',
                 items: [
                     {label: 'Carrier', icon: 'truck', form: () =>
-                            <Carrier onChange={(address) => this.setState({'carrier' : address})} value={this.state.carrier} />},
+                            <Carrier
+                                onAddressChange={(address) => this.setState({'carrier' : address})}
+                                address={this.state.carrier}
+                            />},
                     {label: 'Driver', icon: 'user', form: () => <Driver onChange={this.createOnUpdateFor('driver')} value={this.state.driver} />},
                     {label: 'Vehicle license plate', icon: 'truck', form: () => <Vehicle onChange={this.createOnUpdateFor('truck')} value={this.state.truck}/>},
                     {label: 'Trailer license plate', icon: 'truck', form: () => <Trailer onChange={this.createOnUpdateFor('trailer')} value={this.state.trailer}/>}
@@ -414,19 +408,39 @@ class NewTransport extends Component {
             {
                 section: 'Shipper',
                 items: [
-                    {label: 'Shipper', icon: 'building', form: () => <Shipper onChange={this.createOnUpdateFor('shipper')} value={this.state.shipper} />}
+                    {label: 'Shipper', icon: 'building', form: () =>
+                            <Shipper onAddressChange={(address) => this.setState({'shipper': address})} address={this.state.shipper} />}
                 ]
             },
             {
                 section: 'Pickup',
                 items: [
-                    {label: 'Pickup', icon: 'sign-out', form: () => <Pickup onChange={this.createOnUpdateFor('pickup', this.copyDateToDelivery)} onLoadAdded={(load) => this.onLoadAdded(load)} value={this.state.pickup} loads={this.state.loads}/> }
+                    {label: 'Pickup', icon: 'sign-out', form: () =>
+                            <Pickup onAddressChange={(address) => this.setState({
+                                'pickup': {
+                                    ...this.state.pickup,
+                                    ...address
+                                }
+                            })}
+                                    onChange={this.createOnUpdateFor('pickup', this.copyDateToDelivery)}
+                                    onLoadAdded={(load) => this.onLoadAdded(load)}
+                                    address={this.state.pickup}
+                                    value={this.state.pickup}
+                                    loads={this.state.loads}/> }
                 ]
             },
             {
                 section: 'Delivery',
                 items: [
-                    {label: 'Delivery', icon: 'sign-in', form: () => <Delivery onChange={this.createOnUpdateFor('delivery')} value={this.state.delivery} />}
+                    {label: 'Delivery', icon: 'sign-in', form: () =>
+                            <Delivery onChange={this.createOnUpdateFor('delivery')}
+                                      onAddressChange={(address) => this.setState({'delivery': {
+                                          ...this.state.delivery,
+                                          ...address
+                                          }
+                                      })}
+                                      address={this.state.delivery}
+                                      value={this.state.delivery} />}
                 ]
             }
         ];
