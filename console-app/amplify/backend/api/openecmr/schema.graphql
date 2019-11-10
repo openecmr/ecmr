@@ -42,12 +42,12 @@ type Contract @model
     owner: String
     carrierUsername: String
     status: ContractStatus
-    shipper: Address
-    carrier: Address
-    delivery: Address
+    shipper: Contact! @connection
+    carrier: Contact! @connection
+    delivery: Contact! @connection
     arrivalDate: String
     deliveryDate: String
-    pickup: Address
+    pickup: Contact! @connection
     loads: [Load]!
     driver: Driver
     trailer: String

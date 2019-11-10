@@ -9,7 +9,7 @@ import {
     Icon,
     Segment,
     Form,
-    Modal, List, Search
+    Modal, List, Search, Dropdown
 } from "semantic-ui-react";
 import React from "react";
 import { API, graphqlOperation } from 'aws-amplify';
@@ -59,18 +59,11 @@ class NewTransportForm extends Component {
     }
 }
 
-class AddressPicker extends Component {
-    initialState = {
-        isLoading: false,
-        results: [],
-        value: ''
-    };
-
+class ContactPicker extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            ...this.initialState,
-            source: []
+            options: []
         };
 
         this.loadContacts();
@@ -79,32 +72,26 @@ class AddressPicker extends Component {
     async loadContacts() {
         const response = await API.graphql(graphqlOperation(queries.listContacts));
         this.setState({
-            source: response.data.listContacts.items
+            options: response.data.listContacts.items.map(e => ({text: `${e.name}, ${e.address}, ${e.country}`, key: e.id, value: e.id}))
         });
     }
 
     render() {
-        const { isLoading, value, results } = this.state;
         const { address } = this.props;
-
-        console.log(address);
 
         return (
             <div style={{marginBottom: '15px'}}>
                 <Button basic compact style={{marginLeft: '100px', marginBottom: '5px'}} as={'a'} icon='plus square'
                         onClick={() => this.addItem()} content={'Add new contact'} size={'mini'}/>
-                <Search
-                    showNoResults={true}
-                    placeholder={"Name of contact"}
-                    loading={isLoading}
-                    onResultSelect={(e, data) => this.handleResultSelect(e, data)}
-                    onSearchChange={_.debounce((e, arg) => this.handleSearchChange(e, arg), 500, {
-                        leading: true
-                    })}
-                    results={results}
-                    value={value}
-                    title={'Search'}
-                    resultRenderer={this.resultRenderer}
+                <Dropdown
+                    placeholder='Select contact'
+                    fluid
+                    search
+                    clearable
+                    selection
+                    value={this.props.contactId}
+                    onChange={(e, data) => {this.props.contactSelected(data.value)}}
+                    options={this.state.options}
                 />
                 {address && (
                     <List>
@@ -121,43 +108,6 @@ class AddressPicker extends Component {
                     <AddAddressModal show={this.state.addingItem} add={() => this.close()}/>
             </div>
         )
-    }
-
-
-    handleResultSelect(e, { result }) {
-        const address = {
-            name: result.item.name,
-            address: result.item.address,
-            postalCode: result.item.postalCode,
-            city: result.item.city,
-            country: result.item.country
-        };
-        this.props.addressSelected(address);
-        this.setState({
-            ...this.initialState
-        });
-    }
-
-    handleSearchChange(e, { value }) {
-        if (value.length < 1) {
-            return this.setState({
-                ...this.initialState
-            });
-        }
-
-        const re = new RegExp(_.escapeRegExp(this.state.value), 'i');
-        const isMatch = (result) => re.test(result.name);
-
-        this.setState({
-            value,
-            results: this.state.source
-                .filter(isMatch)
-                .map(item => ({
-                    title: item.name,
-                    description: `${item.address} ${item.postalCode}, ${item.cityName}`,
-                    item: item
-                })),
-        })
     }
 
     close() {
@@ -200,8 +150,8 @@ class Carrier extends Component {
     render() {
         return (<div>
             <Header as={'h3'}>Enter carrier information</Header>
-            <AddressPicker addressSelected={(selected) => {this.props.onAddressChange(selected)}}
-                           address={this.props.address} />
+            <ContactPicker contactSelected={(contactId) => {this.props.contactSelected(contactId)}}
+                           contactId={this.props.contactId} />
 
         </div>);
     }
@@ -217,8 +167,8 @@ class Shipper extends NewTransportForm {
     render() {
         return (<div>
             <Header as={'h3'}>Enter shipper information</Header>
-            <AddressPicker addressSelected={(selected) => {this.props.onAddressChange(selected)}}
-                           address={this.props.address} />
+            <ContactPicker contactSelected={(contactId) => {this.props.contactSelected(contactId)}}
+                           contactId={this.props.contactId} />
 
         </div>);
     }
@@ -236,8 +186,8 @@ class Delivery extends NewTransportForm {
 
         return (
             <Fragment>
-                <AddressPicker addressSelected={(selected) => {this.props.onAddressChange(selected)}}
-                               address={this.props.address} />
+                <ContactPicker contactSelected={(contactId) => {this.props.contactSelected(contactId)}}
+                               contactId={this.props.contactId} />
 
                 <Form.Field key={"pickup"}>
                     <label>Planned delivery date</label>
@@ -274,8 +224,8 @@ class Pickup extends NewTransportForm {
 
         return (
             <Fragment>
-                <AddressPicker addressSelected={(selected) => {this.props.onAddressChange(selected)}}
-                               address={this.props.address} />
+                <ContactPicker contactSelected={(contactId) => {this.props.contactSelected(contactId)}}
+                               contactId={this.props.contactId} />
 
                 <Form.Field key={"pickup"}>
                     <label>Planned pickup date</label>
@@ -397,8 +347,8 @@ class NewTransport extends Component {
                 items: [
                     {label: 'Carrier', icon: 'truck', form: () =>
                             <Carrier
-                                onAddressChange={(address) => this.setState({'carrier' : address})}
-                                address={this.state.carrier}
+                                contactSelected={(contactId) => this.setState({'carrierContactId' : contactId})}
+                                contactId={this.state.carrierContactId}
                             />},
                     {label: 'Driver', icon: 'user', form: () => <Driver onChange={this.createOnUpdateFor('driver')} value={this.state.driver} />},
                     {label: 'Vehicle license plate', icon: 'truck', form: () => <Vehicle onChange={this.createOnUpdateFor('truck')} value={this.state.truck}/>},
@@ -409,22 +359,23 @@ class NewTransport extends Component {
                 section: 'Shipper',
                 items: [
                     {label: 'Shipper', icon: 'building', form: () =>
-                            <Shipper onAddressChange={(address) => this.setState({'shipper': address})} address={this.state.shipper} />}
+                            <Shipper  contactSelected={(contactId) => this.setState({'shipperContactId' : contactId})}
+                                      contactId={this.state.shipperContactId} />}
                 ]
             },
             {
                 section: 'Pickup',
                 items: [
                     {label: 'Pickup', icon: 'sign-out', form: () =>
-                            <Pickup onAddressChange={(address) => this.setState({
+                            <Pickup contactSelected={(contactId) => this.setState({
                                 'pickup': {
                                     ...this.state.pickup,
-                                    ...address
+                                    contactId
                                 }
                             })}
                                     onChange={this.createOnUpdateFor('pickup', this.copyDateToDelivery)}
                                     onLoadAdded={(load) => this.onLoadAdded(load)}
-                                    address={this.state.pickup}
+                                    contactId={this.state.pickup.contactId}
                                     value={this.state.pickup}
                                     loads={this.state.loads}/> }
                 ]
@@ -434,12 +385,12 @@ class NewTransport extends Component {
                 items: [
                     {label: 'Delivery', icon: 'sign-in', form: () =>
                             <Delivery onChange={this.createOnUpdateFor('delivery')}
-                                      onAddressChange={(address) => this.setState({'delivery': {
+                                      contactSelected={(contactId) => this.setState({'delivery': {
                                           ...this.state.delivery,
-                                          ...address
+                                          contactId
                                           }
                                       })}
-                                      address={this.state.delivery}
+                                      contactId={this.state.delivery.contactId}
                                       value={this.state.delivery} />}
                 ]
             }
@@ -592,22 +543,23 @@ class NewTransport extends Component {
     }
 
     async save() {
+        const now = moment().toISOString();
         const input = {
-            ...this.state,
             status: 'DRAFT',
-            carrierUsername: this.state.carrier.username,
             arrivalDate: this.state.pickup.pickupDate,
             deliveryDate: this.state.delivery.deliveryDate,
-            events: []
+            contractShipperId: this.state.shipperContactId,
+            contractCarrierId: this.state.carrierContactId,
+            contractDeliveryId: this.state.delivery.contactId,
+            contractPickupId: this.state.pickup.contactId,
+            loads: this.state.loads,
+            driver: this.state.driver,
+            trailer: this.state.trailer,
+            truck: this.state.truck,
+            events: [],
+            updatedAt: now,
+            createdAt: now,
         };
-        delete input.selectedLabel;
-        delete input.form;
-        delete input.pickup.pickupDate;
-        delete input.delivery.deliveryDate;
-        delete input.carrier.username;
-        let now = moment().toISOString();
-        input.updatedAt = now;
-        input.createdAt = now;
 
         try {
             await API.graphql(graphqlOperation(mutations.createContract, {input: input}));
