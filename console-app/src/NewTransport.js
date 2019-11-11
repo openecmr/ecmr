@@ -440,20 +440,17 @@ class NewTransport extends Component {
         const contract = response.data.getContract;
 
         this.setState({
-            carrier: {
-                ...contract.carrier,
-                username: contract.carrierUsername
-            },
+            carrierContactId: contract.carrier.id,
+            shipperContactId: contract.shipper.id,
             driver: contract.driver,
             trailer: contract.trailer,
             truck: contract.truck,
-            shipper: contract.shipper,
             delivery: {
-                ...contract.delivery,
+                contactId: contract.delivery.id,
                 deliveryDate: contract.deliveryDate
             },
             pickup: {
-                ...contract.pickup,
+                contactId: contract.pickup.id,
                 pickupDate: contract.arrivalDate
             },
             loads: contract.loads
