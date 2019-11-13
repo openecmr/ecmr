@@ -10,6 +10,7 @@ import moment from "moment";
 import { Auth } from 'aws-amplify';
 import {S3Image} from "aws-amplify-react-native";
 import ContractModel from "./ContractModel";
+import {createUpdateContractInput, updateContract} from "./DataUtil";
 
 const Header = ({children}) => <MyText style={styles.header}>{children}</MyText>;
 
@@ -58,7 +59,7 @@ class Transport extends Component {
             ['ArrivalOnSite', 'UnloadingComplete'];
         const events = (item.events || []).filter(e => e.site === site && actions.indexOf(e.type) !== -1).map(e => e.type);
         actions.splice(0, events.length === 0 ? 0 : actions.indexOf(events[events.length - 1]) + 1);
-        const firstAction = actions.length === 0 ? '' : actions[0];
+        const firstAction = actions.length === 0 || !this.isPending(contract) ? '' : actions[0];
 
         const relevantItems = [...item.events || []].filter(e => e.site === site).reverse();
 
@@ -104,6 +105,10 @@ class Transport extends Component {
         );
     }
 
+    isPending(contract) {
+        return contract.status === 'CREATED' || contract.status === 'IN_PROGRESS';
+    }
+
     eventText(event) {
         switch (event.type) {
             case 'ArrivalOnSite':
@@ -142,7 +147,7 @@ class Transport extends Component {
     }
 
     async notifyArrival() {
-        const item = {...this.props.navigation.getParam('item')};
+        const item = createUpdateContractInput(this.props.navigation.getParam('item'));
         const now = moment().format();
         const user = await Auth.currentAuthenticatedUser();
 
@@ -157,14 +162,15 @@ class Transport extends Component {
                 username: user.username
             }
         });
+        item.status = 'IN_PROGRESS';
 
         try {
-            await API.graphql(graphqlOperation(mutations.updateContract, {input: item}));
+            const result = await updateContract(item);
             this.props.navigation.setParams({
-                item: item
+                item: result
             });
             this.setState({
-                item: item
+                item: result
             });
         } catch (ex) {
             console.log(ex);

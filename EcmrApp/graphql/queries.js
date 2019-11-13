@@ -8,6 +8,8 @@ export const getContract = `query GetContract($id: ID!) {
     carrierUsername
     status
     shipper {
+      id
+      owner
       name
       postalCode
       address
@@ -15,6 +17,8 @@ export const getContract = `query GetContract($id: ID!) {
       country
     }
     carrier {
+      id
+      owner
       name
       postalCode
       address
@@ -22,6 +26,8 @@ export const getContract = `query GetContract($id: ID!) {
       country
     }
     delivery {
+      id
+      owner
       name
       postalCode
       address
@@ -31,6 +37,8 @@ export const getContract = `query GetContract($id: ID!) {
     arrivalDate
     deliveryDate
     pickup {
+      id
+      owner
       name
       postalCode
       address
@@ -90,6 +98,8 @@ export const listContracts = `query ListContracts(
       carrierUsername
       status
       shipper {
+        id
+        owner
         name
         postalCode
         address
@@ -97,6 +107,8 @@ export const listContracts = `query ListContracts(
         country
       }
       carrier {
+        id
+        owner
         name
         postalCode
         address
@@ -104,6 +116,8 @@ export const listContracts = `query ListContracts(
         country
       }
       delivery {
+        id
+        owner
         name
         postalCode
         address
@@ -113,6 +127,8 @@ export const listContracts = `query ListContracts(
       arrivalDate
       deliveryDate
       pickup {
+        id
+        owner
         name
         postalCode
         address
@@ -157,6 +173,37 @@ export const listContracts = `query ListContracts(
           }
         }
       }
+    }
+    nextToken
+  }
+}
+`;
+export const getContact = `query GetContact($id: ID!) {
+  getContact(id: $id) {
+    id
+    owner
+    name
+    postalCode
+    address
+    city
+    country
+  }
+}
+`;
+export const listContacts = `query ListContacts(
+  $filter: ModelContactFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listContacts(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      owner
+      name
+      postalCode
+      address
+      city
+      country
     }
     nextToken
   }

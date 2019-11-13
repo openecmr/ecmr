@@ -10,6 +10,7 @@ import UUIDGenerator from "react-native-uuid-generator";
 import {Buffer} from "buffer";
 import moment from "moment";
 import * as mutations from "./graphql/mutations";
+import {createUpdateContractInput, updateContract} from "./DataUtil";
 
 class CaptureSignature extends Component {
     constructor(props) {
@@ -69,12 +70,12 @@ class CaptureSignature extends Component {
                     }
                 }
             };
-            const contract = {...this.state.contract};
-            contract.events.push(event);
-            contract.status = this.state.site === 'pickup' ? 'IN_PROGRESS' : 'DONE';
+            const input = createUpdateContractInput(this.state.contract)
+            input.events.push(event);
+            input.status = this.state.site === 'pickup' ? 'IN_PROGRESS' : 'DONE';
 
             try {
-                await API.graphql(graphqlOperation(mutations.updateContract, {input: contract}));
+                await updateContract(input);
                 this.props.navigation.popToTop();
             } catch (ex) {
                 console.warn(ex);
