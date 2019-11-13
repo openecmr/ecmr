@@ -542,7 +542,7 @@ class NewTransport extends Component {
     async save() {
         const now = moment().toISOString();
         const input = {
-            status: 'DRAFT',
+            status: 'CREATED',
             arrivalDate: this.state.pickup.pickupDate,
             deliveryDate: this.state.delivery.deliveryDate,
             contractShipperId: this.state.shipperContactId,
