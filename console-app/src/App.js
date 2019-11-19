@@ -10,6 +10,7 @@ import awsmobile from './aws-exports';
 import { withAuthenticator } from 'aws-amplify-react';
 import Transport from "./Transport";
 import style from "./Style"
+import AddressBook from "./AddressBook";
 
 Amplify.configure(awsmobile);
 
@@ -55,6 +56,7 @@ class App extends Component {
                         <Route exact path="/transports-new/:copy_id" component={NewTransport}/>
                         <Route exact path="/transports-new" component={NewTransport}/>
                         <Route exact path="/transports/:id" component={Transport}/>
+                        <Route exact path="/addressbook" component={AddressBook}/>
                     </div>
                 </div>
             </Router>

@@ -81,8 +81,6 @@ class ContactPicker extends Component {
 
         return (
             <div style={{marginBottom: '15px'}}>
-                <Button basic compact style={{marginLeft: '100px', marginBottom: '5px'}} as={'a'} icon='plus square'
-                        onClick={() => this.addItem()} content={'Add new contact'} size={'mini'}/>
                 <Dropdown
                     placeholder='Select contact'
                     fluid
@@ -105,7 +103,6 @@ class ContactPicker extends Component {
                             <List.Content>{address.postalCode} {address.city}{address.country && `, ${address.country}`}</List.Content>
                         </List.Item>
                     </List>)}
-                    <AddAddressModal show={this.state.addingItem} add={() => this.close()}/>
             </div>
         )
     }
@@ -118,29 +115,6 @@ class ContactPicker extends Component {
         this.setState({addingItem: true});
     }
 }
-
-const AddAddressModal = ({show, add}) => {
-    return (<Modal key={"showLoad"} open={show} size='small'>
-        <Header icon={"plus square"} content={"Add address"} />
-        <Modal.Content>
-            <Form id={"item"}>
-                <Form.Input label='Name' type='input' name={"name"} placeholder={"The Trucking Company"}/>
-                <Form.Input label='Address' type='input' name={"address"} placeholder={"22 Oxford street"}/>
-                <Form.Input label='Postal code' type='input' name={"postalCode"} placeholder={"23411"}/>
-                <Form.Input label='City' type='input' name={"city"} placeholder={"London"}/>
-                <Form.Input label='Country' type='input' name={"country"} placeholder={"United Kingdom"}/>
-            </Form>
-        </Modal.Content>
-        <Modal.Actions>
-            <Button color='red' inverted>
-                <Icon name='remove' /> Cancel
-            </Button>
-            <Button color='green' inverted onClick={() => add()}>
-                <Icon name='checkmark' /> Add address
-            </Button>
-        </Modal.Actions>
-    </Modal>)
-};
 
 class Carrier extends Component {
     constructor(props) {
