@@ -1,5 +1,4 @@
 import {Button, Form, Header, Icon, Modal, Table} from "semantic-ui-react";
-import {Link} from "react-router-dom";
 import React, {Component} from "react";
 import {API, graphqlOperation} from "aws-amplify";
 import * as queries from "./graphql/queries";

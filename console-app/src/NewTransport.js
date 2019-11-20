@@ -215,15 +215,15 @@ class Pickup extends NewTransportForm {
     }
 
     showLoad() {
-        const trigger = <Button content={"Add a load"} icon={"plus square"} labelPosition={"left"} onClick={() => this.setState({ modalOpen: true })}/>;
+        const trigger = <Button content={"Add a load"} icon={"plus square"} labelPosition={"left"} onClick={() => this.setState({ modalOpen: true, index: null })}/>;
 
-        return (<Modal key={"showLoad"} open={this.state.modalOpen}  trigger={trigger} size='small'>
+        return (<Modal open={this.state.modalOpen}  trigger={trigger} size='small' key={this.state.index}>
             <Header icon={"plus square"} content={"Add load"} />
             <Modal.Content>
                 <Form id={"item"}>
-                    <Form.Input label='Category' type='input' name={"category"} onChange={this.handleChangeForLoad}/>
-                    <Form.Input label='Quantity' type='input' name={"quantity"} onChange={this.handleChangeForLoad}/>
-                    <Form.Input label='Description' type='input' name={"description"} onChange={this.handleChangeForLoad}/>
+                    <Form.Input label='Category' type='input' name={"category"} value={this.state.category} onChange={this.handleChangeForLoad}/>
+                    <Form.Input label='Quantity' type='input' name={"quantity"} value={this.state.quantity} onChange={this.handleChangeForLoad}/>
+                    <Form.Input label='Description' type='input' name={"description"} value={this.state.description} onChange={this.handleChangeForLoad}/>
                 </Form>
             </Modal.Content>
             <Modal.Actions>
@@ -239,17 +239,26 @@ class Pickup extends NewTransportForm {
 
     addLoad() {
         this.setState({modalOpen: false});
+        const index = this.state.index;
         const load = { ...this.state };
+
+        console.log(this.state);
+
         delete load.modalOpen;
-        this.props.onLoadAdded(load);
+        delete load.index;
+        this.props.onLoadAdded(index, load);
     }
 
     renderLoads() {
         return (
             <List divided relaxed>
                 {
-                    this.props.loads.map(load => {
-                        return (<List.Item key={load.description}>
+                    this.props.loads.map((load, index) => {
+                        return (<List.Item key={index} onClick={() => this.setState({
+                            modalOpen: true,
+                            index: index,
+                            ...load
+                        })}>
                             <List.Icon name='archive' size='large' verticalAlign='middle' />
                             <List.Content>
                                 <List.Header as='a'>{load.quantity} {load.category}</List.Header>
@@ -348,7 +357,7 @@ class NewTransport extends Component {
                                 }
                             })}
                                     onChange={this.createOnUpdateFor('pickup', this.copyDateToDelivery)}
-                                    onLoadAdded={(load) => this.onLoadAdded(load)}
+                                    onLoadAdded={(index, load) => this.onLoadAdded(index, load)}
                                     contactId={this.state.pickup.contactId}
                                     value={this.state.pickup}
                                     loads={this.state.loads}/> }
@@ -431,10 +440,18 @@ class NewTransport extends Component {
         });
     }
 
-    onLoadAdded(load) {
-        this.setState(prevState => ({
-            loads: [...prevState.loads, load]
-        }))
+    onLoadAdded(index, load) {
+        console.log(load);
+        const loads = [...this.state.loads];
+        if (index !== null) {
+            loads[index] = {...load};
+        } else {
+            loads.push(load);
+        }
+
+        this.setState({
+            loads: loads
+        });
     }
 
     createOnUpdateFor(item, customCallback) {
