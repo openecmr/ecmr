@@ -175,6 +175,11 @@ class Delivery extends NewTransportForm {
 }
 
 class Pickup extends NewTransportForm {
+    emptyLoad = {
+        category: '',
+        quantity: '',
+        description: ''
+    };
     state = { modalOpen: false }
     constructor(props) {
         super(props);
@@ -215,7 +220,7 @@ class Pickup extends NewTransportForm {
     }
 
     showLoad() {
-        const trigger = <Button content={"Add a load"} icon={"plus square"} labelPosition={"left"} onClick={() => this.setState({ modalOpen: true, index: null })}/>;
+        const trigger = <Button content={"Add a load"} icon={"plus square"} labelPosition={"left"} onClick={() => this.setState({ modalOpen: true, index: null, ...this.emptyLoad })}/>;
 
         return (<Modal open={this.state.modalOpen}  trigger={trigger} size='small' key={this.state.index}>
             <Header icon={"plus square"} content={"Add load"} />
@@ -227,8 +232,13 @@ class Pickup extends NewTransportForm {
                 </Form>
             </Modal.Content>
             <Modal.Actions>
-                <Button color='red' inverted>
-                    <Icon name='remove' /> Cancel
+                {this.state.index !== null &&
+                (<Button color='red' inverted onClick={() => this.removeLoad()}>
+                    <Icon name='remove' /> Remove
+                </Button>)}
+
+                <Button color='red' inverted onClick={() => this.setState({modalOpen: false})}>
+                    <Icon name='cancel' /> Cancel
                 </Button>
                 <Button color='green' inverted onClick={() => this.addLoad()}>
                     <Icon name='checkmark' /> Add load
@@ -237,12 +247,15 @@ class Pickup extends NewTransportForm {
         </Modal>);
     }
 
+    removeLoad() {
+        this.setState({modalOpen: false});
+        this.props.onLoadRemoved(this.state.index);
+    }
+
     addLoad() {
         this.setState({modalOpen: false});
         const index = this.state.index;
         const load = { ...this.state };
-
-        console.log(this.state);
 
         delete load.modalOpen;
         delete load.index;
@@ -358,6 +371,7 @@ class NewTransport extends Component {
                             })}
                                     onChange={this.createOnUpdateFor('pickup', this.copyDateToDelivery)}
                                     onLoadAdded={(index, load) => this.onLoadAdded(index, load)}
+                                    onLoadRemoved={(index) => this.onLoadRemoved(index)}
                                     contactId={this.state.pickup.contactId}
                                     value={this.state.pickup}
                                     loads={this.state.loads}/> }
@@ -452,6 +466,11 @@ class NewTransport extends Component {
         this.setState({
             loads: loads
         });
+    }
+
+
+    onLoadRemoved(index) {
+        this.state.loads.splice(index, 1);
     }
 
     createOnUpdateFor(item, customCallback) {
