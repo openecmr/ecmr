@@ -92,8 +92,8 @@ class AddressBook extends Component {
                                  this.setState({showAddress: false});
                                  this.componentDidMount();
                              }}
-                             selectedContact={this.state.selectedContact}
-                             key={this.state.selectedContact} />,
+                             selectedContact={selectedContact}
+                             key={selectedContact ? selectedContact.id : null} />,
             <Table className="App-text-with-newlines" selectable compact='very'>
                 <Table.Header>
                     <Table.Row>
@@ -132,7 +132,10 @@ class AddressBook extends Component {
         return (
             this.state.contacts.map((e) =>
                 <Table.Row key={e.id}>
-                    <Table.Cell collapsing verticalAlign="top"><Form.Checkbox checked={e.id === selectedContactId}  onChange={(event, {checked}) => this.handleCheck(e, checked)} /></Table.Cell>
+                    <Table.Cell collapsing verticalAlign="top">
+                        <Form.Checkbox checked={e.id === selectedContactId}
+                                       onChange={(event, {checked}) => this.handleCheck(e, checked)} />
+                    </Table.Cell>
                     <TextCell text={e.name} />
                     <TextCell text={e.address} />
                     <TextCell text={e.postalCode} />
@@ -144,8 +147,6 @@ class AddressBook extends Component {
     }
 
     handleCheck(contact, checked) {
-        console.log(this.state);
-
         this.setState({
             selectedContact: checked ? contact : null
         });
