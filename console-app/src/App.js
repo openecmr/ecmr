@@ -11,6 +11,7 @@ import { withAuthenticator } from 'aws-amplify-react';
 import Transport from "./Transport";
 import style from "./Style"
 import AddressBook from "./AddressBook";
+import Drivers from "./Drivers";
 
 Amplify.configure(awsmobile);
 
@@ -35,6 +36,12 @@ const AppMenu = withRouter(({location}) => (
             to={'/settings'}
             as={Link}
         />
+        <Menu.Item
+            name='drivers'
+            active={location.pathname.startsWith('/drivers')}
+            to={'/drivers'}
+            as={Link}
+        />
     </Menu>));
 
 class App extends Component {
@@ -57,6 +64,7 @@ class App extends Component {
                         <Route exact path="/transports-new" component={NewTransport}/>
                         <Route exact path="/transports/:id" component={Transport}/>
                         <Route exact path="/addressbook" component={AddressBook}/>
+                        <Route exact path="/drivers" component={Drivers}/>
                     </div>
                 </div>
             </Router>

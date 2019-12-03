@@ -17,17 +17,16 @@ const graphqlQuery = require('./query.js').listDrivers;
 const graphqlMutation = require('./query.js').mutation;
 const apiKey = process.env.API_KEY;
 
-
-exports.handler = function (event, context) { //eslint-disable-line
-  const req = new AWS.HttpRequest(appsyncUrl, region);
-  const driver = getDriver(event.arguments.activationCode);
+exports.handler = async (event, context) => { //eslint-disable-line
+  const driver = await getDriver(event.arguments.activationCode);
+  if (!driver) {
+    return "invalid code";
+  }
   driver.carrier = getUsername(event, context);
+  driver.associationSecret = null;
   console.log(`assigning ${driver.id} to ${driver.carrier}`);
-  updateDriver(driver);
-  return {
-    statusCode: 200,
-    body: "ok"
-  };
+  await updateDriver(driver);
+  return "success";
 };
 
 const getUsername = (event, context) => {
@@ -36,12 +35,7 @@ const getUsername = (event, context) => {
 
 // https://aws-amplify.github.io/docs/cli-toolchain/quickstart#graphql-from-lambda
 const getDriver = async (activationCode) => {
-  const req = new AWS.HttpRequest(appsyncUrl, region);
-
-  req.method = "POST";
-  req.headers.host = endpoint;
-  req.headers["Content-Type"] = "application/json";
-  req.body = JSON.stringify({
+  const body = JSON.stringify({
     query: graphqlQuery,
     variables: {
       filter: {
@@ -52,6 +46,36 @@ const getDriver = async (activationCode) => {
     }
   });
 
+  const data = await sendRequest(body);
+  if (data.length === 0) {
+    console.log(`no results found for ${activationCode}`);
+    return null;
+  }
+
+  return data.data.listDrivers.items[0];
+};
+
+const updateDriver = async (driver) => {
+  const body = JSON.stringify({
+    query: graphqlMutation,
+    operationName: "updateDriver",
+    variables: {
+      input: driver
+    }
+  });
+
+  const result = await sendRequest(body);
+  console.log(result);
+};
+
+const sendRequest = async (body) => {
+  const req = new AWS.HttpRequest(appsyncUrl, region);
+
+  req.method = "POST";
+  req.headers.host = endpoint;
+  req.headers["Content-Type"] = "application/json";
+  req.body = body;
+
   if (apiKey) {
     req.headers["x-api-key"] = apiKey;
   } else {
@@ -59,7 +83,7 @@ const getDriver = async (activationCode) => {
     signer.addAuthorization(AWS.config.credentials, AWS.util.date.getDate());
   }
 
-  const data = await new Promise((resolve, reject) => {
+  return await new Promise((resolve, reject) => {
     const httpRequest = https.request({...req, host: endpoint}, (result) => {
       result.on('data', (data) => {
         resolve(JSON.parse(data.toString()));
@@ -69,27 +93,4 @@ const getDriver = async (activationCode) => {
     httpRequest.write(req.body);
     httpRequest.end();
   });
-
-  console.log(data);
-
-  return data.data.listDrivers.items[0];
-};
-
-const updateDriver = (driver) => {
-  const req = new AWS.HttpRequest(appsyncUrl, region);
-  req.method = "POST";
-  req.headers.host = endpoint;
-  req.headers["Content-Type"] = "application/json";
-  req.body = JSON.stringify({
-    query: graphqlQuery,
-    operationName: "updateDriver",
-    variables: driver
-  });
-
-  if (apiKey) {
-    req.headers["x-api-key"] = apiKey;
-  } else {
-    const signer = new AWS.Signers.V4(req, "appsync", true);
-    signer.addAuthorization(AWS.config.credentials, AWS.util.date.getDate());
-  }
 };

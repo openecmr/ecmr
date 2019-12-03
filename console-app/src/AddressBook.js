@@ -93,18 +93,23 @@ class AddressBook extends Component {
                                  this.componentDidMount();
                              }}
                              selectedContact={selectedContact}
-                             key={selectedContact ? selectedContact.id : null} />,
+                             key={selectedContact ? selectedContact.id : null}/>,
             <Table className="App-text-with-newlines" selectable compact='very'>
                 <Table.Header>
                     <Table.Row>
                         <Table.HeaderCell collapsing colSpan='6'>
 
                             <Button floated='right' icon labelPosition='left' primary size='small'
-                                    onClick={() => this.setState({showAddress: true, newAddress: true, selectedContact: null})}>
+                                    onClick={() => this.setState({
+                                        showAddress: true,
+                                        newAddress: true,
+                                        selectedContact: null
+                                    })}>
                                 <Icon name='plus'/> New contact
                             </Button>
 
-                            <Button floated='right' icon labelPosition='left' primary size='small' disabled={selectedContact == null}
+                            <Button floated='right' icon labelPosition='left' primary size='small'
+                                    disabled={selectedContact == null}
                                     onClick={() => this.setState({showAddress: true, newAddress: false})}>
                                 <Icon name='edit'/> Edit contact
                             </Button>
@@ -134,13 +139,13 @@ class AddressBook extends Component {
                 <Table.Row key={e.id}>
                     <Table.Cell collapsing verticalAlign="top">
                         <Form.Checkbox checked={e.id === selectedContactId}
-                                       onChange={(event, {checked}) => this.handleCheck(e, checked)} />
+                                       onChange={(event, {checked}) => this.handleCheck(e, checked)}/>
                     </Table.Cell>
-                    <TextCell text={e.name} />
-                    <TextCell text={e.address} />
-                    <TextCell text={e.postalCode} />
-                    <TextCell text={e.city} />
-                    <TextCell text={e.country} />
+                    <TextCell text={e.name}/>
+                    <TextCell text={e.address}/>
+                    <TextCell text={e.postalCode}/>
+                    <TextCell text={e.city}/>
+                    <TextCell text={e.country}/>
                 </Table.Row>
             )
         )
