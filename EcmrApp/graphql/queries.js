@@ -50,9 +50,6 @@ export const getContract = `query GetContract($id: ID!) {
       quantity
       description
     }
-    driver {
-      name
-    }
     trailer
     truck
     references {
@@ -82,6 +79,13 @@ export const getContract = `query GetContract($id: ID!) {
           key
         }
       }
+    }
+    driver {
+      id
+      owner
+      name
+      carrier
+      associationSecret
     }
   }
 }
@@ -140,9 +144,6 @@ export const listContracts = `query ListContracts(
         quantity
         description
       }
-      driver {
-        name
-      }
       trailer
       truck
       references {
@@ -172,6 +173,13 @@ export const listContracts = `query ListContracts(
             key
           }
         }
+      }
+      driver {
+        id
+        owner
+        name
+        carrier
+        associationSecret
       }
     }
     nextToken
@@ -206,6 +214,33 @@ export const listContacts = `query ListContacts(
       country
     }
     nextToken
+  }
+}
+`;
+export const listDrivers = `query ListDrivers(
+  $filter: ModelDriverFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listDrivers(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      owner
+      name
+      carrier
+      associationSecret
+    }
+    nextToken
+  }
+}
+`;
+export const getDriver = `query GetDriver($id: ID!) {
+  getDriver(id: $id) {
+    id
+    owner
+    name
+    carrier
+    associationSecret
   }
 }
 `;

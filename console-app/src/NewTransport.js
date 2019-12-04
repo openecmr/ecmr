@@ -116,6 +116,45 @@ class ContactPicker extends Component {
     }
 }
 
+class DriverPicker extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            options: []
+        };
+
+        this.loadDrivers();
+    }
+
+    async loadDrivers() {
+        const response = await API.graphql(graphqlOperation(queries.listDrivers));
+        this.setState({
+            options: response.data.listDrivers.items.map(e => ({text: `${e.name}`, key: e.id, value: e.id})),
+            drivers: response.data.listDrivers.items.reduce((map, obj) => {
+                map[obj.id] = obj;
+                return map;
+            }, {})
+        });
+    }
+
+    render() {
+        return (
+            <div style={{marginBottom: '15px'}}>
+                <Dropdown
+                    placeholder='Select driver'
+                    fluid
+                    search
+                    clearable
+                    selection
+                    value={this.props.driverId}
+                    onChange={(e, data) => {this.props.driverSelected(this.state.drivers[data.value])}}
+                    options={this.state.options}
+                />
+            </div>
+        )
+    }
+}
+
 class Carrier extends Component {
     constructor(props) {
         super(props);
@@ -285,19 +324,18 @@ class Pickup extends NewTransportForm {
     }
 }
 
-class Driver extends NewTransportForm {
+class Driver extends Component {
     constructor(props) {
         super(props);
-
-        this.label = "Enter driver information";
     }
 
-    renderFields() {
-        super.renderFields();
+    render() {
+        return (<div>
+            <Header as={'h3'}>Enter driver information</Header>
+            <DriverPicker driverSelected={(driver) => {this.props.driverSelected(driver)}}
+                           driverId={this.props.driverId} />
 
-        return ([
-           this.renderField("Name", "name")
-        ]);
+        </div>);
     }
 }
 
@@ -346,7 +384,13 @@ class NewTransport extends Component {
                                 contactSelected={(contactId) => this.setState({'carrierContactId' : contactId})}
                                 contactId={this.state.carrierContactId}
                             />},
-                    {label: 'Driver', icon: 'user', form: () => <Driver onChange={this.createOnUpdateFor('driver')} value={this.state.driver} />},
+                    {label: 'Driver', icon: 'user', form: () => <Driver
+                            driverSelected={(driver) => this.setState({
+                                'driverDriverId' : driver.id,
+                                'carrierUsername': driver.carrier
+                            })}
+                            driverId={this.state.driverDriverId}
+                        />},
                     {label: 'Vehicle license plate', icon: 'truck', form: () => <Vehicle onChange={this.createOnUpdateFor('truck')} value={this.state.truck}/>},
                     {label: 'Trailer license plate', icon: 'truck', form: () => <Trailer onChange={this.createOnUpdateFor('trailer')} value={this.state.trailer}/>}
                 ]
@@ -396,8 +440,6 @@ class NewTransport extends Component {
         this.state = {
             selectedLabel: this.form[0].items[0].label,
             form: this.form[0].items[0].form,
-            driver: {
-            },
             trailer: {
             },
             truck: {
@@ -439,7 +481,8 @@ class NewTransport extends Component {
         this.setState({
             carrierContactId: contract.carrier.id,
             shipperContactId: contract.shipper.id,
-            driver: contract.driver,
+            driverDriverId: contract.driver.id,
+            carrierUsername: contract.carrierUsername,
             trailer: contract.trailer,
             truck: contract.truck,
             delivery: {
@@ -559,10 +602,11 @@ class NewTransport extends Component {
             contractCarrierId: this.state.carrierContactId,
             contractDeliveryId: this.state.delivery.contactId,
             contractPickupId: this.state.pickup.contactId,
+            contractDriverId: this.state.driverDriverId,
+            carrierUsername: this.state.carrierUsername,
             loads: this.state.loads,
-            driver: this.state.driver,
-            trailer: this.state.trailer,
-            truck: this.state.truck,
+            trailer: this.state.trailer.licensePlate,
+            truck: this.state.truck.licensePlate,
             events: [],
             updatedAt: now,
             createdAt: now,

@@ -1,6 +1,10 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const activate = `mutation Activate($activationCode: String) {
+  activate(activationCode: $activationCode)
+}
+`;
 export const createContract = `mutation CreateContract($input: CreateContractInput!) {
   createContract(input: $input) {
     id
@@ -50,9 +54,6 @@ export const createContract = `mutation CreateContract($input: CreateContractInp
       quantity
       description
     }
-    driver {
-      name
-    }
     trailer
     truck
     references {
@@ -82,6 +83,13 @@ export const createContract = `mutation CreateContract($input: CreateContractInp
           key
         }
       }
+    }
+    driver {
+      id
+      owner
+      name
+      carrier
+      associationSecret
     }
   }
 }
@@ -135,9 +143,6 @@ export const updateContract = `mutation UpdateContract($input: UpdateContractInp
       quantity
       description
     }
-    driver {
-      name
-    }
     trailer
     truck
     references {
@@ -167,6 +172,13 @@ export const updateContract = `mutation UpdateContract($input: UpdateContractInp
           key
         }
       }
+    }
+    driver {
+      id
+      owner
+      name
+      carrier
+      associationSecret
     }
   }
 }
@@ -220,9 +232,6 @@ export const deleteContract = `mutation DeleteContract($input: DeleteContractInp
       quantity
       description
     }
-    driver {
-      name
-    }
     trailer
     truck
     references {
@@ -252,6 +261,13 @@ export const deleteContract = `mutation DeleteContract($input: DeleteContractInp
           key
         }
       }
+    }
+    driver {
+      id
+      owner
+      name
+      carrier
+      associationSecret
     }
   }
 }
@@ -289,6 +305,36 @@ export const deleteContact = `mutation DeleteContact($input: DeleteContactInput!
     address
     city
     country
+  }
+}
+`;
+export const createDriver = `mutation CreateDriver($input: CreateDriverInput!) {
+  createDriver(input: $input) {
+    id
+    owner
+    name
+    carrier
+    associationSecret
+  }
+}
+`;
+export const deleteDriver = `mutation DeleteDriver($input: DeleteDriverInput!) {
+  deleteDriver(input: $input) {
+    id
+    owner
+    name
+    carrier
+    associationSecret
+  }
+}
+`;
+export const updateDriver = `mutation UpdateDriver($input: UpdateDriverInput!) {
+  updateDriver(input: $input) {
+    id
+    owner
+    name
+    carrier
+    associationSecret
   }
 }
 `;

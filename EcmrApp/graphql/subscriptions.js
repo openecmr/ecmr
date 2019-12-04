@@ -50,9 +50,6 @@ export const onCreateContract = `subscription OnCreateContract($owner: String!) 
       quantity
       description
     }
-    driver {
-      name
-    }
     trailer
     truck
     references {
@@ -82,6 +79,13 @@ export const onCreateContract = `subscription OnCreateContract($owner: String!) 
           key
         }
       }
+    }
+    driver {
+      id
+      owner
+      name
+      carrier
+      associationSecret
     }
   }
 }
@@ -135,9 +139,6 @@ export const onUpdateContract = `subscription OnUpdateContract($owner: String!, 
       quantity
       description
     }
-    driver {
-      name
-    }
     trailer
     truck
     references {
@@ -167,6 +168,13 @@ export const onUpdateContract = `subscription OnUpdateContract($owner: String!, 
           key
         }
       }
+    }
+    driver {
+      id
+      owner
+      name
+      carrier
+      associationSecret
     }
   }
 }
@@ -220,9 +228,6 @@ export const onDeleteContract = `subscription OnDeleteContract($owner: String!) 
       quantity
       description
     }
-    driver {
-      name
-    }
     trailer
     truck
     references {
@@ -252,6 +257,13 @@ export const onDeleteContract = `subscription OnDeleteContract($owner: String!) 
           key
         }
       }
+    }
+    driver {
+      id
+      owner
+      name
+      carrier
+      associationSecret
     }
   }
 }
@@ -289,6 +301,36 @@ export const onDeleteContact = `subscription OnDeleteContact($owner: String!) {
     address
     city
     country
+  }
+}
+`;
+export const onCreateDriver = `subscription OnCreateDriver($owner: String!) {
+  onCreateDriver(owner: $owner) {
+    id
+    owner
+    name
+    carrier
+    associationSecret
+  }
+}
+`;
+export const onDeleteDriver = `subscription OnDeleteDriver($owner: String!) {
+  onDeleteDriver(owner: $owner) {
+    id
+    owner
+    name
+    carrier
+    associationSecret
+  }
+}
+`;
+export const onUpdateDriver = `subscription OnUpdateDriver($owner: String!) {
+  onUpdateDriver(owner: $owner) {
+    id
+    owner
+    name
+    carrier
+    associationSecret
   }
 }
 `;
