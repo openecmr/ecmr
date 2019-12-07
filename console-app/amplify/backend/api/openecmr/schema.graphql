@@ -42,14 +42,39 @@ type Contract @model
     owner: String
     carrierUsername: String
     status: ContractStatus
-    shipper: Contact! @connection
-    carrier: Contact! @connection
-    delivery: Contact! @connection
+    shipper: Contact
+        @connection
+        @auth(rules: [
+            { allow: owner, operations: [read, update] },
+            { allow: owner, ownerField: "carrierUsername", operations: [read] }
+        ])
+    carrier: Contact
+        @connection
+        @auth(rules: [
+            { allow: owner, operations: [read, update] },
+            { allow: owner, ownerField: "carrierUsername", operations: [read] }
+        ])
+    delivery: Contact
+        @connection
+        @auth(rules: [
+            { allow: owner, operations: [read, update] },
+            { allow: owner, ownerField: "carrierUsername", operations: [read] }
+        ])
     arrivalDate: String
     deliveryDate: String
-    pickup: Contact! @connection
+    pickup: Contact
+        @connection
+        @auth(rules: [
+            { allow: owner, operations: [read, update]  },
+            { allow: owner, ownerField: "carrierUsername", operations: [read] }
+        ])
     loads: [Load]!
-    driver: Driver @connection
+    driver: Driver
+        @connection
+        @auth(rules: [
+            { allow: owner, operations: [read, update] },
+            { allow: owner, ownerField: "carrierUsername", operations: [read] }
+        ])
     trailer: String
     truck: String
     references: Reference
