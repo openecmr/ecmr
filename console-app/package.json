@@ -3,20 +3,20 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@aws-amplify/cli": "^3.14.0",
+    "@aws-amplify/cli": "^4.5.0",
     "@types/jest": "^24.0.11",
-    "@types/node": "^11.13.0",
+    "@types/node": "^12.12.14",
     "@types/react": "^16.8.12",
     "@types/react-dom": "^16.8.3",
-    "aws-amplify": "^1.2.2",
-    "aws-amplify-react": "^2.5.3",
+    "aws-amplify": "^2.2.0",
+    "aws-amplify-react": "^3.1.1",
     "graphql-tag": "^2.10.1",
     "lodash": "^4.17.15",
     "moment": "^2.24.0",
     "react": "^16.5.0",
     "react-dom": "^16.5.0",
-    "react-router-dom": "^4.3.1",
-    "react-scripts": "1.1.5",
+    "react-router-dom": "^5.1.2",
+    "react-scripts": "3.3.0",
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^0.88.1",
     "typescript": "^3.4.2"
@@ -26,5 +26,17 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }
