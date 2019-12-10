@@ -8,8 +8,6 @@ export const getContract = `query GetContract($id: ID!) {
     carrierUsername
     status
     shipper {
-      id
-      owner
       name
       postalCode
       address
@@ -17,8 +15,6 @@ export const getContract = `query GetContract($id: ID!) {
       country
     }
     carrier {
-      id
-      owner
       name
       postalCode
       address
@@ -26,8 +22,6 @@ export const getContract = `query GetContract($id: ID!) {
       country
     }
     delivery {
-      id
-      owner
       name
       postalCode
       address
@@ -37,8 +31,6 @@ export const getContract = `query GetContract($id: ID!) {
     arrivalDate
     deliveryDate
     pickup {
-      id
-      owner
       name
       postalCode
       address
@@ -49,6 +41,9 @@ export const getContract = `query GetContract($id: ID!) {
       category
       quantity
       description
+    }
+    driver {
+      name
     }
     trailer
     truck
@@ -80,13 +75,11 @@ export const getContract = `query GetContract($id: ID!) {
         }
       }
     }
-    driver {
-      id
-      owner
-      name
-      carrier
-      associationSecret
-    }
+    shipperContactId
+    carrierContactId
+    pickupContactId
+    deliveryContactId
+    driverDriverId
   }
 }
 `;
@@ -102,8 +95,6 @@ export const listContracts = `query ListContracts(
       carrierUsername
       status
       shipper {
-        id
-        owner
         name
         postalCode
         address
@@ -111,8 +102,6 @@ export const listContracts = `query ListContracts(
         country
       }
       carrier {
-        id
-        owner
         name
         postalCode
         address
@@ -120,8 +109,6 @@ export const listContracts = `query ListContracts(
         country
       }
       delivery {
-        id
-        owner
         name
         postalCode
         address
@@ -131,8 +118,6 @@ export const listContracts = `query ListContracts(
       arrivalDate
       deliveryDate
       pickup {
-        id
-        owner
         name
         postalCode
         address
@@ -143,6 +128,9 @@ export const listContracts = `query ListContracts(
         category
         quantity
         description
+      }
+      driver {
+        name
       }
       trailer
       truck
@@ -174,13 +162,11 @@ export const listContracts = `query ListContracts(
           }
         }
       }
-      driver {
-        id
-        owner
-        name
-        carrier
-        associationSecret
-      }
+      shipperContactId
+      carrierContactId
+      pickupContactId
+      deliveryContactId
+      driverDriverId
     }
     nextToken
   }
@@ -217,6 +203,16 @@ export const listContacts = `query ListContacts(
   }
 }
 `;
+export const getDriver = `query GetDriver($id: ID!) {
+  getDriver(id: $id) {
+    id
+    owner
+    name
+    carrier
+    associationSecret
+  }
+}
+`;
 export const listDrivers = `query ListDrivers(
   $filter: ModelDriverFilterInput
   $limit: Int
@@ -231,16 +227,6 @@ export const listDrivers = `query ListDrivers(
       associationSecret
     }
     nextToken
-  }
-}
-`;
-export const getDriver = `query GetDriver($id: ID!) {
-  getDriver(id: $id) {
-    id
-    owner
-    name
-    carrier
-    associationSecret
   }
 }
 `;

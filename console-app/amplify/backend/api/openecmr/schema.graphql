@@ -32,7 +32,7 @@ enum ContractStatus {
     ARCHIVED
 }
 
-type Contract @model(subscriptions: null)
+type Contract @model
     @auth(rules: [
         { allow: owner },
         { allow: owner, ownerField: "carrierUsername", operations: [read, update] }
@@ -43,45 +43,31 @@ type Contract @model(subscriptions: null)
     carrierUsername: String
     status: ContractStatus
 
-    shipper: Contact
-        @connection
-        @auth(rules: [
-            { allow: owner, operations: [read, update] },
-            { allow: owner, ownerField: "carrierUsername", operations: [read, update] }
-        ])
-    carrier: Contact
-        @connection
-        @auth(rules: [
-            { allow: owner, operations: [read, update] },
-            { allow: owner, ownerField: "carrierUsername", operations: [read, update] }
-        ])
-    delivery: Contact
-        @connection
-        @auth(rules: [
-            { allow: owner, operations: [read, update] },
-            { allow: owner, ownerField: "carrierUsername", operations: [read, update] }
-        ])
+    shipper: Address
+    carrier: Address
+    delivery: Address
     arrivalDate: String
     deliveryDate: String
-    pickup: Contact
-        @connection
-        @auth(rules: [
-            { allow: owner, operations: [read, update]  },
-            { allow: owner, ownerField: "carrierUsername", operations: [read, update] }
-        ])
+    pickup: Address
     loads: [Load]!
-    driver: Driver
-        @connection
-        @auth(rules: [
-            { allow: owner, operations: [read, update] },
-            { allow: owner, ownerField: "carrierUsername", operations: [read, update] }
-        ])
+    driver: DriverDetail
     trailer: String
     truck: String
     references: Reference
     updatedAt: String!
     createdAt: String!
     events: [Event]!
+
+    # these are ids that can be used by the submitter for grouping contracts
+    shipperContactId: ID
+    carrierContactId: ID
+    pickupContactId: ID
+    deliveryContactId: ID
+    driverDriverId: ID
+}
+
+type DriverDetail {
+    name: String
 }
 
 type Address {

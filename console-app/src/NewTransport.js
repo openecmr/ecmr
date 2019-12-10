@@ -451,8 +451,8 @@ class NewTransport extends Component {
             pickup: {
             },
             loads: [
-            ]
-
+            ],
+            loading: false
         };
 
         const copyId = this.props.match.params.copy_id;
@@ -479,18 +479,18 @@ class NewTransport extends Component {
         const contract = response.data.getContract;
 
         this.setState({
-            carrierContactId: contract.carrier.id,
-            shipperContactId: contract.shipper.id,
-            driverDriverId: contract.driver.id,
+            carrierContactId: contract.carrierContactId,
+            shipperContactId: contract.shipperContactId,
+            driverDriverId: contract.driverDriverId,
             carrierUsername: contract.carrierUsername,
             trailer: contract.trailer,
             truck: contract.truck,
             delivery: {
-                contactId: contract.delivery.id,
+                contactId: contract.deliveryContactId,
                 deliveryDate: contract.deliveryDate
             },
             pickup: {
-                contactId: contract.pickup.id,
+                contactId: contract.pickupContactId,
                 pickupDate: contract.arrivalDate
             },
             loads: contract.loads
@@ -575,7 +575,7 @@ class NewTransport extends Component {
                                         this.state.error
                                     ]}
                                 />}
-                                <Button floated={"right"} onClick={() => this.save()}>Save</Button>
+                                <Button floated={"right"} loading={this.state.loading} onClick={() => this.save()}>Save</Button>
                                 <Divider clearing hidden fitted />
                             </Segment>
                         </Grid.Column>
@@ -593,16 +593,38 @@ class NewTransport extends Component {
     }
 
     async save() {
+        this.setState({
+            loading: true
+        });
+
+        const copyToAddress = async (contactId) => {
+            const address = (await API.graphql(graphqlOperation(queries.getContact, {
+                id: contactId
+            }))).data.getContact;
+            return {
+                name: address.name,
+                postalCode: address.postalCode,
+                address: address.address,
+                city: address.city,
+                country: address.country
+            };
+        };
+
+        const copyToDriverDetail = async (driverId) =>  {
+            const driver = (await API.graphql(graphqlOperation(queries.getDriver, {
+                id: driverId
+            }))).data.getDriver;
+            return {
+                name: driver.name
+            };
+        };
+
         const now = moment().toISOString();
         const input = {
             status: 'CREATED',
             arrivalDate: this.state.pickup.pickupDate,
             deliveryDate: this.state.delivery.deliveryDate,
-            contractShipperId: this.state.shipperContactId,
-            contractCarrierId: this.state.carrierContactId,
-            contractDeliveryId: this.state.delivery.contactId,
-            contractPickupId: this.state.pickup.contactId,
-            contractDriverId: this.state.driverDriverId,
+
             carrierUsername: this.state.carrierUsername,
             loads: this.state.loads,
             trailer: this.state.trailer.licensePlate,
@@ -610,14 +632,29 @@ class NewTransport extends Component {
             events: [],
             updatedAt: now,
             createdAt: now,
+
+            shipper: await copyToAddress(this.state.shipperContactId),
+            carrier: await copyToAddress(this.state.carrierContactId),
+            delivery: await copyToAddress(this.state.delivery.contactId),
+            pickup: await copyToAddress(this.state.pickup.contactId),
+            driver: await copyToDriverDetail(this.state.driverDriverId),
+
+            shipperContactId: this.state.shipperContactId,
+            carrierContactId: this.state.carrierContactId,
+            deliveryContactId: this.state.delivery.contactId,
+            pickupContactId: this.state.pickup.contactId,
+            driverDriverId: this.state.driverDriverId
         };
+
+        console.log(input);
 
         try {
             await API.graphql(graphqlOperation(mutations.createContract, {input: input}));
             this.props.history.push('/transports')
         } catch (ex) {
             this.setState({
-                error: JSON.stringify(ex)
+                error: JSON.stringify(ex),
+                loading: false
             })
         }
     }

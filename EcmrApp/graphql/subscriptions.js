@@ -8,8 +8,6 @@ export const onCreateContract = `subscription OnCreateContract($owner: String!) 
     carrierUsername
     status
     shipper {
-      id
-      owner
       name
       postalCode
       address
@@ -17,8 +15,6 @@ export const onCreateContract = `subscription OnCreateContract($owner: String!) 
       country
     }
     carrier {
-      id
-      owner
       name
       postalCode
       address
@@ -26,8 +22,6 @@ export const onCreateContract = `subscription OnCreateContract($owner: String!) 
       country
     }
     delivery {
-      id
-      owner
       name
       postalCode
       address
@@ -37,8 +31,6 @@ export const onCreateContract = `subscription OnCreateContract($owner: String!) 
     arrivalDate
     deliveryDate
     pickup {
-      id
-      owner
       name
       postalCode
       address
@@ -49,6 +41,9 @@ export const onCreateContract = `subscription OnCreateContract($owner: String!) 
       category
       quantity
       description
+    }
+    driver {
+      name
     }
     trailer
     truck
@@ -80,13 +75,11 @@ export const onCreateContract = `subscription OnCreateContract($owner: String!) 
         }
       }
     }
-    driver {
-      id
-      owner
-      name
-      carrier
-      associationSecret
-    }
+    shipperContactId
+    carrierContactId
+    pickupContactId
+    deliveryContactId
+    driverDriverId
   }
 }
 `;
@@ -97,8 +90,6 @@ export const onUpdateContract = `subscription OnUpdateContract($owner: String!, 
     carrierUsername
     status
     shipper {
-      id
-      owner
       name
       postalCode
       address
@@ -106,8 +97,6 @@ export const onUpdateContract = `subscription OnUpdateContract($owner: String!, 
       country
     }
     carrier {
-      id
-      owner
       name
       postalCode
       address
@@ -115,8 +104,6 @@ export const onUpdateContract = `subscription OnUpdateContract($owner: String!, 
       country
     }
     delivery {
-      id
-      owner
       name
       postalCode
       address
@@ -126,8 +113,6 @@ export const onUpdateContract = `subscription OnUpdateContract($owner: String!, 
     arrivalDate
     deliveryDate
     pickup {
-      id
-      owner
       name
       postalCode
       address
@@ -138,6 +123,9 @@ export const onUpdateContract = `subscription OnUpdateContract($owner: String!, 
       category
       quantity
       description
+    }
+    driver {
+      name
     }
     trailer
     truck
@@ -169,13 +157,11 @@ export const onUpdateContract = `subscription OnUpdateContract($owner: String!, 
         }
       }
     }
-    driver {
-      id
-      owner
-      name
-      carrier
-      associationSecret
-    }
+    shipperContactId
+    carrierContactId
+    pickupContactId
+    deliveryContactId
+    driverDriverId
   }
 }
 `;
@@ -186,8 +172,6 @@ export const onDeleteContract = `subscription OnDeleteContract($owner: String!) 
     carrierUsername
     status
     shipper {
-      id
-      owner
       name
       postalCode
       address
@@ -195,8 +179,6 @@ export const onDeleteContract = `subscription OnDeleteContract($owner: String!) 
       country
     }
     carrier {
-      id
-      owner
       name
       postalCode
       address
@@ -204,8 +186,6 @@ export const onDeleteContract = `subscription OnDeleteContract($owner: String!) 
       country
     }
     delivery {
-      id
-      owner
       name
       postalCode
       address
@@ -215,8 +195,6 @@ export const onDeleteContract = `subscription OnDeleteContract($owner: String!) 
     arrivalDate
     deliveryDate
     pickup {
-      id
-      owner
       name
       postalCode
       address
@@ -227,6 +205,9 @@ export const onDeleteContract = `subscription OnDeleteContract($owner: String!) 
       category
       quantity
       description
+    }
+    driver {
+      name
     }
     trailer
     truck
@@ -258,13 +239,11 @@ export const onDeleteContract = `subscription OnDeleteContract($owner: String!) 
         }
       }
     }
-    driver {
-      id
-      owner
-      name
-      carrier
-      associationSecret
-    }
+    shipperContactId
+    carrierContactId
+    pickupContactId
+    deliveryContactId
+    driverDriverId
   }
 }
 `;

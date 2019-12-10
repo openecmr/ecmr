@@ -12,8 +12,6 @@ export const createContract = `mutation CreateContract($input: CreateContractInp
     carrierUsername
     status
     shipper {
-      id
-      owner
       name
       postalCode
       address
@@ -21,8 +19,6 @@ export const createContract = `mutation CreateContract($input: CreateContractInp
       country
     }
     carrier {
-      id
-      owner
       name
       postalCode
       address
@@ -30,8 +26,6 @@ export const createContract = `mutation CreateContract($input: CreateContractInp
       country
     }
     delivery {
-      id
-      owner
       name
       postalCode
       address
@@ -41,8 +35,6 @@ export const createContract = `mutation CreateContract($input: CreateContractInp
     arrivalDate
     deliveryDate
     pickup {
-      id
-      owner
       name
       postalCode
       address
@@ -53,6 +45,9 @@ export const createContract = `mutation CreateContract($input: CreateContractInp
       category
       quantity
       description
+    }
+    driver {
+      name
     }
     trailer
     truck
@@ -84,13 +79,11 @@ export const createContract = `mutation CreateContract($input: CreateContractInp
         }
       }
     }
-    driver {
-      id
-      owner
-      name
-      carrier
-      associationSecret
-    }
+    shipperContactId
+    carrierContactId
+    pickupContactId
+    deliveryContactId
+    driverDriverId
   }
 }
 `;
@@ -101,8 +94,6 @@ export const updateContract = `mutation UpdateContract($input: UpdateContractInp
     carrierUsername
     status
     shipper {
-      id
-      owner
       name
       postalCode
       address
@@ -110,8 +101,6 @@ export const updateContract = `mutation UpdateContract($input: UpdateContractInp
       country
     }
     carrier {
-      id
-      owner
       name
       postalCode
       address
@@ -119,8 +108,6 @@ export const updateContract = `mutation UpdateContract($input: UpdateContractInp
       country
     }
     delivery {
-      id
-      owner
       name
       postalCode
       address
@@ -130,8 +117,6 @@ export const updateContract = `mutation UpdateContract($input: UpdateContractInp
     arrivalDate
     deliveryDate
     pickup {
-      id
-      owner
       name
       postalCode
       address
@@ -142,6 +127,9 @@ export const updateContract = `mutation UpdateContract($input: UpdateContractInp
       category
       quantity
       description
+    }
+    driver {
+      name
     }
     trailer
     truck
@@ -173,13 +161,11 @@ export const updateContract = `mutation UpdateContract($input: UpdateContractInp
         }
       }
     }
-    driver {
-      id
-      owner
-      name
-      carrier
-      associationSecret
-    }
+    shipperContactId
+    carrierContactId
+    pickupContactId
+    deliveryContactId
+    driverDriverId
   }
 }
 `;
@@ -190,8 +176,6 @@ export const deleteContract = `mutation DeleteContract($input: DeleteContractInp
     carrierUsername
     status
     shipper {
-      id
-      owner
       name
       postalCode
       address
@@ -199,8 +183,6 @@ export const deleteContract = `mutation DeleteContract($input: DeleteContractInp
       country
     }
     carrier {
-      id
-      owner
       name
       postalCode
       address
@@ -208,8 +190,6 @@ export const deleteContract = `mutation DeleteContract($input: DeleteContractInp
       country
     }
     delivery {
-      id
-      owner
       name
       postalCode
       address
@@ -219,8 +199,6 @@ export const deleteContract = `mutation DeleteContract($input: DeleteContractInp
     arrivalDate
     deliveryDate
     pickup {
-      id
-      owner
       name
       postalCode
       address
@@ -231,6 +209,9 @@ export const deleteContract = `mutation DeleteContract($input: DeleteContractInp
       category
       quantity
       description
+    }
+    driver {
+      name
     }
     trailer
     truck
@@ -262,13 +243,11 @@ export const deleteContract = `mutation DeleteContract($input: DeleteContractInp
         }
       }
     }
-    driver {
-      id
-      owner
-      name
-      carrier
-      associationSecret
-    }
+    shipperContactId
+    carrierContactId
+    pickupContactId
+    deliveryContactId
+    driverDriverId
   }
 }
 `;
