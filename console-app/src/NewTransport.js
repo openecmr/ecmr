@@ -483,8 +483,12 @@ class NewTransport extends Component {
             shipperContactId: contract.shipperContactId,
             driverDriverId: contract.driverDriverId,
             carrierUsername: contract.carrierUsername,
-            trailer: contract.trailer,
-            truck: contract.truck,
+            trailer: {
+                licensePlate: contract.trailer
+            },
+            truck: {
+                licensePlate: contract.truck
+            },
             delivery: {
                 contactId: contract.deliveryContactId,
                 deliveryDate: contract.deliveryDate

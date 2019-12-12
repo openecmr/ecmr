@@ -47,7 +47,7 @@ export default class SettingsScreen extends Component {
                 error: false
             });
             const result = await API.graphql(graphqlOperation(mutations.activate, {activationCode: this.state.code}));
-            if (result === "success") {
+            if (result.data.activate === "success") {
                 this.setState({
                     success: true
                 });

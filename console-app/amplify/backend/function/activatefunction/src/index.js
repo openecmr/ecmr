@@ -30,7 +30,7 @@ exports.handler = async (event, context) => { //eslint-disable-line
 };
 
 const getUsername = (event, context) => {
-  return event.identity.claims['cognito:username'];
+  return event.identity.username;
 };
 
 // https://aws-amplify.github.io/docs/cli-toolchain/quickstart#graphql-from-lambda
