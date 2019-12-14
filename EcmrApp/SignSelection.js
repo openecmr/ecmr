@@ -36,7 +36,7 @@ class SignSelection extends Component {
 
     signOnPhone() {
         const {navigate} = this.props.navigation;
-        navigate('Signature', {
+        navigate('SignatoryInformation', {
             item: this.state.contract,
             site: this.state.site
         });

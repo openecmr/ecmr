@@ -11,6 +11,7 @@ import Signature from "./Signature";
 import CaptureSignature from "./CaptureSignature";
 import SettingsScreen from "./SettingsScreen";
 import LinkAccount from "./LinkAccount";
+import SignatoryInformation from "./SignatoryInformation";
 
 Amplify.configure(awsmobile);
 Amplify.Logger.LOG_LEVEL = 'DEBUG';
@@ -21,7 +22,8 @@ const MainNavigator = createStackNavigator({
     ConfirmLoading: {screen: ConfirmLoading},
     SignSelection: {screen: SignSelection},
     Signature: {screen: Signature},
-    CaptureSignature: {screen: CaptureSignature}
+    CaptureSignature: {screen: CaptureSignature},
+    SignatoryInformation: {screen: SignatoryInformation}
 });
 
 const SettingsNavigator = createStackNavigator({

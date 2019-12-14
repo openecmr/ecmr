@@ -57,7 +57,9 @@ export default class SettingsScreen extends Component {
                 })
             }
         } catch(ex) {
-            console.log(ex);
+            this.setState({
+                error: true
+            })
         }
     }
 }

@@ -73,7 +73,11 @@ export const onCreateContract = `subscription OnCreateContract($owner: String!) 
           region
           key
         }
+        signatoryName
+        signatoryEmail
       }
+      driverObservation
+      signatoryObservation
     }
     shipperContactId
     carrierContactId
@@ -155,7 +159,11 @@ export const onUpdateContract = `subscription OnUpdateContract($owner: String!, 
           region
           key
         }
+        signatoryName
+        signatoryEmail
       }
+      driverObservation
+      signatoryObservation
     }
     shipperContactId
     carrierContactId
@@ -237,7 +245,11 @@ export const onDeleteContract = `subscription OnDeleteContract($owner: String!) 
           region
           key
         }
+        signatoryName
+        signatoryEmail
       }
+      driverObservation
+      signatoryObservation
     }
     shipperContactId
     carrierContactId

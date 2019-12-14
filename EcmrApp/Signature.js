@@ -1,5 +1,5 @@
 import {Component} from "react";
-import {Alert, FlatList, StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import {Alert, FlatList, StyleSheet, Text, TouchableOpacity, View, Modal, TextInput} from "react-native";
 import React from "react";
 import {Address, MyText} from "./Components";
 import {Button, CheckBox} from "react-native-elements";
@@ -13,7 +13,10 @@ class Signature extends Component {
         super(props);
         this.state = {
             contract: props.navigation.getParam("item"),
-            site: props.navigation.getParam("site")
+            site: props.navigation.getParam("site"),
+            signatoryName: props.navigation.getParam("signatoryName"),
+            signatoryEmail: props.navigation.getParam("signatoryEmail"),
+            addingRemark: false
         };
     }
 
@@ -21,7 +24,30 @@ class Signature extends Component {
     render() {
         return (
             <View style={{padding: 10, flex: 1}}>
-                <MyText style={{fontWeight: 'bold', fontSize: 17, textAlign: 'center'}}>Consignor, please check the information below before signing</MyText>
+                <Modal
+                    animationType="slide"
+                    transparent={false}
+                    visible={this.state.addingRemark}
+                    onRequestClose={() => this.setState({addingRemark: false})}>
+                    <View style={{padding: 10}}>
+                        <View>
+                            <TextInput
+                                multiline
+                                numberOfLines={5}
+                                value={this.state.signatoryObservation}
+                                style={{textAlignVertical: 'top',  borderColor: 'gray', borderWidth: 1, marginTop: 5, marginBottom: 15}}
+                                placeholder="Enter an observation..."
+                                onChangeText={(signatoryObservation) => this.setState({signatoryObservation})}/>
+
+                            <Button
+                                color={"rgb(60,176,60)"}
+                                title={"Save"}
+                                onPress={() => this.setState({addingRemark: false})}/>
+                        </View>
+                    </View>
+                </Modal>
+
+                <MyText style={{fontWeight: 'bold', fontSize: 17, textAlign: 'center'}}>{this.state.signatoryName}, please check the information below before signing</MyText>
                 <MyText style={{marginTop: 10, color: 'rgb(66,133,244)', textAlign: 'center'}}>By checking the box below, I agree with the terms and conditions of this carrier.</MyText>
 
 
@@ -50,10 +76,11 @@ class Signature extends Component {
                 <MyText style={{marginLeft: 10}}>No observations</MyText>
 
                 <MyText style={{fontWeight: 'bold', marginTop: 5}}>Signatory observations:</MyText>
-                <MyText style={{marginLeft: 10}}>No observations</MyText>
+                <MyText style={{marginLeft: 10}}>{this.state.signatoryObservation || "No observations"}</MyText>
 
                 <View style={{flexDirection: 'row', margin: 10, marginTop: 5, position: 'absolute', bottom: 0, left: 10}}>
-                    <Button containerStyle={{flex: 1, marginRight: 15}} buttonStyle={{height: 60}} title={"Add observations"}/>
+                    <Button containerStyle={{flex: 1, marginRight: 15}} buttonStyle={{height: 60}} title={"Add observations"}
+                            onPress={() => this.setState({addingRemark: true})}/>
                     <Button containerStyle={{flex: 1}} title={"Sign"} buttonStyle={{height: 60, backgroundColor: 'rgb(60,176,60)'}}
                             onPress={() => this.captureSignature()}/>
                 </View>
@@ -83,7 +110,10 @@ class Signature extends Component {
         const {navigate} = this.props.navigation;
         navigate('CaptureSignature', {
             item: this.state.contract,
-            site: this.state.site
+            site: this.state.site,
+            signatoryName: this.state.signatoryName,
+            signatoryEmail: this.state.signatoryEmail,
+            signatoryObservation: this.state.signatoryObservation
         });
     }
 }

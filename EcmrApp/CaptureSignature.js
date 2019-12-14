@@ -67,19 +67,19 @@ class CaptureSignature extends Component {
                         bucket: 'bucket',
                         region: 'eu-central-1',
                         key: file.key
-                    }
-                }
+                    },
+                    signatoryName: this.props.navigation.getParam("signatoryName"),
+                    signatoryEmail: this.props.navigation.getParam("signatoryEmail")
+                },
+                signatoryObservation: this.props.navigation.getParam("signatoryObservation")
             };
             const input = createUpdateContractInput(this.state.contract)
             input.events.push(event);
             input.status = this.state.site === 'pickup' ? 'IN_PROGRESS' : 'DONE';
 
-            try {
-                await updateContract(input);
-                this.props.navigation.popToTop();
-            } catch (ex) {
-                console.warn(ex);
-            }
+
+            await updateContract(input);
+            this.props.navigation.popToTop();
         } catch (error) {
             console.warn(error);
         }

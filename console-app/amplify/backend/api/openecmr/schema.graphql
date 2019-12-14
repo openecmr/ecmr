@@ -140,7 +140,9 @@ enum SignatureMethod {
 type Signature {
     method: SignatureMethod!,
     signatureImageDriver: S3Object,
-    signatureImageSignatory: S3Object
+    signatureImageSignatory: S3Object,
+    signatoryName: String
+    signatoryEmail: String
 }
 
 type Event {
@@ -151,4 +153,6 @@ type Event {
     latitude: Float
     longitude: Float
     signature: Signature
+    driverObservation: String
+    signatoryObservation: String
 }

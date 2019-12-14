@@ -77,7 +77,11 @@ export const createContract = `mutation CreateContract($input: CreateContractInp
           region
           key
         }
+        signatoryName
+        signatoryEmail
       }
+      driverObservation
+      signatoryObservation
     }
     shipperContactId
     carrierContactId
@@ -159,7 +163,11 @@ export const updateContract = `mutation UpdateContract($input: UpdateContractInp
           region
           key
         }
+        signatoryName
+        signatoryEmail
       }
+      driverObservation
+      signatoryObservation
     }
     shipperContactId
     carrierContactId
@@ -241,7 +249,11 @@ export const deleteContract = `mutation DeleteContract($input: DeleteContractInp
           region
           key
         }
+        signatoryName
+        signatoryEmail
       }
+      driverObservation
+      signatoryObservation
     }
     shipperContactId
     carrierContactId

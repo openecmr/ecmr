@@ -73,7 +73,11 @@ export const getContract = `query GetContract($id: ID!) {
           region
           key
         }
+        signatoryName
+        signatoryEmail
       }
+      driverObservation
+      signatoryObservation
     }
     shipperContactId
     carrierContactId
@@ -160,7 +164,11 @@ export const listContracts = `query ListContracts(
             region
             key
           }
+          signatoryName
+          signatoryEmail
         }
+        driverObservation
+        signatoryObservation
       }
       shipperContactId
       carrierContactId
