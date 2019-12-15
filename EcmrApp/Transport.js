@@ -23,6 +23,29 @@ const Package = ({total}) =>
 const activityDoneColor = 'rgb(5, 172, 5)';
 const actionButtonColor = 'rgb(60,176,60)';
 
+const SignatureEvent = ({signature, signatoryObservation}) => (
+    <View>
+        <S3Image style={{width: 150, height: 150}}
+             resizeMode={'center'}
+             level={"public"}
+             imgKey={signature.signatureImageSignatory.key} />
+        {
+            signature.signatoryName &&
+            <View style={{flexDirection: 'row'}}>
+                <MyText>Signed by: </MyText>
+                <MyText style={{fontStyle: 'italic'}}>{signature.signatoryName} ({signature.signatoryEmail})</MyText>
+            </View>
+        }
+        {
+            signatoryObservation &&
+            <View style={{flexDirection: 'row'}}>
+                <MyText>Signatory observation: </MyText>
+                <MyText style={{fontStyle: 'italic'}}>{signatoryObservation}</MyText>
+            </View>
+        }
+    </View>
+);
+
 class Transport extends Component {
     static navigationOptions = ({ navigation, screenProps }) => {
         const site = navigation.getParam('site');
@@ -93,10 +116,7 @@ class Transport extends Component {
                             <MyText>{this.eventText(item)}</MyText>
                             {
                                 (item.type === 'UnloadingComplete' || item.type === 'LoadingComplete') &&
-                                    <S3Image style={{width: 150, height: 150}}
-                                             resizeMode={'center'}
-                                             level={"public"}
-                                             imgKey={item.signature.signatureImageSignatory.key} />
+                                    <SignatureEvent signature={item.signature} signatoryObservation={item.signatoryObservation}/>
                             }
                         </View>)
                     }
