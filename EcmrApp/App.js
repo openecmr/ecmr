@@ -2,7 +2,8 @@ import React from 'react';
 import Amplify from 'aws-amplify';
 import awsmobile from './aws-exports';
 import { withAuthenticator } from 'aws-amplify-react-native';
-import {createStackNavigator, createAppContainer, createBottomTabNavigator} from 'react-navigation';
+import { createAppContainer} from 'react-navigation';
+import { createStackNavigator } from 'react-navigation-stack'
 import Transports from "./Transports";
 import Transport from "./Transport";
 import ConfirmLoading from "./ConfirmLoading";
@@ -12,6 +13,7 @@ import CaptureSignature from "./CaptureSignature";
 import SettingsScreen from "./SettingsScreen";
 import LinkAccount from "./LinkAccount";
 import SignatoryInformation from "./SignatoryInformation";
+import {createBottomTabNavigator} from "react-navigation-tabs";
 
 Amplify.configure(awsmobile);
 Amplify.Logger.LOG_LEVEL = 'DEBUG';
@@ -37,8 +39,7 @@ const TabNavigator = createBottomTabNavigator({
 });
 
 
-const navigationPersistenceKey = __DEV__ ? "NavigationStateDEV" : null;
 const App = createAppContainer(TabNavigator);
-const AppWithPersistence = () => <App persistenceKey={navigationPersistenceKey}/>;
+const AppWithPersistence = () => <App/>;
 
 export default withAuthenticator(AppWithPersistence);

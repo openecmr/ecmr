@@ -105,12 +105,8 @@ class Transport extends Component {
                 </View>
 
                 <Header>Activity feed</Header>
-                <FlatList
-                    data={relevantItems}
-                    extraData={this.state}
-                    keyExtractor={(item, index) => String(index)}
-                    renderItem={({item}) =>
-                        (<View style={styles.activityItemContainer}>
+                {relevantItems.map((item, index) =>
+                    (<View style={styles.activityItemContainer} key={index}>
                             <Text style={{fontSize: 12}}>{moment(item.createdAt).format('llll')}</Text>
 
                             <MyText>{this.eventText(item)}</MyText>
@@ -118,9 +114,8 @@ class Transport extends Component {
                                 (item.type === 'UnloadingComplete' || item.type === 'LoadingComplete') &&
                                     <SignatureEvent signature={item.signature} signatoryObservation={item.signatoryObservation}/>
                             }
-                        </View>)
+                        </View>))
                     }
-                />
             </ScrollView>
         );
     }
@@ -212,7 +207,7 @@ class Transport extends Component {
         this.navigationEventSubscription.remove();
     }
 
-    componentWillMount() {
+    componentDidMount() {
         this.navigationEventSubscription = this.props.navigation.addListener(
             'willFocus',
             payload => {
