@@ -1,7 +1,7 @@
 import React from 'react';
 import Amplify from 'aws-amplify';
 import awsmobile from './aws-exports';
-import { withAuthenticator } from 'aws-amplify-react-native';
+import {ConfirmSignUp, SignUp, withAuthenticator} from 'aws-amplify-react-native';
 import { createAppContainer} from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack'
 import Transports from "./Transports";
@@ -14,6 +14,8 @@ import SettingsScreen from "./SettingsScreen";
 import LinkAccount from "./LinkAccount";
 import SignatoryInformation from "./SignatoryInformation";
 import {createBottomTabNavigator} from "react-navigation-tabs";
+import AmplifyTheme from "aws-amplify-react-native/dist/AmplifyTheme";
+import EcmrSignIn from "./EcmrSignIn";
 
 Amplify.configure(awsmobile);
 Amplify.Logger.LOG_LEVEL = 'DEBUG';
@@ -42,4 +44,13 @@ const TabNavigator = createBottomTabNavigator({
 const App = createAppContainer(TabNavigator);
 const AppWithPersistence = () => <App/>;
 
-export default withAuthenticator(AppWithPersistence);
+
+const MySectionHeader = Object.assign({}, AmplifyTheme.button, { backgroundColor: 'rgb(60,176,60)' });
+const MyTheme = Object.assign({}, AmplifyTheme, {button: MySectionHeader});
+
+
+export default withAuthenticator(AppWithPersistence,false, [
+    <EcmrSignIn override={'EcmrSignIn'}/>,
+    <SignUp/>,
+    <ConfirmSignUp/>
+], null, MyTheme);
