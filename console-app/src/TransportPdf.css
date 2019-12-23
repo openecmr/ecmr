@@ -1,0 +1,24 @@
+.pdf {
+    width: 612px;
+    height: 792px;
+    background-color: white;
+    margin: 0 auto;
+
+    border: 1px solid black;
+}
+
+.row {
+    border-bottom: 1px solid black;
+    border-collapse: collapse;
+    display: flex;
+}
+
+.cell {
+    flex: 0.5;
+    padding: 10px;
+}
+
+.cell:last-child {
+    border-left: 1px solid black;
+    border-collapse: collapse;
+}

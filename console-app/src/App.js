@@ -12,6 +12,7 @@ import Transport from "./Transport";
 import style from "./Style"
 import AddressBook from "./AddressBook";
 import Drivers from "./Drivers";
+import TransportPdf from "./TransportPdf";
 
 Amplify.configure(awsmobile);
 
@@ -44,29 +45,40 @@ const AppMenu = withRouter(({location}) => (
         />
     </Menu>));
 
+const Main = withRouter(({location}) => {
+    const pdf = location.pathname.endsWith('/pdf');
+
+    return (<div>
+            {pdf && <Route exact path="/transports/:id/pdf" component={TransportPdf}/>}
+            {!pdf &&
+            <div>
+                <Menu fixed='top' inverted>
+                    <Menu.Item as='a' header>
+                        <Image size='mini' src='/logo.png' style={{marginRight: '1.5em'}}/>
+                        Open e-CMR
+                    </Menu.Item>
+                </Menu>
+
+                <AppMenu/>
+
+                <div style={style.content}>
+                    <Route exact path="/transports" component={Transports}/>
+                    <Route exact path="/transports-new/:copy_id" component={NewTransport}/>
+                    <Route exact path="/transports-new" component={NewTransport}/>
+                    <Route exact path="/transports/:id" component={Transport}/>
+                    <Route exact path="/addressbook" component={AddressBook}/>
+                    <Route exact path="/drivers" component={Drivers}/>
+                </div>
+            </div>
+            }
+        </div>);
+});
+
 class App extends Component {
     render() {
         return (
             <Router>
-                <div>
-                    <Menu fixed='top' inverted>
-                        <Menu.Item as='a' header>
-                            <Image size='mini' src='/logo.png' style={{ marginRight: '1.5em' }} />
-                            Open e-CMR
-                        </Menu.Item>
-                    </Menu>
-
-                    <AppMenu/>
-
-                    <div style={style.content}>
-                        <Route exact path="/transports" component={Transports}/>
-                        <Route exact path="/transports-new/:copy_id" component={NewTransport}/>
-                        <Route exact path="/transports-new" component={NewTransport}/>
-                        <Route exact path="/transports/:id" component={Transport}/>
-                        <Route exact path="/addressbook" component={AddressBook}/>
-                        <Route exact path="/drivers" component={Drivers}/>
-                    </div>
-                </div>
+                <Main/>
             </Router>
         );
     }
