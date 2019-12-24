@@ -14,7 +14,19 @@ import AddressBook from "./AddressBook";
 import Drivers from "./Drivers";
 import TransportPdf from "./TransportPdf";
 
-Amplify.configure(awsmobile);
+let config;
+const pdfServiceKey = location.hash.substr(1);
+if (pdfServiceKey) {
+    config = {
+        ...awsmobile,
+        'aws_appsync_authenticationType': 'API_KEY',
+        'aws_appsync_apiKey': pdfServiceKey,
+    }
+} else {
+    config = awsmobile;
+}
+
+Amplify.configure(config);
 
 const AppMenu = withRouter(({location}) => (
     <Menu vertical fixed={'left'} style={style.appMenu}>
