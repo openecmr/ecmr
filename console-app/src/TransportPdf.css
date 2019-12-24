@@ -3,7 +3,8 @@
     height: 792px;
     background-color: white;
     margin: 0 auto;
-
+    display: flex;
+    flex-direction: column;
     border: 1px solid black;
 }
 
@@ -11,14 +12,19 @@
     border-bottom: 1px solid black;
     border-collapse: collapse;
     display: flex;
+    flex-direction: row;
+}
+
+.row.max {
+    flex: 1
 }
 
 .cell {
-    flex: 0.5;
+    flex: 1;
     padding: 10px;
 }
 
-.cell:last-child {
+.cell:not(:first-child) {
     border-left: 1px solid black;
     border-collapse: collapse;
 }

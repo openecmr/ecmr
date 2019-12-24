@@ -3,7 +3,9 @@ import {API, graphqlOperation} from "aws-amplify";
 import moment from 'moment';
 import * as queries from "./graphql/queries";
 import "./TransportPdf.css"
-import {Container, Header, Icon, Label, List} from "semantic-ui-react";
+import {Button, Container, Header, Icon, Label, List, Table} from "semantic-ui-react";
+import {Link} from "react-router-dom";
+import {S3Image} from "aws-amplify-react";
 
 const PdfHeader = ({label, icon}) => (
     <Header as={'h5'}>
@@ -31,14 +33,13 @@ const Address = ({address, label, icon}) => (
     </div>
 );
 
-const Row = ({children}) => (
-    <div className={"row"}>
-        <div className={"cell"}>
-            {children[0]}
-        </div>
-        <div className={"cell"}>
-            {children[1]}
-        </div>
+const Row = ({children, max}) => (
+    <div className={"row " + (max ? ' max' : '')}>
+        {React.Children.map(children, c =>
+            <div className={"cell"}>
+                {c}
+            </div>
+        )}
     </div>
 );
 
@@ -48,6 +49,40 @@ const LicensePlates = ({contract: {driver, trailer, truck}}) => (<div>
     <div>Truck: {truck}</div>
     <div>Trailer: {trailer}</div>
 </div>);
+
+
+const ListOfLoads = ({loads}) => (
+    <Table className="App-text-with-newlines" compact='very'>
+        <Table.Header>
+            <Table.Row>
+                <Table.HeaderCell>Category</Table.HeaderCell>
+                <Table.HeaderCell>Quantity</Table.HeaderCell>
+                <Table.HeaderCell>Description</Table.HeaderCell>
+            </Table.Row>
+        </Table.Header>
+        <Table.Body>
+            {loads.map(g => [
+                <Table.Cell>{g.category}</Table.Cell>,
+                <Table.Cell>{g.quantity}</Table.Cell>,
+                <Table.Cell>{g.description}</Table.Cell>
+                ]
+            )}
+        </Table.Body>
+    </Table>
+);
+
+const Signature = ({event, label}) => (
+    <div>
+        <PdfHeader icon={'building'} label={label}/>
+        {event &&
+        <S3Image
+            theme={{photoImg: {width: '100px', height: '100px'}}}
+            resizeMode={'center'}
+            level={"public"}
+            imgKey={event.signature.signatureImageSignatory.key}/>
+        }
+    </div>
+);
 
 export default class TransportPdf extends Component {
     constructor(props) {
@@ -89,7 +124,24 @@ export default class TransportPdf extends Component {
                     <Address address={contract.delivery} icon={'building'} label={'3. Place designated for delivery of goods (place, country)'}/>
                     <LicensePlates contract={contract}/>
                 </Row>
+                <Row max={true}>
+                    <ListOfLoads loads={contract.loads}/>
+                </Row>
+                <Row>
+                    <Signature event={this.selectSignature(contract.events, 'pickup')}
+                               label={'22. Signature and stamp of the sender'}/>
+                    <Signature event={null}
+                               label={'23. Signature and stamp of the carrier'}/>
+                    <Signature event={this.selectSignature(contract.events, 'delivery')}
+                               label={'24. Signature and stamp of the consignee'}/>
+                </Row>
             </div>
         );
+    }
+
+    selectSignature(events, site) {
+        console.log(events);
+        const match = events.filter(e => (e.type === 'LoadingComplete' || e.type === 'UnloadingComplete') && e.site === site);
+        return match.length === 0 ? null : match[0];
     }
 }
