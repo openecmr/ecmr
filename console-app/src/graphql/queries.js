@@ -1,6 +1,10 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const pdfexport = `query Pdfexport($id: String) {
+  pdfexport(id: $id)
+}
+`;
 export const getContact = `query GetContact($id: ID!) {
   getContact(id: $id) {
     id

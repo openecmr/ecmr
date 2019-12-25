@@ -126,6 +126,10 @@ class Transport extends Component {
                         <Icon name='copy' />
                         Copy
                     </Button>
+                    <Button onClick={() => this.downloadPdf()}>
+                        <Icon name='file pdf outline' />
+                        View CMR
+                    </Button>
                 </Button.Group>
                 <Header as={'h1'}>
                     <Header.Content>Transport {contract.id.substring(0,8)}</Header.Content>
@@ -231,6 +235,12 @@ class Transport extends Component {
         }));
 
         history.push('/transports');
+    }
+
+    async downloadPdf() {
+        const response = await API.graphql(graphqlOperation(queries.pdfexport, {
+            "id": this.props.match.params.id
+        }));
     }
 }
 

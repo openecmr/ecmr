@@ -119,6 +119,10 @@ type Mutation {
     activate(activationCode: String): String @function(name: "activatefunction-${env}")
 }
 
+type Query {
+    pdfexport(id: String): String @function(name : "pdfexport-${env}")
+}
+
 type Reference @aws_api_key @aws_cognito_user_pools @aws_iam {
     carrier: String
 }
