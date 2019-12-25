@@ -18,7 +18,7 @@
 #  content: String!
 #}
 
-type S3Object {
+type S3Object @aws_api_key @aws_cognito_user_pools @aws_iam {
     bucket: String!
     region: String!
     key: String!
@@ -35,7 +35,8 @@ enum ContractStatus {
 type Contract @model
     @auth(rules: [
         { allow: owner },
-        { allow: owner, ownerField: "carrierUsername", operations: [read, update] }
+        { allow: owner, ownerField: "carrierUsername", operations: [read, update] },
+        { allow: public, provider: apiKey, operations: [read]}
     ])
 {
     id: ID
@@ -66,11 +67,11 @@ type Contract @model
     driverDriverId: ID
 }
 
-type DriverDetail {
+type DriverDetail @aws_api_key @aws_cognito_user_pools @aws_iam {
     name: String
 }
 
-type Address {
+type Address @aws_api_key @aws_cognito_user_pools @aws_iam {
     name: String
     postalCode: String
     address: String
@@ -93,7 +94,7 @@ type Contact
     country: String
 }
 
-type Load {
+type Load @aws_api_key @aws_cognito_user_pools @aws_iam {
     category: String
     quantity: Int
     description: String
@@ -118,7 +119,7 @@ type Mutation {
     activate(activationCode: String): String @function(name: "activatefunction-${env}")
 }
 
-type Reference {
+type Reference @aws_api_key @aws_cognito_user_pools @aws_iam {
     carrier: String
 }
 
@@ -129,7 +130,7 @@ enum EventType {
     DepartureFromSite
 }
 
-type Author {
+type Author @aws_api_key @aws_cognito_user_pools @aws_iam {
     username: String!
 }
 
@@ -137,7 +138,7 @@ enum SignatureMethod {
     SIGN_ON_GLASS, PGP, NO_SIGNATORY
 }
 
-type Signature {
+type Signature @aws_api_key @aws_cognito_user_pools @aws_iam {
     method: SignatureMethod!,
     signatureImageDriver: S3Object,
     signatureImageSignatory: S3Object,
@@ -145,7 +146,7 @@ type Signature {
     signatoryEmail: String
 }
 
-type Event {
+type Event @aws_api_key @aws_cognito_user_pools @aws_iam {
     author: Author!
     type: EventType!
     site: String

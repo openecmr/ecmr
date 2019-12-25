@@ -1,0 +1,19 @@
+{
+    "permissions": {
+        "auth": {
+            "openecmr83cee658": [
+                "read"
+            ]
+        },
+        "api": {
+            "openecmr": [
+                "read"
+            ]
+        },
+        "storage": {
+            "attachments": [
+                "read"
+            ]
+        }
+    }
+}

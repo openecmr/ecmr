@@ -15,7 +15,7 @@ import Drivers from "./Drivers";
 import TransportPdf from "./TransportPdf";
 
 let config;
-const pdfServiceKey = location.hash.substr(1);
+const pdfServiceKey = window.location.hash.substr(1);
 if (pdfServiceKey) {
     config = {
         ...awsmobile,
@@ -95,4 +95,4 @@ class App extends Component {
         );
     }
 }
-export default withAuthenticator(App, false);
+export default pdfServiceKey ?  App : withAuthenticator(App, false);

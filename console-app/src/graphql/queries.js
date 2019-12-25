@@ -1,6 +1,37 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const getContact = `query GetContact($id: ID!) {
+  getContact(id: $id) {
+    id
+    owner
+    name
+    postalCode
+    address
+    city
+    country
+  }
+}
+`;
+export const listContacts = `query ListContacts(
+  $filter: ModelContactFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listContacts(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      owner
+      name
+      postalCode
+      address
+      city
+      country
+    }
+    nextToken
+  }
+}
+`;
 export const getContract = `query GetContract($id: ID!) {
   getContract(id: $id) {
     id
@@ -175,37 +206,6 @@ export const listContracts = `query ListContracts(
       pickupContactId
       deliveryContactId
       driverDriverId
-    }
-    nextToken
-  }
-}
-`;
-export const getContact = `query GetContact($id: ID!) {
-  getContact(id: $id) {
-    id
-    owner
-    name
-    postalCode
-    address
-    city
-    country
-  }
-}
-`;
-export const listContacts = `query ListContacts(
-  $filter: ModelContactFilterInput
-  $limit: Int
-  $nextToken: String
-) {
-  listContacts(filter: $filter, limit: $limit, nextToken: $nextToken) {
-    items {
-      id
-      owner
-      name
-      postalCode
-      address
-      city
-      country
     }
     nextToken
   }

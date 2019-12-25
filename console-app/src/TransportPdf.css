@@ -8,23 +8,23 @@
     border: 1px solid black;
 }
 
-.row {
+.pdf .row {
     border-bottom: 1px solid black;
     border-collapse: collapse;
     display: flex;
     flex-direction: row;
 }
 
-.row.max {
+.pdf .row.max {
     flex: 1
 }
 
-.cell {
+.pdf .cell {
     flex: 1;
     padding: 10px;
 }
 
-.cell:not(:first-child) {
+.pdf .cell:not(:first-child) {
     border-left: 1px solid black;
     border-collapse: collapse;
 }

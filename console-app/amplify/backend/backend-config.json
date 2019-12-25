@@ -14,6 +14,13 @@
 				"authConfig": {
 					"additionalAuthenticationProviders": [
 						{
+							"authenticationType": "API_KEY",
+							"apiKeyConfig": {
+								"description": "backend",
+								"apiKeyExpirationDays": 7
+							}
+						},
+						{
 							"authenticationType": "AWS_IAM"
 						}
 					],
@@ -45,6 +52,35 @@
 					"attributes": [
 						"GraphQLAPIIdOutput",
 						"GraphQLAPIEndpointOutput"
+					]
+				}
+			]
+		},
+		"pdfexport": {
+			"service": "Lambda",
+			"providerPlugin": "awscloudformation",
+			"build": true,
+			"dependsOn": [
+				{
+					"category": "auth",
+					"resourceName": "openecmr83cee658",
+					"attributes": [
+						"UserPoolId"
+					]
+				},
+				{
+					"category": "api",
+					"resourceName": "openecmr",
+					"attributes": [
+						"GraphQLAPIIdOutput",
+						"GraphQLAPIEndpointOutput"
+					]
+				},
+				{
+					"category": "storage",
+					"resourceName": "attachments",
+					"attributes": [
+						"BucketName"
 					]
 				}
 			]
