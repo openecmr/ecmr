@@ -126,7 +126,7 @@ class Transport extends Component {
                         <Icon name='copy' />
                         Copy
                     </Button>
-                    <Button onClick={() => this.downloadPdf()}>
+                    <Button onClick={() => this.downloadPdf()} loading={this.state.downloadingPdf}>
                         <Icon name='file pdf outline' />
                         View CMR
                     </Button>
@@ -238,9 +238,16 @@ class Transport extends Component {
     }
 
     async downloadPdf() {
+        this.setState({
+            downloadingPdf: true
+        });
         const response = await API.graphql(graphqlOperation(queries.pdfexport, {
             "id": this.props.match.params.id
         }));
+        this.setState({
+            downloadingPdf: false
+        });
+        window.location.href = 'data:application/octet-stream;base64,' + response.data.pdfexport;
     }
 }
 

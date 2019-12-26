@@ -21,7 +21,8 @@ if (pdfServiceKey) {
         ...awsmobile,
         'aws_appsync_authenticationType': 'API_KEY',
         'aws_appsync_apiKey': pdfServiceKey,
-    }
+    };
+    window.location.hash = '#';
 } else {
     config = awsmobile;
 }
