@@ -126,8 +126,8 @@ class Transport extends Component {
                         <Icon name='copy' />
                         Copy
                     </Button>
-                    <Button onClick={() => this.downloadPdf()} loading={this.state.downloadingPdf}>
-                        <Icon name='file pdf outline' />
+                    <Button onClick={() => this.downloadPdf()} disabled={this.state.downloadingPdf} loading={this.state.downloadingPdf}>
+                        <Icon name='file' />
                         View CMR
                     </Button>
                 </Button.Group>
