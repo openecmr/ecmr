@@ -8,16 +8,17 @@ import {
     View,
     Dimensions,
     Image,
-    ScrollView
+    ScrollView, Alert
 } from "react-native";
 import * as queries from "./graphql/queries";
-import {API, Auth, graphqlOperation, I18n, Logger} from 'aws-amplify';
+import {API, Auth, graphqlOperation, I18n, JS, Logger} from 'aws-amplify';
 import {Address, MyText, Packages} from './Components';
 import {SceneMap, TabBar, TabView} from "react-native-tab-view";
 import ContractModel from "./ContractModel";
 import {Input} from "react-native-elements";
-import {FormField} from "aws-amplify-react-native";
+import {ErrorRow, FormField, LinkCell} from "aws-amplify-react-native";
 import AmplifyTheme from "aws-amplify-react-native/dist/AmplifyTheme";
+import AmplifyMessageMap from "aws-amplify-react-native/dist/AmplifyMessageMap";
 
 const logger = new Logger('EcmrSignIn');
 
@@ -27,7 +28,8 @@ export default class EcmrSignIn extends Component {
         super(props);
 
         this.state = {
-            action: 'choose'
+            action: 'choose',
+            signingIn: false
         };
 
     }
@@ -42,7 +44,7 @@ export default class EcmrSignIn extends Component {
         return (
 
             <View style={{flex: 1, width: '100%', alignItems: 'center', backgroundColor: 'white'}}>
-                    <ScrollView style={{flex: 1, width: '100%'}} >
+                <ScrollView style={{flex: 1, width: '100%'}}>
                     <View style={{flex: 1, width: '100%', alignItems: 'center'}}>
                         <View>
                             <Image style={{marginLeft: 50, width: 50, height: 50}}
@@ -60,7 +62,8 @@ export default class EcmrSignIn extends Component {
                                 borderColor: "black",
                                 borderTopWidth: StyleSheet.hairlineWidth
                             }}>or</Text>
-                            <Button title={"Create an account"} color={'rgb(60, 167, 60)'} onPress={() => this.changeState("signUp")}/>
+                            <Button title={"Create an account"} color={'rgb(60, 167, 60)'}
+                                    onPress={() => this.changeState("signUp")}/>
                         </View>
                         }
                         {this.state.action === 'login' &&
@@ -87,12 +90,15 @@ export default class EcmrSignIn extends Component {
 
                             <View style={{marginTop: 15}}>
                                 <Button title={"Login"} color={'rgb(60, 167, 60)'}
-                                        onPress={() => this.signIn()}/>
+                                        onPress={() => this.signIn()} disabled={this.state.signingIn}/>
                             </View>
                         </View>
                         }
+                        {this.state.action !== 'choose' &&
+                        <LinkCell onPress={() => this.setState({action: 'choose'})}>Back</LinkCell>}
                     </View>
-                    </ScrollView>
+                    <ErrorRow>{this.state.error}</ErrorRow>
+                </ScrollView>
 
             </View>
 
@@ -106,8 +112,27 @@ export default class EcmrSignIn extends Component {
     }
 
     signIn() {
+
+        this.setState({
+            signingIn: true
+        });
         const {username, password} = this.state;
-        logger.debug('Sign In for ' + username);
+
+        if (!username || !password) {
+            this.setState({
+                signingIn: false
+            });
+            Alert.alert(
+                'Required fields',
+                'Please enter username and password',
+                [
+                    {text: 'OK'}
+                ],
+                {cancelable: true}
+            );
+            return;
+        }
+
         Auth.signIn(username, password)
             .then(user => {
                 logger.debug(user);
@@ -121,80 +146,47 @@ export default class EcmrSignIn extends Component {
                     this.checkContact(user);
                 }
             })
-            .catch(err => this.error(err));
+            .catch(err => {
+                this.setState({
+                    signingIn: false
+                });
+                this.error(err);
+            });
+    }
+
+    checkContact(user) {
+        Auth.verifiedContact(user).then(data => {
+            logger.debug('verified user attributes', data);
+            if (!JS.isEmpty(data.verified)) {
+                this.changeState('signedIn', user);
+            } else {
+                user = Object.assign(user, data);
+                this.changeState('verifyContact', user);
+            }
+        });
+    }
+
+    error(err) {
+        logger.debug(err);
+
+        let msg = '';
+        if (typeof err === 'string') {
+            msg = err;
+        } else if (err.message) {
+            msg = err.message;
+        } else {
+            msg = JSON.stringify(err);
+        }
+
+        const map = this.props.errorMessage || this.props.messageMap || AmplifyMessageMap;
+        msg = typeof map === 'string' ? map : map(msg);
+        Alert.alert(
+            'Failed login',
+            msg,
+            [
+                {text: 'OK'}
+            ],
+            {cancelable: true}
+        );
     }
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
-    sectionHeader: {
-        paddingTop: 5,
-        paddingLeft: 10,
-        paddingRight: 10,
-        paddingBottom: 5,
-        fontSize: 14,
-        fontWeight: 'bold',
-        backgroundColor: 'rgba(247,247,247,1.0)',
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 1,
-        },
-        shadowOpacity: 0.20,
-        shadowRadius: 1.41,
-        elevation: 2,
-        color: 'black'
-    },
-    item: {
-        padding: 10,
-        fontSize: 18,
-        height: 44,
-    },
-    card: {
-        backgroundColor: 'white',
-        elevation: 5,
-        marginBottom: 10
-    },
-    transportCardHeader: {
-        flexDirection: 'row',
-        backgroundColor: 'rgb(225,236,254)',
-        paddingTop: 10,
-        paddingBottom: 10
-    },
-    transportCardHeaderId: {
-        flex: 2,
-        fontWeight: 'bold',
-        paddingRight: 5,
-        paddingLeft: 10,
-        paddingTop: 5,
-        paddingBottom: 5
-    },
-    transportCardHeaderProgress: {
-        flex: 1,
-        textAlign: 'center',
-        color: 'white',
-        fontWeight: 'bold',
-        right: 10,
-        borderRadius: 15,
-        backgroundColor: 'rgb(60, 167, 60)',
-
-        paddingRight: 5,
-        paddingLeft: 5,
-        paddingTop: 5,
-        paddingBottom: 5,
-    },
-    transportCardPart: {
-        flex: 1,
-        padding: 5,
-        paddingLeft: 10,
-        paddingRight: 10,
-        elevation: 1,
-        backgroundColor: 'white'
-    },
-    upperCaseLabel: {
-        fontWeight: 'bold',
-        textTransform: 'uppercase'
-    }
-});

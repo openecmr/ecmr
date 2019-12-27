@@ -1,7 +1,7 @@
 import React from 'react';
 import Amplify from 'aws-amplify';
 import awsmobile from './aws-exports';
-import {ConfirmSignUp, SignUp, withAuthenticator} from 'aws-amplify-react-native';
+import {Authenticator, ConfirmSignUp, SignUp, withAuthenticator} from 'aws-amplify-react-native';
 import { createAppContainer} from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack'
 import Transports from "./Transports";
@@ -59,9 +59,10 @@ const MyTheme = Object.assign({}, AmplifyTheme, {button: MySectionHeader});
 export default withAuthenticator(AppWithPersistence,false, [
     <EcmrSignIn override={'EcmrSignIn'}/>,
     <Loading />,
+    <SignUp />,
     <ConfirmSignIn />,
     <VerifyContact />,
     <ConfirmSignUp />,
     <ForgotPassword />,
-    <RequireNewPassword />,
+    <RequireNewPassword />
 ], null, MyTheme);
