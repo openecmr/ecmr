@@ -1,6 +1,17 @@
 import {Component} from "react";
 import React from "react";
-import {Alert, SectionList, StyleSheet, Text, View, Button, FlatList, ScrollView} from "react-native";
+import {
+    Alert,
+    SectionList,
+    StyleSheet,
+    Text,
+    View,
+    Button,
+    FlatList,
+    ScrollView,
+    TouchableOpacity,
+    ActivityIndicator
+} from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import {Address, MyText, Packages} from "./Components";
 import { API, graphqlOperation } from 'aws-amplify';
@@ -11,8 +22,8 @@ import { Auth } from 'aws-amplify';
 import {S3Image} from "aws-amplify-react-native";
 import ContractModel from "./ContractModel";
 import {createUpdateContractInput, updateContract} from "./DataUtil";
-
 const Header = ({children}) => <MyText style={styles.header}>{children}</MyText>;
+import RNFetchBlob from 'rn-fetch-blob'
 
 const Package = ({total}) =>
     <View style={styles.package}>
@@ -64,7 +75,8 @@ class Transport extends Component {
 
         this.state = {
             'site': navigation.getParam('site'),
-            'item': item
+            'item': item,
+            downloadingPdf: false
         };
     }
 
@@ -103,6 +115,16 @@ class Transport extends Component {
                         </View>
                     }
                 </View>
+                <Header>Consignment note</Header>
+                <TouchableOpacity style={{borderBottomWidth: StyleSheet.hairlineWidth,
+                    borderBottomColor: 'black',
+                    padding: 15}} onPress={() => this.showConsignmentNote()} disabled={this.state.downloadingPdf}>
+                    <View style={{flexDirection: "row"}}>
+                        <Icon name={'file'} style={{color: 'rgb(0, 115, 209)', marginRight: 5, textAlignVertical: "center"}} size={15}/>
+                        <MyText style={{fontWeight: "bold"}}>Display the consignment note</MyText>
+                        <ActivityIndicator size="small" color="rgb(0, 115, 209)" animating={this.state.downloadingPdf}/>
+                    </View>
+                </TouchableOpacity>
 
                 <Header>Activity feed</Header>
                 {relevantItems.map((item, index) =>
@@ -122,6 +144,20 @@ class Transport extends Component {
 
     isPending(contract) {
         return contract.status === 'CREATED' || contract.status === 'IN_PROGRESS';
+    }
+
+    async showConsignmentNote() {
+        this.setState({
+            downloadingPdf: true
+        });
+        const dirs = RNFetchBlob.fs.dirs;
+        const path = `${dirs.CacheDir}/cn-${this.state.item.id.substring(0,8)}.pdf`;
+        const result = await API.graphql(graphqlOperation(queries.pdfexport, {id: this.state.item.id}));
+        await RNFetchBlob.fs.writeFile(path, result.data.pdfexport, 'base64');
+        await RNFetchBlob.android.actionViewIntent(path, 'application/pdf');
+        this.setState({
+            downloadingPdf: false
+        });
     }
 
     eventText(event) {

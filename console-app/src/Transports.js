@@ -39,7 +39,7 @@ const IdCell = ({id}) => {
 };
 
 const DateCell = ({date}) => (
-    <Table.Cell width={"1"} verticalAlign={"top"}>
+    <Table.Cell width={"1"} verticalAlign={"top"} style={{whiteSpace: "nowrap"}}>
         {moment(date).format('ll')}
     </Table.Cell>
 );

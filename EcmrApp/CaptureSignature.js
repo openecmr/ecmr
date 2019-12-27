@@ -54,6 +54,9 @@ class CaptureSignature extends Component {
             const now = moment().format();
             const user = await Auth.currentAuthenticatedUser();
 
+            const signatoryObservation = this.props.navigation.getParam("signatoryObservation");
+            const signatoryName = this.props.navigation.getParam("signatoryName");
+            const signatoryEmail = this.props.navigation.getParam("signatoryEmail");
             const event = {
                 type: this.state.site === 'pickup' ? 'LoadingComplete' : 'UnloadingComplete',
                 site: this.state.site,
@@ -68,12 +71,12 @@ class CaptureSignature extends Component {
                         region: 'eu-central-1',
                         key: file.key
                     },
-                    signatoryName: this.props.navigation.getParam("signatoryName"),
-                    signatoryEmail: this.props.navigation.getParam("signatoryEmail")
+                    ...signatoryName && {signatoryName},
+                    ...signatoryEmail && {signatoryEmail}
                 },
-                signatoryObservation: this.props.navigation.getParam("signatoryObservation")
+                ...signatoryObservation && {signatoryObservation}
             };
-            const input = createUpdateContractInput(this.state.contract)
+            const input = createUpdateContractInput(this.state.contract);
             input.events.push(event);
             input.status = this.state.site === 'pickup' ? 'IN_PROGRESS' : 'DONE';
 
