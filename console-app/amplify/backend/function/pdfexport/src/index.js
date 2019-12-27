@@ -14,6 +14,7 @@ const chromium = require('chrome-aws-lambda');
 exports.handler = async (event, context) => { //eslint-disable-line
   let browser = null;
   try {
+    console.info("starting browser")
     browser = await chromium.puppeteer.launch({
       args: chromium.args,
       defaultViewport: chromium.defaultViewport,
@@ -21,25 +22,21 @@ exports.handler = async (event, context) => { //eslint-disable-line
       headless: chromium.headless
     });
 
+    console.info("loading page");
     const page = await browser.newPage();
+    await page.goto('https://testaws.desert-spring.nl/transports/' + event.arguments.id + '/pdf#' + process.env.API_KEY);
+    await page.waitForSelector('div.content');
+    await page.waitFor(1000);
 
+    console.log("loading pdf");
     const pdf = await page.pdf({
       format: 'A4',
       printBackground: true,
       margin: {top: '1cm', right: '1cm', bottom: '1cm', left: '1cm'}
     });
 
-    // 5. Return PDf as base64 string
-    const response = {
-      headers: {
-        'Content-type': 'application/pdf',
-        'content-disposition': 'attachment; filename=test.pdf'
-      },
-      statusCode: 200,
-      body: pdf.toString('base64'),
-      isBase64Encoded: true
-    };
-    context.succeed(response)
+
+    return pdf.toString('base64');
   } catch (error) {
     return context.fail(error)
   } finally {
