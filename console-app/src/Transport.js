@@ -7,7 +7,7 @@ import {
     Header,
     Icon,
     Step,
-    List, Table, Label, Divider, Segment, Comment
+    List, Table, Label, Divider, Segment, Comment, Loader
 } from "semantic-ui-react";
 import { API, graphqlOperation } from 'aws-amplify';
 import moment from 'moment';
@@ -126,10 +126,6 @@ class Transport extends Component {
                         <Icon name='copy' />
                         Copy
                     </Button>
-                    <Button onClick={() => this.downloadPdf()} disabled={this.state.downloadingPdf} loading={this.state.downloadingPdf}>
-                        <Icon name='file' />
-                        View CMR
-                    </Button>
                 </Button.Group>
                 <Header as={'h1'}>
                     <Header.Content>Transport {contract.id.substring(0,8)}</Header.Content>
@@ -207,6 +203,21 @@ class Transport extends Component {
                         <Grid.Column>
                             <Segment>
                                 <Header as={'h4'}>Documents and photos</Header>
+                                <Grid columns={2} divided>
+                                    <Grid.Row divided>
+                                        <Grid.Column><Header as={'h5'}>Type</Header></Grid.Column>
+                                        <Grid.Column><Header as={'h5'}>Name</Header></Grid.Column>
+                                    </Grid.Row>
+                                    <Grid.Row>
+                                        <Grid.Column>
+                                            <Icon name='file' /> Consignment note
+                                        </Grid.Column>
+                                        <Grid.Column>
+                                            <a onClick={() => this.downloadPdf()} href={'#'}>{`cmr-${this.state.contract.id.substring(0,8)}.pdf`}</a>&nbsp;
+                                            <Loader size='mini' active={this.state.downloadingPdf} inline/>
+                                        </Grid.Column>
+                                    </Grid.Row>
+                                </Grid>
                             </Segment>
                         </Grid.Column>
                         <Grid.Column>
@@ -238,6 +249,9 @@ class Transport extends Component {
     }
 
     async downloadPdf() {
+        if (this.state.downloadingPdf) {
+            return;
+        }
         this.setState({
             downloadingPdf: true
         });
@@ -247,7 +261,15 @@ class Transport extends Component {
         this.setState({
             downloadingPdf: false
         });
-        window.location.href = 'data:application/octet-stream;base64,' + response.data.pdfexport;
+
+        const linkSource = `data:application/pdf;base64,${response.data.pdfexport}`;
+        const downloadLink = document.createElement("a");
+        const fileName = `cmr-${this.state.contract.id.substring(0,8)}.pdf`;
+
+        downloadLink.href = linkSource;
+        downloadLink.download = fileName;
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
     }
 }
 

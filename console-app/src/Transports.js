@@ -17,7 +17,7 @@ const AddressCell = ({address}) => {
 
 const ConsignmentCell = ({loads}) => {
     return (
-        <Table.Cell verticalAlign="top" width="5">
+        <Table.Cell verticalAlign="top" width="3">
             {loads.map((e) => [e.quantity, e.category, e.description].join(" ")).join(" ")}
         </Table.Cell>
     )
@@ -37,6 +37,12 @@ const IdCell = ({id}) => {
         </Table.Cell>
     )
 };
+
+const DateCell = ({date}) => (
+    <Table.Cell width={"1"} verticalAlign={"top"}>
+        {moment(date).format('ll')}
+    </Table.Cell>
+);
 
 const StatusMappings = {
     DRAFT: {
@@ -68,7 +74,7 @@ const StatusMappings = {
 
 const Status = ({status, updatedAt}) => {
     const statusMapping = StatusMappings[status];
-    return <Table.Cell width={2}>
+    return <Table.Cell width={1}>
         <Progress percent={statusMapping.progress} size='tiny' color={statusMapping.color}>
             {statusMapping.label}
         </Progress>
@@ -90,7 +96,7 @@ class Transports extends Component {
             <Table className="App-text-with-newlines" selectable compact='very'>
                 <Table.Header>
                     <Table.Row>
-                        <Table.HeaderCell colSpan='12'>
+                        <Table.HeaderCell colSpan='11'>
                             <Link to={"/transports-new"}>
                                 <Button floated='right' icon labelPosition='left' primary size='small'>
                                     <Icon name='plus'/> New transport
@@ -108,7 +114,6 @@ class Transports extends Component {
                         <Table.HeaderCell>Delivery date</Table.HeaderCell>
                         <Table.HeaderCell>Shipper</Table.HeaderCell>
                         <Table.HeaderCell>Driver</Table.HeaderCell>
-                        <Table.HeaderCell>CMR</Table.HeaderCell>
                         <Table.HeaderCell>Loads</Table.HeaderCell>
                     </Table.Row>
                 </Table.Header>
@@ -128,12 +133,11 @@ class Transports extends Component {
                     <TextCell text={e.references ? e.references.carrier : null}/>
                     <Status status={e.status} lastUpdate={e.updatedAt}/>
                     <AddressCell address={e.pickup}/>
-                    <TextCell text={e.pickup ? e.pickup.arrivalDate : null}/>
+                    <DateCell date={e.arrivalDate}/>
                     <AddressCell address={e.delivery}/>
-                    <TextCell text={e.delivery ? e.delivery.arrivalDate : null}/>
+                    <DateCell date={e.deliveryDate}/>
                     <AddressCell address={e.shipper}/>
                     <TextCell text={e.driver ? e.driver.name : null}/>
-                    <TextCell text={''}/>
                     <ConsignmentCell loads={e.loads}/>
                 </Table.Row>
             )
