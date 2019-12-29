@@ -1,0 +1,12 @@
+{
+    "permissions": {
+        "api": {
+            "openecmr": [
+                "create",
+                "read",
+                "update",
+                "delete"
+            ]
+        }
+    }
+}

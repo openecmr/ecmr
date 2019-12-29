@@ -1,0 +1,163 @@
+#type Task
+#  @model
+#  @auth(rules: [
+#      {allow: groups, groups: ["Managers"], queries: null, mutations: [create, update, delete]},
+#      {allow: groups, groups: ["Employees"], queries: [get, list], mutations: null}
+#    ])
+#{
+#  id: ID!
+#  title: String!
+#  description: String
+#  status: String
+#}
+#type PrivateNote
+#  @model
+#  @auth(rules: [{allow: owner}])
+#{
+#  id: ID!
+#  content: String!
+#}
+
+type S3Object @aws_api_key @aws_cognito_user_pools @aws_iam {
+    bucket: String!
+    region: String!
+    key: String!
+}
+
+enum ContractStatus {
+    DRAFT
+    CREATED,
+    IN_PROGRESS,
+    DONE,
+    ARCHIVED
+}
+
+type Contract @model
+    @auth(rules: [
+        { allow: owner },
+        { allow: owner, ownerField: "carrierUsername", operations: [read, update] },
+        { allow: public, provider: apiKey, operations: [read]}
+    ])
+{
+    id: ID
+    owner: String
+    carrierUsername: String
+    status: ContractStatus
+
+    shipper: Address
+    carrier: Address
+    delivery: Address
+    arrivalDate: String
+    deliveryDate: String
+    pickup: Address
+    loads: [Load]!
+    driver: DriverDetail
+    trailer: String
+    truck: String
+    references: Reference
+    updatedAt: String!
+    createdAt: String!
+    events: [Event]!
+
+    # these are ids that can be used by the submitter for grouping contracts
+    shipperContactId: ID
+    carrierContactId: ID
+    pickupContactId: ID
+    deliveryContactId: ID
+    driverDriverId: ID
+}
+
+type DriverDetail @aws_api_key @aws_cognito_user_pools @aws_iam {
+    name: String
+}
+
+type Address @aws_api_key @aws_cognito_user_pools @aws_iam {
+    name: String
+    postalCode: String
+    address: String
+    city: String
+    country: String
+}
+
+type Contact
+    @model
+    @auth(rules: [
+        { allow: owner
+    }])
+{
+    id: ID
+    owner: String
+    name: String!
+    postalCode: String
+    address: String
+    city: String
+    country: String
+}
+
+type Load @aws_api_key @aws_cognito_user_pools @aws_iam {
+    category: String
+    quantity: Int
+    description: String
+}
+
+type Driver
+    @model
+    @auth(rules: [
+        { allow: owner },
+        { allow: owner, ownerField: "carrier", operations: [read] },
+        { allow: private, provider: iam, operations: [read, update] }
+    ])
+{
+    id: ID
+    owner: String
+    name: String!
+    carrier: String
+    associationSecret: String
+}
+
+type Mutation {
+    activate(activationCode: String): String @function(name: "activatefunction-${env}")
+}
+
+type Query {
+    pdfexport(id: String): String @function(name : "pdfexport-${env}")
+}
+
+type Reference @aws_api_key @aws_cognito_user_pools @aws_iam {
+    carrier: String
+}
+
+enum EventType {
+    ArrivalOnSite,
+    LoadingComplete,
+    UnloadingComplete,
+    DepartureFromSite
+}
+
+type Author @aws_api_key @aws_cognito_user_pools @aws_iam {
+    username: String!
+}
+
+enum SignatureMethod {
+    SIGN_ON_GLASS, PGP, NO_SIGNATORY
+}
+
+type Signature @aws_api_key @aws_cognito_user_pools @aws_iam {
+    method: SignatureMethod!,
+    signatureImageDriver: S3Object,
+    signatureImageSignatory: S3Object,
+    signatoryName: String
+    signatoryEmail: String
+}
+
+type Event @aws_api_key @aws_cognito_user_pools @aws_iam {
+    author: Author!
+    type: EventType!
+    site: String
+    createdAt: String!
+    latitude: Float
+    longitude: Float
+    signature: Signature
+    driverObservation: String
+    signatoryObservation: String
+}

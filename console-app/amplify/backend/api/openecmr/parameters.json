@@ -1,0 +1,11 @@
+{
+    "AppSyncApiName": "openecmr",
+    "DynamoDBBillingMode": "PAY_PER_REQUEST",
+    "DynamoDBEnableServerSideEncryption": "false",
+    "AuthCognitoUserPoolId": {
+        "Fn::GetAtt": [
+            "authopenecmr83cee658",
+            "Outputs.UserPoolId"
+        ]
+    }
+}
