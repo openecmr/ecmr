@@ -17,12 +17,10 @@ import {createBottomTabNavigator} from "react-navigation-tabs";
 import AmplifyTheme from "aws-amplify-react-native/dist/AmplifyTheme";
 import EcmrSignIn from "./EcmrSignIn";
 import Loading from "aws-amplify-react-native/dist/Auth/Loading";
-import SignIn from "aws-amplify-react-native/dist/Auth/SignIn";
 import ConfirmSignIn from "aws-amplify-react-native/dist/Auth/ConfirmSignIn";
 import VerifyContact from "aws-amplify-react-native/dist/Auth/VerifyContact";
 import ForgotPassword from "aws-amplify-react-native/dist/Auth/ForgotPassword";
 import RequireNewPassword from "aws-amplify-react-native/dist/Auth/RequireNewPassword";
-import Greetings from "aws-amplify-react-native/dist/Auth/Greetings";
 
 Amplify.configure(awsmobile);
 Amplify.Logger.LOG_LEVEL = 'DEBUG';

@@ -1,10 +1,8 @@
 import {Component} from "react";
 import {Alert, FlatList, StyleSheet, Text, TouchableOpacity, View, Modal, TextInput} from "react-native";
 import React from "react";
-import {Address, MyText} from "./Components";
+import {Address, HandOverModal, MyText} from "./Components";
 import {Button, CheckBox} from "react-native-elements";
-
-import SignatureCapture from 'react-native-signature-capture';
 
 class Signature extends Component {
 
@@ -16,7 +14,8 @@ class Signature extends Component {
             site: props.navigation.getParam("site"),
             signatoryName: props.navigation.getParam("signatoryName"),
             signatoryEmail: props.navigation.getParam("signatoryEmail"),
-            addingRemark: false
+            addingRemark: false,
+            handoverPhone: true
         };
     }
 
@@ -40,12 +39,18 @@ class Signature extends Component {
                                 onChangeText={(signatoryObservation) => this.setState({signatoryObservation})}/>
 
                             <Button
+                                buttonStyle={{height: 60}}
                                 color={"rgb(60,176,60)"}
                                 title={"Save"}
                                 onPress={() => this.setState({addingRemark: false})}/>
                         </View>
                     </View>
                 </Modal>
+
+                <HandOverModal
+                    onPress={() => this.setState({handoverPhone: false})}
+                    visible={this.state.handoverPhone}
+                               text={`Please hand the phone to ${this.state.signatoryName}`}/>
 
                 <MyText style={{fontWeight: 'bold', fontSize: 17, textAlign: 'center'}}>{this.state.signatoryName}, please check the information below before signing</MyText>
                 <MyText style={{marginTop: 10, color: 'rgb(66,133,244)', textAlign: 'center'}}>By checking the box below, I agree with the terms and conditions of this carrier.</MyText>

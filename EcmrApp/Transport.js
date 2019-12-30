@@ -44,7 +44,7 @@ const SignatureEvent = ({signature, signatoryObservation}) => (
             signature.signatoryName &&
             <View style={{flexDirection: 'row'}}>
                 <MyText>Signed by: </MyText>
-                <MyText style={{fontStyle: 'italic'}}>{signature.signatoryName} ({signature.signatoryEmail})</MyText>
+                <MyText style={{fontStyle: 'italic'}}>{signature.signatoryName} {signature.signatoryEmail && `(${signature.signatoryEmail})`}</MyText>
             </View>
         }
         {

@@ -1,8 +1,8 @@
 import {Component} from "react";
 import React from "react";
 import {MyText} from "./Components";
-import {Button, View, Modal, TouchableHighlight, TextInput, Text} from "react-native";
-import { Auth } from 'aws-amplify';
+import {View, TextInput, Text, Alert, StyleSheet} from "react-native";
+import {Button} from "react-native-elements";
 
 export default class SignatoryInformation extends Component {
     static navigationOptions = ({ navigation, screenProps }) => ({
@@ -21,25 +21,29 @@ export default class SignatoryInformation extends Component {
 
     render() {
         return (
-            <View style={{backgroundColor: 'rgb(245,245,245)', flex: 1}}>
-                <Text style={{padding: 20, color: 'rgb(0, 115, 209)', fontSize: 25}}>Please enter the details of the signatory:</Text>
-                <View style={{padding: 10, flex: 1, flexDirection: 'column'}}>
+
+            <View style={{backgroundColor: 'white', flex: 1}}>
+                <Text style={{padding: 10, color: 'rgb(0, 115, 209)', fontSize: 25, paddingBottom: 10}}>Please enter the details of the signatory:</Text>
+                <View style={{padding: 10, flex: 1, flexDirection: 'column', paddingTop: 0}}>
 
 
                     <MyText>Name of signatory</MyText>
                     <TextInput
                         value={this.signatoryName}
-                        style={{height: 40, borderColor: 'gray', borderWidth: 1, marginTop: 5, marginBottom: 15}}
-                        placeholder="John Smith..."
+                        style={styles.textInput}
+                        placeholder="e.g. John Smith..."
                         onChangeText={(signatoryName) => this.setState({signatoryName})}/>
-                    <MyText>Email of signatory</MyText>
+                    <MyText>Email of signatory (optional)</MyText>
                     <TextInput
+                        autoCapitalize={"none"}
+                        autoCompleteType={"email"}
+                        keyboardType={"email-address"}
                         value={this.signatoryEmail}
                         style={{height: 40, borderColor: 'gray', borderWidth: 1, marginTop: 5, marginBottom: 15}}
-                        placeholder="john@smith.com..."
+                        placeholder="e.g. john@smith.com..."
                         onChangeText={(signatoryEmail) => this.setState({signatoryEmail})}/>
                     <Button
-                        color={"rgb(60,176,60)"}
+                        buttonStyle={{height: 60, backgroundColor: "rgb(60,176,60)"}}
                         title={"Save"}
                         onPress={() => this.save()}/>
                 </View>
@@ -47,6 +51,18 @@ export default class SignatoryInformation extends Component {
     }
 
     save() {
+        if (!this.state.signatoryName) {
+            Alert.alert(
+                'Required information',
+                'Please enter the name of the signatory',
+                [
+                    {text: 'OK'}
+                ],
+                {cancelable: true}
+            );
+            return;
+        }
+
         const {navigate} = this.props.navigation;
         navigate('Signature', {
             item: this.state.contract,
@@ -56,3 +72,13 @@ export default class SignatoryInformation extends Component {
         });
     }
 }
+
+const styles = StyleSheet.create({
+    textInput: {
+        height: 40,
+        borderColor: 'gray',
+        borderWidth: 1,
+        marginTop: 5,
+        marginBottom: 15
+    }
+});

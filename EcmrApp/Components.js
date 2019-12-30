@@ -1,6 +1,7 @@
 import React from "react";
-import {Text, View} from "react-native";
+import {Modal, Text, View} from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
+import {Button} from "react-native-elements";
 
 const MyText = ({style, children}) => <Text style={{...style, color: style && style.color ? style.color : 'black'}}>{children}</Text>;
 
@@ -22,8 +23,27 @@ const Packages = ({total}) => (
     </View>
 );
 
+const HandOverModal = ({visible, text, onPress}) =>
+    <Modal animationType="slide"
+           transparent={false}
+           visible={visible}>
+        <View style={{backgroundColor: 'rgb(0, 115, 209)', height: '100%', padding: 10, justifyContent: "center", alignContent: "center"}}>
+            <Text style={{textAlign: "center", marginBottom: 20, fontWeight: "bold", color: 'white', fontSize: 25}}>{text}</Text>
+            <View style={{flexDirection: "row", justifyContent: "center", alignItems: "center", marginBottom: 15}}>
+                <Icon name={"mobile"} size={100} style={{marginRight: 10}} color={"white"}/>
+                <Icon name={"arrow-right"} size={50} color={"white"}/>
+                <Icon name={"user"} size={120} color={"white"}/>
+            </View>
+            <Button
+                buttonStyle={{height: 60, backgroundColor: "rgb(60,176,60)"}}
+                title={"Ready"}
+                onPress={onPress}/>
+        </View>
+    </Modal>;
+
 export {
     MyText,
     Address,
-    Packages
+    Packages,
+    HandOverModal
 };
