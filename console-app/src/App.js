@@ -6,6 +6,7 @@ import {BrowserRouter as Router, Route, Link, withRouter} from "react-router-dom
 import NewTransport from "./NewTransport";
 
 import Amplify from 'aws-amplify';
+import { Auth } from 'aws-amplify';
 import awsmobile from './aws-exports';
 import { withAuthenticator } from 'aws-amplify-react';
 import Transport from "./Transport";
@@ -29,7 +30,7 @@ if (pdfServiceKey) {
 
 Amplify.configure(config);
 
-const AppMenu = withRouter(({location}) => (
+const AppMenu = withRouter(({location, onLogout}) => (
     <Menu vertical fixed={'left'} style={style.appMenu}>
         {console.log(location)}
         <Menu.Item
@@ -56,9 +57,10 @@ const AppMenu = withRouter(({location}) => (
             to={'/drivers'}
             as={Link}
         />
+        <Menu.Item name={'logout'} onClick={onLogout}/>
     </Menu>));
 
-const Main = withRouter(({location}) => {
+const Main = withRouter(({location, onLogout}) => {
     const pdf = location.pathname.endsWith('/pdf');
 
     return (<div>
@@ -72,7 +74,7 @@ const Main = withRouter(({location}) => {
                     </Menu.Item>
                 </Menu>
 
-                <AppMenu/>
+                <AppMenu onLogout={onLogout}/>
 
                 <div style={style.content}>
                     <Route exact path="/transports" component={Transports}/>
@@ -87,13 +89,19 @@ const Main = withRouter(({location}) => {
         </div>);
 });
 
+const MainWithAuth = pdfServiceKey ?  App : withAuthenticator(Main, false);
+
 class App extends Component {
     render() {
         return (
             <Router>
-                <Main/>
+                <MainWithAuth onLogout={() => this.logout()}/>
             </Router>
         );
     }
+
+    async logout() {
+        await Auth.signOut()
+    }
 }
-export default pdfServiceKey ?  App : withAuthenticator(App, false);
+export default App;
