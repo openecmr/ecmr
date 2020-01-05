@@ -23,6 +23,7 @@ if (pdfServiceKey) {
         'aws_appsync_authenticationType': 'API_KEY',
         'aws_appsync_apiKey': pdfServiceKey,
     };
+    // delete config["oauth"];
     window.location.hash = '#';
 } else {
     config = awsmobile;
@@ -89,7 +90,7 @@ const Main = withRouter(({location, onLogout}) => {
         </div>);
 });
 
-const MainWithAuth = pdfServiceKey ?  App : withAuthenticator(Main, false);
+const MainWithAuth = pdfServiceKey ?  Main : withAuthenticator(Main, false);
 
 class App extends Component {
     render() {
