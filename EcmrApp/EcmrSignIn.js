@@ -3,13 +3,13 @@ import {
     SectionList,
     StyleSheet,
     Text,
-    Button,
     TouchableOpacity,
     View,
     Dimensions,
     Image,
     ScrollView, Alert
 } from "react-native";
+import {Button, CheckBox} from "react-native-elements";
 import * as queries from "./graphql/queries";
 import {API, Auth, graphqlOperation, I18n, JS, Logger} from 'aws-amplify';
 import {Address, MyText, Packages} from './Components';
@@ -53,10 +53,12 @@ export default class EcmrSignIn extends Component {
                         </View>
                         {this.state.action === 'choose' &&
                         <View style={{marginTop: 50, width: '100%', padding: 15}}>
-                            <Button containerStyle={{marginBottom: 50}} title={"Login with username"}
+                            <Button containerStyle={{marginBottom: 10}} title={"Login with Google"}
+                                    onPress={() => this.googleLogin()} color={'rgb(60, 167, 60)'}/>
+                            <Button containerStyle={{marginBottom: 10}} style={{}} title={"Login with username"}
                                     onPress={() => this.setState({action: 'login'})} color={'rgb(60, 167, 60)'}/>
                             <Text style={{
-                                marginTop: 10, marginBottom: 10, textAlign: "center", fontWeight: "bold",
+                                marginBottom: 10, textAlign: "center", fontWeight: "bold",
                                 borderBottomColor: "black",
                                 borderBottomWidth: StyleSheet.hairlineWidth,
                                 borderColor: "black",
@@ -103,6 +105,10 @@ export default class EcmrSignIn extends Component {
             </View>
 
         )
+    }
+
+    googleLogin() {
+        Auth.federatedSignIn({provider:'google'});
     }
 
     changeState(state, data) {
