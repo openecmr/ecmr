@@ -149,9 +149,21 @@ class Transports extends Component {
     }
 
     async retrieveAppSync() {
-        const response = await API.graphql(graphqlOperation(queries.listContracts));
-        const contracts = response.data.listContracts.items.sort((a, b) => a.updatedAt < b.updatedAt ? 1 : -1);
-
+        let contracts = [];
+        let nextToken;
+        while (true) {
+            const response = await API.graphql(graphqlOperation(queries.listContracts, {
+                nextToken: nextToken,
+                limit: 1000
+            }));
+            contracts = contracts.concat(response.data.listContracts.items);
+            nextToken = response.data.listContracts.nextToken;
+            if (!nextToken) {
+                break;
+            }
+        }
+        contracts = contracts.sort((a, b) => a.updatedAt < b.updatedAt ? 1 : -1);
+        console.log(contracts);
         this.setState({
             notes: contracts
         });
