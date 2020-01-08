@@ -163,7 +163,6 @@ class Transports extends Component {
             }
         }
         contracts = contracts.sort((a, b) => a.updatedAt < b.updatedAt ? 1 : -1);
-        console.log(contracts);
         this.setState({
             notes: contracts
         });

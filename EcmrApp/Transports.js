@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import {SectionList, StyleSheet, Text, TouchableOpacity, View, Dimensions} from "react-native";
 import * as queries from "./graphql/queries";
-import {API, graphqlOperation} from 'aws-amplify';
+import {API, graphqlOperation, Auth} from 'aws-amplify';
 import {Address, MyText, Packages} from './Components';
 import {SceneMap, TabBar, TabView} from "react-native-tab-view";
 import ContractModel from "./ContractModel";
@@ -170,7 +170,7 @@ class Transports extends Component {
     }
 
     async loadData() {
-        const response = await API.graphql(graphqlOperation(queries.listContracts));
+        const response = await API.graphql(graphqlOperation(queries.listContracts, {limit: 1000}));
         const contracts = response.data.listContracts.items.sort((a, b) => {
             const first = (a.arrivalDate || "").localeCompare(b.arrivalDate || "");
             if (first === 0) {

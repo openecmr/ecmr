@@ -201,6 +201,7 @@ class Transport extends Component {
         const item = createUpdateContractInput(this.props.navigation.getParam('item'));
         const now = moment().format();
         const user = await Auth.currentAuthenticatedUser();
+        const userInfo = await Auth.currentUserInfo();
 
         if (!item.events) {
             item.events = [];
@@ -210,7 +211,7 @@ class Transport extends Component {
             site: this.state.site,
             createdAt: now,
             author: {
-                username: user.username
+                username: user.username.indexOf("Google") !== -1 ? userInfo.attributes.email : user.username
             }
         });
         item.status = 'IN_PROGRESS';

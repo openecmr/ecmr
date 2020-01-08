@@ -69,6 +69,7 @@ class CaptureSignature extends Component {
             const file = await Storage.put('signature-' + filename + '.png', buffer);
             const now = moment().format();
             const user = await Auth.currentAuthenticatedUser();
+            const userInfo = await Auth.currentUserInfo();
 
             const signatoryObservation = this.props.navigation.getParam("signatoryObservation");
             const signatoryName = this.props.navigation.getParam("signatoryName");
@@ -78,7 +79,7 @@ class CaptureSignature extends Component {
                 site: this.state.site,
                 createdAt: now,
                 author: {
-                    username: user.username
+                    username: user.username.indexOf("Google") !== -1 ? userInfo.attributes.email : user.username
                 },
                 signature: {
                     method: 'SIGN_ON_GLASS',
