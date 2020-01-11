@@ -9,6 +9,18 @@ Parameters:
     Type: String
   
   
+  
+  
+  functionopenecmr83cee658PostAuthenticationArn: 
+    Type: String
+    Default: functionopenecmr83cee658PostAuthenticationArn
+  
+  functionopenecmr83cee658PostAuthenticationName: 
+    Type: String
+    Default: functionopenecmr83cee658PostAuthenticationName
+  
+  
+  
 
     
   identityPoolName:
@@ -91,10 +103,7 @@ Parameters:
                     
   authProviders:
     Type: CommaDelimitedList
-      
-  googleClientId:
-    Type: String
-                
+        
   userPoolGroups:
     Type: String
               
@@ -115,22 +124,25 @@ Parameters:
       
   hostedUIProviderMeta:
     Type: String
+                      
+  userPoolGroupList:
+    Type: CommaDelimitedList
+            
+  parentStack:
+    Type: String
+                
+  permissions:
+    Type: CommaDelimitedList
+      
+  googleClientId:
+    Type: String
               
   hostedUIProviderCreds:
     Type: String
               
   oAuthMetadata:
     Type: String
-                      
-  userPoolGroupList:
-    Type: CommaDelimitedList
                         
-  parentStack:
-    Type: String
-                
-  permissions:
-    Type: CommaDelimitedList
-    
 Conditions:
   ShouldNotCreateEnvResources: !Equals [ !Ref env, NONE ]
 
@@ -184,6 +196,19 @@ Resources:
         
       
       
+      LambdaConfig:
+        
+        
+        
+        
+          PostAuthentication: !Ref functionopenecmr83cee658PostAuthenticationArn
+        
+        
+        
+        
+        
+        
+      
       
       AutoVerifiedAttributes: !Ref autoVerifiedAttributes
       
@@ -209,6 +234,15 @@ Resources:
     
     
   
+  
+  UserPoolPostAuthenticationLambdaInvokePermission: 
+    Type: "AWS::Lambda::Permission"
+    DependsOn: UserPool
+    Properties: 
+      Action: "lambda:invokeFunction"
+      Principal: "cognito-idp.amazonaws.com"
+      FunctionName: !Ref functionopenecmr83cee658PostAuthenticationName
+      SourceArn: !GetAtt UserPool.Arn
     
     
   
@@ -225,6 +259,9 @@ Resources:
     Properties:
       ClientName: openec83cee658_app_clientWeb
       
+      ReadAttributes: !Ref userpoolClientReadAttributes
+      WriteAttributes: !Ref userpoolClientWriteAttributes
+      
       RefreshTokenValidity: !Ref userpoolClientRefreshTokenValidity
       UserPoolId: !Ref UserPool
     DependsOn: UserPool
@@ -234,6 +271,9 @@ Resources:
     Type: "AWS::Cognito::UserPoolClient"
     Properties:
       ClientName: openec83cee658_app_client
+      
+      ReadAttributes: !Ref userpoolClientReadAttributes
+      WriteAttributes: !Ref userpoolClientWriteAttributes
       
       GenerateSecret: !Ref userpoolClientGenerateSecret
       RefreshTokenValidity: !Ref userpoolClientRefreshTokenValidity

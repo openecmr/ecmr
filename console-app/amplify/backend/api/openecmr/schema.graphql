@@ -39,7 +39,7 @@ type Contract @model
         { allow: public, provider: apiKey, operations: [read]}
     ])
 {
-    id: ID
+    id: ID!
     owner: String
     carrierUsername: String
     status: ContractStatus
@@ -85,7 +85,7 @@ type Contact
         { allow: owner
     }])
 {
-    id: ID
+    id: ID!
     owner: String
     name: String!
     postalCode: String
@@ -108,7 +108,7 @@ type Driver
         { allow: private, provider: iam, operations: [read, update] }
     ])
 {
-    id: ID
+    id: ID!
     owner: String
     name: String!
     carrier: String

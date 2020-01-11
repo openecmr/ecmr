@@ -7,5 +7,7 @@
             "authopenecmr83cee658",
             "Outputs.UserPoolId"
         ]
-    }
+    },
+    "APIKeyExpirationEpoch": -1,
+    "CreateAPIKey": 0
 }

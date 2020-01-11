@@ -3,7 +3,17 @@
         "openecmr83cee658": {
             "service": "Cognito",
             "providerPlugin": "awscloudformation",
-            "dependsOn": []
+            "dependsOn": [
+                {
+                    "category": "function",
+                    "resourceName": "openecmr83cee658PostAuthentication",
+                    "triggerProvider": "Cognito",
+                    "attributes": [
+                        "Arn",
+                        "Name"
+                    ]
+                }
+            ]
         }
     },
     "api": {
@@ -84,6 +94,11 @@
                     ]
                 }
             ]
+        },
+        "openecmr83cee658PostAuthentication": {
+            "service": "Lambda",
+            "providerPlugin": "awscloudformation",
+            "build": true
         }
     }
 }

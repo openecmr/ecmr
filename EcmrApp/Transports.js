@@ -78,7 +78,7 @@ class Transports extends Component {
                     sections={contracts}
                     renderItem={({item}) => this.renderItem(item)}
                     renderSectionHeader={({section}) => <Text style={styles.sectionHeader}>{section.title ? section.title : "unknown date"}</Text>}
-                    keyExtractor={(item, index) => index}
+                    keyExtractor={(item, index) => item.id}
                 />
             </View>
         );
@@ -197,6 +197,7 @@ class Transports extends Component {
             } else {
                 acc[arrivalDate] = {
                     title: arrivalDate,
+                    key: arrivalDate,
                     data: [contract]
                 };
             }

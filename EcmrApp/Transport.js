@@ -131,7 +131,7 @@ class Transport extends Component {
                     (<View style={styles.activityItemContainer} key={index}>
                             <Text style={{fontSize: 12}}>{moment(item.createdAt).format('llll')}</Text>
 
-                            <MyText>{this.eventText(item)}</MyText>
+                            <MyText>{this.eventText(item, contract.driver.name)}</MyText>
                             {
                                 (item.type === 'UnloadingComplete' || item.type === 'LoadingComplete') &&
                                     <SignatureEvent signature={item.signature} signatoryObservation={item.signatoryObservation}/>
@@ -160,16 +160,16 @@ class Transport extends Component {
         });
     }
 
-    eventText(event) {
+    eventText(event, name) {
         switch (event.type) {
             case 'ArrivalOnSite':
-                return `${event.author.username} arrived on ${event.site} site.`;
+                return `${name} arrived on ${event.site} site.`;
             case 'LoadingComplete':
-                return `${event.author.username} completed the loading.`;
+                return `${name} completed the loading.`;
             case 'UnloadingComplete':
-                return `${event.author.username} completed the unloading.`;
+                return `${name} completed the unloading.`;
             default:
-                return `${event.author.username} completed ${event.type}`;
+                return `${name} completed ${event.type}`;
         }
     }
 

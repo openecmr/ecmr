@@ -29,7 +29,7 @@
         "email"
     ],
     "userpoolClientLambdaRole": "openec83cee658_userpoolclient_lambda_role",
-    "userpoolClientSetAttributes": false,
+    "userpoolClientSetAttributes": true,
     "resourceName": "openecmr83cee658",
     "authSelections": "identityPoolAndUserPool",
     "authRoleArn": {
@@ -45,24 +45,34 @@
         ]
     },
     "useDefault": "manual",
-    "dependsOn": [],
+    "dependsOn": [
+        {
+            "category": "function",
+            "resourceName": "openecmr83cee658PostAuthentication",
+            "triggerProvider": "Cognito",
+            "attributes": [
+                "Arn",
+                "Name"
+            ]
+        }
+    ],
     "thirdPartyAuth": true,
     "authProviders": [
         "accounts.google.com"
     ],
     "userPoolGroups": false,
     "adminQueries": false,
-    "triggers": "{}",
+    "triggers": "{\"PostAuthentication\":[\"custom\"]}",
     "hostedUI": true,
     "hostedUIDomainName": "openecmr",
     "authProvidersUserPool": [
         "Google"
     ],
     "hostedUIProviderMeta": "[{\"ProviderName\":\"Google\",\"authorize_scopes\":\"openid email profile\",\"AttributeMapping\":{\"email\":\"email\",\"username\":\"sub\"}}]",
-    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"https://testaws.desert-spring.nl/\", \"openecmr://main\"],\"LogoutURLs\":[\"https://testaws.desert-spring.nl/logout/\"]}",
     "userPoolGroupList": [],
     "parentStack": {
         "Ref": "AWS::StackId"
     },
-    "permissions": []
+    "permissions": [],
+    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"https://testaws.desert-spring.nl/\",\"openecmr://main\"],\"LogoutURLs\":[\"https://testaws.desert-spring.nl/logout/\"]}"
 }

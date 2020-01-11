@@ -49,7 +49,7 @@ const eventText = (event) => {
     }
 };
 
-const Events = ({events}) => (
+const Events = ({driver, events}) => (
     <Container>
         <Comment.Group>
             <Header as={'h4'}>Events</Header>
@@ -58,7 +58,7 @@ const Events = ({events}) => (
                     <Comment>
 
                         <Comment.Content>
-                            <Comment.Author as={'a'}>{event.author.username}</Comment.Author>
+                            <Comment.Author as={'a'}>{driver.name}</Comment.Author>
                             <Comment.Metadata>
                                 <div>{moment(event.createdAt).format('llll')}</div>
                             </Comment.Metadata>
@@ -176,7 +176,7 @@ class Transport extends Component {
                                 {contract.arrivalDate}
                             </Grid.Column>
                             <Grid.Column>
-                                {contract.carrierUsername}
+                                {contract.driver.name}
                             </Grid.Column>
                         </Grid.Row>
                         <Grid.Row>
@@ -193,7 +193,7 @@ class Transport extends Component {
                                 {contract.deliveryDate}
                             </Grid.Column>
                             <Grid.Column>
-                                {contract.carrierUsername}
+                                {contract.driver.name}
                             </Grid.Column>
                         </Grid.Row>
                     </Grid>
@@ -222,7 +222,7 @@ class Transport extends Component {
                         </Grid.Column>
                         <Grid.Column>
                             <Segment>
-                                <Events events={contract.events}/>
+                                <Events events={contract.events} driver={contract.driver}/>
                             </Segment>
                         </Grid.Column>
                     </Grid.Row>

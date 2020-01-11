@@ -1,0 +1,14 @@
+{
+    "trigger": true,
+    "modules": [
+        "custom"
+    ],
+    "parentResource": "openecmr83cee658",
+    "functionName": "openecmr83cee658PostAuthentication",
+    "parentStack": "auth",
+    "triggerEnvs": "[]",
+    "triggerTemplate": "PostAuthentication.json.ejs",
+    "roleName": "openecmr83cee658PostAuthentication",
+    "skipEdit": true,
+    "resourceName": "openecmr83cee658PostAuthentication"
+}
