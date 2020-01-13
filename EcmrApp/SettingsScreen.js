@@ -9,15 +9,23 @@ class SettingsScreen extends Component {
         super(props);
 
         this.state = {
-            modalVisible: false
+            modalVisible: false,
+            user: {
+                attributes: {}
+            }
         }
     }
 
     render() {
+        const {user} = this.state;
+
         return (
             <View style={{padding: 10}}>
-                <MyText style={{marginBottom: 10}}>Settings</MyText>
+                <MyText style={{marginBottom: 10}}>Account</MyText>
+                <MyText style={{marginBottom: 20}}>Logged in as {user.username} (email: {user.attributes['email']},
+                    verified: {user.attributes['email_verified'] ? "yes" : "no"})</MyText>
 
+                <MyText style={{marginBottom: 10}}>Settings</MyText>
                 <View>
                     <Button title={"Link to company"} color={"rgb(60,176,60)"} onPress={() => this.linkToCompany()}/>
                 </View>
@@ -25,6 +33,12 @@ class SettingsScreen extends Component {
                     <Button title={"Logout"} color={"rgb(60,176,60)"} onPress={() => this.logout()} containerStyle={{marginTop: 25}} />
                 </View>
             </View>);
+    }
+
+    async componentDidMount() {
+        this.setState({
+            user: await Auth.currentAuthenticatedUser()
+        })
     }
 
     async logout() {

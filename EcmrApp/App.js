@@ -21,6 +21,7 @@ import ConfirmSignIn from "aws-amplify-react-native/dist/Auth/ConfirmSignIn";
 import VerifyContact from "aws-amplify-react-native/dist/Auth/VerifyContact";
 import ForgotPassword from "aws-amplify-react-native/dist/Auth/ForgotPassword";
 import RequireNewPassword from "aws-amplify-react-native/dist/Auth/RequireNewPassword";
+import {Icon} from "react-native-elements";
 
 Amplify.configure(awsmobile);
 Amplify.Logger.LOG_LEVEL = 'DEBUG';
@@ -36,13 +37,34 @@ const MainNavigator = createStackNavigator({
 });
 
 const SettingsNavigator = createStackNavigator({
-    SettingsScreen: {screen: withAuthenticator(SettingsScreen)},
+    SettingsScreen: {
+        screen: withAuthenticator(SettingsScreen),
+        navigationOptions: {
+            title: "Open e-CMR"
+        }
+    },
     LinkAccount: {screen: LinkAccount}
 });
 
 const TabNavigator = createBottomTabNavigator({
-    Home: MainNavigator,
-    Settings: SettingsNavigator
+    Home: {
+        screen: MainNavigator,
+        navigationOptions: {
+            tabBarIcon: ({ focused, tintColor }) => {
+                return <Icon name={"local-shipping"}/>
+            },
+            tabBarLabel: "Transports"
+        }
+    },
+    Settings: {
+        screen: SettingsNavigator,
+        navigationOptions: {
+            tabBarIcon: ({ focused, tintColor }) => {
+                return <Icon name="settings"/>
+            },
+            tabBarLabel: "Settings"
+        }
+    }
 });
 
 
