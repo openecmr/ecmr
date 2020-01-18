@@ -70,7 +70,9 @@ class ContactPicker extends Component {
     }
 
     async loadContacts() {
-        const response = await API.graphql(graphqlOperation(queries.listContacts));
+        const response = await API.graphql(graphqlOperation(queries.listContacts, {
+            limit: 1000
+        }));
         this.setState({
             options: response.data.listContacts.items.map(e => ({text: `${e.name}, ${e.address}, ${e.country}`, key: e.id, value: e.id}))
         });
@@ -127,7 +129,9 @@ class DriverPicker extends Component {
     }
 
     async loadDrivers() {
-        const response = await API.graphql(graphqlOperation(queries.listDrivers));
+        const response = await API.graphql(graphqlOperation(queries.listDrivers, {
+            limit: 1000
+        }));
         this.setState({
             options: response.data.listDrivers.items.map(e => ({text: `${e.name}`, key: e.id, value: e.id})),
             drivers: response.data.listDrivers.items.reduce((map, obj) => {

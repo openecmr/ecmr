@@ -177,7 +177,9 @@ class Drivers extends Component {
     }
 
     async componentDidMount() {
-        const response = await API.graphql(graphqlOperation(queries.listDrivers));
+        const response = await API.graphql(graphqlOperation(queries.listDrivers, {
+            limit: 1000
+        }));
         const drivers = response.data.listDrivers.items;
 
         this.setState({

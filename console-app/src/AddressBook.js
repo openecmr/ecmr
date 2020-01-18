@@ -158,7 +158,9 @@ class AddressBook extends Component {
     }
 
     async componentDidMount() {
-        const response = await API.graphql(graphqlOperation(queries.listContacts));
+        const response = await API.graphql(graphqlOperation(queries.listContacts, {
+            limit: 1000
+        }));
         const contacts = response.data.listContacts.items;
 
         this.setState({

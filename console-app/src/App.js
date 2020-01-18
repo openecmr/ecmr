@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import './App.css';
-import {Container, Grid, Header, Menu, Dropdown, Image} from "semantic-ui-react";
+import {Container, Grid, Header, Menu, Dropdown, Image, Icon} from "semantic-ui-react";
 import Transports from "./Transports";
 import {BrowserRouter as Router, Route, Link, withRouter} from "react-router-dom";
 import NewTransport from "./NewTransport";
 
 import Amplify from 'aws-amplify';
-import { Auth } from 'aws-amplify';
+import { Auth, Hub } from 'aws-amplify';
 import awsmobile from './aws-exports';
 import { withAuthenticator } from 'aws-amplify-react';
 import Transport from "./Transport";
@@ -47,21 +47,14 @@ const AppMenu = withRouter(({location, onLogout}) => (
             as={Link}
         />
         <Menu.Item
-            name='settings'
-            active={location.pathname.startsWith('/settings')}
-            to={'/settings'}
-            as={Link}
-        />
-        <Menu.Item
             name='drivers'
             active={location.pathname.startsWith('/drivers')}
             to={'/drivers'}
             as={Link}
         />
-        <Menu.Item name={'logout'} onClick={onLogout}/>
     </Menu>));
 
-const Main = withRouter(({location, onLogout}) => {
+const Main = withRouter(({location, onLogout, user}) => {
     const pdf = location.pathname.endsWith('/pdf');
 
     return (<div>
@@ -73,6 +66,11 @@ const Main = withRouter(({location, onLogout}) => {
                         <Image size='mini' src='/logo.png' style={{marginRight: '1.5em'}}/>
                         Open e-CMR
                     </Menu.Item>
+                    <Menu.Item header position={"right"}>
+                        <Icon name={'user'}/>
+                        {user && user.attributes['email']}
+                    </Menu.Item>
+                    <Menu.Item name={'logout'} header onClick={onLogout}/>
                 </Menu>
 
                 <AppMenu onLogout={onLogout}/>
@@ -93,16 +91,33 @@ const Main = withRouter(({location, onLogout}) => {
 const MainWithAuth = pdfServiceKey ?  Main : withAuthenticator(Main, false);
 
 class App extends Component {
+    state = {
+        user: null
+    };
+    constructor(props) {
+        super(props);
+
+        Hub.listen('auth', (data) => {
+            this.componentDidMount();
+        })
+    }
+
     render() {
         return (
             <Router>
-                <MainWithAuth onLogout={() => this.logout()}/>
+                <MainWithAuth onLogout={() => this.logout()} user={this.state.user}/>
             </Router>
         );
     }
 
     async logout() {
         await Auth.signOut()
+    }
+
+    async componentDidMount() {
+        this.setState({
+            user: await Auth.currentAuthenticatedUser()
+        })
     }
 }
 export default App;
