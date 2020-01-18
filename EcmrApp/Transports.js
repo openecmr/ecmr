@@ -5,118 +5,55 @@ import {API, graphqlOperation, Auth} from 'aws-amplify';
 import {Address, MyText, Packages} from './Components';
 import {SceneMap, TabBar, TabView} from "react-native-tab-view";
 import ContractModel from "./ContractModel";
+import {set} from "react-native-reanimated";
 
 const NoContracts = () =>
     <View style={{justifyContent: 'center', alignItems: 'center', flex: 1, paddingTop: 40}}>
         <MyText>All done, no pending contracts assigned to you.</MyText>
-    </View>
-;
+    </View>;
 
-const tabIndicatorColor = 'rgb(0,115,209)';
-const tabBackgroundColor = 'rgb(245,245,245)';
-
-class Transports extends Component {
-    static navigationOptions = ({ navigation, screenProps }) => ({
-        title: 'Open e-CMR'
-    });
-
+class ContractsList extends Component {
     constructor(props) {
         super(props);
-
-        this.state = {
-            index: 0,
-            routes: [
-                { key: 'open', title: 'Pending' },
-                { key: 'done', title: 'Done' }
-            ],
-
-            ongoingContracts: [],
-            doneContracts: [],
-            refreshing: false
-        };
-
-        this.navigationEventSubscription = this.props.navigation.addListener(
-            'willFocus',
-            payload => {
-                this.onRefresh();
-            }
-        );
     }
 
     render() {
         return (
-            <TabView
-                navigationState={this.state}
-                renderScene={SceneMap({
-                    open: () => this.renderItems(this.state.ongoingContracts),
-                    done: () => this.renderItems(this.state.doneContracts)
-                })}
-                onIndexChange={index => this.setState({ index })}
-                initialLayout={{
-                    width: Dimensions.get('window').width
-                }}
-                renderTabBar={props =>
-                    <TabBar
-                        {...props}
-                        indicatorStyle={{ backgroundColor: tabIndicatorColor }}
-                        style={{ backgroundColor: tabBackgroundColor }}
-                        activeColor={tabIndicatorColor}
-                        inactiveColor={tabIndicatorColor}
-                    />
-                }
-            />
-        );
-    }
-
-    renderItems(contracts) {
-        return (
             <View style={styles.container}>
                 <SectionList
                     ListEmptyComponent={<NoContracts/>}
-                    onRefresh={() => this.onRefresh()}
-                    refreshing={this.state.refreshing}
-                    sections={contracts}
-                    renderItem={({item}) => this.renderItem(item)}
-                    renderSectionHeader={({section}) => <Text style={styles.sectionHeader}>{section.title ? section.title : "unknown date"}</Text>}
+                    onRefresh={this.props.onRefresh}
+                    refreshing={this.props.refreshing}
+                    sections={this.props.contracts}
+                    renderItem={({item}) => {
+                        const contract = new ContractModel(item);
+                        return (<View style={styles.card}>
+                            <View style={styles.transportCardHeader}>
+                                <MyText style={styles.transportCardHeaderId}>TRANSPORT {contract.id.substring(0, 8)}</MyText>
+                                <MyText style={styles.transportCardHeaderProgress}>{this.progressText(contract)}</MyText>
+                            </View>
+                            <TouchableOpacity onPress={() => this.props.open(contract, 'pickup')}>
+                                <View style={styles.transportCardPart}>
+                                    <MyText style={styles.upperCaseLabel}>pickup</MyText>
+                                    <Address address={contract.pickup}/>
+                                    <Packages total={contract.total()}/>
+                                </View>
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={() => this.props.open(contract, 'delivery')}>
+                                <View style={styles.transportCardPart}>
+                                    <MyText style={styles.upperCaseLabel}>delivery</MyText>
+                                    <Address address={contract.delivery}/>
+                                    <Packages total={contract.total()}/>
+                                </View>
+                            </TouchableOpacity>
+                        </View>);
+                    }}
+                    renderSectionHeader={({section}) => <Text
+                        style={styles.sectionHeader}>{section.title ? section.title : "unknown date"}</Text>}
                     keyExtractor={(item, index) => item.id}
                 />
             </View>
         );
-    }
-
-    renderItem(contract) {
-        const item = new ContractModel(contract);
-
-        return (
-            <View style={styles.card}>
-                <View style={styles.transportCardHeader}>
-                    <MyText style={styles.transportCardHeaderId}>TRANSPORT {item.id.substring(0, 8)}</MyText>
-                    <MyText style={styles.transportCardHeaderProgress}>{this.progressText(item)}</MyText>
-                </View>
-                <TouchableOpacity onPress={() => this.open(item, 'pickup')}>
-                    <View style={styles.transportCardPart}>
-                        <MyText style={styles.upperCaseLabel}>pickup</MyText>
-                        <Address address={item.pickup}/>
-                        <Packages total={item.total()}/>
-                    </View>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => this.open(item, 'delivery')}>
-                    <View style={styles.transportCardPart}>
-                        <MyText style={styles.upperCaseLabel}>delivery</MyText>
-                        <Address address={item.delivery}/>
-                        <Packages total={item.total()}/>
-                    </View>
-                </TouchableOpacity>
-            </View>
-        );
-    }
-
-    open(item, site) {
-        const {navigate} = this.props.navigation;
-        navigate('Transport', {
-            item: item,
-            site: site
-        });
     }
 
     progressText(item) {
@@ -153,6 +90,89 @@ class Transports extends Component {
         const actions = ['Acknowledged', 'ArrivalOnSite', 'LoadingComplete'];
         const events = (item.events || []).filter(e => e.site === "pickup" && actions.indexOf(e.type) !== -1).map(e => e.type);
         return events.length === 0 ? actions[0] : events[events.length - 1];
+    }
+}
+
+const tabIndicatorColor = 'rgb(0,115,209)';
+const tabBackgroundColor = 'rgb(245,245,245)';
+
+class Transports extends Component {
+    static navigationOptions = ({ navigation, screenProps }) => ({
+        title: 'Open e-CMR'
+    });
+
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            navigationState: {
+                index: 0,
+                routes: [
+                    { key: 'open', title: 'Pending' },
+                    { key: 'done', title: 'Done' }
+                ]
+            },
+
+            ongoingContracts: [],
+            doneContracts: [],
+            refreshing: false
+        };
+
+        this.navigationEventSubscription = this.props.navigation.addListener(
+            'willFocus',
+            payload => {
+                this.onRefresh();
+            }
+        );
+    }
+
+    render() {
+        const renderScene = ({ route }) => {
+            switch (route.key) {
+                case 'open':
+                    return <ContractsList open={(item, site) => this.open(item, site)}
+                                          contracts={this.state.ongoingContracts}
+                                          onRefresh={() => this.onRefresh()}
+                                          refreshing={this.state.refreshing} />;
+                case 'done':
+                    return <ContractsList open={(item, site) => this.open(item, site)}
+                                          contracts={this.state.doneContracts}
+                                          onRefresh={() => this.onRefresh()}
+                                          refreshing={this.state.refreshing} />;
+                default:
+                    return null;
+            }
+        };
+
+        return (
+            <TabView
+                navigationState={this.state.navigationState}
+                renderScene={renderScene}
+                onIndexChange={index => this.setState({
+                    navigationState: { ...this.state.navigationState, index }
+                })}
+                initialLayout={{
+                    width: Dimensions.get('window').width
+                }}
+                renderTabBar={props =>
+                    <TabBar
+                        {...props}
+                        indicatorStyle={{ backgroundColor: tabIndicatorColor }}
+                        style={{ backgroundColor: tabBackgroundColor }}
+                        activeColor={tabIndicatorColor}
+                        inactiveColor={tabIndicatorColor}
+                    />
+                }
+            />
+        );
+    }
+
+    open(item, site) {
+        const {navigate} = this.props.navigation;
+        navigate('Transport', {
+            item: item,
+            site: site
+        });
     }
 
     async onRefresh() {
@@ -197,7 +217,7 @@ class Transports extends Component {
             } else {
                 acc[arrivalDate] = {
                     title: arrivalDate,
-                    key: arrivalDate,
+                    id: arrivalDate,
                     data: [contract]
                 };
             }
@@ -249,7 +269,6 @@ const styles = StyleSheet.create({
         paddingBottom: 10
     },
     transportCardHeaderId: {
-        flex: 2,
         fontWeight: 'bold',
         paddingRight: 5,
         paddingLeft: 10,
@@ -257,16 +276,17 @@ const styles = StyleSheet.create({
         paddingBottom: 5
     },
     transportCardHeaderProgress: {
-        flex: 1,
         textAlign: 'center',
         color: 'white',
         fontWeight: 'bold',
+        position: 'absolute',
         right: 10,
+        top: 10,
         borderRadius: 15,
         backgroundColor: 'rgb(60, 167, 60)',
 
-        paddingRight: 5,
-        paddingLeft: 5,
+        paddingRight: 10,
+        paddingLeft: 10,
         paddingTop: 5,
         paddingBottom: 5,
     },
