@@ -1,5 +1,4 @@
 import {Component, Fragment} from "react";
-import _ from 'lodash';
 import {
     Button,
     Container,
@@ -9,7 +8,7 @@ import {
     Icon,
     Segment,
     Form,
-    Modal, List, Search, Dropdown
+    Modal, List, Dropdown
 } from "semantic-ui-react";
 import React from "react";
 import { API, graphqlOperation } from 'aws-amplify';
@@ -605,63 +604,64 @@ class NewTransport extends Component {
             loading: true
         });
 
-        const copyToAddress = async (contactId) => {
-            const address = (await API.graphql(graphqlOperation(queries.getContact, {
-                id: contactId
-            }))).data.getContact;
-            return {
-                name: address.name,
-                postalCode: address.postalCode,
-                address: address.address,
-                city: address.city,
-                country: address.country
-            };
-        };
-
-        const copyToDriverDetail = async (driverId) =>  {
-            const driver = (await API.graphql(graphqlOperation(queries.getDriver, {
-                id: driverId
-            }))).data.getDriver;
-            return {
-                name: driver.name
-            };
-        };
-
-        const now = moment().toISOString();
-        const input = {
-            status: 'CREATED',
-            arrivalDate: this.state.pickup.pickupDate,
-            deliveryDate: this.state.delivery.deliveryDate,
-
-            carrierUsername: this.state.carrierUsername,
-            loads: this.state.loads,
-            trailer: this.state.trailer.licensePlate,
-            truck: this.state.truck.licensePlate,
-            events: [],
-            updatedAt: now,
-            createdAt: now,
-
-            shipper: await copyToAddress(this.state.shipperContactId),
-            carrier: await copyToAddress(this.state.carrierContactId),
-            delivery: await copyToAddress(this.state.delivery.contactId),
-            pickup: await copyToAddress(this.state.pickup.contactId),
-            driver: await copyToDriverDetail(this.state.driverDriverId),
-
-            shipperContactId: this.state.shipperContactId,
-            carrierContactId: this.state.carrierContactId,
-            deliveryContactId: this.state.delivery.contactId,
-            pickupContactId: this.state.pickup.contactId,
-            driverDriverId: this.state.driverDriverId
-        };
-
-        console.log(input);
-
         try {
+            const copyToAddress = async (contactId) => {
+                const address = (await API.graphql(graphqlOperation(queries.getContact, {
+                    id: contactId
+                }))).data.getContact;
+                return {
+                    name: address.name,
+                    postalCode: address.postalCode,
+                    address: address.address,
+                    city: address.city,
+                    country: address.country
+                };
+            };
+
+            const copyToDriverDetail = async (driverId) => {
+                const driver = (await API.graphql(graphqlOperation(queries.getDriver, {
+                    id: driverId
+                }))).data.getDriver;
+                return {
+                    name: driver.name
+                };
+            };
+
+            const now = moment().toISOString();
+            const input = {
+                status: 'CREATED',
+                arrivalDate: this.state.pickup.pickupDate,
+                deliveryDate: this.state.delivery.deliveryDate,
+
+                carrierUsername: this.state.carrierUsername,
+                loads: this.state.loads,
+                trailer: this.state.trailer.licensePlate,
+                truck: this.state.truck.licensePlate,
+                events: [],
+                updatedAt: now,
+                createdAt: now,
+
+                shipper: await copyToAddress(this.state.shipperContactId),
+                carrier: await copyToAddress(this.state.carrierContactId),
+                delivery: await copyToAddress(this.state.delivery.contactId),
+                pickup: await copyToAddress(this.state.pickup.contactId),
+                driver: await copyToDriverDetail(this.state.driverDriverId),
+
+                shipperContactId: this.state.shipperContactId,
+                carrierContactId: this.state.carrierContactId,
+                deliveryContactId: this.state.delivery.contactId,
+                pickupContactId: this.state.pickup.contactId,
+                driverDriverId: this.state.driverDriverId
+            };
+
+            console.log(input);
+
             await API.graphql(graphqlOperation(mutations.createContract, {input: input}));
             this.props.history.push('/transports')
         } catch (ex) {
+            console.warn("error while creating transport" + JSON.stringify(ex));
             this.setState({
-                error: JSON.stringify(ex),
+                error: "Cannot create transport because validation failed. Please ensure all fields are filled in.",
                 loading: false
             })
         }

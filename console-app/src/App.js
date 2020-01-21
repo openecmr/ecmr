@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import './App.css';
-import {Container, Grid, Header, Menu, Dropdown, Image, Icon} from "semantic-ui-react";
+import {Menu, Image, Icon} from "semantic-ui-react";
 import Transports from "./Transports";
-import {BrowserRouter as Router, Route, Link, withRouter} from "react-router-dom";
+import {BrowserRouter as Router, Route, Link, withRouter, Redirect} from "react-router-dom";
 import NewTransport from "./NewTransport";
 
 import Amplify from 'aws-amplify';
-import { Auth, Hub } from 'aws-amplify';
+import { Auth, Hub, I18n } from 'aws-amplify';
 import awsmobile from './aws-exports';
 import { withAuthenticator } from 'aws-amplify-react';
 import Transport from "./Transport";
@@ -76,6 +76,7 @@ const Main = withRouter(({location, onLogout, user}) => {
                 <AppMenu onLogout={onLogout}/>
 
                 <div style={style.content}>
+                    <Redirect exact from="/" to="/transports" />
                     <Route exact path="/transports" component={Transports}/>
                     <Route exact path="/transports-new/:copy_id" component={NewTransport}/>
                     <Route exact path="/transports-new" component={NewTransport}/>
@@ -88,7 +89,38 @@ const Main = withRouter(({location, onLogout, user}) => {
         </div>);
 });
 
-const MainWithAuth = pdfServiceKey ?  Main : withAuthenticator(Main, false);
+const signUpConfig = {
+    header: 'Sign up for Open e-CMR',
+    hideAllDefaults: true,
+    defaultCountryCode: '1',
+    signUpFields: [
+        {
+            label: 'Email address',
+            key: 'email',
+            required: true,
+            displayOrder: 1,
+            type: 'string'
+        },
+        {
+            label: 'Username',
+            key: 'username',
+            required: true,
+            displayOrder: 2,
+            type: 'string'
+        },
+        {
+            label: 'Password',
+            key: 'password',
+            required: true,
+            displayOrder: 3,
+            type: 'password'
+        }
+    ]
+};
+
+const MainWithAuth = pdfServiceKey ?  Main : withAuthenticator(Main, {
+    signUpConfig
+});
 
 class App extends Component {
     state = {
@@ -115,9 +147,24 @@ class App extends Component {
     }
 
     async componentDidMount() {
-        this.setState({
-            user: await Auth.currentAuthenticatedUser()
-        })
+        try {
+            this.setState({
+                user: await Auth.currentAuthenticatedUser()
+            });
+        } catch (ex) {
+        }
     }
 }
+
+
+const authScreenLabels = {
+    en: {
+        'Sign in to your account': 'Sign in to your Open e-CMR account',
+        'Sign in with AWS': 'Sign in using Google'
+    }
+};
+
+I18n.setLanguage('en');
+I18n.putVocabularies(authScreenLabels);
+
 export default App;

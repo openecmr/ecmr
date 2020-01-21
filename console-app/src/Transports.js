@@ -1,6 +1,6 @@
 import {Component} from "react";
 import React from "react";
-import {Button, Container, Icon, Progress, Table} from "semantic-ui-react";
+import {Button, Dimmer, Icon, Loader, Progress, Segment, Table} from "semantic-ui-react";
 import {Link} from "react-router-dom";
 import * as queries from "./graphql/queries";
 import {API, graphqlOperation} from 'aws-amplify';
@@ -86,7 +86,8 @@ class Transports extends Component {
         super(props);
 
         this.state = {
-            notes: []
+            notes: [],
+            loading: true
         };
     }
 
@@ -118,7 +119,27 @@ class Transports extends Component {
                     </Table.Row>
                 </Table.Header>
                 <Table.Body>
-                    {this.renderConsignmentNotes()}
+
+                    {!this.state.loading && this.renderConsignmentNotes()}
+                    {!this.state.loading && this.state.notes.length === 0 &&
+                        <Table.Row>
+                            <Table.Cell colSpan={'10'} textAlign={"center"} selectable={false}>
+                                <div style={{padding: '50px', paddingTop: '200px', minHeight: '560px'}}>
+                                    <p>
+                                        No transports found, please create one using the button above.
+                                    </p>
+                                    <Icon name={"shipping fast"} size={"massive"}/>
+                                </div>
+                            </Table.Cell>
+                        </Table.Row>
+                    }
+                    {this.state.loading &&
+                        <Table.Row>
+                            <Table.Cell colSpan={'10'} textAlign={"center"} selectable={false}>
+                                <Loader active={true} inline size={"large"}/>
+                            </Table.Cell>
+                        </Table.Row>
+                    }
                 </Table.Body>
             </Table>
         );
@@ -164,7 +185,8 @@ class Transports extends Component {
         }
         contracts = contracts.sort((a, b) => a.updatedAt < b.updatedAt ? 1 : -1);
         this.setState({
-            notes: contracts
+            notes: contracts,
+            loading: false
         });
     }
 }

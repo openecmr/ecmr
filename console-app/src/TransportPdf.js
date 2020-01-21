@@ -1,10 +1,8 @@
 import React, {Component} from "react";
 import {API, graphqlOperation} from "aws-amplify";
-import moment from 'moment';
 import * as queries from "./graphql/queries";
 import "./TransportPdf.css"
-import {Button, Container, Header, Icon, Label, List, Table} from "semantic-ui-react";
-import {Link} from "react-router-dom";
+import {Header, Icon, List, Table} from "semantic-ui-react";
 import {S3Image} from "aws-amplify-react";
 
 const PdfHeader = ({label, icon}) => (

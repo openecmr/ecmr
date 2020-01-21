@@ -7,7 +7,7 @@ import {
     Header,
     Icon,
     Step,
-    List, Table, Label, Divider, Segment, Comment, Loader
+    List, Label, Segment, Comment, Loader
 } from "semantic-ui-react";
 import { API, graphqlOperation } from 'aws-amplify';
 import moment from 'moment';
