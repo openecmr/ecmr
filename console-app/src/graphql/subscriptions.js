@@ -29,7 +29,15 @@ export const onCreateContract = `subscription OnCreateContract($owner: String!) 
       country
     }
     arrivalDate
+    arrivalTime {
+      start
+      end
+    }
     deliveryDate
+    deliveryTime {
+      start
+      end
+    }
     pickup {
       name
       postalCode
@@ -115,7 +123,15 @@ export const onUpdateContract = `subscription OnUpdateContract($owner: String!, 
       country
     }
     arrivalDate
+    arrivalTime {
+      start
+      end
+    }
     deliveryDate
+    deliveryTime {
+      start
+      end
+    }
     pickup {
       name
       postalCode
@@ -201,7 +217,15 @@ export const onDeleteContract = `subscription OnDeleteContract($owner: String!) 
       country
     }
     arrivalDate
+    arrivalTime {
+      start
+      end
+    }
     deliveryDate
+    deliveryTime {
+      start
+      end
+    }
     pickup {
       name
       postalCode

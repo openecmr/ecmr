@@ -208,7 +208,19 @@ class Delivery extends NewTransportForm {
                 <Form.Field key={"pickup"}>
                     <label>Planned delivery date</label>
                     <Form.Group inline >
-                        <Form.Input label="On" onChange={this.handleInput} name="deliveryDate" value={this.props.value["deliveryDate"]} type={'date'} width={8}/>
+                        <Form.Input label="On" onChange={this.handleInput} name="deliveryDate" value={this.props.value["deliveryDate"]} type={'date'}/>
+                        <Form.Input
+                            label={"Between"}
+                            placeholder={"12:05"}
+                            onChange={this.handleInput}
+                            name="deliveryFromTime"
+                            value={this.props.value["deliveryFromTime"]} type={'time'} />
+                        <Form.Input
+                            label={"And"}
+                            placeholder={"12:15"}
+                            onChange={this.handleInput}
+                            name="deliveryEndTime"
+                            value={this.props.value["deliveryEndTime"]} type={'time'} />
                     </Form.Group>
                 </Form.Field>
             </Fragment>
@@ -236,13 +248,6 @@ class Pickup extends NewTransportForm {
     renderFields() {
         super.renderFields();
 
-        let times = [
-            {
-                "text": "00:00",
-                "value": "00:00"
-            }
-        ];
-
         return (
             <Fragment>
                 <ContactPicker contactSelected={(contactId) => {this.props.contactSelected(contactId)}}
@@ -251,7 +256,20 @@ class Pickup extends NewTransportForm {
                 <Form.Field key={"pickup"}>
                     <label>Planned pickup date</label>
                     <Form.Group inline >
-                        <Form.Input label="On" onChange={this.handleInput} name="pickupDate" value={this.props.value["pickupDate"]} type={'date'} width={8}/>
+                        <Form.Input label="On" onChange={this.handleInput} name="pickupDate" value={this.props.value["pickupDate"]} type={'date'} />
+
+                        <Form.Input
+                            label={"Between"}
+                            placeholder={"12:05"}
+                            onChange={this.handleInput}
+                            name="pickupFromTime"
+                            value={this.props.value["pickupFromTime"]} type={'time'} />
+                        <Form.Input
+                            label={"And"}
+                            placeholder={"12:15"}
+                            onChange={this.handleInput}
+                            name="pickupEndTime"
+                            value={this.props.value["pickupEndTime"]} type={'time'} />
                     </Form.Group>
                 </Form.Field>
                 <Header as={'h3'} key={"header"}>Loads</Header>
@@ -494,11 +512,19 @@ class NewTransport extends Component {
             },
             delivery: {
                 contactId: contract.deliveryContactId,
-                deliveryDate: contract.deliveryDate
+                deliveryDate: contract.deliveryDate,
+                ...(contract.deliveryTime && {
+                    deliveryFromTime: contract.deliveryTime.start,
+                    deliveryEndTime: contract.deliveryTime.end
+                })
             },
             pickup: {
                 contactId: contract.pickupContactId,
-                pickupDate: contract.arrivalDate
+                pickupDate: contract.arrivalDate,
+                ...(contract.arrivalTime && {
+                    pickupFromTime: contract.arrivalTime.start,
+                    pickupEndTime: contract.arrivalTime.end
+                })
             },
             loads: contract.loads
         });
@@ -627,12 +653,21 @@ class NewTransport extends Component {
                 };
             };
 
+            console.log(this.state.pickup);
+
             const now = moment().toISOString();
             const input = {
                 status: 'CREATED',
                 arrivalDate: this.state.pickup.pickupDate,
+                arrivalTime: {
+                    start: this.state.pickup.pickupFromTime,
+                    end: this.state.pickup.pickupEndTime
+                },
                 deliveryDate: this.state.delivery.deliveryDate,
-
+                deliveryTime: {
+                    start: this.state.delivery.deliveryFromTime,
+                    end: this.state.delivery.deliveryEndTime
+                },
                 carrierUsername: this.state.carrierUsername,
                 loads: this.state.loads,
                 trailer: this.state.trailer.licensePlate,

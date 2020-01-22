@@ -33,7 +33,15 @@ export const createContract = `mutation CreateContract($input: CreateContractInp
       country
     }
     arrivalDate
+    arrivalTime {
+      start
+      end
+    }
     deliveryDate
+    deliveryTime {
+      start
+      end
+    }
     pickup {
       name
       postalCode
@@ -119,7 +127,15 @@ export const updateContract = `mutation UpdateContract($input: UpdateContractInp
       country
     }
     arrivalDate
+    arrivalTime {
+      start
+      end
+    }
     deliveryDate
+    deliveryTime {
+      start
+      end
+    }
     pickup {
       name
       postalCode
@@ -205,7 +221,15 @@ export const deleteContract = `mutation DeleteContract($input: DeleteContractInp
       country
     }
     arrivalDate
+    arrivalTime {
+      start
+      end
+    }
     deliveryDate
+    deliveryTime {
+      start
+      end
+    }
     pickup {
       name
       postalCode

@@ -76,13 +76,13 @@ const Main = withRouter(({location, onLogout, user}) => {
                 <AppMenu onLogout={onLogout}/>
 
                 <div style={style.content}>
-                    <Redirect exact from="/" to="/transports" />
                     <Route exact path="/transports" component={Transports}/>
                     <Route exact path="/transports-new/:copy_id" component={NewTransport}/>
                     <Route exact path="/transports-new" component={NewTransport}/>
                     <Route exact path="/transports/:id" component={Transport}/>
                     <Route exact path="/addressbook" component={AddressBook}/>
                     <Route exact path="/drivers" component={Drivers}/>
+                    <Redirect exact from="/" to="/transports" />
                 </div>
             </div>
             }

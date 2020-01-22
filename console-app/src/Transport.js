@@ -173,7 +173,9 @@ class Transport extends Component {
                                 {goods}
                             </Grid.Column>
                             <Grid.Column>
-                                {contract.arrivalDate}
+                                <Header sub>Planned</Header>
+                                On {contract.arrivalDate}<br/>
+                                {contract.arrivalTime && <div>From {contract.arrivalTime.start} to {contract.arrivalTime.end}</div>}
                             </Grid.Column>
                             <Grid.Column>
                                 {contract.driver.name}
@@ -190,7 +192,9 @@ class Transport extends Component {
                                 {goods}
                             </Grid.Column>
                             <Grid.Column>
-                                {contract.deliveryDate}
+                                <Header sub>Planned</Header>
+                                On {contract.deliveryDate}
+                                {contract.deliveryTime && <div>From {contract.deliveryTime.start} to {contract.deliveryTime.end}</div>}
                             </Grid.Column>
                             <Grid.Column>
                                 {contract.driver.name}
