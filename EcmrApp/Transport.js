@@ -13,7 +13,7 @@ import {
     ActivityIndicator
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
-import {Address, MyText, Packages} from "./Components";
+import {Address, ArrivalDate, MyText, Packages} from "./Components";
 import { API, graphqlOperation } from 'aws-amplify';
 import * as queries from "./graphql/queries";
 import * as mutations from "./graphql/mutations";
@@ -27,7 +27,7 @@ import RNFetchBlob from 'rn-fetch-blob'
 
 const Package = ({total}) =>
     <View style={styles.package}>
-        <Icon name="dropbox" style={styles.packageIcon} size={30} />
+        <Icon name="dropbox" style={styles.packageIcon} size={20} />
         <MyText style={styles.packageText}>{total} packages</MyText>
     </View>;
 
@@ -88,21 +88,24 @@ class Transport extends Component {
 
         const item = new ContractModel(contract);
         const site = this.state.site;
+
         const direction = site === 'pickup' ? "loading" : "unloading";
+        const arrivalDate = site === 'pickup' ? item.arrivalDate : item.deliveryDate;
+        const arrivalTime = site === 'pickup' ? item.arrivalTime : item.deliveryTime;
         const actions = site === 'pickup' ?
             ['ArrivalOnSite', 'LoadingComplete', /*'DepartureFromSite'*/] :
             ['ArrivalOnSite', 'UnloadingComplete'];
         const events = (item.events || []).filter(e => e.site === site && actions.indexOf(e.type) !== -1).map(e => e.type);
         actions.splice(0, events.length === 0 ? 0 : actions.indexOf(events[events.length - 1]) + 1);
         const firstAction = actions.length === 0 || !this.isPending(contract) ? '' : actions[0];
-
         const relevantItems = [...item.events || []].filter(e => e.site === site).reverse();
+
 
         return (
             <ScrollView style={styles.transport}>
                 <Header>Details</Header>
                 <Address address={item[site]} style={styles.address} />
-
+                <ArrivalDate date={arrivalDate} time={arrivalTime}  style={{paddingTop: 10, ...styles.address}} />
                 <Package total={item.total()} />
 
                 <View style={styles.action}>
@@ -274,6 +277,7 @@ const styles = StyleSheet.create({
     },
     package: {
         flexDirection: 'row',
+        alignItems: "center",
         padding: 10
     },
     packageIcon: {
@@ -281,7 +285,7 @@ const styles = StyleSheet.create({
         color: 'rgb(0, 115, 209)'
     },
     packageText: {
-        flex: 8
+        flex: 10
     },
     action: {
         backgroundColor: 'rgb(240,240,240)',

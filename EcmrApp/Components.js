@@ -2,13 +2,16 @@ import React from "react";
 import {Modal, Text, View} from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import {Button} from "react-native-elements";
+import moment from "moment";
+
+const formatTime = time => moment(time, "HH:mm").format('LT');
 
 const MyText = ({style, children}) => <Text style={{...style, color: style && style.color ? style.color : 'black'}}>{children}</Text>;
 
 const Address = ({address, style, hideIcon}) => (
-    <View style={{ flexDirection: 'row', ...style}}>
-        {!hideIcon && <Icon name="location-arrow" style={{flex: 1, color: 'rgb(0, 115, 209)'}} size={30} />}
-        <View style={{flex: 8}}>
+    <View style={{ flexDirection: 'row', alignItems: "center", ...style}}>
+        {!hideIcon && <Icon name="location-arrow" style={{flex: 1, color: 'rgb(0, 115, 209)'}} size={20} />}
+        <View style={{flex: 10}}>
             <MyText><MyText style={{fontWeight: 'bold'}}>{address.postalCode}</MyText> {address.city} {address.country}</MyText>
             <MyText>{address.address}</MyText>
             <MyText style={{fontWeight: 'bold'}}>{address.name}</MyText>
@@ -16,10 +19,20 @@ const Address = ({address, style, hideIcon}) => (
     </View>
 );
 
+const ArrivalDate = ({date, time, style}) => (
+    <View style={{flexDirection: 'row', paddingTop: 5, alignItems: "center", ...style}}>
+        <Icon name={"clock-o"} style={{flex: 1, color: 'rgb(0, 115, 209)'}} size={20}/>
+        <View style={{flex: 10, flexDirection: "column"}}>
+            <MyText>{moment(date).format('ll')}</MyText>
+            {time && <MyText>Between {formatTime(time.start)} and {formatTime(time.end)}</MyText>}
+        </View>
+    </View>
+);
+
 const Packages = ({total}) => (
-    <View style={{flexDirection: 'row', paddingTop: 10}}>
-        <Icon name="dropbox" style={{flex: 1, color: 'rgb(0, 115, 209)'}} size={30} />
-        <MyText style={{flex: 8}}>{total} packages</MyText>
+    <View style={{flexDirection: 'row', alignItems: "center", paddingTop: 5}}>
+        <Icon name="cube" style={{flex: 1, color: 'rgb(0, 115, 209)'}} size={20} />
+        <MyText style={{flex: 10}}>{total} packages</MyText>
     </View>
 );
 
@@ -45,5 +58,6 @@ export {
     MyText,
     Address,
     Packages,
-    HandOverModal
+    HandOverModal,
+    ArrivalDate
 };

@@ -64,7 +64,15 @@ export const getContract = `query GetContract($id: ID!) {
       country
     }
     arrivalDate
+    arrivalTime {
+      start
+      end
+    }
     deliveryDate
+    deliveryTime {
+      start
+      end
+    }
     pickup {
       name
       postalCode
@@ -155,7 +163,15 @@ export const listContracts = `query ListContracts(
         country
       }
       arrivalDate
+      arrivalTime {
+        start
+        end
+      }
       deliveryDate
+      deliveryTime {
+        start
+        end
+      }
       pickup {
         name
         postalCode
