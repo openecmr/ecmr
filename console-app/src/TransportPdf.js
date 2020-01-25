@@ -59,12 +59,14 @@ const ListOfLoads = ({loads}) => (
             </Table.Row>
         </Table.Header>
         <Table.Body>
-            {loads.map(g => [
-                <Table.Cell>{g.category}</Table.Cell>,
-                <Table.Cell>{g.quantity}</Table.Cell>,
-                <Table.Cell>{g.description}</Table.Cell>
-                ]
-            )}
+            {loads.map((g, index) =>
+                <Table.Row key={index}>
+                    <Table.Cell>{g.category}</Table.Cell>
+                    <Table.Cell>{g.quantity}</Table.Cell>
+                    <Table.Cell>{g.description}</Table.Cell>
+                </Table.Row>
+
+        )}
         </Table.Body>
     </Table>
 );
@@ -78,6 +80,9 @@ const Signature = ({event, label}) => (
             resizeMode={'center'}
             level={"public"}
             imgKey={event.signature.signatureImageSignatory.key}/>
+        }
+        {!event &&
+            <div style={{width: "100px", height: "100px"}}/>
         }
     </div>
 );

@@ -13,6 +13,8 @@ export const onCreateContract = `subscription OnCreateContract($owner: String!) 
       address
       city
       country
+      phone
+      email
     }
     carrier {
       name
@@ -20,6 +22,8 @@ export const onCreateContract = `subscription OnCreateContract($owner: String!) 
       address
       city
       country
+      phone
+      email
     }
     delivery {
       name
@@ -27,6 +31,8 @@ export const onCreateContract = `subscription OnCreateContract($owner: String!) 
       address
       city
       country
+      phone
+      email
     }
     arrivalDate
     arrivalTime {
@@ -44,11 +50,19 @@ export const onCreateContract = `subscription OnCreateContract($owner: String!) 
       address
       city
       country
+      phone
+      email
     }
     loads {
       category
       quantity
+      volume
+      loadMeters
+      netWeight
       description
+      hazardousGoodsItems {
+        hazardLabel
+      }
     }
     driver {
       name
@@ -107,6 +121,8 @@ export const onUpdateContract = `subscription OnUpdateContract($owner: String!, 
       address
       city
       country
+      phone
+      email
     }
     carrier {
       name
@@ -114,6 +130,8 @@ export const onUpdateContract = `subscription OnUpdateContract($owner: String!, 
       address
       city
       country
+      phone
+      email
     }
     delivery {
       name
@@ -121,6 +139,8 @@ export const onUpdateContract = `subscription OnUpdateContract($owner: String!, 
       address
       city
       country
+      phone
+      email
     }
     arrivalDate
     arrivalTime {
@@ -138,11 +158,19 @@ export const onUpdateContract = `subscription OnUpdateContract($owner: String!, 
       address
       city
       country
+      phone
+      email
     }
     loads {
       category
       quantity
+      volume
+      loadMeters
+      netWeight
       description
+      hazardousGoodsItems {
+        hazardLabel
+      }
     }
     driver {
       name
@@ -201,6 +229,8 @@ export const onDeleteContract = `subscription OnDeleteContract($owner: String!) 
       address
       city
       country
+      phone
+      email
     }
     carrier {
       name
@@ -208,6 +238,8 @@ export const onDeleteContract = `subscription OnDeleteContract($owner: String!) 
       address
       city
       country
+      phone
+      email
     }
     delivery {
       name
@@ -215,6 +247,8 @@ export const onDeleteContract = `subscription OnDeleteContract($owner: String!) 
       address
       city
       country
+      phone
+      email
     }
     arrivalDate
     arrivalTime {
@@ -232,11 +266,19 @@ export const onDeleteContract = `subscription OnDeleteContract($owner: String!) 
       address
       city
       country
+      phone
+      email
     }
     loads {
       category
       quantity
+      volume
+      loadMeters
+      netWeight
       description
+      hazardousGoodsItems {
+        hazardLabel
+      }
     }
     driver {
       name
@@ -292,6 +334,8 @@ export const onCreateContact = `subscription OnCreateContact($owner: String!) {
     address
     city
     country
+    phone
+    email
   }
 }
 `;
@@ -304,6 +348,8 @@ export const onUpdateContact = `subscription OnUpdateContact($owner: String!) {
     address
     city
     country
+    phone
+    email
   }
 }
 `;
@@ -316,6 +362,8 @@ export const onDeleteContact = `subscription OnDeleteContact($owner: String!) {
     address
     city
     country
+    phone
+    email
   }
 }
 `;

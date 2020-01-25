@@ -111,12 +111,18 @@ class Transport extends Component {
         const goods =
             <List>
                 {contract.loads.map((load) =>
-                    <List.Item>{load.quantity} {load.category}, {load.description}</List.Item>
+                    <List.Item>
+                        {load.quantity} {load.category}
+                        {load.description && `, ${load.description}`}
+                        {load.volume && `, ${load.volume} m³`}
+                        {load.netWeight && `, ${load.netWeight} kg`}
+                        {load.loadMeters && `, ${load.loadMeters} m`}
+                    </List.Item>
                 )}
             </List>;
 
         return (
-            <Container>
+            <div>
                 <Button.Group floated='right'>
                     <Button onClick={() => this.delete()}>
                         <Icon name='delete' />
@@ -132,13 +138,14 @@ class Transport extends Component {
                     <Header.Subheader>Created by {contract.owner} on {moment(contract.createdAt).format("LLLL")}</Header.Subheader>
                 </Header>
 
-                <Step.Group>
+                <Step.Group fluid size={"mini"}>
                     <Step content='Created' active={contract.status === 'CREATED' || contract.status === 'DRAFT'}/>
                     <Step content='Ongoing'  active={contract.status === 'IN_PROGRESS'} />
                     <Step content='Done'  active={contract.status === 'DONE'} />
                     <Step content='Archived'  active={contract.status === 'ARCHIVED'}/>
                 </Step.Group>
                 <Segment>
+
                 <Grid columns={3}>
                     <Grid.Row>
                         <Grid.Column>
@@ -231,7 +238,7 @@ class Transport extends Component {
                         </Grid.Column>
                     </Grid.Row>
                 </Grid>
-            </Container>
+            </div>
 
         );
     }

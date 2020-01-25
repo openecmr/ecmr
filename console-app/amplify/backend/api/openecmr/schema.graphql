@@ -84,6 +84,8 @@ type Address @aws_api_key @aws_cognito_user_pools @aws_iam {
     address: String
     city: String
     country: String
+    phone: String
+    email: String
 }
 
 type Contact
@@ -99,13 +101,29 @@ type Contact
     address: String
     city: String
     country: String
+    phone: String
+    email: String
 }
 
 type Load @aws_api_key @aws_cognito_user_pools @aws_iam {
     category: String
     quantity: Int
+    volume: Float
+    loadMeters: Float
+    netWeight: Float
     description: String
+    hazardousGoodsItems: HazardousGoodsItems
 }
+
+type HazardousGoodsItems {
+    hazardLabel: String!
+}
+
+#pallets,
+#packages,
+#rolls,
+#containers,
+#bulk
 
 type Driver
     @model

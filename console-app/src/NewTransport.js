@@ -8,7 +8,7 @@ import {
     Icon,
     Segment,
     Form,
-    Modal, List, Dropdown
+    Modal, List, Dropdown, Select
 } from "semantic-ui-react";
 import React from "react";
 import { API, graphqlOperation } from 'aws-amplify';
@@ -228,13 +228,36 @@ class Delivery extends NewTransportForm {
     }
 }
 
+const categoryOptions = [
+    {text: 'pallets', value: 'pallets'},
+    {text: 'packages', value: 'packages'},
+    {text: 'rolls', value: 'rolls'},
+    {text: 'containers', value: 'containers'},
+    {text: 'bulk', value: 'bulk'}
+];
+const CategoryDropdown = ({onChange, value}) =>
+    <Dropdown options={categoryOptions} clearable={true} fluid
+              // onChange={(e, data) => {onChange(data.value)}}
+              onChange={(e, data) => onChange(e, {
+                  name: "category",
+                  value: data.value
+              })}
+              value={value} search
+              selection/>;
+
 class Pickup extends NewTransportForm {
     emptyLoad = {
         category: '',
         quantity: '',
+        volume: '',
+        loadMeters: '',
+        netWeight: '',
         description: ''
     };
-    state = { modalOpen: false }
+    state = {
+        modalOpen: false
+    };
+
     constructor(props) {
         super(props);
 
@@ -286,9 +309,26 @@ class Pickup extends NewTransportForm {
             <Header icon={"plus square"} content={"Add load"} />
             <Modal.Content>
                 <Form id={"item"}>
-                    <Form.Input label='Category' type='input' name={"category"} value={this.state.category} onChange={this.handleChangeForLoad}/>
-                    <Form.Input label='Quantity' type='input' name={"quantity"} value={this.state.quantity} onChange={this.handleChangeForLoad}/>
+                    <Form.Field label='Category'
+                                name={"category"}
+                                control={CategoryDropdown}
+                                value={this.state.category}
+                                onChange={this.handleChangeForLoad}/>
+                    {/*<CategoryDropdown />*/}
+                    <Form.Group>
+                        <Form.Input label='Quantity' type='number' size={"tiny"} name={"quantity"} value={this.state.quantity} onChange={this.handleChangeForLoad}/>
+                    </Form.Group>
+                    <Form.Group>
+                        <Form.Input label='Volume (m³)' type={'number'} size={"tiny"} name={"volume"} value={this.state.volume} onChange={this.handleChangeForLoad}/>
+                    </Form.Group>
+                    <Form.Group>
+                        <Form.Input  label='Net weight (kg)' type={'number'} size={"tiny"} name={"netWeight"} value={this.state.netWeight} onChange={this.handleChangeForLoad}/>
+                    </Form.Group>
+                    <Form.Group>
+                        <Form.Input  label='Load meters (m)' type={'number'} size={"tiny"} name={"loadMeters"} value={this.state.loadMeters} onChange={this.handleChangeForLoad}/>
+                    </Form.Group>
                     <Form.Input label='Description' type='input' name={"description"} value={this.state.description} onChange={this.handleChangeForLoad}/>
+
                 </Form>
             </Modal.Content>
             <Modal.Actions>
@@ -531,7 +571,6 @@ class NewTransport extends Component {
     }
 
     onLoadAdded(index, load) {
-        console.log(load);
         const loads = [...this.state.loads];
         if (index !== null) {
             loads[index] = {...load};
@@ -669,7 +708,7 @@ class NewTransport extends Component {
                     end: this.state.delivery.deliveryEndTime
                 },
                 carrierUsername: this.state.carrierUsername,
-                loads: this.state.loads,
+                loads: this.state.loads.map(removeEmpty),
                 trailer: this.state.trailer.licensePlate,
                 truck: this.state.truck.licensePlate,
                 events: [],
@@ -713,5 +752,13 @@ class NewTransport extends Component {
         });
     }
 }
+
+const removeEmpty = obj =>
+    Object.keys(obj)
+        .filter(k => obj[k])
+        .reduce(
+            (newObj, k) => ({ ...newObj, [k]: obj[k] }),
+            {}
+        );
 
 export default NewTransport;

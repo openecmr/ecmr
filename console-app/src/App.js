@@ -82,7 +82,7 @@ const Main = withRouter(({location, onLogout, user}) => {
                     <Route exact path="/transports/:id" component={Transport}/>
                     <Route exact path="/addressbook" component={AddressBook}/>
                     <Route exact path="/drivers" component={Drivers}/>
-                    <Redirect exact from="/" to="/transports" />
+                    {/*<Redirect exact from="/" to="/transports" />*/}
                 </div>
             </div>
             }
