@@ -231,8 +231,7 @@ class Delivery extends NewTransportForm {
 const categoryOptions = [
     {text: 'pallets', value: 'pallets'},
     {text: 'packages', value: 'packages'},
-    {text: 'rolls', value: 'rolls'},
-    {text: 'containers', value: 'containers'},
+    {text: 'roll containers', value: 'roll containers'},
     {text: 'bulk', value: 'bulk'}
 ];
 const CategoryDropdown = ({onChange, value}) =>
