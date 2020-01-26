@@ -17,6 +17,8 @@ export const createContract = `mutation CreateContract($input: CreateContractInp
       address
       city
       country
+      phone
+      email
     }
     carrier {
       name
@@ -24,6 +26,8 @@ export const createContract = `mutation CreateContract($input: CreateContractInp
       address
       city
       country
+      phone
+      email
     }
     delivery {
       name
@@ -31,6 +35,8 @@ export const createContract = `mutation CreateContract($input: CreateContractInp
       address
       city
       country
+      phone
+      email
     }
     arrivalDate
     arrivalTime {
@@ -48,11 +54,19 @@ export const createContract = `mutation CreateContract($input: CreateContractInp
       address
       city
       country
+      phone
+      email
     }
     loads {
       category
       quantity
+      volume
+      loadMeters
+      netWeight
       description
+      hazardousGoodsItems {
+        hazardLabel
+      }
     }
     driver {
       name
@@ -111,6 +125,8 @@ export const updateContract = `mutation UpdateContract($input: UpdateContractInp
       address
       city
       country
+      phone
+      email
     }
     carrier {
       name
@@ -118,6 +134,8 @@ export const updateContract = `mutation UpdateContract($input: UpdateContractInp
       address
       city
       country
+      phone
+      email
     }
     delivery {
       name
@@ -125,6 +143,8 @@ export const updateContract = `mutation UpdateContract($input: UpdateContractInp
       address
       city
       country
+      phone
+      email
     }
     arrivalDate
     arrivalTime {
@@ -142,11 +162,19 @@ export const updateContract = `mutation UpdateContract($input: UpdateContractInp
       address
       city
       country
+      phone
+      email
     }
     loads {
       category
       quantity
+      volume
+      loadMeters
+      netWeight
       description
+      hazardousGoodsItems {
+        hazardLabel
+      }
     }
     driver {
       name
@@ -205,6 +233,8 @@ export const deleteContract = `mutation DeleteContract($input: DeleteContractInp
       address
       city
       country
+      phone
+      email
     }
     carrier {
       name
@@ -212,6 +242,8 @@ export const deleteContract = `mutation DeleteContract($input: DeleteContractInp
       address
       city
       country
+      phone
+      email
     }
     delivery {
       name
@@ -219,6 +251,8 @@ export const deleteContract = `mutation DeleteContract($input: DeleteContractInp
       address
       city
       country
+      phone
+      email
     }
     arrivalDate
     arrivalTime {
@@ -236,11 +270,19 @@ export const deleteContract = `mutation DeleteContract($input: DeleteContractInp
       address
       city
       country
+      phone
+      email
     }
     loads {
       category
       quantity
+      volume
+      loadMeters
+      netWeight
       description
+      hazardousGoodsItems {
+        hazardLabel
+      }
     }
     driver {
       name
@@ -296,6 +338,8 @@ export const createContact = `mutation CreateContact($input: CreateContactInput!
     address
     city
     country
+    phone
+    email
   }
 }
 `;
@@ -308,6 +352,8 @@ export const updateContact = `mutation UpdateContact($input: UpdateContactInput!
     address
     city
     country
+    phone
+    email
   }
 }
 `;
@@ -320,6 +366,8 @@ export const deleteContact = `mutation DeleteContact($input: DeleteContactInput!
     address
     city
     country
+    phone
+    email
   }
 }
 `;

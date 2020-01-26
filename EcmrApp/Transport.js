@@ -6,14 +6,13 @@ import {
     StyleSheet,
     Text,
     View,
-    Button,
     FlatList,
     ScrollView,
     TouchableOpacity,
     ActivityIndicator
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
-import {Address, ArrivalDate, MyText, Packages} from "./Components";
+import {Address, ArrivalDate, LoadDetailText, MyText, Packages} from "./Components";
 import { API, graphqlOperation } from 'aws-amplify';
 import * as queries from "./graphql/queries";
 import * as mutations from "./graphql/mutations";
@@ -24,12 +23,7 @@ import ContractModel from "./ContractModel";
 import {createUpdateContractInput, updateContract} from "./DataUtil";
 const Header = ({children}) => <MyText style={styles.header}>{children}</MyText>;
 import RNFetchBlob from 'rn-fetch-blob'
-
-const Package = ({total}) =>
-    <View style={styles.package}>
-        <Icon name="dropbox" style={styles.packageIcon} size={20} />
-        <MyText style={styles.packageText}>{total} packages</MyText>
-    </View>;
+import {Button} from "react-native-elements";
 
 const activityDoneColor = 'rgb(5, 172, 5)';
 const actionButtonColor = 'rgb(60,176,60)';
@@ -54,6 +48,13 @@ const SignatureEvent = ({signature, signatoryObservation}) => (
                 <MyText style={{fontStyle: 'italic'}}>{signatoryObservation}</MyText>
             </View>
         }
+    </View>
+);
+
+const LoadDetail = ({load}) => (
+    <View style={styles.package}>
+        <Icon name="dropbox" style={styles.packageIcon} size={20} />
+        <LoadDetailText style={styles.packageText} load={load} />
     </View>
 );
 
@@ -106,11 +107,14 @@ class Transport extends Component {
                 <Header>Details</Header>
                 <Address address={item[site]} style={styles.address} />
                 <ArrivalDate date={arrivalDate} time={arrivalTime}  style={{paddingTop: 10, ...styles.address}} />
-                <Package total={item.total()} />
+
+                {
+                    contract.loads.map((load, index) => <LoadDetail key={index} load={load}/>)
+                }
 
                 <View style={styles.action}>
-                    {firstAction === 'ArrivalOnSite' && <Button title={`Notify arrival at ${direction} site`} color={actionButtonColor} onPress={() => this.confirmNotifyArrival()}/>}
-                    {(firstAction === 'LoadingComplete' || firstAction === 'UnloadingComplete') && <Button title={`Confirm ${direction}`} color={actionButtonColor} onPress={() => this.confirmLoading()}/>}
+                    {firstAction === 'ArrivalOnSite' && <Button title={`Notify arrival at ${direction} site`} buttonStyle={styles.actionButton} onPress={() => this.confirmNotifyArrival()}/>}
+                    {(firstAction === 'LoadingComplete' || firstAction === 'UnloadingComplete') && <Button title={`Confirm ${direction}`} buttonStyle={styles.actionButton} onPress={() => this.confirmLoading()}/>}
                     {!firstAction &&
                         <View style={{flexDirection: 'row', alignItems: 'center'}}>
                             <Icon color={activityDoneColor} size={30} name='check-circle'/>
@@ -268,17 +272,22 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgb(240,240,240)',
         fontWeight: 'bold',
         padding: 15,
-        paddingLeft: 10
+        paddingLeft: 10,
+        borderBottomColor: 'rgb(200, 200, 200)',
+        borderBottomWidth:  StyleSheet.hairlineWidth
     },
     address: {
         borderBottomWidth: StyleSheet.hairlineWidth,
-        borderBottomColor: 'black',
+        borderBottomColor: 'rgb(200, 200, 200)',
         padding: 10
     },
     package: {
+        borderBottomWidth: StyleSheet.hairlineWidth,
+        borderBottomColor: 'rgb(200, 200, 200)',
+
+        padding: 10,
         flexDirection: 'row',
-        alignItems: "center",
-        padding: 10
+        alignItems: "center"
     },
     packageIcon: {
         flex: 1,
@@ -289,7 +298,10 @@ const styles = StyleSheet.create({
     },
     action: {
         backgroundColor: 'rgb(240,240,240)',
-        padding: 10
+        padding: 10,
+
+        borderTopColor: 'rgb(219, 219, 219)',
+        borderTopWidth:  StyleSheet.hairlineWidth
     },
     activityDoneText: {
         color: activityDoneColor,
@@ -300,6 +312,9 @@ const styles = StyleSheet.create({
         padding: 10,
         borderBottomWidth: StyleSheet.hairlineWidth,
         borderBottomColor: 'black'
+    },
+    actionButton: {
+        backgroundColor: actionButtonColor
     }
 });
 

@@ -54,10 +54,20 @@ const HandOverModal = ({visible, text, onPress}) =>
         </View>
     </Modal>;
 
+const LoadDetailText = ({load, style}) =>
+    <MyText style={style}>
+        {load.quantity} {load.category}
+        {load.description && `, ${load.description}`}
+        {load.volume && `, ${load.volume} m³`}
+        {load.netWeight && `, ${load.netWeight} kg`}
+        {load.loadMeters && `, ${load.loadMeters} m`}
+    </MyText>;
+
 export {
     MyText,
     Address,
     Packages,
     HandOverModal,
-    ArrivalDate
+    ArrivalDate,
+    LoadDetailText
 };

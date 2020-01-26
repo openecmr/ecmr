@@ -14,6 +14,8 @@ export const getContact = `query GetContact($id: ID!) {
     address
     city
     country
+    phone
+    email
   }
 }
 `;
@@ -31,6 +33,8 @@ export const listContacts = `query ListContacts(
       address
       city
       country
+      phone
+      email
     }
     nextToken
   }
@@ -48,6 +52,8 @@ export const getContract = `query GetContract($id: ID!) {
       address
       city
       country
+      phone
+      email
     }
     carrier {
       name
@@ -55,6 +61,8 @@ export const getContract = `query GetContract($id: ID!) {
       address
       city
       country
+      phone
+      email
     }
     delivery {
       name
@@ -62,6 +70,8 @@ export const getContract = `query GetContract($id: ID!) {
       address
       city
       country
+      phone
+      email
     }
     arrivalDate
     arrivalTime {
@@ -79,11 +89,19 @@ export const getContract = `query GetContract($id: ID!) {
       address
       city
       country
+      phone
+      email
     }
     loads {
       category
       quantity
+      volume
+      loadMeters
+      netWeight
       description
+      hazardousGoodsItems {
+        hazardLabel
+      }
     }
     driver {
       name
@@ -147,6 +165,8 @@ export const listContracts = `query ListContracts(
         address
         city
         country
+        phone
+        email
       }
       carrier {
         name
@@ -154,6 +174,8 @@ export const listContracts = `query ListContracts(
         address
         city
         country
+        phone
+        email
       }
       delivery {
         name
@@ -161,6 +183,8 @@ export const listContracts = `query ListContracts(
         address
         city
         country
+        phone
+        email
       }
       arrivalDate
       arrivalTime {
@@ -178,11 +202,19 @@ export const listContracts = `query ListContracts(
         address
         city
         country
+        phone
+        email
       }
       loads {
         category
         quantity
+        volume
+        loadMeters
+        netWeight
         description
+        hazardousGoodsItems {
+          hazardLabel
+        }
       }
       driver {
         name
