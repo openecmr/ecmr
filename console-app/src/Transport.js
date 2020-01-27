@@ -9,7 +9,7 @@ import {
     Step,
     List, Label, Segment, Comment, Loader
 } from "semantic-ui-react";
-import { API, graphqlOperation } from 'aws-amplify';
+import {API, graphqlOperation} from 'aws-amplify';
 import moment from 'moment';
 import * as queries from "./graphql/queries";
 import * as mutations from "./graphql/mutations";
@@ -17,11 +17,11 @@ import {S3Image} from "aws-amplify-react";
 
 const Address = ({address, label, icon}) => (
     <Container>
-        { label &&
-            <Header as={'h5'}>
-            <Icon name={icon} />
+        {label &&
+        <Header as={'h5'}>
+            <Icon name={icon}/>
             <Header.Content>{label}</Header.Content>
-            </Header>
+        </Header>
         }
         <List>
             <List.Item>
@@ -51,7 +51,7 @@ const eventText = (event) => {
 
 const Events = ({driver, events}) => (
     <Container>
-        <Comment.Group>
+        <Comment.Group >
             <Header as={'h4'}>Events</Header>
             {
                 events.map(event => (
@@ -66,11 +66,7 @@ const Events = ({driver, events}) => (
                                 {eventText(event)}
                                 {
                                     (event.type === 'UnloadingComplete' || event.type === 'LoadingComplete') &&
-                                    <S3Image
-                                             theme={{ photoImg: { width: '100px', height: '100px' } }}
-                                             resizeMode={'center'}
-                                             level={"public"}
-                                             imgKey={event.signature.signatureImageSignatory.key} />
+                                        <SignatureEvent event={event}/>
                                 }
                             </Comment.Text>
                         </Comment.Content>
@@ -81,18 +77,56 @@ const Events = ({driver, events}) => (
     </Container>
 );
 
+const SignatureEvent = ({event: { signature, signatoryObservation, driverObservation }}) =>
+    <div>
+        {
+            <List style={{paddingTop: "10px", marginLeft: "20px"}}>
+                {
+                    signature.signatoryName &&
+                    <List.Item>
+                        <List.Icon name='user' verticalAlign={"middle"}/>
+                        <List.Content>
+                            <List.Header>Signed by</List.Header>
+                            <List.Description>{signature.signatoryName} {signature.signatoryEmail && `(${signature.signatoryEmail})`}</List.Description>
+                        </List.Content>
+                    </List.Item>
+                }
+                {
+                    signatoryObservation &&
+                    <List.Item>
+                        <List.Icon name='warning sign' verticalAlign={"middle"} />
+                        <List.Content>
+                            <List.Header>Signatory observation</List.Header>
+                            <List.Description>{signatoryObservation}</List.Description>
+                        </List.Content>
+                    </List.Item>
+                }
+                {
+                    <List.Item>
+                        <List.Icon name={'pencil'} verticalAlign={"middle"}/>
+                        <List.Content>
+                            <S3Image
+                                theme={{photoImg: {width: '100px', height: '100px'}}}
+                                resizeMode={'center'}
+                                level={"public"}
+                                imgKey={signature.signatureImageSignatory.key}/>
+                        </List.Content>
+                    </List.Item>
+                }
+            </List>
+        }
+    </div>;
+
 class Transport extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-
-        };
+        this.state = {};
     }
 
     async componentDidMount() {
         const response = await API.graphql(graphqlOperation(queries.getContract, {
-                "id": this.props.match.params.id
+            "id": this.props.match.params.id
         }));
         const contract = response.data.getContract;
 
@@ -125,40 +159,41 @@ class Transport extends Component {
             <div>
                 <Button.Group floated='right'>
                     <Button onClick={() => this.delete()}>
-                        <Icon name='delete' />
+                        <Icon name='delete'/>
                         Delete
                     </Button>
                     <Button onClick={() => this.copy()}>
-                        <Icon name='copy' />
+                        <Icon name='copy'/>
                         Copy
                     </Button>
                 </Button.Group>
                 <Header as={'h1'}>
-                    <Header.Content>Transport {contract.id.substring(0,8)}</Header.Content>
-                    <Header.Subheader>Created by {contract.owner} on {moment(contract.createdAt).format("LLLL")}</Header.Subheader>
+                    <Header.Content>Transport {contract.id.substring(0, 8)}</Header.Content>
+                    <Header.Subheader>Created
+                        by {contract.owner} on {moment(contract.createdAt).format("LLLL")}</Header.Subheader>
                 </Header>
 
                 <Step.Group fluid size={"mini"}>
                     <Step content='Created' active={contract.status === 'CREATED' || contract.status === 'DRAFT'}/>
-                    <Step content='Ongoing'  active={contract.status === 'IN_PROGRESS'} />
-                    <Step content='Done'  active={contract.status === 'DONE'} />
-                    <Step content='Archived'  active={contract.status === 'ARCHIVED'}/>
+                    <Step content='Ongoing' active={contract.status === 'IN_PROGRESS'}/>
+                    <Step content='Done' active={contract.status === 'DONE'}/>
+                    <Step content='Archived' active={contract.status === 'ARCHIVED'}/>
                 </Step.Group>
                 <Segment>
 
-                <Grid columns={3}>
-                    <Grid.Row>
-                        <Grid.Column>
-                            <Address address={contract.shipper} icon={'building'} label={'Shipper'}/>
-                        </Grid.Column>
-                        <Grid.Column>
-                            <Address address={contract.carrier} icon={'truck'} label={'Carrier'}/>
-                        </Grid.Column>
-                        <Grid.Column>
-                            Transport code
-                        </Grid.Column>
-                    </Grid.Row>
-                </Grid>
+                    <Grid columns={3}>
+                        <Grid.Row>
+                            <Grid.Column>
+                                <Address address={contract.shipper} icon={'building'} label={'Shipper'}/>
+                            </Grid.Column>
+                            <Grid.Column>
+                                <Address address={contract.carrier} icon={'truck'} label={'Carrier'}/>
+                            </Grid.Column>
+                            <Grid.Column>
+                                Transport code
+                            </Grid.Column>
+                        </Grid.Row>
+                    </Grid>
                 </Segment>
                 <Segment>
                     <Grid columns={5} divided>
@@ -174,7 +209,7 @@ class Transport extends Component {
                                 <Label circular={true}>1</Label>Pickup
                             </Grid.Column>
                             <Grid.Column>
-                                <Address address={contract.pickup} />
+                                <Address address={contract.pickup}/>
                             </Grid.Column>
                             <Grid.Column>
                                 {goods}
@@ -182,7 +217,8 @@ class Transport extends Component {
                             <Grid.Column>
                                 <Header sub>Planned</Header>
                                 On {contract.arrivalDate}<br/>
-                                {contract.arrivalTime && <div>From {contract.arrivalTime.start} to {contract.arrivalTime.end}</div>}
+                                {contract.arrivalTime &&
+                                <div>From {contract.arrivalTime.start} to {contract.arrivalTime.end}</div>}
                             </Grid.Column>
                             <Grid.Column>
                                 {contract.driver.name}
@@ -193,7 +229,7 @@ class Transport extends Component {
                                 <Label circular={true}>2</Label>Delivery
                             </Grid.Column>
                             <Grid.Column>
-                                <Address address={contract.delivery} />
+                                <Address address={contract.delivery}/>
                             </Grid.Column>
                             <Grid.Column>
                                 {goods}
@@ -201,7 +237,8 @@ class Transport extends Component {
                             <Grid.Column>
                                 <Header sub>Planned</Header>
                                 On {contract.deliveryDate}
-                                {contract.deliveryTime && <div>From {contract.deliveryTime.start} to {contract.deliveryTime.end}</div>}
+                                {contract.deliveryTime &&
+                                <div>From {contract.deliveryTime.start} to {contract.deliveryTime.end}</div>}
                             </Grid.Column>
                             <Grid.Column>
                                 {contract.driver.name}
@@ -221,10 +258,11 @@ class Transport extends Component {
                                     </Grid.Row>
                                     <Grid.Row>
                                         <Grid.Column>
-                                            <Icon name='file' /> Consignment note
+                                            <Icon name='file'/> Consignment note
                                         </Grid.Column>
                                         <Grid.Column>
-                                            <a onClick={() => this.downloadPdf()} href={'#'}>{`cmr-${this.state.contract.id.substring(0,8)}.pdf`}</a>&nbsp;
+                                            <a onClick={() => this.downloadPdf()}
+                                               href={'#'}>{`cmr-${this.state.contract.id.substring(0, 8)}.pdf`}</a>&nbsp;
                                             <Loader size='mini' active={this.state.downloadingPdf} inline/>
                                         </Grid.Column>
                                     </Grid.Row>
@@ -275,7 +313,7 @@ class Transport extends Component {
 
         const linkSource = `data:application/pdf;base64,${response.data.pdfexport}`;
         const downloadLink = document.createElement("a");
-        const fileName = `cmr-${this.state.contract.id.substring(0,8)}.pdf`;
+        const fileName = `cmr-${this.state.contract.id.substring(0, 8)}.pdf`;
 
         downloadLink.href = linkSource;
         downloadLink.download = fileName;
