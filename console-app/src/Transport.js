@@ -155,6 +155,10 @@ class Transport extends Component {
                 )}
             </List>;
 
+        const loadingComplete = contract.events.find(e => e.type === 'LoadingComplete');
+        const unloadingComplete = contract.events.find(e => e.type === 'UnloadingComplete');
+
+
         return (
             <div>
                 <Button.Group floated='right'>
@@ -216,9 +220,16 @@ class Transport extends Component {
                             </Grid.Column>
                             <Grid.Column>
                                 <Header sub>Planned</Header>
-                                On {contract.arrivalDate}<br/>
+                                On {moment(contract.arrivalDate).format('ll')}<br/>
                                 {contract.arrivalTime &&
                                 <div>From {contract.arrivalTime.start} to {contract.arrivalTime.end}</div>}
+
+                                {loadingComplete &&
+                                    <div>
+                                        <Header sub>Actual</Header>
+                                        {moment(loadingComplete.createdAt).format('llll')}
+                                    </div>
+                                }
                             </Grid.Column>
                             <Grid.Column>
                                 {contract.driver.name}
@@ -236,9 +247,16 @@ class Transport extends Component {
                             </Grid.Column>
                             <Grid.Column>
                                 <Header sub>Planned</Header>
-                                On {contract.deliveryDate}
+                                On {moment(contract.deliveryDate).format('ll')}
                                 {contract.deliveryTime &&
                                 <div>From {contract.deliveryTime.start} to {contract.deliveryTime.end}</div>}
+
+                                {unloadingComplete &&
+                                    <div>
+                                        <Header sub>Actual</Header>
+                                        {moment(unloadingComplete.createdAt).format('llll')}
+                                    </div>
+                                }
                             </Grid.Column>
                             <Grid.Column>
                                 {contract.driver.name}
