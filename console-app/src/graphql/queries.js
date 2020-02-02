@@ -40,6 +40,29 @@ export const listContacts = `query ListContacts(
   }
 }
 `;
+export const getCompany = `query GetCompany($id: ID!) {
+  getCompany(id: $id) {
+    id
+    owner
+    name
+  }
+}
+`;
+export const listCompanys = `query ListCompanys(
+  $filter: ModelCompanyFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listCompanys(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      owner
+      name
+    }
+    nextToken
+  }
+}
+`;
 export const getContract = `query GetContract($id: ID!) {
   getContract(id: $id) {
     id

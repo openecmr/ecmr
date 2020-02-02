@@ -371,6 +371,30 @@ export const deleteContact = `mutation DeleteContact($input: DeleteContactInput!
   }
 }
 `;
+export const createCompany = `mutation CreateCompany($input: CreateCompanyInput!) {
+  createCompany(input: $input) {
+    id
+    owner
+    name
+  }
+}
+`;
+export const updateCompany = `mutation UpdateCompany($input: UpdateCompanyInput!) {
+  updateCompany(input: $input) {
+    id
+    owner
+    name
+  }
+}
+`;
+export const deleteCompany = `mutation DeleteCompany($input: DeleteCompanyInput!) {
+  deleteCompany(input: $input) {
+    id
+    owner
+    name
+  }
+}
+`;
 export const createDriver = `mutation CreateDriver($input: CreateDriverInput!) {
   createDriver(input: $input) {
     id

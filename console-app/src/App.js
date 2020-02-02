@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import './App.css';
-import {Menu, Image, Icon} from "semantic-ui-react";
+import {Menu, Image, Icon, Header, Modal, Form, Button} from "semantic-ui-react";
 import Transports from "./Transports";
 import {BrowserRouter as Router, Route, Link, withRouter, Redirect} from "react-router-dom";
 import NewTransport from "./NewTransport";
 
-import Amplify from 'aws-amplify';
+import Amplify, {API, graphqlOperation} from 'aws-amplify';
 import { Auth, Hub, I18n } from 'aws-amplify';
 import awsmobile from './aws-exports';
 import { withAuthenticator } from 'aws-amplify-react';
@@ -14,6 +14,8 @@ import style from "./Style"
 import AddressBook from "./AddressBook";
 import Drivers from "./Drivers";
 import TransportPdf from "./TransportPdf";
+import * as queries from "./graphql/queries";
+import * as mutations from "./graphql/mutations";
 
 let config;
 const pdfServiceKey = window.location.hash.substr(1);
@@ -30,6 +32,54 @@ if (pdfServiceKey) {
 }
 
 Amplify.configure(config);
+
+class CompanyDialog extends Component {
+    state = {
+        name: ''
+    };
+
+    constructor(props) {
+        super(props);
+
+        this.save = this.save.bind(this);
+    }
+
+    handleChange = (e, {name, value}) => {
+        this.setState({
+            name: value
+        });
+    };
+
+    async save() {
+        if (this.state.saving) {
+            return;
+        }
+        this.setState({
+            saving: true
+        });
+        await API.graphql(graphqlOperation(mutations.createCompany, {input: {
+            name: this.state.name
+        }}));
+        this.props.onCompanyUpdated();
+    }
+
+    render() {
+        return <Modal open={this.props.show} size='small'>
+            <Header icon={"building"} content={"Please enter your company details"}/>
+            <Modal.Content>
+                <Form id={"item"}>
+                    <Form.Input onChange={this.handleChange} label='Company name' type='input' name={"name"} value={this.state.name}
+                                placeholder={"International Transporting Corp..."}/>
+                </Form>
+            </Modal.Content>
+            <Modal.Actions>
+                <Button color='green' inverted onClick={this.save}>
+                    <Icon name='checkmark'/> {'Save'}
+                </Button>
+            </Modal.Actions>
+        </Modal>
+    }
+}
 
 const AppMenu = withRouter(({location, onLogout}) => (
     <Menu vertical fixed={'left'} style={style.appMenu}>
@@ -54,7 +104,7 @@ const AppMenu = withRouter(({location, onLogout}) => (
         />
     </Menu>));
 
-const Main = withRouter(({location, onLogout, user}) => {
+const Main = withRouter(({location, onLogout, user, company, noCompany, onCompanyUpdated}) => {
     const pdf = location.pathname.endsWith('/pdf');
 
     return (<div>
@@ -68,12 +118,15 @@ const Main = withRouter(({location, onLogout, user}) => {
                     </Menu.Item>
                     <Menu.Item header position={"right"}>
                         <Icon name={'user'}/>
-                        {user && user.attributes['email']}
+                        {company && company.name}
+                        {user && ` (${user.attributes['email']})`}
                     </Menu.Item>
                     <Menu.Item name={'logout'} header onClick={onLogout}/>
                 </Menu>
 
                 <AppMenu onLogout={onLogout}/>
+
+                <CompanyDialog show={noCompany} onCompanyUpdated={onCompanyUpdated}/>
 
                 <div style={style.content}>
                     <Route exact path="/transports" component={Transports}/>
@@ -124,7 +177,9 @@ const MainWithAuth = pdfServiceKey ?  Main : withAuthenticator(Main, {
 
 class App extends Component {
     state = {
-        user: null
+        user: null,
+        company: null,
+        noCompany: false
     };
     constructor(props) {
         super(props);
@@ -132,12 +187,17 @@ class App extends Component {
         Hub.listen('auth', (data) => {
             this.componentDidMount();
         })
+
+        this.checkCompany = this.checkCompany.bind(this);
     }
 
     render() {
         return (
             <Router>
-                <MainWithAuth onLogout={() => this.logout()} user={this.state.user}/>
+                <MainWithAuth onLogout={() => this.logout()} user={this.state.user}
+                              company={this.state.company}
+                              onCompanyUpdated={this.checkCompany}
+                              noCompany={this.state.noCompany}/>
             </Router>
         );
     }
@@ -151,7 +211,32 @@ class App extends Component {
             this.setState({
                 user: await Auth.currentAuthenticatedUser()
             });
+
+            this.checkCompany();
         } catch (ex) {
+        }
+    }
+
+    async checkCompany() {
+        const response = await API.graphql(graphqlOperation(queries.listCompanys, {
+            "filter": {
+                "owner": {
+                    "eq": this.state.user.username
+                }
+            },
+            "limit": 1000
+        }));
+
+        if (response.data.listCompanys.items.length > 0) {
+            this.setState({
+                company: response.data.listCompanys.items[0],
+                noCompany: false
+            });
+        } else {
+            this.setState({
+                company: null,
+                noCompany: true
+            });
         }
     }
 }

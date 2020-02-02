@@ -367,6 +367,30 @@ export const onDeleteContact = `subscription OnDeleteContact($owner: String!) {
   }
 }
 `;
+export const onCreateCompany = `subscription OnCreateCompany($owner: String!) {
+  onCreateCompany(owner: $owner) {
+    id
+    owner
+    name
+  }
+}
+`;
+export const onUpdateCompany = `subscription OnUpdateCompany($owner: String!) {
+  onUpdateCompany(owner: $owner) {
+    id
+    owner
+    name
+  }
+}
+`;
+export const onDeleteCompany = `subscription OnDeleteCompany($owner: String!) {
+  onDeleteCompany(owner: $owner) {
+    id
+    owner
+    name
+  }
+}
+`;
 export const onCreateDriver = `subscription OnCreateDriver($owner: String!) {
   onCreateDriver(owner: $owner) {
     id

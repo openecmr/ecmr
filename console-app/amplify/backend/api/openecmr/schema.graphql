@@ -105,6 +105,16 @@ type Contact
     email: String
 }
 
+type Company
+    @model
+    @auth(rules: [
+        { allow: owner }
+    ]) {
+    id: ID!
+    owner: String
+    name: String!
+}
+
 type Load @aws_api_key @aws_cognito_user_pools @aws_iam {
     category: String
     quantity: Int
