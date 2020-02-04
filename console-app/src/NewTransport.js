@@ -719,6 +719,12 @@ class NewTransport extends Component {
                 delivery: await copyToAddress(this.state.delivery.contactId),
                 pickup: await copyToAddress(this.state.pickup.contactId),
                 driver: await copyToDriverDetail(this.state.driverDriverId),
+                ...(this.props.company && {
+                    creator: {
+                        name: this.props.company.name
+                    },
+                    creatorCompanyId: this.props.company.id
+                }),
 
                 shipperContactId: this.state.shipperContactId,
                 carrierContactId: this.state.carrierContactId,

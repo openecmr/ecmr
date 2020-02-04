@@ -69,6 +69,9 @@ export const getContract = `query GetContract($id: ID!) {
     owner
     carrierUsername
     status
+    creator {
+      name
+    }
     shipper {
       name
       postalCode
@@ -168,6 +171,7 @@ export const getContract = `query GetContract($id: ID!) {
     pickupContactId
     deliveryContactId
     driverDriverId
+    creatorCompanyId
   }
 }
 `;
@@ -182,6 +186,9 @@ export const listContracts = `query ListContracts(
       owner
       carrierUsername
       status
+      creator {
+        name
+      }
       shipper {
         name
         postalCode
@@ -281,6 +288,7 @@ export const listContracts = `query ListContracts(
       pickupContactId
       deliveryContactId
       driverDriverId
+      creatorCompanyId
     }
     nextToken
   }

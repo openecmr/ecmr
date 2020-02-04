@@ -174,7 +174,7 @@ class Transport extends Component {
                 <Header as={'h1'}>
                     <Header.Content>Transport {contract.id.substring(0, 8)}</Header.Content>
                     <Header.Subheader>Created
-                        by {contract.owner} on {moment(contract.createdAt).format("LLLL")}</Header.Subheader>
+                        by {contract.creator ? contract.creator.name : contract.owner} on {moment(contract.createdAt).format("LLLL")}</Header.Subheader>
                 </Header>
 
                 <Step.Group fluid size={"mini"}>

@@ -7,6 +7,9 @@ export const onCreateContract = `subscription OnCreateContract($owner: String!) 
     owner
     carrierUsername
     status
+    creator {
+      name
+    }
     shipper {
       name
       postalCode
@@ -106,6 +109,7 @@ export const onCreateContract = `subscription OnCreateContract($owner: String!) 
     pickupContactId
     deliveryContactId
     driverDriverId
+    creatorCompanyId
   }
 }
 `;
@@ -115,6 +119,9 @@ export const onUpdateContract = `subscription OnUpdateContract($owner: String!, 
     owner
     carrierUsername
     status
+    creator {
+      name
+    }
     shipper {
       name
       postalCode
@@ -214,6 +221,7 @@ export const onUpdateContract = `subscription OnUpdateContract($owner: String!, 
     pickupContactId
     deliveryContactId
     driverDriverId
+    creatorCompanyId
   }
 }
 `;
@@ -223,6 +231,9 @@ export const onDeleteContract = `subscription OnDeleteContract($owner: String!) 
     owner
     carrierUsername
     status
+    creator {
+      name
+    }
     shipper {
       name
       postalCode
@@ -322,6 +333,7 @@ export const onDeleteContract = `subscription OnDeleteContract($owner: String!) 
     pickupContactId
     deliveryContactId
     driverDriverId
+    creatorCompanyId
   }
 }
 `;

@@ -11,6 +11,9 @@ export const createContract = `mutation CreateContract($input: CreateContractInp
     owner
     carrierUsername
     status
+    creator {
+      name
+    }
     shipper {
       name
       postalCode
@@ -110,6 +113,7 @@ export const createContract = `mutation CreateContract($input: CreateContractInp
     pickupContactId
     deliveryContactId
     driverDriverId
+    creatorCompanyId
   }
 }
 `;
@@ -119,6 +123,9 @@ export const updateContract = `mutation UpdateContract($input: UpdateContractInp
     owner
     carrierUsername
     status
+    creator {
+      name
+    }
     shipper {
       name
       postalCode
@@ -218,6 +225,7 @@ export const updateContract = `mutation UpdateContract($input: UpdateContractInp
     pickupContactId
     deliveryContactId
     driverDriverId
+    creatorCompanyId
   }
 }
 `;
@@ -227,6 +235,9 @@ export const deleteContract = `mutation DeleteContract($input: DeleteContractInp
     owner
     carrierUsername
     status
+    creator {
+      name
+    }
     shipper {
       name
       postalCode
@@ -326,6 +337,7 @@ export const deleteContract = `mutation DeleteContract($input: DeleteContractInp
     pickupContactId
     deliveryContactId
     driverDriverId
+    creatorCompanyId
   }
 }
 `;

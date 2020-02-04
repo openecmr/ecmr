@@ -44,6 +44,7 @@ type Contract @model
     carrierUsername: String
     status: ContractStatus
 
+    creator: CreatorDetail
     shipper: Address
     carrier: Address
     delivery: Address
@@ -67,6 +68,7 @@ type Contract @model
     pickupContactId: ID
     deliveryContactId: ID
     driverDriverId: ID
+    creatorCompanyId: ID
 }
 
 type TimeSlot @aws_api_key @aws_cognito_user_pools @aws_iam {
@@ -76,6 +78,10 @@ type TimeSlot @aws_api_key @aws_cognito_user_pools @aws_iam {
 
 type DriverDetail @aws_api_key @aws_cognito_user_pools @aws_iam {
     name: String
+}
+
+type CreatorDetail @aws_api_key @aws_cognito_user_pools @aws_iam {
+    name: String!
 }
 
 type Address @aws_api_key @aws_cognito_user_pools @aws_iam {
