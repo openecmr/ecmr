@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {Button, Form, Header, Icon, Modal, Table} from "semantic-ui-react";
-import {API, graphqlOperation} from "aws-amplify";
+import {API, Auth, graphqlOperation} from "aws-amplify";
 import * as queries from "./graphql/queries";
 import * as mutations from "./graphql/mutations";
 
@@ -177,8 +177,14 @@ class Drivers extends Component {
     }
 
     async componentDidMount() {
+        const user = await Auth.currentAuthenticatedUser();
         const response = await API.graphql(graphqlOperation(queries.listDrivers, {
-            limit: 1000
+            limit: 1000,
+            filter: {
+                "owner": {
+                    "eq": user.getUsername()
+                }
+            }
         }));
         const drivers = response.data.listDrivers.items;
 

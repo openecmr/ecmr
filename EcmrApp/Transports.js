@@ -5,7 +5,6 @@ import {API, graphqlOperation, Auth} from 'aws-amplify';
 import {Address, ArrivalDate, MyText, Packages} from './Components';
 import {SceneMap, TabBar, TabView} from "react-native-tab-view";
 import ContractModel from "./ContractModel";
-import {set} from "react-native-reanimated";
 
 const NoContracts = () =>
     <View style={{justifyContent: 'center', alignItems: 'center', flex: 1, paddingTop: 40}}>
@@ -27,13 +26,17 @@ class ContractsList extends Component {
                     sections={this.props.contracts}
                     renderItem={({item}) => {
                         const contract = new ContractModel(item);
+                        const firstAction = this.props.showFirstAction ?
+                            (contract.events.some(e => e.site === "pickup" && e.type === "LoadingComplete") ? "delivery" : "pickup") :
+                            null;
+
                         return (<View style={styles.card}>
                             <View style={styles.transportCardHeader}>
                                 <MyText style={styles.transportCardHeaderId}>TRANSPORT {contract.id.substring(0, 8)}</MyText>
                                 <MyText style={styles.transportCardHeaderProgress}>{this.progressText(contract)}</MyText>
                             </View>
                             <TouchableOpacity onPress={() => this.props.open(contract, 'pickup')}>
-                                <View style={styles.transportCardPart}>
+                                <View style={{...styles.transportCardPart, ...(firstAction === "pickup" && {backgroundColor: 'rgb(226, 255, 225)'})}}>
                                     <MyText style={styles.upperCaseLabel}>pickup</MyText>
                                     <Address address={contract.pickup}/>
                                     <ArrivalDate date={contract.arrivalDate} time={contract.arrivalTime}/>
@@ -41,7 +44,7 @@ class ContractsList extends Component {
                                 </View>
                             </TouchableOpacity>
                             <TouchableOpacity onPress={() => this.props.open(contract, 'delivery')}>
-                                <View style={styles.transportCardPart}>
+                                <View style={{...styles.transportCardPart, ...(firstAction === "delivery" && {backgroundColor: 'rgb(226, 255, 225)'})}}>
                                     <MyText style={styles.upperCaseLabel}>delivery</MyText>
                                     <Address address={contract.delivery}/>
                                     <ArrivalDate date={contract.deliveryDate} time={contract.deliveryTime}/>
@@ -135,6 +138,7 @@ class Transports extends Component {
                     return <ContractsList open={(item, site) => this.open(item, site)}
                                           contracts={this.state.ongoingContracts}
                                           onRefresh={() => this.onRefresh()}
+                                          showFirstAction={true}
                                           refreshing={this.state.refreshing} />;
                 case 'done':
                     return <ContractsList open={(item, site) => this.open(item, site)}
@@ -192,7 +196,10 @@ class Transports extends Component {
     }
 
     async loadData() {
-        const response = await API.graphql(graphqlOperation(queries.listContracts, {limit: 1000}));
+        const response = await API.graphql(graphqlOperation(queries.listContracts, {
+            limit: 1000,
+            carrierUsername: (await Auth.currentAuthenticatedUser()).getUsername()
+        }));
         const contracts = response.data.listContracts.items.sort((a, b) => {
             const first = (a.arrivalDate || "").localeCompare(b.arrivalDate || "");
             if (first === 0) {
