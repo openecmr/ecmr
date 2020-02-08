@@ -5,11 +5,18 @@ import {API, graphqlOperation, Auth} from 'aws-amplify';
 import {Address, ArrivalDate, MyText, Packages} from './Components';
 import {SceneMap, TabBar, TabView} from "react-native-tab-view";
 import ContractModel from "./ContractModel";
+import {Icon} from "react-native-elements";
+import {activate} from "./graphql/mutations";
 
 const NoContracts = () =>
     <View style={{justifyContent: 'center', alignItems: 'center', flex: 1, paddingTop: 40}}>
         <MyText>All done, no pending contracts assigned to you.</MyText>
     </View>;
+
+const ForwardIcon = () =>
+    <Icon size={20}
+          containerStyle={{position: "absolute", right: 10, top: "35%"}} reverse
+          color={"rgb(60, 167, 60)"} name={"keyboard-arrow-right"} ellipsizeMode={"middle"} raised/>;
 
 class ContractsList extends Component {
     constructor(props) {
@@ -26,9 +33,8 @@ class ContractsList extends Component {
                     sections={this.props.contracts}
                     renderItem={({item}) => {
                         const contract = new ContractModel(item);
-                        const firstAction = this.props.showFirstAction ?
-                            (contract.events.some(e => e.site === "pickup" && e.type === "LoadingComplete") ? "delivery" : "pickup") :
-                            null;
+                        const isDone = site => this.props.showFirstAction && contract.siteDone(site);
+                        const activeSite = contract.activeSite();
 
                         return (<View style={styles.card}>
                             <View style={styles.transportCardHeader}>
@@ -36,19 +42,23 @@ class ContractsList extends Component {
                                 <MyText style={styles.transportCardHeaderProgress}>{this.progressText(contract)}</MyText>
                             </View>
                             <TouchableOpacity onPress={() => this.props.open(contract, 'pickup')}>
-                                <View style={{...styles.transportCardPart, ...(firstAction === "pickup" && {backgroundColor: 'rgb(226, 255, 225)'})}}>
+                                <View style={{...styles.transportCardPart, ...(isDone('pickup') && styles.transportCardPartDone)}}>
+                                    {isDone('pickup') && <MyText style={styles.doneLabel}>DONE</MyText>}
                                     <MyText style={styles.upperCaseLabel}>pickup</MyText>
                                     <Address address={contract.pickup}/>
                                     <ArrivalDate date={contract.arrivalDate} time={contract.arrivalTime}/>
                                     <Packages total={contract.total()}/>
+                                    {activeSite === 'pickup' && <ForwardIcon/>}
                                 </View>
                             </TouchableOpacity>
                             <TouchableOpacity onPress={() => this.props.open(contract, 'delivery')}>
-                                <View style={{...styles.transportCardPart, ...(firstAction === "delivery" && {backgroundColor: 'rgb(226, 255, 225)'})}}>
+                                <View style={{...styles.transportCardPart, ...(isDone('delivery') && styles.transportCardPartDone), ...styles.transportCardPartNotFirst}}>
+                                    {isDone('delivery') && <MyText style={styles.doneLabel}>DONE</MyText>}
                                     <MyText style={styles.upperCaseLabel}>delivery</MyText>
                                     <Address address={contract.delivery}/>
                                     <ArrivalDate date={contract.deliveryDate} time={contract.deliveryTime}/>
                                     <Packages total={contract.total()}/>
+                                    {activeSite === 'delivery' && <ForwardIcon/>}
                                 </View>
                             </TouchableOpacity>
                         </View>);
@@ -307,8 +317,24 @@ const styles = StyleSheet.create({
         elevation: 1,
         backgroundColor: 'white'
     },
+    transportCardPartNotFirst: {
+        borderTopWidth: StyleSheet.hairlineWidth,
+        borderTopColor: 'black',
+    },
     upperCaseLabel: {
         fontWeight: 'bold',
         textTransform: 'uppercase'
+    },
+    transportCardPartDone: {
+        backgroundColor: 'rgb(226, 255, 225)'
+    },
+    doneLabel: {
+        fontWeight: 'bold',
+        textTransform: 'uppercase',
+        fontSize: 10,
+        top: 5,
+        right: 20,
+        position: 'absolute',
+        color: 'rgb(84, 162, 87)'
     }
 });
