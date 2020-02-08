@@ -225,7 +225,7 @@ class Transport extends Component {
                                 <div>From {contract.arrivalTime.start} to {contract.arrivalTime.end}</div>}
 
                                 {loadingComplete &&
-                                    <div>
+                                    <div style={{paddingTop: "10px"}}>
                                         <Header sub>Actual</Header>
                                         {moment(loadingComplete.createdAt).format('llll')}
                                     </div>
@@ -252,7 +252,7 @@ class Transport extends Component {
                                 <div>From {contract.deliveryTime.start} to {contract.deliveryTime.end}</div>}
 
                                 {unloadingComplete &&
-                                    <div>
+                                    <div style={{paddingTop: "10px"}}>
                                         <Header sub>Actual</Header>
                                         {moment(unloadingComplete.createdAt).format('llll')}
                                     </div>

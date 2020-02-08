@@ -3,7 +3,7 @@ import React from "react";
 import {Button, Dimmer, Icon, Loader, Progress, Segment, Table} from "semantic-ui-react";
 import {Link} from "react-router-dom";
 import * as queries from "./graphql/queries";
-import {API, graphqlOperation} from 'aws-amplify';
+import {API, Auth, graphqlOperation} from 'aws-amplify';
 import moment from 'moment';
 
 const AddressCell = ({address}) => {
@@ -170,12 +170,18 @@ class Transports extends Component {
     }
 
     async retrieveAppSync() {
+        const user = await Auth.currentAuthenticatedUser();
         let contracts = [];
         let nextToken;
         while (true) {
             const response = await API.graphql(graphqlOperation(queries.listContracts, {
                 nextToken: nextToken,
-                limit: 1000
+                limit: 1000,
+                filter: {
+                    "owner": {
+                        "eq": user.getUsername()
+                    }
+                }
             }));
             contracts = contracts.concat(response.data.listContracts.items);
             nextToken = response.data.listContracts.nextToken;

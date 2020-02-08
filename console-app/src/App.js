@@ -85,7 +85,7 @@ const AppMenu = withRouter(({location, onLogout}) => (
     <Menu vertical fixed={'left'} style={style.appMenu}>
         {console.log(location)}
         <Menu.Item
-            name='transports'
+            name='my transports'
             to={'/transports'}
             active={location.pathname.startsWith('/transports')}
             as={Link}
