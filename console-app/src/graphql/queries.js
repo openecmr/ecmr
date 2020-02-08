@@ -131,6 +131,7 @@ export const getContract = `query GetContract($id: ID!) {
     }
     driver {
       name
+      username
     }
     trailer
     truck
@@ -165,6 +166,10 @@ export const getContract = `query GetContract($id: ID!) {
       }
       driverObservation
       signatoryObservation
+      assignedDriver {
+        name
+        username
+      }
     }
     shipperContactId
     carrierContactId
@@ -248,6 +253,7 @@ export const listContracts = `query ListContracts(
       }
       driver {
         name
+        username
       }
       trailer
       truck
@@ -282,6 +288,10 @@ export const listContracts = `query ListContracts(
         }
         driverObservation
         signatoryObservation
+        assignedDriver {
+          name
+          username
+        }
       }
       shipperContactId
       carrierContactId

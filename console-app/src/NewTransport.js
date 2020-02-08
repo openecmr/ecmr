@@ -766,4 +766,7 @@ const removeEmpty = obj =>
             {}
         );
 
-export default NewTransport;
+export {
+    NewTransport,
+    DriverPicker
+};

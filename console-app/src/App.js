@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import './App.css';
 import {Menu, Image, Icon, Header, Modal, Form, Button} from "semantic-ui-react";
 import Transports from "./Transports";
-import {BrowserRouter as Router, Route, Link, withRouter, Redirect} from "react-router-dom";
-import NewTransport from "./NewTransport";
+import {BrowserRouter as Router, Route, Link, withRouter, Redirect, Switch} from "react-router-dom";
+import {NewTransport} from "./NewTransport";
 
 import Amplify, {API, graphqlOperation} from 'aws-amplify';
 import { Auth, Hub, I18n } from 'aws-amplify';
@@ -129,17 +129,19 @@ const Main = withRouter(({location, onLogout, user, company, noCompany, onCompan
                 <CompanyDialog show={noCompany} onCompanyUpdated={onCompanyUpdated}/>
 
                 <div style={style.content}>
-                    <Route exact path="/transports" component={Transports}/>
-                    <Route exact path="/transports-new/:copy_id"
-                           render={(props) => <NewTransport {...props} company={company}/>}
-                    />
-                    <Route exact path="/transports-new"
-                           render={(props) => <NewTransport {...props} company={company}/>}
-                    />
-                    <Route exact path="/transports/:id" component={Transport}/>
-                    <Route exact path="/addressbook" component={AddressBook}/>
-                    <Route exact path="/drivers" component={Drivers}/>
-                    <Redirect exact from="/" to="/transports" />
+                    <Switch>
+                        <Route exact path="/transports" component={Transports}/>
+                        <Route exact path="/transports-new/:copy_id"
+                               render={(props) => <NewTransport {...props} company={company}/>}
+                        />
+                        <Route exact path="/transports-new"
+                               render={(props) => <NewTransport {...props} company={company}/>}
+                        />
+                        <Route exact path="/transports/:id" component={Transport}/>
+                        <Route exact path="/addressbook" component={AddressBook}/>
+                        <Route exact path="/drivers" component={Drivers}/>
+                        <Redirect exact from="/" to="/transports" />
+                    </Switch>
                 </div>
             </div>
             }

@@ -69,6 +69,7 @@ export const onCreateContract = `subscription OnCreateContract($owner: String!) 
     }
     driver {
       name
+      username
     }
     trailer
     truck
@@ -103,6 +104,10 @@ export const onCreateContract = `subscription OnCreateContract($owner: String!) 
       }
       driverObservation
       signatoryObservation
+      assignedDriver {
+        name
+        username
+      }
     }
     shipperContactId
     carrierContactId
@@ -181,6 +186,7 @@ export const onUpdateContract = `subscription OnUpdateContract($owner: String!, 
     }
     driver {
       name
+      username
     }
     trailer
     truck
@@ -215,6 +221,10 @@ export const onUpdateContract = `subscription OnUpdateContract($owner: String!, 
       }
       driverObservation
       signatoryObservation
+      assignedDriver {
+        name
+        username
+      }
     }
     shipperContactId
     carrierContactId
@@ -293,6 +303,7 @@ export const onDeleteContract = `subscription OnDeleteContract($owner: String!) 
     }
     driver {
       name
+      username
     }
     trailer
     truck
@@ -327,6 +338,10 @@ export const onDeleteContract = `subscription OnDeleteContract($owner: String!) 
       }
       driverObservation
       signatoryObservation
+      assignedDriver {
+        name
+        username
+      }
     }
     shipperContactId
     carrierContactId

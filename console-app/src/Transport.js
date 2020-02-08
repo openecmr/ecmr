@@ -7,13 +7,15 @@ import {
     Header,
     Icon,
     Step,
-    List, Label, Segment, Comment, Loader
+    List, Label, Segment, Comment, Loader, Modal, Form
 } from "semantic-ui-react";
 import {API, graphqlOperation} from 'aws-amplify';
 import moment from 'moment';
 import * as queries from "./graphql/queries";
 import * as mutations from "./graphql/mutations";
 import {S3Image} from "aws-amplify-react";
+import {DriverPicker} from "./NewTransport";
+
 
 const Address = ({address, label, icon}) => (
     <Container>
@@ -117,6 +119,49 @@ const SignatureEvent = ({event: { signature, signatoryObservation, driverObserva
         }
     </div>;
 
+class AssignDriverModal extends Component {
+    constructor(props) {
+        super(props);
+
+        this.onDriverSelected = this.onDriverSelected.bind(this);
+        this.save = this.save.bind(this);
+        this.state = {
+            driver: {
+                id: props.driverId
+            }
+        };
+    }
+
+    render() {
+        return (<Modal key={"showLoad"} open={this.props.show} size='small'>
+            <Header icon={"truck"} content={"Assign driver"}/>
+            <Modal.Content>
+                <Form id={"item"}>
+                    <DriverPicker driverId={this.state.driver && this.state.driver.id} driverSelected={this.onDriverSelected}/>
+                </Form>
+            </Modal.Content>
+            <Modal.Actions>
+                <Button color='red' inverted onClick={() => this.props.hide()}>
+                    <Icon name='remove'/> Cancel
+                </Button>
+                <Button color='green' inverted onClick={this.save}>
+                    <Icon name='checkmark'/> Assign
+                </Button>
+            </Modal.Actions>
+        </Modal>)
+    }
+
+    onDriverSelected(driver) {
+        this.setState({
+            driver
+        });
+    }
+
+    save() {
+        this.props.onSave(this.state.driver);
+    }
+}
+
 class Transport extends Component {
     constructor(props) {
         super(props);
@@ -162,6 +207,10 @@ class Transport extends Component {
         return (
             <div>
                 <Button.Group floated='right'>
+                    <Button onClick={() => this.showAssignDriver()}>
+                        <Icon name='truck'/>
+                        Assign driver
+                    </Button>
                     <Button onClick={() => this.delete()}>
                         <Icon name='delete'/>
                         Delete
@@ -294,6 +343,11 @@ class Transport extends Component {
                         </Grid.Column>
                     </Grid.Row>
                 </Grid>
+                <AssignDriverModal show={this.state.assignDriver}
+                                   hide={() => this.hideAssignDriver()}
+                                   driverId={this.state.contract.driverDriverId}
+                                   onSave={(driver) => this.assignDriver(driver)}
+                />
             </div>
 
         );
@@ -302,6 +356,35 @@ class Transport extends Component {
     copy() {
         const {history} = this.props;
         history.push('/transports-new/' + this.state.contract.id);
+    }
+
+    showAssignDriver() {
+        this.setState({
+            assignDriver: true
+        });
+    }
+
+    hideAssignDriver() {
+        this.setState({
+            assignDriver: false
+        });
+    }
+
+    async assignDriver(driver) {
+        const {contract} = this.state;
+        contract.driverDriverId = driver.id;
+        contract.driver = {
+            name: driver.name,
+            username: driver.carrier
+        };
+        contract.carrierUsername = driver.carrier;
+        this.setState({
+            contract
+        });
+        this.hideAssignDriver();
+        await API.graphql(graphqlOperation(mutations.updateContract, {
+            "input": contract
+        }));
     }
 
     async delete() {

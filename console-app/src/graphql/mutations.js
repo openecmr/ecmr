@@ -73,6 +73,7 @@ export const createContract = `mutation CreateContract($input: CreateContractInp
     }
     driver {
       name
+      username
     }
     trailer
     truck
@@ -107,6 +108,10 @@ export const createContract = `mutation CreateContract($input: CreateContractInp
       }
       driverObservation
       signatoryObservation
+      assignedDriver {
+        name
+        username
+      }
     }
     shipperContactId
     carrierContactId
@@ -185,6 +190,7 @@ export const updateContract = `mutation UpdateContract($input: UpdateContractInp
     }
     driver {
       name
+      username
     }
     trailer
     truck
@@ -219,6 +225,10 @@ export const updateContract = `mutation UpdateContract($input: UpdateContractInp
       }
       driverObservation
       signatoryObservation
+      assignedDriver {
+        name
+        username
+      }
     }
     shipperContactId
     carrierContactId
@@ -297,6 +307,7 @@ export const deleteContract = `mutation DeleteContract($input: DeleteContractInp
     }
     driver {
       name
+      username
     }
     trailer
     truck
@@ -331,6 +342,10 @@ export const deleteContract = `mutation DeleteContract($input: DeleteContractInp
       }
       driverObservation
       signatoryObservation
+      assignedDriver {
+        name
+        username
+      }
     }
     shipperContactId
     carrierContactId

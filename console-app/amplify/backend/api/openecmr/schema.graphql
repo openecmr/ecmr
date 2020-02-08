@@ -78,6 +78,7 @@ type TimeSlot @aws_api_key @aws_cognito_user_pools @aws_iam {
 
 type DriverDetail @aws_api_key @aws_cognito_user_pools @aws_iam {
     name: String
+    username: String
 }
 
 type CreatorDetail @aws_api_key @aws_cognito_user_pools @aws_iam {
@@ -145,7 +146,6 @@ type Driver
     @model
     @auth(rules: [
         { allow: owner },
-        { allow: owner, ownerField: "carrier", operations: [read] },
         { allow: private, provider: iam, operations: [read, update] }
     ])
 {
@@ -172,7 +172,10 @@ enum EventType {
     ArrivalOnSite,
     LoadingComplete,
     UnloadingComplete,
-    DepartureFromSite
+    DepartureFromSite,
+    Created,
+    Archived,
+    AssignDriver
 }
 
 type Author @aws_api_key @aws_cognito_user_pools @aws_iam {
@@ -201,4 +204,5 @@ type Event @aws_api_key @aws_cognito_user_pools @aws_iam {
     signature: Signature
     driverObservation: String
     signatoryObservation: String
+    assignedDriver: DriverDetail
 }
