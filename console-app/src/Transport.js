@@ -9,7 +9,7 @@ import {
     Step,
     List, Label, Segment, Comment, Loader, Modal, Form
 } from "semantic-ui-react";
-import {API, graphqlOperation} from 'aws-amplify';
+import {API, graphqlOperation, Auth} from 'aws-amplify';
 import moment from 'moment';
 import * as queries from "./graphql/queries";
 import * as mutations from "./graphql/mutations";
@@ -46,12 +46,14 @@ const eventText = (event) => {
             return `completed the loading.`;
         case 'UnloadingComplete':
             return `completed the unloading.`;
+        case "AssignDriver":
+            return `assigned transport to driver ${event.assignedDriver ? event.assignedDriver.name : "unknown"}.`;
         default:
             return `completed ${event.type}`;
     }
 };
 
-const Events = ({driver, events}) => (
+const Events = ({names, events}) => (
     <Container>
         <Comment.Group >
             <Header as={'h4'}>Events</Header>
@@ -60,7 +62,7 @@ const Events = ({driver, events}) => (
                     <Comment>
 
                         <Comment.Content>
-                            <Comment.Author as={'a'}>{driver.name}</Comment.Author>
+                            <Comment.Author as={'a'}>{names[event.author.username] || event.author.username}</Comment.Author>
                             <Comment.Metadata>
                                 <div>{moment(event.createdAt).format('llll')}</div>
                             </Comment.Metadata>
@@ -180,6 +182,19 @@ class Transport extends Component {
         });
     }
 
+    names(contract) {
+        const result = contract.events
+            .filter(e => e.type === 'AssignDriver' && e.assignedDriver)
+            .reduce((map, obj) => {
+                map[obj.assignedDriver.username] = obj.assignedDriver.name;
+                return map;
+            }, {});
+        if (contract.creator) {
+            result[contract.owner] = contract.creator.name;
+        }
+        return result;
+    }
+
     render() {
         const {contract} = this.state;
 
@@ -202,7 +217,7 @@ class Transport extends Component {
 
         const loadingComplete = contract.events.find(e => e.type === 'LoadingComplete');
         const unloadingComplete = contract.events.find(e => e.type === 'UnloadingComplete');
-
+        const names = this.names(contract);
 
         return (
             <div>
@@ -338,7 +353,7 @@ class Transport extends Component {
                         </Grid.Column>
                         <Grid.Column>
                             <Segment>
-                                <Events events={contract.events} driver={contract.driver}/>
+                                <Events events={contract.events} names={names}/>
                             </Segment>
                         </Grid.Column>
                     </Grid.Row>
@@ -372,12 +387,27 @@ class Transport extends Component {
 
     async assignDriver(driver) {
         const {contract} = this.state;
+        const now = moment().toISOString();
         contract.driverDriverId = driver.id;
         contract.driver = {
             name: driver.name,
             username: driver.carrier
         };
         contract.carrierUsername = driver.carrier;
+        if (!contract.events) {
+            contract.events = [];
+        }
+        contract.events.push({
+            author: {
+                username: (await Auth.currentAuthenticatedUser()).getUsername()
+            },
+            type: 'AssignDriver',
+            createdAt: now,
+            assignedDriver: {
+                name: driver.name,
+                username: driver.carrier
+            }
+        });
         this.setState({
             contract
         });

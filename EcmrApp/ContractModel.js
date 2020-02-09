@@ -15,6 +15,19 @@ class ContractModel {
         const sites = ['pickup', 'delivery'];
         return sites.find(site => !this.siteDone(site));
     }
+
+    names() {
+        const result = this.events
+            .filter(e => e.type === 'AssignDriver' && e.assignedDriver)
+            .reduce((map, obj) => {
+                map[obj.assignedDriver.username] = obj.assignedDriver.name;
+                return map;
+            }, {});
+        if (this.creator) {
+            result[this.owner] = this.creator.name;
+        }
+        return result;
+    }
 }
 
 export default ContractModel;

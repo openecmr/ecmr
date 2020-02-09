@@ -11,7 +11,7 @@ import {
     Modal, List, Dropdown, Select
 } from "semantic-ui-react";
 import React from "react";
-import { API, graphqlOperation } from 'aws-amplify';
+import {API, Auth, graphqlOperation} from 'aws-amplify';
 import * as mutations from './graphql/mutations'
 import * as queries from "./graphql/queries";
 import moment from "moment";
@@ -710,7 +710,6 @@ class NewTransport extends Component {
                 loads: this.state.loads.map(removeEmpty),
                 trailer: this.state.trailer.licensePlate,
                 truck: this.state.truck.licensePlate,
-                events: [],
                 updatedAt: now,
                 createdAt: now,
 
@@ -725,13 +724,25 @@ class NewTransport extends Component {
                     },
                     creatorCompanyId: this.props.company.id
                 }),
-
+                events: [],
                 shipperContactId: this.state.shipperContactId,
                 carrierContactId: this.state.carrierContactId,
                 deliveryContactId: this.state.delivery.contactId,
                 pickupContactId: this.state.pickup.contactId,
                 driverDriverId: this.state.driverDriverId
             };
+
+            input.events.push({
+                author: {
+                    username: (await Auth.currentAuthenticatedUser()).getUsername()
+                },
+                type: 'AssignDriver',
+                createdAt: now,
+                assignedDriver: {
+                    name: input.driver.name,
+                    username: input.carrierUsername
+                }
+            });
 
             console.log(input);
 

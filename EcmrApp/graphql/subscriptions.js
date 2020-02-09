@@ -7,6 +7,9 @@ export const onCreateContract = `subscription OnCreateContract($owner: String!) 
     owner
     carrierUsername
     status
+    creator {
+      name
+    }
     shipper {
       name
       postalCode
@@ -66,6 +69,7 @@ export const onCreateContract = `subscription OnCreateContract($owner: String!) 
     }
     driver {
       name
+      username
     }
     trailer
     truck
@@ -100,12 +104,17 @@ export const onCreateContract = `subscription OnCreateContract($owner: String!) 
       }
       driverObservation
       signatoryObservation
+      assignedDriver {
+        name
+        username
+      }
     }
     shipperContactId
     carrierContactId
     pickupContactId
     deliveryContactId
     driverDriverId
+    creatorCompanyId
   }
 }
 `;
@@ -115,6 +124,9 @@ export const onUpdateContract = `subscription OnUpdateContract($owner: String!, 
     owner
     carrierUsername
     status
+    creator {
+      name
+    }
     shipper {
       name
       postalCode
@@ -174,6 +186,7 @@ export const onUpdateContract = `subscription OnUpdateContract($owner: String!, 
     }
     driver {
       name
+      username
     }
     trailer
     truck
@@ -208,12 +221,17 @@ export const onUpdateContract = `subscription OnUpdateContract($owner: String!, 
       }
       driverObservation
       signatoryObservation
+      assignedDriver {
+        name
+        username
+      }
     }
     shipperContactId
     carrierContactId
     pickupContactId
     deliveryContactId
     driverDriverId
+    creatorCompanyId
   }
 }
 `;
@@ -223,6 +241,9 @@ export const onDeleteContract = `subscription OnDeleteContract($owner: String!) 
     owner
     carrierUsername
     status
+    creator {
+      name
+    }
     shipper {
       name
       postalCode
@@ -282,6 +303,7 @@ export const onDeleteContract = `subscription OnDeleteContract($owner: String!) 
     }
     driver {
       name
+      username
     }
     trailer
     truck
@@ -316,12 +338,17 @@ export const onDeleteContract = `subscription OnDeleteContract($owner: String!) 
       }
       driverObservation
       signatoryObservation
+      assignedDriver {
+        name
+        username
+      }
     }
     shipperContactId
     carrierContactId
     pickupContactId
     deliveryContactId
     driverDriverId
+    creatorCompanyId
   }
 }
 `;
@@ -364,6 +391,30 @@ export const onDeleteContact = `subscription OnDeleteContact($owner: String!) {
     country
     phone
     email
+  }
+}
+`;
+export const onCreateCompany = `subscription OnCreateCompany($owner: String!) {
+  onCreateCompany(owner: $owner) {
+    id
+    owner
+    name
+  }
+}
+`;
+export const onUpdateCompany = `subscription OnUpdateCompany($owner: String!) {
+  onUpdateCompany(owner: $owner) {
+    id
+    owner
+    name
+  }
+}
+`;
+export const onDeleteCompany = `subscription OnDeleteCompany($owner: String!) {
+  onDeleteCompany(owner: $owner) {
+    id
+    owner
+    name
   }
 }
 `;

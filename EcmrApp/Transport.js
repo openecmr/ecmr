@@ -99,8 +99,8 @@ class Transport extends Component {
         const events = (item.events || []).filter(e => e.site === site && actions.indexOf(e.type) !== -1).map(e => e.type);
         actions.splice(0, events.length === 0 ? 0 : actions.indexOf(events[events.length - 1]) + 1);
         const firstAction = actions.length === 0 || !this.isPending(contract) ? '' : actions[0];
-        const relevantItems = [...item.events || []].filter(e => e.site === site).reverse();
-
+        const relevantItems = [...item.events || []].reverse();
+        const names = item.names();
 
         return (
             <ScrollView style={styles.transport}>
@@ -138,7 +138,7 @@ class Transport extends Component {
                     (<View style={styles.activityItemContainer} key={index}>
                             <Text style={{fontSize: 12}}>{moment(item.createdAt).format('llll')}</Text>
 
-                            <MyText>{this.eventText(item, contract.driver.name)}</MyText>
+                            <MyText>{this.eventText(item, names)}</MyText>
                             {
                                 (item.type === 'UnloadingComplete' || item.type === 'LoadingComplete') &&
                                     <SignatureEvent signature={item.signature} signatoryObservation={item.signatoryObservation}/>
@@ -167,7 +167,8 @@ class Transport extends Component {
         });
     }
 
-    eventText(event, name) {
+    eventText(event, names) {
+        const name = names[event.author.username] || event.author.username;
         switch (event.type) {
             case 'ArrivalOnSite':
                 return `${name} arrived on ${event.site} site.`;
@@ -175,6 +176,8 @@ class Transport extends Component {
                 return `${name} completed the loading.`;
             case 'UnloadingComplete':
                 return `${name} completed the unloading.`;
+            case 'AssignDriver':
+                return `${name} assigned transport to driver ${event.assignedDriver ? event.assignedDriver.name : "unknown"}.`;
             default:
                 return `${name} completed ${event.type}`;
         }

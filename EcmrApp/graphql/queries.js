@@ -40,12 +40,38 @@ export const listContacts = `query ListContacts(
   }
 }
 `;
+export const getCompany = `query GetCompany($id: ID!) {
+  getCompany(id: $id) {
+    id
+    owner
+    name
+  }
+}
+`;
+export const listCompanys = `query ListCompanys(
+  $filter: ModelCompanyFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listCompanys(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      owner
+      name
+    }
+    nextToken
+  }
+}
+`;
 export const getContract = `query GetContract($id: ID!) {
   getContract(id: $id) {
     id
     owner
     carrierUsername
     status
+    creator {
+      name
+    }
     shipper {
       name
       postalCode
@@ -105,6 +131,7 @@ export const getContract = `query GetContract($id: ID!) {
     }
     driver {
       name
+      username
     }
     trailer
     truck
@@ -139,12 +166,17 @@ export const getContract = `query GetContract($id: ID!) {
       }
       driverObservation
       signatoryObservation
+      assignedDriver {
+        name
+        username
+      }
     }
     shipperContactId
     carrierContactId
     pickupContactId
     deliveryContactId
     driverDriverId
+    creatorCompanyId
   }
 }
 `;
@@ -159,6 +191,9 @@ export const listContracts = `query ListContracts(
       owner
       carrierUsername
       status
+      creator {
+        name
+      }
       shipper {
         name
         postalCode
@@ -218,6 +253,7 @@ export const listContracts = `query ListContracts(
       }
       driver {
         name
+        username
       }
       trailer
       truck
@@ -252,12 +288,17 @@ export const listContracts = `query ListContracts(
         }
         driverObservation
         signatoryObservation
+        assignedDriver {
+          name
+          username
+        }
       }
       shipperContactId
       carrierContactId
       pickupContactId
       deliveryContactId
       driverDriverId
+      creatorCompanyId
     }
     nextToken
   }

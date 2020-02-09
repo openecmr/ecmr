@@ -11,6 +11,9 @@ export const createContract = `mutation CreateContract($input: CreateContractInp
     owner
     carrierUsername
     status
+    creator {
+      name
+    }
     shipper {
       name
       postalCode
@@ -70,6 +73,7 @@ export const createContract = `mutation CreateContract($input: CreateContractInp
     }
     driver {
       name
+      username
     }
     trailer
     truck
@@ -104,12 +108,17 @@ export const createContract = `mutation CreateContract($input: CreateContractInp
       }
       driverObservation
       signatoryObservation
+      assignedDriver {
+        name
+        username
+      }
     }
     shipperContactId
     carrierContactId
     pickupContactId
     deliveryContactId
     driverDriverId
+    creatorCompanyId
   }
 }
 `;
@@ -119,6 +128,9 @@ export const updateContract = `mutation UpdateContract($input: UpdateContractInp
     owner
     carrierUsername
     status
+    creator {
+      name
+    }
     shipper {
       name
       postalCode
@@ -178,6 +190,7 @@ export const updateContract = `mutation UpdateContract($input: UpdateContractInp
     }
     driver {
       name
+      username
     }
     trailer
     truck
@@ -212,12 +225,17 @@ export const updateContract = `mutation UpdateContract($input: UpdateContractInp
       }
       driverObservation
       signatoryObservation
+      assignedDriver {
+        name
+        username
+      }
     }
     shipperContactId
     carrierContactId
     pickupContactId
     deliveryContactId
     driverDriverId
+    creatorCompanyId
   }
 }
 `;
@@ -227,6 +245,9 @@ export const deleteContract = `mutation DeleteContract($input: DeleteContractInp
     owner
     carrierUsername
     status
+    creator {
+      name
+    }
     shipper {
       name
       postalCode
@@ -286,6 +307,7 @@ export const deleteContract = `mutation DeleteContract($input: DeleteContractInp
     }
     driver {
       name
+      username
     }
     trailer
     truck
@@ -320,12 +342,17 @@ export const deleteContract = `mutation DeleteContract($input: DeleteContractInp
       }
       driverObservation
       signatoryObservation
+      assignedDriver {
+        name
+        username
+      }
     }
     shipperContactId
     carrierContactId
     pickupContactId
     deliveryContactId
     driverDriverId
+    creatorCompanyId
   }
 }
 `;
@@ -368,6 +395,30 @@ export const deleteContact = `mutation DeleteContact($input: DeleteContactInput!
     country
     phone
     email
+  }
+}
+`;
+export const createCompany = `mutation CreateCompany($input: CreateCompanyInput!) {
+  createCompany(input: $input) {
+    id
+    owner
+    name
+  }
+}
+`;
+export const updateCompany = `mutation UpdateCompany($input: UpdateCompanyInput!) {
+  updateCompany(input: $input) {
+    id
+    owner
+    name
+  }
+}
+`;
+export const deleteCompany = `mutation DeleteCompany($input: DeleteCompanyInput!) {
+  deleteCompany(input: $input) {
+    id
+    owner
+    name
   }
 }
 `;
