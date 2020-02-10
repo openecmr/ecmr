@@ -1,6 +1,6 @@
 {
     "identityPoolName": "openecmr83cee658_identitypool_83cee658",
-    "allowUnauthenticatedIdentities": false,
+    "allowUnauthenticatedIdentities": true,
     "resourceNameTruncated": "openec83cee658",
     "userPoolName": "openecmr83cee658_userpool_83cee658",
     "autoVerifiedAttributes": [
