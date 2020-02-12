@@ -99,7 +99,7 @@ class Transport extends Component {
         const events = (item.events || []).filter(e => e.site === site && actions.indexOf(e.type) !== -1).map(e => e.type);
         actions.splice(0, events.length === 0 ? 0 : actions.indexOf(events[events.length - 1]) + 1);
         const firstAction = actions.length === 0 || !this.isPending(contract) ? '' : actions[0];
-        const relevantItems = [...item.events || []].reverse();
+        const relevantItems = [...item.events || []].filter(e => e.site === site || !e.site).reverse();
         const names = item.names();
 
         return (
