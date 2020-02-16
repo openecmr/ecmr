@@ -68,7 +68,9 @@ type Contract @model
     pickupContactId: ID
     deliveryContactId: ID
     driverDriverId: ID
-    creatorCompanyId: ID
+    creatorCompanyId: ID,
+    trailerVehicleId: ID,
+    truckVehicleId: ID
 }
 
 type TimeSlot @aws_api_key @aws_cognito_user_pools @aws_iam {
@@ -93,6 +95,25 @@ type Address @aws_api_key @aws_cognito_user_pools @aws_iam {
     country: String
     phone: String
     email: String
+}
+
+enum VehicleType {
+    TRAILER,
+    TRUCK
+}
+
+type Vehicle
+    @model
+    @auth(rules: [
+        { allow: owner
+    }])
+{
+    id: ID!
+    owner: String
+    companyId: ID!
+    type: VehicleType!
+    licensePlateNumber: String!
+    description: String!
 }
 
 type Contact

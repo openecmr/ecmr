@@ -5,6 +5,35 @@ export const pdfexport = `query Pdfexport($id: String) {
   pdfexport(id: $id)
 }
 `;
+export const getVehicle = `query GetVehicle($id: ID!) {
+  getVehicle(id: $id) {
+    id
+    owner
+    companyId
+    type
+    licensePlateNumber
+    description
+  }
+}
+`;
+export const listVehicles = `query ListVehicles(
+  $filter: ModelVehicleFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listVehicles(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      owner
+      companyId
+      type
+      licensePlateNumber
+      description
+    }
+    nextToken
+  }
+}
+`;
 export const getContact = `query GetContact($id: ID!) {
   getContact(id: $id) {
     id
@@ -177,6 +206,8 @@ export const getContract = `query GetContract($id: ID!) {
     deliveryContactId
     driverDriverId
     creatorCompanyId
+    trailerVehicleId
+    truckVehicleId
   }
 }
 `;
@@ -299,6 +330,8 @@ export const listContracts = `query ListContracts(
       deliveryContactId
       driverDriverId
       creatorCompanyId
+      trailerVehicleId
+      truckVehicleId
     }
     nextToken
   }

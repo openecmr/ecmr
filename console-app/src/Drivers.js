@@ -38,7 +38,7 @@ class AddDriverModal extends Component {
         const { name, address } = this.state.driver;
 
         return (<Modal key={"showLoad"} open={this.props.show} size='small'>
-            <Header icon={"plus square"} content={"Add address"}/>
+            <Header icon={"plus square"} content={"Driver"}/>
             <Modal.Content>
                 <Form id={"item"}>
                     <Form.Input onChange={this.handleChange} label='Name' type='input' name={"name"} value={name} placeholder={"Name of driver"}/>

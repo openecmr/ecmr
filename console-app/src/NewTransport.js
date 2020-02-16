@@ -70,7 +70,8 @@ class ContactPicker extends Component {
 
     async loadContacts() {
         const response = await API.graphql(graphqlOperation(queries.listContacts, {
-            limit: 1000
+            limit: 1000,
+            username: (await Auth.currentAuthenticatedUser()).getUsername()
         }));
         this.setState({
             options: response.data.listContacts.items.map(e => ({text: `${e.name}, ${e.address}, ${e.country}`, key: e.id, value: e.id}))
@@ -151,6 +152,55 @@ class DriverPicker extends Component {
                     selection
                     value={this.props.driverId}
                     onChange={(e, data) => {this.props.driverSelected(this.state.drivers[data.value])}}
+                    options={this.state.options}
+                />
+            </div>
+        )
+    }
+}
+
+class VehiclePicker extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            options: []
+        };
+
+        this.loadVehicles();
+    }
+
+    async loadVehicles() {
+        const response = await API.graphql(graphqlOperation(queries.listVehicles, {
+            limit: 1000,
+            filter: {
+                companyId: {
+                    eq: this.props.companyId
+                },
+                type: {
+                    eq: this.props.type
+                }
+            }
+        }));
+        this.setState({
+            options: response.data.listVehicles.items.map(e => ({text: `${e.licensePlateNumber}, ${e.description}`, key: e.id, value: e.id})),
+            vehicles: response.data.listVehicles.items.reduce((map, obj) => {
+                map[obj.id] = obj;
+                return map;
+            }, {})
+        });
+    }
+
+    render() {
+        return (
+            <div style={{marginBottom: '15px'}}>
+                <Dropdown
+                    placeholder='Select vehicle'
+                    fluid
+                    search
+                    clearable
+                    selection
+                    value={this.props.vehicleId}
+                    onChange={(e, data) => {this.props.vehicleSelected(this.state.vehicles[data.value])}}
                     options={this.state.options}
                 />
             </div>
@@ -406,28 +456,33 @@ class Vehicle extends NewTransportForm {
         this.label = "Enter vehicle information";
     }
 
-    renderFields() {
-        super.renderFields();
+    render() {
+        return (
+            <div>
+                <Header as={'h3'}>Enter truck information</Header>
+                <VehiclePicker type={"TRUCK"}  companyId={this.props.companyId}
+                               vehicleSelected={(vehicleId) => {this.props.truckSelected(vehicleId)}}
+                               vehicleId={this.props.truckId} />
 
-        return ([
-            this.renderField("Vehicle license plate", "licensePlate")
-        ]);
+            </div>
+        );
     }
 }
 
 class Trailer extends NewTransportForm {
     constructor(props) {
         super(props);
-
-        this.label = "Enter trailer information";
     }
 
-    renderFields() {
-        super.renderFields();
-
-        return ([
-            this.renderField("Trailer license plate", "licensePlate")
-        ]);
+    render() {
+        return (
+            <div>
+                <Header as={'h3'}>Enter trailer information</Header>
+                <VehiclePicker type={"TRAILER"}  companyId={this.props.companyId}
+                               vehicleSelected={(vehicleId) => {this.props.trailerSelected(vehicleId)}}
+                               vehicleId={this.props.trailerId} />
+            </div>
+        );
     }
 }
 
@@ -446,13 +501,29 @@ class NewTransport extends Component {
                             />},
                     {label: 'Driver', icon: 'user', form: () => <Driver
                             driverSelected={(driver) => this.setState({
-                                'driverDriverId' : driver.id,
-                                'carrierUsername': driver.carrier
+                                driverDriverId : driver.id,
+                                carrierUsername: driver.carrier
                             })}
                             driverId={this.state.driverDriverId}
                         />},
-                    {label: 'Vehicle license plate', icon: 'truck', form: () => <Vehicle onChange={this.createOnUpdateFor('truck')} value={this.state.truck}/>},
-                    {label: 'Trailer license plate', icon: 'truck', form: () => <Trailer onChange={this.createOnUpdateFor('trailer')} value={this.state.trailer}/>}
+                    {label: 'Vehicle license plate', icon: 'truck', form: () => <Vehicle
+                            companyId={this.props.company.id}
+                            truckSelected={(vehicle) => this.setState({
+                                truckVehicleId: vehicle.id,
+                                truck: vehicle.licensePlateNumber
+                            })}
+                            truckId={this.state.truckVehicleId}
+                        />},
+                    {label: 'Trailer license plate', icon: 'truck', form: () => <Trailer
+                            companyId={this.props.company.id}
+                            trailerSelected={(vehicle) => this.setState({
+                                trailerVehicleId: vehicle.id,
+                                trailer: vehicle.licensePlateNumber
+                            })}
+                            trailerId={this.state.trailerVehicleId}
+                        />
+
+                    }
                 ]
             },
             {
@@ -500,10 +571,8 @@ class NewTransport extends Component {
         this.state = {
             selectedLabel: this.form[0].items[0].label,
             form: this.form[0].items[0].form,
-            trailer: {
-            },
-            truck: {
-            },
+            trailer: '',
+            truck: '',
             shipper: {
             },
             delivery: {
@@ -543,12 +612,12 @@ class NewTransport extends Component {
             shipperContactId: contract.shipperContactId,
             driverDriverId: contract.driverDriverId,
             carrierUsername: contract.carrierUsername,
-            trailer: {
-                licensePlate: contract.trailer
-            },
-            truck: {
-                licensePlate: contract.truck
-            },
+
+            trailerVehicleId: contract.trailerVehicleId,
+            trailer: contract.trailer,
+            truckVehicleId: contract.truckVehicleId,
+            truck: contract.truck,
+
             delivery: {
                 contactId: contract.deliveryContactId,
                 deliveryDate: contract.deliveryDate,
@@ -691,8 +760,6 @@ class NewTransport extends Component {
                 };
             };
 
-            console.log(this.state.pickup);
-
             const now = moment().toISOString();
             const input = {
                 status: 'CREATED',
@@ -708,8 +775,8 @@ class NewTransport extends Component {
                 },
                 carrierUsername: this.state.carrierUsername,
                 loads: this.state.loads.map(removeEmpty),
-                trailer: this.state.trailer.licensePlate,
-                truck: this.state.truck.licensePlate,
+                trailer: this.state.trailer,
+                truck: this.state.truck,
                 updatedAt: now,
                 createdAt: now,
 
@@ -729,7 +796,9 @@ class NewTransport extends Component {
                 carrierContactId: this.state.carrierContactId,
                 deliveryContactId: this.state.delivery.contactId,
                 pickupContactId: this.state.pickup.contactId,
-                driverDriverId: this.state.driverDriverId
+                driverDriverId: this.state.driverDriverId,
+                truckVehicleId: this.state.truckVehicleId,
+                trailerVehicleId: this.state.trailerVehicleId
             };
 
             input.events.push({

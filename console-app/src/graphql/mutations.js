@@ -119,6 +119,8 @@ export const createContract = `mutation CreateContract($input: CreateContractInp
     deliveryContactId
     driverDriverId
     creatorCompanyId
+    trailerVehicleId
+    truckVehicleId
   }
 }
 `;
@@ -236,6 +238,8 @@ export const updateContract = `mutation UpdateContract($input: UpdateContractInp
     deliveryContactId
     driverDriverId
     creatorCompanyId
+    trailerVehicleId
+    truckVehicleId
   }
 }
 `;
@@ -353,6 +357,41 @@ export const deleteContract = `mutation DeleteContract($input: DeleteContractInp
     deliveryContactId
     driverDriverId
     creatorCompanyId
+    trailerVehicleId
+    truckVehicleId
+  }
+}
+`;
+export const createVehicle = `mutation CreateVehicle($input: CreateVehicleInput!) {
+  createVehicle(input: $input) {
+    id
+    owner
+    companyId
+    type
+    licensePlateNumber
+    description
+  }
+}
+`;
+export const updateVehicle = `mutation UpdateVehicle($input: UpdateVehicleInput!) {
+  updateVehicle(input: $input) {
+    id
+    owner
+    companyId
+    type
+    licensePlateNumber
+    description
+  }
+}
+`;
+export const deleteVehicle = `mutation DeleteVehicle($input: DeleteVehicleInput!) {
+  deleteVehicle(input: $input) {
+    id
+    owner
+    companyId
+    type
+    licensePlateNumber
+    description
   }
 }
 `;

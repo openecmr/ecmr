@@ -115,6 +115,8 @@ export const onCreateContract = `subscription OnCreateContract($owner: String!) 
     deliveryContactId
     driverDriverId
     creatorCompanyId
+    trailerVehicleId
+    truckVehicleId
   }
 }
 `;
@@ -232,6 +234,8 @@ export const onUpdateContract = `subscription OnUpdateContract($owner: String!, 
     deliveryContactId
     driverDriverId
     creatorCompanyId
+    trailerVehicleId
+    truckVehicleId
   }
 }
 `;
@@ -349,6 +353,41 @@ export const onDeleteContract = `subscription OnDeleteContract($owner: String!) 
     deliveryContactId
     driverDriverId
     creatorCompanyId
+    trailerVehicleId
+    truckVehicleId
+  }
+}
+`;
+export const onCreateVehicle = `subscription OnCreateVehicle($owner: String!) {
+  onCreateVehicle(owner: $owner) {
+    id
+    owner
+    companyId
+    type
+    licensePlateNumber
+    description
+  }
+}
+`;
+export const onUpdateVehicle = `subscription OnUpdateVehicle($owner: String!) {
+  onUpdateVehicle(owner: $owner) {
+    id
+    owner
+    companyId
+    type
+    licensePlateNumber
+    description
+  }
+}
+`;
+export const onDeleteVehicle = `subscription OnDeleteVehicle($owner: String!) {
+  onDeleteVehicle(owner: $owner) {
+    id
+    owner
+    companyId
+    type
+    licensePlateNumber
+    description
   }
 }
 `;

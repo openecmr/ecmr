@@ -16,6 +16,7 @@ import Drivers from "./Drivers";
 import TransportPdf from "./TransportPdf";
 import * as queries from "./graphql/queries";
 import * as mutations from "./graphql/mutations";
+import Vehicles from "./Vehicles";
 
 let config;
 const pdfServiceKey = window.location.hash.substr(1);
@@ -102,6 +103,12 @@ const AppMenu = withRouter(({location, onLogout}) => (
             to={'/drivers'}
             as={Link}
         />
+        <Menu.Item
+            name='vehicles'
+            active={location.pathname.startsWith('/vehicles')}
+            to={'/vehicles'}
+            as={Link}
+        />
     </Menu>));
 
 const Main = withRouter(({location, onLogout, user, company, noCompany, onCompanyUpdated}) => {
@@ -140,6 +147,8 @@ const Main = withRouter(({location, onLogout, user, company, noCompany, onCompan
                         <Route exact path="/transports/:id" component={Transport}/>
                         <Route exact path="/addressbook" component={AddressBook}/>
                         <Route exact path="/drivers" component={Drivers}/>
+                        <Route exact path="/vehicles"
+                               render={(props) => <Vehicles {...props} company={company}/>}/>
                         <Redirect exact from="/" to="/transports" />
                     </Switch>
                 </div>

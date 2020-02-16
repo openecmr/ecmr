@@ -1,6 +1,6 @@
 import React from "react";
 import {Modal, Text, View} from "react-native";
-import Icon from "react-native-vector-icons/FontAwesome";
+import Icon, {default as FIcon} from "react-native-vector-icons/FontAwesome";
 import {Button} from "react-native-elements";
 import moment from "moment";
 
@@ -63,11 +63,24 @@ const LoadDetailText = ({load, style}) =>
         {load.loadMeters && `, ${load.loadMeters} m`}
     </MyText>;
 
+const LicensePlates = ({trailer, truck, style}) =>
+    ((trailer || truck) && <View style={{flex: 1, flexDirection: "row", ...style}}>
+        <View style={{flexDirection: 'row', alignItems: "center", paddingTop: 5, flex: 1}}>
+            <FIcon name="truck" style={{flex: 1, color: 'rgb(0, 115, 209)'}} size={20} />
+            <MyText style={{flex: 5}}>{truck}</MyText>
+        </View>
+        <View style={{flexDirection: 'row', alignItems: "center", paddingTop: 5, flex: 1}}>
+            <FIcon name="truck" style={{flex: 1, color: 'rgb(0, 115, 209)'}} size={20} />
+            <MyText style={{flex: 5}}>{trailer || "no trailer"}</MyText>
+        </View>
+    </View>);
+
 export {
     MyText,
     Address,
     Packages,
     HandOverModal,
     ArrivalDate,
-    LoadDetailText
+    LoadDetailText,
+    LicensePlates
 };

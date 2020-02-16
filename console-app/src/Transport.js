@@ -258,7 +258,7 @@ class Transport extends Component {
                                 <Address address={contract.carrier} icon={'truck'} label={'Carrier'}/>
                             </Grid.Column>
                             <Grid.Column>
-                                Transport code
+                                {/*Transport code*/}
                             </Grid.Column>
                         </Grid.Row>
                     </Grid>
@@ -296,7 +296,21 @@ class Transport extends Component {
                                 }
                             </Grid.Column>
                             <Grid.Column>
-                                {contract.driver.name}
+                                <List>
+                                    <List.Item>
+                                        <List.Icon name={"user"}/>
+                                        <List.Content>{contract.driver.name}</List.Content>
+                                    </List.Item>
+                                    <List.Item>
+                                        <List.Icon name={"truck"}/>
+                                        <List.Content>{contract.truck}</List.Content>
+                                    </List.Item>
+                                    <List.Item>
+                                        <List.Icon name={"truck"}/>
+                                        <List.Content>{contract.trailer}</List.Content>
+                                    </List.Item>
+                                </List>
+
                             </Grid.Column>
                         </Grid.Row>
                         <Grid.Row>

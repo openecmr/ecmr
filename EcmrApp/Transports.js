@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import {SectionList, StyleSheet, Text, TouchableOpacity, View, Dimensions} from "react-native";
 import * as queries from "./graphql/queries";
 import {API, graphqlOperation, Auth} from 'aws-amplify';
-import {Address, ArrivalDate, MyText, Packages} from './Components';
+import {Address, ArrivalDate, LicensePlates, MyText, Packages} from './Components';
 import {SceneMap, TabBar, TabView} from "react-native-tab-view";
 import ContractModel from "./ContractModel";
 import {Icon} from "react-native-elements";
@@ -48,6 +48,7 @@ class ContractsList extends Component {
                                     <Address address={contract.pickup}/>
                                     <ArrivalDate date={contract.arrivalDate} time={contract.arrivalTime}/>
                                     <Packages total={contract.total()}/>
+                                    <LicensePlates truck={contract.truck} trailer={contract.trailer}/>
                                     {activeSite === 'pickup' && <ForwardIcon/>}
                                 </View>
                             </TouchableOpacity>
@@ -58,6 +59,7 @@ class ContractsList extends Component {
                                     <Address address={contract.delivery}/>
                                     <ArrivalDate date={contract.deliveryDate} time={contract.deliveryTime}/>
                                     <Packages total={contract.total()}/>
+                                    <LicensePlates truck={contract.truck} trailer={contract.trailer}/>
                                     {activeSite === 'delivery' && <ForwardIcon/>}
                                 </View>
                             </TouchableOpacity>

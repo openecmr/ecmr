@@ -12,7 +12,7 @@ import {
     ActivityIndicator
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
-import {Address, ArrivalDate, LoadDetailText, MyText, Packages} from "./Components";
+import {Address, ArrivalDate, LicensePlates, LoadDetailText, MyText, Packages} from "./Components";
 import { API, graphqlOperation } from 'aws-amplify';
 import * as queries from "./graphql/queries";
 import * as mutations from "./graphql/mutations";
@@ -111,6 +111,8 @@ class Transport extends Component {
                 {
                     contract.loads.map((load, index) => <LoadDetail key={index} load={load}/>)
                 }
+
+                <LicensePlates truck={contract.truck} trailer={contract.trailer} style={{paddingTop: 10, ...styles.address}}/>
 
                 <View style={styles.action}>
                     {firstAction === 'ArrivalOnSite' && <Button title={`Notify arrival at ${direction} site`} buttonStyle={styles.actionButton} onPress={() => this.confirmNotifyArrival()}/>}

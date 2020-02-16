@@ -38,7 +38,7 @@ class AddAddressModal extends Component {
         const { name, address, postalCode, city, country } = this.state.contact;
 
         return (<Modal key={"showLoad"} open={this.props.show} size='small'>
-            <Header icon={"plus square"} content={"Add address"}/>
+            <Header icon={"plus square"} content={"Address"}/>
             <Modal.Content>
                 <Form id={"item"}>
                     <Form.Input onChange={this.handleChange} label='Name' type='input' name={"name"} value={name} placeholder={"The Trucking Company"}/>
