@@ -762,6 +762,7 @@ class NewTransport extends Component {
 
             const now = moment().toISOString();
             const input = {
+                owner: (await Auth.currentAuthenticatedUser()).getUsername(),
                 status: 'CREATED',
                 arrivalDate: this.state.pickup.pickupDate,
                 arrivalTime: {
