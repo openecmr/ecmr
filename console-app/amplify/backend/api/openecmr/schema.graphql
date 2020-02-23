@@ -38,11 +38,12 @@ type Contract @model
         { allow: owner, ownerField: "carrierUsername", operations: [read, update] },
         { allow: public, provider: apiKey, operations: [read]}
     ])
-    @key(name: "OwnerArrival", fields: ["owner", "arrivalDate"])
+    @key(name: "OwnerArrival", fields: ["owner", "arrivalDate"], queryField: "contractsByOwnerArrivalDate")
+    @key(name: "CarrierArrival", fields: ["carrierUsername", "arrivalDate"], queryField: "contractsByCarrierArrivalDate")
 {
     id: ID!
     owner: String!
-    carrierUsername: String
+    carrierUsername: String!
     status: ContractStatus
 
     creator: CreatorDetail

@@ -208,19 +208,12 @@ class Transports extends Component {
     }
 
     async loadData() {
-        const response = await API.graphql(graphqlOperation(queries.listContracts, {
-            limit: 1000,
-            carrierUsername: (await Auth.currentAuthenticatedUser()).getUsername()
+        const response = await API.graphql(graphqlOperation(queries.contractsByCarrierArrivalDate, {
+            limit: 50,
+            carrierUsername: (await Auth.currentAuthenticatedUser()).getUsername(),
+            sortDirection: "DESC"
         }));
-        const contracts = response.data.listContracts.items.sort((a, b) => {
-            const first = (a.arrivalDate || "").localeCompare(b.arrivalDate || "");
-            if (first === 0) {
-                return a.createdAt.localeCompare(b.createdAt);
-            } else {
-                return first;
-            }
-        });
-        contracts.reverse();
+        const contracts = response.data.contractsByCarrierArrivalDate.items;
         const ongoingContracts = this.groupByDate(contracts.filter(c => c.status !== 'DONE'));
         const doneContracts = this.groupByDate(contracts.filter(c => c.status === 'DONE'));
 

@@ -52,7 +52,7 @@ const StatusMappings = {
     },
     CREATED: {
         progress: 33,
-        label: 'ready',
+        label: 'created',
         color: 'blue'
     },
     IN_PROGRESS: {
@@ -62,7 +62,7 @@ const StatusMappings = {
     },
     DONE: {
         progress: 100,
-        label: 'completed',
+        label: 'done',
         color: 'green'
     },
     ARCHIVED: {
@@ -171,27 +171,13 @@ class Transports extends Component {
 
     async retrieveAppSync() {
         const user = await Auth.currentAuthenticatedUser();
-        let contracts = [];
-        let nextToken;
-        while (true) {
-            const response = await API.graphql(graphqlOperation(queries.listContracts, {
-                nextToken: nextToken,
-                limit: 1000,
-                filter: {
-                    "owner": {
-                        "eq": user.getUsername()
-                    }
-                }
-            }));
-            contracts = contracts.concat(response.data.listContracts.items);
-            nextToken = response.data.listContracts.nextToken;
-            if (!nextToken) {
-                break;
-            }
-        }
-        contracts = contracts.sort((a, b) => a.updatedAt < b.updatedAt ? 1 : -1);
+        const response = await API.graphql(graphqlOperation(queries.contractsByOwnerArrivalDate, {
+            limit: 50,
+            owner: user.getUsername(),
+            sortDirection: "DESC"
+        }));
         this.setState({
-            notes: contracts,
+            notes: response.data.contractsByOwnerArrivalDate.items,
             loading: false
         });
     }
