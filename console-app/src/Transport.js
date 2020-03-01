@@ -7,7 +7,7 @@ import {
     Header,
     Icon,
     Step,
-    List, Label, Segment, Comment, Loader, Modal, Form
+    List, Label, Segment, Comment, Loader, Modal, Form, Message
 } from "semantic-ui-react";
 import {API, graphqlOperation, Auth} from 'aws-amplify';
 import moment from 'moment';
@@ -164,6 +164,22 @@ class AssignDriverModal extends Component {
     }
 }
 
+const Driver = ({contract}) =>
+    <List>
+        <List.Item>
+            <List.Icon name={"user"}/>
+            <List.Content>{contract.driver.name}</List.Content>
+        </List.Item>
+        <List.Item>
+            <List.Icon name={"truck"}/>
+            <List.Content>{contract.truck}</List.Content>
+        </List.Item>
+        <List.Item>
+            <List.Icon name={"truck"}/>
+            <List.Content>{contract.trailer}</List.Content>
+        </List.Item>
+    </List>;
+
 class Transport extends Component {
     constructor(props) {
         super(props);
@@ -221,6 +237,13 @@ class Transport extends Component {
 
         return (
             <div>
+                {
+                    contract.carrierUsername === "-" &&
+                        <Message warning>
+                            <Message.Header>Transport assigned to a driver that is not yet linked</Message.Header>
+                            <p>The driver needs to enter the association code in the app, please see the drivers page.</p>
+                        </Message>
+                }
                 <Button.Group floated='right'>
                     <Button onClick={() => this.showAssignDriver()}>
                         <Icon name='truck'/>
@@ -296,21 +319,7 @@ class Transport extends Component {
                                 }
                             </Grid.Column>
                             <Grid.Column>
-                                <List>
-                                    <List.Item>
-                                        <List.Icon name={"user"}/>
-                                        <List.Content>{contract.driver.name}</List.Content>
-                                    </List.Item>
-                                    <List.Item>
-                                        <List.Icon name={"truck"}/>
-                                        <List.Content>{contract.truck}</List.Content>
-                                    </List.Item>
-                                    <List.Item>
-                                        <List.Icon name={"truck"}/>
-                                        <List.Content>{contract.trailer}</List.Content>
-                                    </List.Item>
-                                </List>
-
+                                <Driver contract={contract}/>
                             </Grid.Column>
                         </Grid.Row>
                         <Grid.Row>
@@ -337,7 +346,7 @@ class Transport extends Component {
                                 }
                             </Grid.Column>
                             <Grid.Column>
-                                {contract.driver.name}
+                                <Driver contract={contract}/>
                             </Grid.Column>
                         </Grid.Row>
                     </Grid>

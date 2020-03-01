@@ -502,15 +502,15 @@ class NewTransport extends Component {
                     {label: 'Driver', icon: 'user', form: () => <Driver
                             driverSelected={(driver) => this.setState({
                                 driverDriverId : driver.id,
-                                carrierUsername: driver.carrier
+                                carrierUsername: driver.carrier ? driver.carrier : "-"
                             })}
                             driverId={this.state.driverDriverId}
                         />},
                     {label: 'Vehicle license plate', icon: 'truck', form: () => <Vehicle
                             companyId={this.props.company.id}
                             truckSelected={(vehicle) => this.setState({
-                                truckVehicleId: vehicle.id,
-                                truck: vehicle.licensePlateNumber
+                                truckVehicleId: vehicle ? vehicle.id : null,
+                                truck: vehicle ? vehicle.licensePlateNumber : null
                             })}
                             truckId={this.state.truckVehicleId}
                         />},
