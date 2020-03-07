@@ -74,5 +74,5 @@
         "Ref": "AWS::StackId"
     },
     "permissions": [],
-    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"https://testaws.desert-spring.nl/\",\"openecmr://main\"],\"LogoutURLs\":[\"https://testaws.desert-spring.nl/logout/\"]}"
+    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"https://app.openecmr.com/\",\"openecmr://main\"],\"LogoutURLs\":[\"https://www.openecmr.com/\"]}"
 }

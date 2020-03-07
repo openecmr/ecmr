@@ -260,7 +260,7 @@ class App extends Component {
 const authScreenLabels = {
     en: {
         'Sign in to your account': 'Sign in to your Open e-CMR account',
-        'Sign in with AWS': 'Sign in using Google'
+        'Sign in with AWS': 'Sign in / Sign up using Google'
     }
 };
 
