@@ -8,7 +8,7 @@ import {
     Icon,
     Segment,
     Form,
-    Modal, List, Dropdown, Select
+    Modal, List, Dropdown
 } from "semantic-ui-react";
 import React from "react";
 import {API, Auth, graphqlOperation} from 'aws-amplify';
