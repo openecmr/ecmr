@@ -17,6 +17,7 @@ import TransportPdf from "./TransportPdf";
 import * as queries from "./graphql/queries";
 import * as mutations from "./graphql/mutations";
 import Vehicles from "./Vehicles";
+import * as ConsoleUtils from "./ConsoleUtils"
 
 let config;
 const pdfServiceKey = window.location.hash.substr(1);
@@ -58,9 +59,45 @@ class CompanyDialog extends Component {
         this.setState({
             saving: true
         });
-        await API.graphql(graphqlOperation(mutations.createCompany, {input: {
+
+        const username = (await Auth.currentAuthenticatedUser()).getUsername();
+        const companyResult = await API.graphql(graphqlOperation(mutations.createCompany, {input: {
+            owner: username,
             name: this.state.name
         }}));
+        const companyId = companyResult.data.createCompany.id;
+        await API.graphql(graphqlOperation(mutations.createContact, {
+            input: {
+                owner: username,
+                name: this.state.name
+            }
+        }));
+        await API.graphql(graphqlOperation(mutations.createDriver, {
+            input: {
+                owner: username,
+                name: this.state.name + " driver",
+                carrier: username
+            }
+        }));
+        await API.graphql(graphqlOperation(mutations.createVehicle, {
+            input: {
+                companyId: companyId,
+                owner: username,
+                licensePlateNumber: "ab-12-34",
+                type: "TRUCK",
+                description: this.state.name + " truck"
+            }
+        }));
+        await API.graphql(graphqlOperation(mutations.createVehicle, {
+            input: {
+                companyId: companyId,
+                owner: username,
+                licensePlateNumber: "ab-12-35",
+                type: "TRAILER",
+                description: this.state.name + " trailer"
+            }
+        }));
+
         this.props.onCompanyUpdated();
     }
 

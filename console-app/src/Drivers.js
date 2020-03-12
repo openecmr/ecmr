@@ -3,6 +3,7 @@ import {Button, Form, Header, Icon, Modal, Table} from "semantic-ui-react";
 import {API, Auth, graphqlOperation} from "aws-amplify";
 import * as queries from "./graphql/queries";
 import * as mutations from "./graphql/mutations";
+import * as ConsoleUtils from "./ConsoleUtils";
 
 const TextCell = ({text}) => {
     return (
@@ -60,12 +61,7 @@ class AddDriverModal extends Component {
             if (this.state.driver.id) {
                 const response = await API.graphql(graphqlOperation(mutations.updateDriver, {input: this.state.driver}));
             } else {
-                const random = new Uint8Array(6);
-                window.crypto.getRandomValues(random);
-                let associationSecret = "";
-                for (let i = 0; i < random.length; i++) {
-                    associationSecret += String.fromCharCode(64 + (random[i] % 26) + 1);
-                }
+                let associationSecret = ConsoleUtils.generateAssociationSecret();
                 const response = await API.graphql(graphqlOperation(mutations.createDriver, {input: {
                         ...this.state.driver,
                         associationSecret
