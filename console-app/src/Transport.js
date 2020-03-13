@@ -168,7 +168,7 @@ const Driver = ({contract}) =>
     <List>
         <List.Item>
             <List.Icon name={"user"}/>
-            <List.Content>{contract.driver.name}</List.Content>
+            <List.Content>{contract.driver && contract.driver.name}</List.Content>
         </List.Item>
         <List.Item>
             <List.Icon name={"truck"}/>
@@ -238,7 +238,7 @@ class Transport extends Component {
         return (
             <div>
                 {
-                    contract.carrierUsername === "-" &&
+                    contract.driverDriverId && contract.carrierUsername === "-" &&
                         <Message warning>
                             <Message.Header>Transport assigned to a driver that is not yet linked</Message.Header>
                             <p>The driver needs to enter the association code in the app, please see the drivers page.</p>
@@ -416,7 +416,7 @@ class Transport extends Component {
             name: driver.name,
             username: driver.carrier
         };
-        contract.carrierUsername = driver.carrier;
+        contract.carrierUsername = driver.carrier ? driver.carrier : "-";
         if (!contract.events) {
             contract.events = [];
         }

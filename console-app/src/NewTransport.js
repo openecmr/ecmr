@@ -732,11 +732,46 @@ class NewTransport extends Component {
         )
     }
 
+    validate() {
+        // shipperContactId),
+        // carrier: await copyToAddress(this.state.carrierContactId),
+        //     delivery: await copyToAddress(this.state.delivery.contactId),
+        //     pickup: await copyToAddress(this.state.pickup.contactId),
+        //     driver: await copyToDriverDetail(this.state.driverDriverId),
+
+        let error;
+        if (!this.state.carrierContactId) {
+            error = "Missing carrier address";
+        } else if (!this.state.truckVehicleId) {
+            error = "Missing truck";
+        } else if (!this.state.trailerVehicleId) {
+            error = "Missing trailer vehicle";
+        } else if (!this.state.shipperContactId) {
+            error = "Missing shipper address";
+        } else if (!this.state.pickup.contactId) {
+            error = "Missing pickup address";
+        } else if (!this.state.pickup.pickupDate) {
+            error = "Missing pickup date";
+        } else if (!this.state.delivery.contactId) {
+            error = "Missing delivery address";
+        }  else if (!this.state.delivery.deliveryDate) {
+            error = "Missing delivery date";
+        } else if (this.state.loads.length === 0) {
+            error = "Need at least one load item";
+        }
+        this.setState({
+            error
+        });
+        return !error;
+    }
+
     async save() {
+        if (this.state.loading || !this.validate()) {
+            return;
+        }
         this.setState({
             loading: true
         });
-
         try {
             const copyToAddress = async (contactId) => {
                 const address = (await API.graphql(graphqlOperation(queries.getContact, {
@@ -765,15 +800,21 @@ class NewTransport extends Component {
                 owner: (await Auth.currentAuthenticatedUser()).getUsername(),
                 status: 'CREATED',
                 arrivalDate: this.state.pickup.pickupDate,
-                arrivalTime: {
-                    start: this.state.pickup.pickupFromTime,
-                    end: this.state.pickup.pickupEndTime
-                },
+                ...(this.state.pickup.pickupFromTime &&
+                    this.state.pickup.pickupEndTime && {
+                        arrivalTime: {
+                            start: this.state.pickup.pickupFromTime,
+                            end: this.state.pickup.pickupEndTime
+                        }
+                    }),
                 deliveryDate: this.state.delivery.deliveryDate,
-                deliveryTime: {
-                    start: this.state.delivery.deliveryFromTime,
-                    end: this.state.delivery.deliveryEndTime
-                },
+                ...(this.state.delivery.deliveryFromTime &&
+                    this.state.delivery.deliveryEndTime && {
+                        deliveryTime: {
+                            start: this.state.delivery.deliveryFromTime,
+                            end: this.state.delivery.deliveryEndTime
+                        }
+                    }),
                 carrierUsername: this.state.carrierUsername,
                 loads: this.state.loads.map(removeEmpty),
                 trailer: this.state.trailer,
@@ -785,7 +826,10 @@ class NewTransport extends Component {
                 carrier: await copyToAddress(this.state.carrierContactId),
                 delivery: await copyToAddress(this.state.delivery.contactId),
                 pickup: await copyToAddress(this.state.pickup.contactId),
-                driver: await copyToDriverDetail(this.state.driverDriverId),
+                ...(this.state.driverDriverId && {
+                        driver: await copyToDriverDetail(this.state.driverDriverId)
+                    }
+                ),
                 ...(this.props.company && {
                     creator: {
                         name: this.props.company.name
@@ -802,17 +846,21 @@ class NewTransport extends Component {
                 trailerVehicleId: this.state.trailerVehicleId
             };
 
-            input.events.push({
-                author: {
-                    username: (await Auth.currentAuthenticatedUser()).getUsername()
-                },
-                type: 'AssignDriver',
-                createdAt: now,
-                assignedDriver: {
-                    name: input.driver.name,
-                    username: input.carrierUsername
-                }
-            });
+            if (this.state.driverDriverId) {
+                input.events.push({
+                    author: {
+                        username: (await Auth.currentAuthenticatedUser()).getUsername()
+                    },
+                    type: 'AssignDriver',
+                    createdAt: now,
+                    assignedDriver: {
+                        name: input.driver.name,
+                        username: input.carrierUsername
+                    }
+                });
+            } else {
+                input.carrierUsername = "-";
+            }
 
             console.log(input);
 
