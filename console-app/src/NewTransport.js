@@ -314,6 +314,12 @@ class Pickup extends NewTransportForm {
     }
 
     handleChangeForLoad = (e, { name, value }) => {
+        const floatFields = ["volume", "netWeight", "loadMeters"];
+        if (name === 'quantity' && !/^[0-9]*$/.test(value)) {
+            return;
+        } else if (floatFields.indexOf(name) !== -1 && !/^[0-9]+(\.[0-9]*)?$/.test(value)) {
+            return;
+        }
         this.setState({ [name]: value });
     };
 
@@ -365,16 +371,16 @@ class Pickup extends NewTransportForm {
                                 onChange={this.handleChangeForLoad}/>
                     {/*<CategoryDropdown />*/}
                     <Form.Group>
-                        <Form.Input label='Quantity' type='number' size={"tiny"} name={"quantity"} value={this.state.quantity} onChange={this.handleChangeForLoad}/>
+                        <Form.Input label='Quantity' type='text' size={"mini"} name={"quantity"} value={this.state.quantity || ''} onChange={this.handleChangeForLoad}/>
                     </Form.Group>
                     <Form.Group>
-                        <Form.Input label='Volume (m³)' type={'number'} size={"tiny"} name={"volume"} value={this.state.volume} onChange={this.handleChangeForLoad}/>
+                        <Form.Input label='Volume (m³)' type={'text'} size={"mini"} name={"volume"} value={this.state.volume || ''} onChange={this.handleChangeForLoad}/>
                     </Form.Group>
                     <Form.Group>
-                        <Form.Input  label='Net weight (kg)' type={'number'} size={"tiny"} name={"netWeight"} value={this.state.netWeight} onChange={this.handleChangeForLoad}/>
+                        <Form.Input  label='Net weight (kg)' type={'text'} size={"mini"} name={"netWeight"} value={this.state.netWeight || ''} onChange={this.handleChangeForLoad}/>
                     </Form.Group>
                     <Form.Group>
-                        <Form.Input  label='Load meters (m)' type={'number'} size={"tiny"} name={"loadMeters"} value={this.state.loadMeters} onChange={this.handleChangeForLoad}/>
+                        <Form.Input  label='Load meters (m)' type={'text'} size={"mini"} name={"loadMeters"} value={this.state.loadMeters || ''} onChange={this.handleChangeForLoad}/>
                     </Form.Group>
                     <Form.Input label='Description' type='input' name={"description"} value={this.state.description} onChange={this.handleChangeForLoad}/>
 
