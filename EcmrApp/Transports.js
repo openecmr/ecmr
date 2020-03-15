@@ -88,12 +88,16 @@ class ContractsList extends Component {
             UnloadingComplete: "done"
         };
 
-        const deliveryState = this.determineActionDelivery(item);
-        if (deliveryState) {
-            return deliveryLabels[deliveryState];
+        if (item.needAcknowledge) {
+            return "need acknowledge";
         } else {
-            const pickupState = this.determineActionPickup(item);
-            return pickupLabels[pickupState];
+            const deliveryState = this.determineActionDelivery(item);
+            if (deliveryState) {
+                return deliveryLabels[deliveryState];
+            } else {
+                const pickupState = this.determineActionPickup(item);
+                return pickupLabels[pickupState];
+            }
         }
     }
 

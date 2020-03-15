@@ -64,6 +64,8 @@ type Contract @model
     createdAt: String!
     events: [Event]!
 
+    needAcknowledge: Boolean
+
     # these are ids that can be used by the submitter for grouping contracts
     shipperContactId: ID
     carrierContactId: ID
@@ -198,7 +200,8 @@ enum EventType {
     DepartureFromSite,
     Created,
     Archived,
-    AssignDriver
+    AssignDriver,
+    Acknowledge
 }
 
 type Author @aws_api_key @aws_cognito_user_pools @aws_iam {

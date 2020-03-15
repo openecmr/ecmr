@@ -115,6 +115,7 @@ export const createContract = /* GraphQL */ `
           username
         }
       }
+      needAcknowledge
       shipperContactId
       carrierContactId
       pickupContactId
@@ -235,6 +236,7 @@ export const updateContract = /* GraphQL */ `
           username
         }
       }
+      needAcknowledge
       shipperContactId
       carrierContactId
       pickupContactId
@@ -355,6 +357,7 @@ export const deleteContract = /* GraphQL */ `
           username
         }
       }
+      needAcknowledge
       shipperContactId
       carrierContactId
       pickupContactId

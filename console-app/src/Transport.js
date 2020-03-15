@@ -48,6 +48,8 @@ const eventText = (event) => {
             return `completed the unloading.`;
         case "AssignDriver":
             return `assigned transport to driver ${event.assignedDriver ? event.assignedDriver.name : "unknown"}.`;
+        case "Acknowledge":
+            return `acknowledged the transport`;
         default:
             return `completed ${event.type}`;
     }
@@ -168,7 +170,9 @@ const Driver = ({contract}) =>
     <List>
         <List.Item>
             <List.Icon name={"user"}/>
-            <List.Content>{contract.driver && contract.driver.name}</List.Content>
+            <List.Content>{contract.driver && contract.driver.name}
+                {contract.needAcknowledge && <Label color='yellow' size={'small'}>not acknowledged yet</Label>}
+            </List.Content>
         </List.Item>
         <List.Item>
             <List.Icon name={"truck"}/>

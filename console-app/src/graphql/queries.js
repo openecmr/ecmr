@@ -208,6 +208,7 @@ export const getContract = /* GraphQL */ `
           username
         }
       }
+      needAcknowledge
       shipperContactId
       carrierContactId
       pickupContactId
@@ -333,6 +334,7 @@ export const listContracts = /* GraphQL */ `
             username
           }
         }
+        needAcknowledge
         shipperContactId
         carrierContactId
         pickupContactId
@@ -470,6 +472,7 @@ export const contractsByOwnerArrivalDate = /* GraphQL */ `
             username
           }
         }
+        needAcknowledge
         shipperContactId
         carrierContactId
         pickupContactId
@@ -607,6 +610,7 @@ export const contractsByCarrierArrivalDate = /* GraphQL */ `
             username
           }
         }
+        needAcknowledge
         shipperContactId
         carrierContactId
         pickupContactId

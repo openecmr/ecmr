@@ -739,12 +739,6 @@ class NewTransport extends Component {
     }
 
     validate() {
-        // shipperContactId),
-        // carrier: await copyToAddress(this.state.carrierContactId),
-        //     delivery: await copyToAddress(this.state.delivery.contactId),
-        //     pickup: await copyToAddress(this.state.pickup.contactId),
-        //     driver: await copyToDriverDetail(this.state.driverDriverId),
-
         let error;
         if (!this.state.carrierContactId) {
             error = "Missing carrier address";
@@ -843,6 +837,7 @@ class NewTransport extends Component {
                     creatorCompanyId: this.props.company.id
                 }),
                 events: [],
+                needAcknowledge: true,
                 shipperContactId: this.state.shipperContactId,
                 carrierContactId: this.state.carrierContactId,
                 deliveryContactId: this.state.delivery.contactId,

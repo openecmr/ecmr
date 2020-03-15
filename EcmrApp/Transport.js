@@ -98,7 +98,9 @@ class Transport extends Component {
             ['ArrivalOnSite', 'UnloadingComplete'];
         const events = (item.events || []).filter(e => e.site === site && actions.indexOf(e.type) !== -1).map(e => e.type);
         actions.splice(0, events.length === 0 ? 0 : actions.indexOf(events[events.length - 1]) + 1);
-        const firstAction = actions.length === 0 || !this.isPending(contract) ? '' : actions[0];
+        const firstAction = contract.needAcknowledge ?
+            "Acknowledge" :
+            (actions.length === 0 || !this.isPending(contract) ? '' : actions[0]);
         const relevantItems = [...item.events || []].filter(e => e.site === site || !e.site).reverse();
         const names = item.names();
 
@@ -115,6 +117,7 @@ class Transport extends Component {
                 <LicensePlates truck={contract.truck} trailer={contract.trailer} style={{paddingTop: 10, ...styles.address}}/>
 
                 <View style={styles.action}>
+                    {firstAction === 'Acknowledge' && <Button title={"Acknowledge transport"} buttonStyle={styles.actionButton} onPress={() => this.confirmAcknowledge()} />}
                     {firstAction === 'ArrivalOnSite' && <Button title={`Notify arrival at ${direction} site`} buttonStyle={styles.actionButton} onPress={() => this.confirmNotifyArrival()}/>}
                     {(firstAction === 'LoadingComplete' || firstAction === 'UnloadingComplete') && <Button title={`Confirm ${direction}`} buttonStyle={styles.actionButton} onPress={() => this.confirmLoading()}/>}
                     {!firstAction &&
@@ -180,6 +183,8 @@ class Transport extends Component {
                 return `${name} completed the unloading.`;
             case 'AssignDriver':
                 return `${name} assigned transport to driver ${event.assignedDriver ? event.assignedDriver.name : "unknown"}.`;
+            case 'Acknowledge':
+                return `${name} acknowledged the transport`;
             default:
                 return `${name} completed ${event.type}`;
         }
@@ -193,10 +198,57 @@ class Transport extends Component {
         });
     }
 
+    confirmAcknowledge() {
+        Alert.alert(
+            'Confirmation',
+            'Are you sure you want to acknowledge the transport?',
+            [
+                {
+                    text: 'Cancel',
+                    onPress: () => console.log('Cancel Pressed'),
+                    style: 'cancel',
+                },
+                {text: 'OK', onPress: () => this.acknowledge()}
+            ],
+            {cancelable: true}
+        );
+    }
+
+    async acknowledge() {
+        const item = createUpdateContractInput(this.props.navigation.getParam('item'));
+        const now = moment().format();
+        const user = await Auth.currentAuthenticatedUser();
+        const userInfo = await Auth.currentUserInfo();
+
+        if (!item.events) {
+            item.events = [];
+        }
+        item.events.push({
+            type: 'Acknowledge',
+            createdAt: now,
+            author: {
+                username: user.username
+            }
+        });
+        item.needAcknowledge = false;
+
+        try {
+            const result = await updateContract(item);
+            this.props.navigation.setParams({
+                item: result
+            });
+            this.setState({
+                item: result
+            });
+        } catch (ex) {
+            console.log(ex);
+        }
+    }
+
     confirmNotifyArrival() {
         Alert.alert(
             'Confirmation',
-            'Are you sure you want to notify your arrival at unloading site?',
+            'Are you sure you want to notify your arrival at site?',
             [
                 {
                     text: 'Cancel',
@@ -223,7 +275,7 @@ class Transport extends Component {
             site: this.state.site,
             createdAt: now,
             author: {
-                username: user.username.indexOf("Google") !== -1 ? userInfo.attributes.email : user.username
+                username: user.username
             }
         });
         item.status = 'IN_PROGRESS';
