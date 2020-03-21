@@ -81,7 +81,7 @@ class ConfirmLoading extends Component {
         const ready = loadConfirmed.every(b => b);
         if (ready) {
             const {navigate} = this.props.navigation;
-            navigate('SignSelection', {
+            navigate('AddPhotos', {
                 item: this.state.contract,
                 site: this.state.site
             });

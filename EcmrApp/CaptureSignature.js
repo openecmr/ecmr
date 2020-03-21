@@ -71,6 +71,16 @@ class CaptureSignature extends Component {
             const user = await Auth.currentAuthenticatedUser();
             const userInfo = await Auth.currentUserInfo();
 
+            const photos = await Promise.all(this.props.navigation.getParam("photos").map(async (photo) => {
+                const photoBuffer = new Buffer(photo.data, 'base64');
+                const key = 'photo-' + (await UUIDGenerator.getRandomUUID()) + ".jpg";
+                return {
+                    bucket: 'bucket',
+                    region: 'eu-central-1',
+                    key: (await Storage.put(key, photoBuffer)).key
+                }
+            }));
+
             const signatoryObservation = this.props.navigation.getParam("signatoryObservation");
             const signatoryName = this.props.navigation.getParam("signatoryName");
             const signatoryEmail = this.props.navigation.getParam("signatoryEmail");
@@ -91,7 +101,8 @@ class CaptureSignature extends Component {
                     ...signatoryName && {signatoryName},
                     ...signatoryEmail && {signatoryEmail}
                 },
-                ...signatoryObservation && {signatoryObservation}
+                ...signatoryObservation && {signatoryObservation},
+                photos
             };
             const input = createUpdateContractInput(this.state.contract);
             input.events.push(event);

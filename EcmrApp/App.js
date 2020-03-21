@@ -22,6 +22,7 @@ import VerifyContact from "aws-amplify-react-native/dist/Auth/VerifyContact";
 import ForgotPassword from "aws-amplify-react-native/dist/Auth/ForgotPassword";
 import RequireNewPassword from "aws-amplify-react-native/dist/Auth/RequireNewPassword";
 import {Icon} from "react-native-elements";
+import AddPhotos from "./AddPhotos";
 
 Amplify.configure(awsmobile);
 Amplify.Logger.LOG_LEVEL = 'DEBUG';
@@ -33,7 +34,8 @@ const MainNavigator = createStackNavigator({
     SignSelection: {screen: SignSelection},
     Signature: {screen: Signature},
     CaptureSignature: {screen: CaptureSignature},
-    SignatoryInformation: {screen: SignatoryInformation}
+    SignatoryInformation: {screen: SignatoryInformation},
+    AddPhotos: {screen: AddPhotos}
 });
 
 const SettingsNavigator = createStackNavigator({

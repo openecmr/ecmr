@@ -118,7 +118,8 @@ class Signature extends Component {
             site: this.state.site,
             signatoryName: this.state.signatoryName,
             signatoryEmail: this.state.signatoryEmail,
-            signatoryObservation: this.state.signatoryObservation
+            signatoryObservation: this.state.signatoryObservation,
+            photos: this.props.navigation.getParam("photos")
         });
     }
 }

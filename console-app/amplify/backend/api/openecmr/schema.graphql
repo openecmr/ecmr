@@ -230,5 +230,6 @@ type Event @aws_api_key @aws_cognito_user_pools @aws_iam {
     signature: Signature
     driverObservation: String
     signatoryObservation: String
-    assignedDriver: DriverDetail
+    assignedDriver: DriverDetail,
+    photos: [S3Object!]
 }
