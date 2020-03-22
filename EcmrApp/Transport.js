@@ -9,7 +9,7 @@ import {
     FlatList,
     ScrollView,
     TouchableOpacity,
-    ActivityIndicator
+    ActivityIndicator, Image
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import {Address, ArrivalDate, LicensePlates, LoadDetailText, MyText, Packages} from "./Components";
@@ -23,12 +23,12 @@ import ContractModel from "./ContractModel";
 import {createUpdateContractInput, updateContract} from "./DataUtil";
 const Header = ({children}) => <MyText style={styles.header}>{children}</MyText>;
 import RNFetchBlob from 'rn-fetch-blob'
-import {Button} from "react-native-elements";
+import {Button, Divider} from "react-native-elements";
 
 const activityDoneColor = 'rgb(5, 172, 5)';
 const actionButtonColor = 'rgb(60,176,60)';
 
-const SignatureEvent = ({signature, signatoryObservation}) => (
+const SignatureEvent = ({signature, signatoryObservation, photos}) => (
     <View>
         <S3Image style={{width: 150, height: 150}}
              resizeMode={'center'}
@@ -46,6 +46,22 @@ const SignatureEvent = ({signature, signatoryObservation}) => (
             <View style={{flexDirection: 'row'}}>
                 <MyText>Signatory observation: </MyText>
                 <MyText style={{fontStyle: 'italic'}}>{signatoryObservation}</MyText>
+            </View>
+        }
+        <Divider style={{marginTop: 5, marginBottom: 5}}/>
+        {
+
+            <View style={{flexDirection: "row"}}>
+                {
+                    photos.map((photo, idx) => (
+                        <View style={{marginLeft: 10, height: 120, width: 120, borderColor: "gray", borderWidth: 1, borderStyle: "dashed", borderRadius: 5}}>
+                            <S3Image style={{width: 118, height: 118, borderRadius: 5}}
+                                     resizeMode={'center'}
+                                     level={"public"}
+                                     imgKey={photo.key} />
+                        </View>
+                    ))
+                }
             </View>
         }
     </View>
@@ -146,7 +162,7 @@ class Transport extends Component {
                             <MyText>{this.eventText(item, names)}</MyText>
                             {
                                 (item.type === 'UnloadingComplete' || item.type === 'LoadingComplete') &&
-                                    <SignatureEvent signature={item.signature} signatoryObservation={item.signatoryObservation}/>
+                                    <SignatureEvent signature={item.signature} signatoryObservation={item.signatoryObservation} photos={item.photos || []}/>
                             }
                         </View>))
                     }

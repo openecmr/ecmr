@@ -114,6 +114,11 @@ export const createContract = /* GraphQL */ `
           name
           username
         }
+        photos {
+          bucket
+          region
+          key
+        }
       }
       needAcknowledge
       shipperContactId
@@ -235,6 +240,11 @@ export const updateContract = /* GraphQL */ `
           name
           username
         }
+        photos {
+          bucket
+          region
+          key
+        }
       }
       needAcknowledge
       shipperContactId
@@ -355,6 +365,11 @@ export const deleteContract = /* GraphQL */ `
         assignedDriver {
           name
           username
+        }
+        photos {
+          bucket
+          region
+          key
         }
       }
       needAcknowledge

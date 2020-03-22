@@ -207,6 +207,11 @@ export const getContract = /* GraphQL */ `
           name
           username
         }
+        photos {
+          bucket
+          region
+          key
+        }
       }
       needAcknowledge
       shipperContactId
@@ -332,6 +337,11 @@ export const listContracts = /* GraphQL */ `
           assignedDriver {
             name
             username
+          }
+          photos {
+            bucket
+            region
+            key
           }
         }
         needAcknowledge
@@ -471,6 +481,11 @@ export const contractsByOwnerArrivalDate = /* GraphQL */ `
             name
             username
           }
+          photos {
+            bucket
+            region
+            key
+          }
         }
         needAcknowledge
         shipperContactId
@@ -608,6 +623,11 @@ export const contractsByCarrierArrivalDate = /* GraphQL */ `
           assignedDriver {
             name
             username
+          }
+          photos {
+            bucket
+            region
+            key
           }
         }
         needAcknowledge
