@@ -7,7 +7,7 @@ import {
     Header,
     Icon,
     Step,
-    List, Label, Segment, Comment, Loader, Modal, Form, Message
+    List, Label, Segment, Comment, Loader, Modal, Form, Message, Card
 } from "semantic-ui-react";
 import {API, graphqlOperation, Auth} from 'aws-amplify';
 import moment from 'moment';
@@ -83,7 +83,7 @@ const Events = ({names, events}) => (
     </Container>
 );
 
-const SignatureEvent = ({event: { signature, signatoryObservation, driverObservation }}) =>
+const SignatureEvent = ({event: { signature, signatoryObservation, driverObservation, photos }}) =>
     <div>
         {
             <List style={{paddingTop: "10px", marginLeft: "20px"}}>
@@ -119,6 +119,17 @@ const SignatureEvent = ({event: { signature, signatoryObservation, driverObserva
                         </List.Content>
                     </List.Item>
                 }
+
+                    <div style={{display: "flex", flexDirection: "row"}}>
+                    {
+                        photos.map(photo =>
+                            <S3Image
+                                theme={{photoImg: {width: '100px', height: '100px', marginRight: 5}}}
+                                resizeMode={'center'}
+                                level={"public"}
+                                imgKey={photo.key}/>)
+                    }
+                    </div>
             </List>
         }
     </div>;
