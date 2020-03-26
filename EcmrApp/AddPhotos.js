@@ -1,10 +1,10 @@
-import {Component} from "react";
-import {FlatList, StyleSheet, TouchableOpacity, View, Text, Alert, TouchableHighlight, Image} from "react-native";
-import React from "react";
+import React, {Component} from "react";
+import {Image, StyleSheet, TouchableOpacity, View} from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
-import {Address, MyText} from "./Components";
+import {MyText} from "./Components";
 import {Button} from "react-native-elements";
 import ImagePicker from 'react-native-image-picker';
+import ImageResizer from 'react-native-image-resizer';
 
 const options = {
     title: 'Select photo',
@@ -64,13 +64,36 @@ class AddPhotos extends Component {
     addPhoto(idx) {
         ImagePicker.showImagePicker(options, (response) => {
             if (response.uri) {
-                const source = { uri: response.uri };
-                const photos = this.state.photos;
-                photos[idx].imageSource = source;
-                photos[idx].data = response.data;
-                this.setState({
-                    photos
-                });
+                if (response.fileSize > 100000) {
+                    const portrait = response.height > response.width;
+                    ImageResizer.createResizedImage(response.uri,
+                        portrait ? response.width : 800,
+                        portrait ? 600 : response.height,
+                        "JPEG", 60, 0, null)
+                        .then(async (response) => {
+                            if (response.size > 250000) {
+                                console.warn(`image still too big ${response.size}`);
+                                return;
+                            }
+                            const source = {uri: response.uri};
+                            const photos = this.state.photos;
+                            photos[idx].imageSource = source;
+                            photos[idx].uri = response.uri;
+                            this.setState({
+                                photos
+                            });
+                    }).catch((err) => {
+                        console.warn(`cannot resize image ${err}`)
+                    });
+                } else {
+                    const source = {uri: response.uri};
+                    const photos = this.state.photos;
+                    photos[idx].imageSource = source;
+                    photos[idx].uri = response.uri;
+                    this.setState({
+                        photos
+                    });
+                }
             }
         });
     }
@@ -80,7 +103,7 @@ class AddPhotos extends Component {
         navigate('SignSelection', {
             item: this.state.contract,
             site: this.state.site,
-            photos: this.state.photos.filter(photo => photo.data),
+            photos: this.state.photos.filter(photo => photo.uri),
         });
     }
 }

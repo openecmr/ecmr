@@ -72,7 +72,8 @@ class CaptureSignature extends Component {
             const userInfo = await Auth.currentUserInfo();
 
             const photos = await Promise.all(this.props.navigation.getParam("photos").map(async (photo) => {
-                const photoBuffer = new Buffer(photo.data, 'base64');
+                const fetchResponse = await fetch(photo.uri);
+                const photoBuffer = await fetchResponse.blob();
                 const key = 'photo-' + (await UUIDGenerator.getRandomUUID()) + ".jpg";
                 return {
                     bucket: 'bucket',
