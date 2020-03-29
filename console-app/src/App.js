@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import React, {Component, useState} from 'react';
 import './App.css';
-import {Menu, Image, Icon, Header, Modal, Form, Button} from "semantic-ui-react";
+import {Menu, Image, Icon, Header, Modal, Form, Button, Sidebar} from "semantic-ui-react";
 import Transports from "./Transports";
 import {BrowserRouter as Router, Route, Link, withRouter, Redirect, Switch} from "react-router-dom";
 import {NewTransport} from "./NewTransport";
@@ -148,7 +148,9 @@ const AppMenu = withRouter(({location, onLogout}) => (
         />
     </Menu>));
 
+
 const Main = withRouter(({location, onLogout, user, company, noCompany, onCompanyUpdated}) => {
+    const [visible, setVisible] = useState(true);
     const pdf = location.pathname.endsWith('/pdf');
 
     return (<div>
@@ -156,7 +158,7 @@ const Main = withRouter(({location, onLogout, user, company, noCompany, onCompan
             {!pdf &&
             <div>
                 <Menu fixed='top' inverted>
-                    <Menu.Item as='a' header>
+                    <Menu.Item as='a' header onClick={() => setVisible(!visible)}>
                         <Image size='mini' src='/logo.png' style={{marginRight: '1.5em'}}/>
                         Open e-CMR
                     </Menu.Item>
@@ -167,28 +169,56 @@ const Main = withRouter(({location, onLogout, user, company, noCompany, onCompan
                     </Menu.Item>
                     <Menu.Item name={'logout'} header onClick={onLogout}/>
                 </Menu>
-
-                <AppMenu onLogout={onLogout}/>
-
                 <CompanyDialog show={noCompany} onCompanyUpdated={onCompanyUpdated}/>
 
-                <div style={style.content}>
-                    <Switch>
-                        <Route exact path="/transports" component={Transports}/>
-                        <Route exact path="/transports-new/:copy_id"
-                               render={(props) => <NewTransport {...props} company={company}/>}
+                <Sidebar.Pushable>
+                    <Sidebar animation={"overlay"} visible={visible} as={Menu} vertical style={style.appMenu}>
+
+                        <Menu.Item
+                            name='my transports'
+                            to={'/transports'}
+                            active={location.pathname.startsWith('/transports')}
+                            as={Link}
                         />
-                        <Route exact path="/transports-new"
-                               render={(props) => <NewTransport {...props} company={company}/>}
+                        <Menu.Item
+                            name='Address book'
+                            active={location.pathname.startsWith('/addressbook')}
+                            to={'/addressbook'}
+                            as={Link}
                         />
-                        <Route exact path="/transports/:id" component={Transport}/>
-                        <Route exact path="/addressbook" component={AddressBook}/>
-                        <Route exact path="/drivers" component={Drivers}/>
-                        <Route exact path="/vehicles"
-                               render={(props) => <Vehicles {...props} company={company}/>}/>
-                        <Redirect exact from="/" to="/transports" />
-                    </Switch>
-                </div>
+                        <Menu.Item
+                            name='drivers'
+                            active={location.pathname.startsWith('/drivers')}
+                            to={'/drivers'}
+                            as={Link}
+                        />
+                        <Menu.Item
+                            name='vehicles'
+                            active={location.pathname.startsWith('/vehicles')}
+                            to={'/vehicles'}
+                            as={Link}
+                        />
+                    </Sidebar>
+                    <Sidebar.Pusher>
+                        <div style={style.content}>
+                            <Switch>
+                                <Route exact path="/transports" component={Transports}/>
+                                <Route exact path="/transports-new/:copy_id"
+                                       render={(props) => <NewTransport {...props} company={company}/>}
+                                />
+                                <Route exact path="/transports-new"
+                                       render={(props) => <NewTransport {...props} company={company}/>}
+                                />
+                                <Route exact path="/transports/:id" component={Transport}/>
+                                <Route exact path="/addressbook" component={AddressBook}/>
+                                <Route exact path="/drivers" component={Drivers}/>
+                                <Route exact path="/vehicles"
+                                       render={(props) => <Vehicles {...props} company={company}/>}/>
+                                <Redirect exact from="/" to="/transports" />
+                            </Switch>
+                        </div>
+                    </Sidebar.Pusher>
+                </Sidebar.Pushable>
             </div>
             }
         </div>);
