@@ -1,4 +1,4 @@
-import {Component} from "react";
+import {Component, useState} from "react";
 import React from "react";
 import {
     Button,
@@ -55,35 +55,51 @@ const eventText = (event) => {
     }
 };
 
-const Events = ({names, events}) => (
-    <Container>
-        <Comment.Group >
-            <Header as={'h4'}>Events</Header>
-            {
-                events.map(event => (
-                    <Comment>
+const ViewPhoto = ({photo, open, close}) => (<Modal open={open} onClose={close} closeIcon>
+    <Header icon={'archive'} content={`Photo ${photo && photo.key}`} />
+    <Modal.Content>
+        {photo && <S3Image
+            // theme={{photoImg: {width: '100px', height: '100px', marginRight: 5}}}
+            resizeMode={'center'}
+            level={"public"}
+            imgKey={photo.key}/>}
+    </Modal.Content>
+</Modal>);
 
-                        <Comment.Content>
-                            <Comment.Author as={'a'}>{names[event.author.username] || event.author.username}</Comment.Author>
-                            <Comment.Metadata>
-                                <div>{moment(event.createdAt).format('llll')}</div>
-                            </Comment.Metadata>
-                            <Comment.Text>
-                                {eventText(event)}
-                                {
-                                    (event.type === 'UnloadingComplete' || event.type === 'LoadingComplete') &&
-                                        <SignatureEvent event={event}/>
-                                }
-                            </Comment.Text>
-                        </Comment.Content>
-                    </Comment>
-                ))
-            }
-        </Comment.Group>
-    </Container>
-);
+const Events = ({names, events}) => {
+    const [photo, setPhoto] = useState(null);
 
-const SignatureEvent = ({event: { signature, signatoryObservation, driverObservation, photos }}) =>
+    return (
+        <Container>
+            <ViewPhoto open={!!photo} photo={photo} close={() => setPhoto(null)}/>
+            <Comment.Group >
+                <Header as={'h4'}>Events</Header>
+                {
+                    events.map(event => (
+                        <Comment>
+
+                            <Comment.Content>
+                                <Comment.Author as={'a'}>{names[event.author.username] || event.author.username}</Comment.Author>
+                                <Comment.Metadata>
+                                    <div>{moment(event.createdAt).format('llll')}</div>
+                                </Comment.Metadata>
+                                <Comment.Text>
+                                    {eventText(event)}
+                                    {
+                                        (event.type === 'UnloadingComplete' || event.type === 'LoadingComplete') &&
+                                            <SignatureEvent event={event} showPhoto={setPhoto}/>
+                                    }
+                                </Comment.Text>
+                            </Comment.Content>
+                        </Comment>
+                    ))
+                }
+            </Comment.Group>
+        </Container>
+    );
+};
+
+const SignatureEvent = ({event: { signature, signatoryObservation, driverObservation, photos }, showPhoto}) =>
     <div>
         {
             <List style={{paddingTop: "10px", marginLeft: "20px"}}>
@@ -124,6 +140,7 @@ const SignatureEvent = ({event: { signature, signatoryObservation, driverObserva
                     {
                         (photos || []).map(photo =>
                             <S3Image
+                                onClick={() => showPhoto(photo)}
                                 theme={{photoImg: {width: '100px', height: '100px', marginRight: 5}}}
                                 resizeMode={'center'}
                                 level={"public"}
