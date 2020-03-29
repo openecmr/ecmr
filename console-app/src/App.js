@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component, useState} from 'react';
 import './App.css';
 import {Menu, Image, Icon, Header, Modal, Form, Button} from "semantic-ui-react";
 import Transports from "./Transports";
@@ -119,9 +119,8 @@ class CompanyDialog extends Component {
     }
 }
 
-const AppMenu = withRouter(({location, onLogout}) => (
-    <Menu vertical fixed={'left'} style={style.appMenu}>
-        {console.log(location)}
+const AppMenu = withRouter(({location, onLogout, menuVisible}) => (
+    <Menu vertical fixed={'left'} style={{...style.appMenu, display: menuVisible ? "block" : "none"}}>
         <Menu.Item
             name='my transports'
             to={'/transports'}
@@ -150,13 +149,14 @@ const AppMenu = withRouter(({location, onLogout}) => (
 
 const Main = withRouter(({location, onLogout, user, company, noCompany, onCompanyUpdated}) => {
     const pdf = location.pathname.endsWith('/pdf');
+    const [menuVisible, setMenuVisible] = useState(true);
 
     return (<div>
             {pdf && <Route exact path="/transports/:id/pdf" component={TransportPdf}/>}
             {!pdf &&
             <div>
                 <Menu fixed='top' inverted>
-                    <Menu.Item as='a' header>
+                    <Menu.Item as='a' header onClick={() => setMenuVisible(!menuVisible)}>
                         <Image size='mini' src='/logo.png' style={{marginRight: '1.5em'}}/>
                         Open e-CMR
                     </Menu.Item>
@@ -168,11 +168,11 @@ const Main = withRouter(({location, onLogout, user, company, noCompany, onCompan
                     <Menu.Item name={'logout'} header onClick={onLogout}/>
                 </Menu>
 
-                <AppMenu onLogout={onLogout}/>
+                <AppMenu onLogout={onLogout} menuVisible={menuVisible}/>
 
                 <CompanyDialog show={noCompany} onCompanyUpdated={onCompanyUpdated}/>
 
-                <div style={style.content}>
+                <div style={{...style.content, ...(!menuVisible && {marginLeft: "0"})}}>
                     <Switch>
                         <Route exact path="/transports" component={Transports}/>
                         <Route exact path="/transports-new/:copy_id"

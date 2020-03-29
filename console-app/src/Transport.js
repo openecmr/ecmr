@@ -122,7 +122,7 @@ const SignatureEvent = ({event: { signature, signatoryObservation, driverObserva
 
                     <div style={{display: "flex", flexDirection: "row"}}>
                     {
-                        photos.map(photo =>
+                        (photos || []).map(photo =>
                             <S3Image
                                 theme={{photoImg: {width: '100px', height: '100px', marginRight: 5}}}
                                 resizeMode={'center'}
