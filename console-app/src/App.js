@@ -1,4 +1,4 @@
-import React, {Component, useState} from 'react';
+import React, {Component, useEffect, useState} from 'react';
 import './App.css';
 import {Menu, Image, Icon, Header, Modal, Form, Button} from "semantic-ui-react";
 import Transports from "./Transports";
@@ -18,6 +18,7 @@ import * as queries from "./graphql/queries";
 import * as mutations from "./graphql/mutations";
 import Vehicles from "./Vehicles";
 import * as ConsoleUtils from "./ConsoleUtils"
+import ReactGA from 'react-ga';
 
 let config;
 const pdfServiceKey = window.location.hash.substr(1);
@@ -147,7 +148,8 @@ const AppMenu = withRouter(({location, onLogout, menuVisible}) => (
         />
     </Menu>));
 
-const Main = withRouter(({location, onLogout, user, company, noCompany, onCompanyUpdated}) => {
+const Main = withRouter(({location, onLogout, user, company, noCompany, onCompanyUpdated, history}) => {
+    ReactGA.pageview(location.pathname);
     const pdf = location.pathname.endsWith('/pdf');
     const [menuVisible, setMenuVisible] = useState(true);
 
@@ -241,6 +243,10 @@ class App extends Component {
         })
 
         this.checkCompany = this.checkCompany.bind(this);
+
+        ReactGA.initialize('UA-160827083-1', {
+            titleCase: false
+        });
     }
 
     render() {
