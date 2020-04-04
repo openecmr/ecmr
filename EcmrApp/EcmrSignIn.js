@@ -7,7 +7,8 @@ import {
     View,
     Dimensions,
     Image,
-    ScrollView, Alert
+    ScrollView, Alert,
+    Linking
 } from "react-native";
 import {Button, CheckBox} from "react-native-elements";
 import * as queries from "./graphql/queries";
@@ -64,7 +65,9 @@ export default class EcmrSignIn extends Component {
                                 borderColor: "black",
                                 borderTopWidth: StyleSheet.hairlineWidth
                             }}>or</Text>
-                            <Button title={"Create an account"} color={'rgb(60, 167, 60)'}
+                            <Button title={"Create an account with Google"} color={'rgb(60, 167, 60)'} containerStyle={{marginBottom: 10}}
+                                    onPress={() => this.googleLogin()}/>
+                            <Button title={"Create an account using email"} color={'rgb(60, 167, 60)'}
                                     onPress={() => this.changeState("signUp")}/>
                         </View>
                         }
@@ -101,6 +104,9 @@ export default class EcmrSignIn extends Component {
                     </View>
                     <ErrorRow>{this.state.error}</ErrorRow>
                 </ScrollView>
+                {this.state.action === 'choose' &&
+                    <Text onPress={() => {Linking.openURL("https://www.openecmr.com/?utm_source=app&utm_content=login")}}
+                          style={{textAlign: "center", textDecorationLine: "underline", color: "blue", bottom: 50, padding: 10, position: "absolute", fontSize: 20}}>Find more information on Open e-CMR at www.openecmr.com</Text>}
 
             </View>
 

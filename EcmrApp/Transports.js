@@ -1,16 +1,18 @@
 import React, {Component} from "react";
-import {SectionList, StyleSheet, Text, TouchableOpacity, View, Dimensions} from "react-native";
+import {SectionList, StyleSheet, Text, TouchableOpacity, View, Dimensions, Linking} from "react-native";
 import * as queries from "./graphql/queries";
 import {API, graphqlOperation, Auth} from 'aws-amplify';
 import {Address, ArrivalDate, LicensePlates, MyText, Packages} from './Components';
 import {SceneMap, TabBar, TabView} from "react-native-tab-view";
 import ContractModel from "./ContractModel";
-import {Icon} from "react-native-elements";
+import {Button, Icon} from "react-native-elements";
 import {activate} from "./graphql/mutations";
 
 const NoContracts = () =>
     <View style={{justifyContent: 'center', alignItems: 'center', flex: 1, paddingTop: 40}}>
-        <MyText>All done, no pending contracts assigned to you.</MyText>
+        <MyText style={{"fontWeight": "bold"}}>All done, no pending transports assigned to you.</MyText>
+        <MyText style={{"marginTop": 10, "marginBottom": 15}}>Create new transports on the Open e-CMR portal</MyText>
+        <Button title={"Visit the Open e-CMR portal"} onPress={() => {Linking.openURL("https://app.openecmr.com/?utm_source=app")}}/>
     </View>;
 
 const ForwardIcon = () =>
@@ -27,7 +29,7 @@ class ContractsList extends Component {
         return (
             <View style={styles.container}>
                 <SectionList
-                    ListEmptyComponent={<NoContracts/>}
+                    ListEmptyComponent={this.props.showEmpty ? <NoContracts/> : null}
                     onRefresh={this.props.onRefresh}
                     refreshing={this.props.refreshing}
                     sections={this.props.contracts}
@@ -155,6 +157,7 @@ class Transports extends Component {
                                           contracts={this.state.ongoingContracts}
                                           onRefresh={() => this.onRefresh()}
                                           showFirstAction={true}
+                                          showEmpty={true}
                                           refreshing={this.state.refreshing} />;
                 case 'done':
                     return <ContractsList open={(item, site) => this.open(item, site)}
