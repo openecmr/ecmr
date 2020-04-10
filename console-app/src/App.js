@@ -266,10 +266,13 @@ class App extends Component {
 
     async componentDidMount() {
         try {
+            const user = await Auth.currentAuthenticatedUser();
             this.setState({
-                user: await Auth.currentAuthenticatedUser()
+                user: user
             });
-
+            ReactGA.set({
+                userId: user.attributes['sub']
+            });
             this.checkCompany();
         } catch (ex) {
         }
