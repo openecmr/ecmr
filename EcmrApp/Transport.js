@@ -48,20 +48,23 @@ const SignatureEvent = ({signature, signatoryObservation, photos}) => (
                 <MyText style={{fontStyle: 'italic'}}>{signatoryObservation}</MyText>
             </View>
         }
-        <Divider style={{marginTop: 5, marginBottom: 5}}/>
         {
-
-            <View style={{flexDirection: "row"}}>
-                {
-                    photos.map((photo, idx) => (
-                        <View style={{marginLeft: 10, height: 120, width: 120, borderColor: "gray", borderWidth: 1, borderStyle: "dashed", borderRadius: 5}}>
-                            <S3Image style={{width: 118, height: 118, borderRadius: 5}}
-                                     resizeMode={'center'}
-                                     level={"public"}
-                                     imgKey={photo.key} />
-                        </View>
-                    ))
-                }
+            !!photos.length && <Divider style={{marginTop: 5, marginBottom: 5}}/>
+        }
+        {
+            !!photos.length &&
+            <View style={styles.photoFrameContainer}>
+            {
+                [0, 1, 2].map((photo, idx) =>
+                    <View
+                        style={[styles.photoFrame, idx === 2 && styles.photoFrameLast, idx > photos.length - 1 && styles.photoFrameHidden]}
+                        key={idx}>
+                        {photos[photo] && <S3Image style={styles.photo}
+                                                   level={"public"}
+                                                   imgKey={photos[photo].key}/>}
+                    </View>
+                )
+            }
             </View>
         }
     </View>
@@ -388,7 +391,36 @@ const styles = StyleSheet.create({
     },
     actionButton: {
         backgroundColor: actionButtonColor
-    }
+    },
+
+
+    photoFrame: {
+        marginRight: 10,
+        aspectRatio: 3 / 4,
+        justifyContent: 'center',
+        alignItems: "center",
+        borderColor: "gray",
+        borderWidth: 1,
+        borderStyle: "dashed",
+        borderRadius: 5,
+        flex: 1
+    },
+    photoFrameLast: {
+        marginRight: 0
+    },
+    photoFrameHidden: {
+        opacity: 0
+    },
+    photoFrameContainer: {
+        flexDirection: "row",
+        marginTop: 5,
+        flex: 1
+    },
+    photo: {
+        height: "100%",
+        width: "100%",
+        borderRadius: 5
+    },
 });
 
 export default Transport;

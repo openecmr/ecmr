@@ -35,23 +35,23 @@ class AddPhotos extends Component {
 
     render() {
         return (
-            <View style={{flex: 1, padding: 10}}>
-                <MyText style={{fontSize: 18}}>E.g. photos of the load, delivery documents, etc.</MyText>
+            <View style={styles.baseContainer}>
+                <MyText style={styles.header}>E.g. photos of the load, delivery documents, etc.</MyText>
 
-                <View style={{flexDirection: "row", marginTop: 20}}>
+                <View style={styles.photoFrameContainer}>
                     {
                         this.state.photos.map((photo, idx) => (
-                            <TouchableOpacity onPress={() => this.addPhoto(idx)} key={idx}>
-                                <View style={{marginLeft: 10, height: 120, width: 120, borderColor: "gray", borderWidth: 1, borderStyle: "dashed", borderRadius: 5}}>
-                                    {!photo.imageSource && <Icon name={"plus"} size={40} style={{position: 'absolute', left: 45, top: 40}}/>}
-                                    {photo.imageSource && <Image source={photo.imageSource} style={{height: 118, width: 118, borderRadius: 5}} />}
+                            <TouchableOpacity onPress={() => this.addPhoto(idx)} key={idx} style={styles.photoFrameClick}>
+                                <View style={styles.photoFrame}>
+                                    {!photo.imageSource && <Icon name={"plus"} size={40} />}
+                                    {photo.imageSource && <Image source={photo.imageSource} style={styles.photo} />}
                                 </View>
                             </TouchableOpacity>
                         ))
                     }
                 </View>
 
-                <View style={{flexDirection: 'row', margin: 10, marginTop: 5, position: 'absolute', bottom: 0, left: 10}}>
+                <View style={styles.alignBottom}>
                     <Button buttonStyle={{height: 60}}
                             containerStyle={{flex: 1, padding: 0}}
                             title={"Continue with signature"}
@@ -75,27 +75,26 @@ class AddPhotos extends Component {
                                 console.warn(`image still too big ${response.size}`);
                                 return;
                             }
-                            const source = {uri: response.uri};
-                            const photos = this.state.photos;
-                            photos[idx].imageSource = source;
-                            photos[idx].uri = response.uri;
-                            this.setState({
-                                photos
-                            });
+                            this.addPhotoState(response, idx);
                     }).catch((err) => {
                         console.warn(`cannot resize image ${err}`)
                     });
                 } else {
-                    const source = {uri: response.uri};
-                    const photos = this.state.photos;
-                    photos[idx].imageSource = source;
-                    photos[idx].uri = response.uri;
-                    this.setState({
-                        photos
-                    });
+                    this.addPhotoState(response, idx);
                 }
             }
         });
+    }
+
+    addPhotoState(response, idx) {
+        const source = {uri: response.uri};
+        const photos = this.state.photos;
+        photos[idx].imageSource = source;
+        photos[idx].uri = response.uri;
+        this.setState({
+            photos
+        });
+
     }
 
     signature() {
@@ -109,7 +108,42 @@ class AddPhotos extends Component {
 }
 
 const styles = StyleSheet.create({
-
+    header: {
+        fontSize: 18
+    },
+    photoFrame: {
+        marginLeft: 10,
+        aspectRatio: 3 / 4,
+        justifyContent: 'center',
+        alignItems: "center",
+        borderColor: "gray",
+        borderWidth: 1,
+        borderStyle: "dashed",
+        borderRadius: 5
+    },
+    photoFrameContainer: {
+        flexDirection: "row",
+        marginTop: 20,
+        flex: 1
+    },
+    photo: {
+        height: "100%",
+        width: "100%",
+        borderRadius: 5
+    },
+    baseContainer: {
+        flex: 1, padding: 10
+    },
+    photoFrameClick: {
+        flex: 1
+    },
+    alignBottom: {
+        flexDirection: 'row',
+        margin: 10,
+        marginTop: 5,
+        position: 'absolute',
+        bottom: 0, left: 10
+    }
 });
 
 export default AddPhotos;

@@ -1,22 +1,14 @@
 import React, {Component} from "react";
 import {
-    SectionList,
     StyleSheet,
     Text,
-    TouchableOpacity,
     View,
-    Dimensions,
     Image,
     ScrollView, Alert,
     Linking
 } from "react-native";
-import {Button, CheckBox} from "react-native-elements";
-import * as queries from "./graphql/queries";
-import {API, Auth, graphqlOperation, I18n, JS, Logger} from 'aws-amplify';
-import {Address, MyText, Packages} from './Components';
-import {SceneMap, TabBar, TabView} from "react-native-tab-view";
-import ContractModel from "./ContractModel";
-import {Input} from "react-native-elements";
+import {Button} from "react-native-elements";
+import {Auth, I18n, JS, Logger} from 'aws-amplify';
 import {ErrorRow, FormField, LinkCell} from "aws-amplify-react-native";
 import AmplifyTheme from "aws-amplify-react-native/dist/AmplifyTheme";
 import AmplifyMessageMap from "aws-amplify-react-native/dist/AmplifyMessageMap";
