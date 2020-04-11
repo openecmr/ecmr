@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {Button, Form, Header, Icon, Modal, Table} from "semantic-ui-react";
+import {Button, Form, Header, Icon, Image, List, Modal, Popup, Table} from "semantic-ui-react";
 import {API, Auth, graphqlOperation} from "aws-amplify";
 import * as queries from "./graphql/queries";
 import * as mutations from "./graphql/mutations";
@@ -10,6 +10,29 @@ const TextCell = ({text}) => {
         <Table.Cell verticalAlign="top">{text}</Table.Cell>
     )
 };
+
+const AssociationSecretCell = ({associationSecret}) =>
+    <Table.Cell style={{...(!!associationSecret && {cursor: "pointer"})}}><Popup
+
+        on='click'
+        content={<div>
+            In order for a driver to activate an account he needs to install the Open e-CMR app, create an account and link the account using this secret code.
+            The steps for the driver are:
+            <List bulleted>
+                <List.Item>Install the Open e-CMR app
+                    <List.List>
+                        <List.Item href='https://play.google.com/store/apps/details?id=com.ecmrapp'>Search for open ecmr in Google Play</List.Item>
+                    </List.List>
+                </List.Item>
+                <List.Item>Create an account (the easiest way is to use Google sign in)
+                </List.Item>
+                <List.Item>Go to <em>Settings > Link to company</em> and enter the secret code</List.Item>
+            </List>
+            After activation the secret code will disappear and the account name will be filled in.
+        </div>}
+        header={"Activating an account"}
+        trigger={<div style={{textDecoration: "underline"}}>{associationSecret}</div>}
+    /></Table.Cell>
 
 class AddDriverModal extends Component {
     constructor(props) {
@@ -148,7 +171,7 @@ class Drivers extends Component {
                     </Table.Cell>
                     <TextCell text={e.name}/>
                     <TextCell text={e.carrier}/>
-                    <TextCell text={e.associationSecret}/>
+                    <AssociationSecretCell associationSecret={e.associationSecret}/>
                 </Table.Row>
             )
         )
