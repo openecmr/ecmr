@@ -8,7 +8,7 @@ import {NewTransport} from "./NewTransport";
 import Amplify, {API, graphqlOperation} from 'aws-amplify';
 import { Auth, Hub, I18n } from 'aws-amplify';
 import awsmobile from './aws-exports';
-import { withAuthenticator } from 'aws-amplify-react';
+import {Container, withAuthenticator} from 'aws-amplify-react';
 import Transport from "./Transport";
 import style from "./Style"
 import AddressBook from "./AddressBook";
@@ -229,6 +229,12 @@ const MainWithAuth = pdfServiceKey ?  Main : withAuthenticator(Main, {
     signUpConfig
 });
 
+const MyContainer = ({children}) =>
+    <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
+        <Image size='tiny' src='/logo.png' style={{marginTop: 20}} avatar />
+        <Container>{children}</Container>
+    </div>;
+
 class App extends Component {
     state = {
         user: null,
@@ -250,9 +256,11 @@ class App extends Component {
     }
 
     render() {
+
         return (
             <Router>
-                <MainWithAuth onLogout={() => this.logout()} user={this.state.user}
+                <MainWithAuth container={MyContainer}
+                              onLogout={() => this.logout()} user={this.state.user}
                               company={this.state.company}
                               onCompanyUpdated={this.checkCompany}
                               noCompany={this.state.noCompany}/>
@@ -275,6 +283,10 @@ class App extends Component {
             });
             this.checkCompany();
         } catch (ex) {
+            ReactGA.set({
+                userId: null
+            });
+            ReactGA.pageview("/login");
         }
     }
 
@@ -305,8 +317,8 @@ class App extends Component {
 
 const authScreenLabels = {
     en: {
-        'Sign in to your account': 'Sign in to your Open e-CMR account',
-        'Sign in with AWS': 'Sign in / Sign up using Google'
+        'Sign in to your account': 'Sign in / sign up to your Open e-CMR account',
+        'Sign in with AWS': 'Continue using your Google account'
     }
 };
 
