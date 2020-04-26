@@ -19,6 +19,7 @@ import * as mutations from "./graphql/mutations";
 import Vehicles from "./Vehicles";
 import * as ConsoleUtils from "./ConsoleUtils"
 import ReactGA from 'react-ga';
+import i18nDictionaryNl from './i18n/nl/resource';
 
 let config;
 const pdfServiceKey = window.location.hash.substr(1);
@@ -104,16 +105,16 @@ class CompanyDialog extends Component {
 
     render() {
         return <Modal open={this.props.show} size='small'>
-            <Header icon={"building"} content={"Please enter your company details"}/>
+            <Header icon={"building"} content={I18n.get("Please enter your company details")}/>
             <Modal.Content>
                 <Form id={"item"}>
-                    <Form.Input onChange={this.handleChange} label='Company name' type='input' name={"name"} value={this.state.name}
-                                placeholder={"International Transporting Corp..."}/>
+                    <Form.Input onChange={this.handleChange} label={I18n.get('Company name')} type='input' name={"name"} value={this.state.name}
+                                placeholder={I18n.get("International Transporting Corp...")}/>
                 </Form>
             </Modal.Content>
             <Modal.Actions>
                 <Button color='green' inverted onClick={this.save}>
-                    <Icon name='checkmark'/> {'Save'}
+                    <Icon name='checkmark'/> {I18n.get('Save')}
                 </Button>
             </Modal.Actions>
         </Modal>
@@ -123,25 +124,25 @@ class CompanyDialog extends Component {
 const AppMenu = withRouter(({location, onLogout, menuVisible}) => (
     <Menu vertical fixed={'left'} style={{...style.appMenu, display: menuVisible ? "block" : "none"}}>
         <Menu.Item
-            name='my transports'
+            name={I18n.get('my transports')}
             to={'/transports'}
             active={location.pathname.startsWith('/transports')}
             as={Link}
         />
         <Menu.Item
-            name='Address book'
+            name={I18n.get('Address book')}
             active={location.pathname.startsWith('/addressbook')}
             to={'/addressbook'}
             as={Link}
         />
         <Menu.Item
-            name='drivers'
+            name={I18n.get('drivers')}
             active={location.pathname.startsWith('/drivers')}
             to={'/drivers'}
             as={Link}
         />
         <Menu.Item
-            name='vehicles'
+            name={I18n.get('vehicles')}
             active={location.pathname.startsWith('/vehicles')}
             to={'/vehicles'}
             as={Link}
@@ -167,7 +168,7 @@ const Main = withRouter(({location, onLogout, user, company, noCompany, onCompan
                         {company && company.name}
                         {user && ` (${user.attributes['email']})`}
                     </Menu.Item>
-                    <Menu.Item name={'logout'} header onClick={onLogout}/>
+                    <Menu.Item name={I18n.get('logout')} header onClick={onLogout}/>
                 </Menu>
 
                 <AppMenu onLogout={onLogout} menuVisible={menuVisible}/>
@@ -197,26 +198,26 @@ const Main = withRouter(({location, onLogout, user, company, noCompany, onCompan
 });
 
 const signUpConfig = {
-    header: 'Sign up for Open e-CMR',
+    header: I18n.get('Sign up for Open e-CMR'),
     hideAllDefaults: true,
     defaultCountryCode: '1',
     signUpFields: [
         {
-            label: 'Email address',
+            label: I18n.get('Email address'),
             key: 'email',
             required: true,
             displayOrder: 1,
             type: 'string'
         },
         {
-            label: 'Username',
+            label: I18n.get('Username'),
             key: 'username',
             required: true,
             displayOrder: 2,
             type: 'string'
         },
         {
-            label: 'Password',
+            label: I18n.get('Password'),
             key: 'password',
             required: true,
             displayOrder: 3,
@@ -314,15 +315,31 @@ class App extends Component {
     }
 }
 
-
-const authScreenLabels = {
+// allow these strings to be picked up by the i18n extraction
+// FIXME find some other way
+I18n.get('Sign in to your account');
+I18n.get('Sign in with AWS');
+I18n.get('Enter your username')
+I18n.get('Enter your password')
+I18n.get('Reset password')
+I18n.get('Sign In')
+I18n.get('No account? ')
+I18n.get('Create account')
+I18n.get('Forget your password? ')
+I18n.get('or')
+I18n.get('Incorrect username or password')
+I18n.get('Have an account? ')
+I18n.get('Sign in')
+I18n.get('Create Account')
+const vocabularies = {
     en: {
         'Sign in to your account': 'Sign in / sign up to your Open e-CMR account',
         'Sign in with AWS': 'Continue using your Google account'
-    }
+    },
+    nl: i18nDictionaryNl
 };
 
-I18n.setLanguage('en');
-I18n.putVocabularies(authScreenLabels);
+// I18n.setLanguage('nl');
+I18n.putVocabularies(vocabularies);
 
 export default App;

@@ -3,7 +3,7 @@ import React from "react";
 import {Button, Dimmer, Icon, Loader, Progress, Segment, Table} from "semantic-ui-react";
 import {Link} from "react-router-dom";
 import * as queries from "./graphql/queries";
-import {API, Auth, graphqlOperation} from 'aws-amplify';
+import {API, Auth, graphqlOperation, I18n} from 'aws-amplify';
 import moment from 'moment';
 
 const AddressCell = ({address}) => {
@@ -47,27 +47,27 @@ const DateCell = ({date}) => (
 const StatusMappings = {
     DRAFT: {
         progress: 0,
-        label: 'draft',
+        label: I18n.get('draft'),
         color: 'grey'
     },
     CREATED: {
         progress: 33,
-        label: 'created',
+        label: I18n.get('created'),
         color: 'blue'
     },
     IN_PROGRESS: {
         progress: 66,
-        label: 'ongoing',
+        label: I18n.get('ongoing'),
         color: 'orange'
     },
     DONE: {
         progress: 100,
-        label: 'done',
+        label: I18n.get('done'),
         color: 'green'
     },
     ARCHIVED: {
         progress: 100,
-        label: 'archived',
+        label: I18n.get('archived'),
         color: 'grey'
     }
 };
@@ -100,22 +100,22 @@ class Transports extends Component {
                         <Table.HeaderCell colSpan='11'>
                             <Link to={"/transports-new"}>
                                 <Button floated='right' icon labelPosition='left' primary size='small'>
-                                    <Icon name='plus'/> New transport
+                                    <Icon name='plus'/> {I18n.get('New transport')}
                                 </Button>
                             </Link>
                         </Table.HeaderCell>
                     </Table.Row>
                     <Table.Row>
-                        <Table.HeaderCell>Number</Table.HeaderCell>
-                        <Table.HeaderCell>Carrier reference</Table.HeaderCell>
-                        <Table.HeaderCell>Status</Table.HeaderCell>
-                        <Table.HeaderCell>Pick-up address</Table.HeaderCell>
-                        <Table.HeaderCell>Pick-up date</Table.HeaderCell>
-                        <Table.HeaderCell>Delivery address</Table.HeaderCell>
-                        <Table.HeaderCell>Delivery date</Table.HeaderCell>
-                        <Table.HeaderCell>Shipper</Table.HeaderCell>
-                        <Table.HeaderCell>Driver</Table.HeaderCell>
-                        <Table.HeaderCell>Loads</Table.HeaderCell>
+                        <Table.HeaderCell>{I18n.get('Number')}</Table.HeaderCell>
+                        <Table.HeaderCell>{I18n.get('Carrier reference')}</Table.HeaderCell>
+                        <Table.HeaderCell>{I18n.get('Status')}</Table.HeaderCell>
+                        <Table.HeaderCell>{I18n.get('Pick-up address')}</Table.HeaderCell>
+                        <Table.HeaderCell>{I18n.get('Pick-up date')}</Table.HeaderCell>
+                        <Table.HeaderCell>{I18n.get('Delivery address')}</Table.HeaderCell>
+                        <Table.HeaderCell>{I18n.get('Delivery date')}</Table.HeaderCell>
+                        <Table.HeaderCell>{I18n.get('Shipper')}</Table.HeaderCell>
+                        <Table.HeaderCell>{I18n.get('Driver')}</Table.HeaderCell>
+                        <Table.HeaderCell>{I18n.get('Loads')}</Table.HeaderCell>
                     </Table.Row>
                 </Table.Header>
                 <Table.Body>
@@ -126,7 +126,7 @@ class Transports extends Component {
                             <Table.Cell colSpan={'10'} textAlign={"center"} selectable={false}>
                                 <div style={{padding: '50px', paddingTop: '200px', minHeight: '560px'}}>
                                     <p>
-                                        No transports found, please create one using the button above.
+                                        {I18n.get('No transports found, please create one using the button above.')}
                                     </p>
                                     <Icon name={"shipping fast"} size={"massive"}/>
                                 </div>

@@ -26,7 +26,7 @@ const AssociationSecretCell = ({associationSecret}) =>
                 </List.Item>
                 <List.Item>Create an account (the easiest way is to use Google sign in)
                 </List.Item>
-                <List.Item>Go to <em>Settings > Link to company</em> and enter the secret code</List.Item>
+                <List.Item>Go to <em>Settings &gt; Link to company</em> and enter the secret code</List.Item>
             </List>
             After activation the secret code will disappear and the account name will be filled in.
         </div>}

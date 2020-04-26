@@ -9,7 +9,7 @@ import {
     Step,
     List, Label, Segment, Comment, Loader, Modal, Form, Message, Card
 } from "semantic-ui-react";
-import {API, graphqlOperation, Auth} from 'aws-amplify';
+import {API, graphqlOperation, Auth, I18n} from 'aws-amplify';
 import moment from 'moment';
 import * as queries from "./graphql/queries";
 import * as mutations from "./graphql/mutations";
@@ -33,7 +33,7 @@ const Address = ({address, label, icon}) => (
                 <List.Content>{address.address}</List.Content>
             </List.Item>
             <List.Item>
-                <List.Content>{address.postalCode} {address.city}, {address.country}</List.Content>
+                <List.Content>{[address.postalCode, address.city, address.country].filter(Boolean).join(', ')}</List.Content>
             </List.Item>
         </List>
     </Container>);
@@ -41,17 +41,20 @@ const Address = ({address, label, icon}) => (
 const eventText = (event) => {
     switch (event.type) {
         case 'ArrivalOnSite':
-            return `arrived on ${event.site} site.`;
+            return I18n.get('arrived on {site}.')
+                .replace('{site}',
+                    event.site === 'pickup' ? I18n.get('pickup site') : I18n.get('delivery site'));
         case 'LoadingComplete':
-            return `completed the loading.`;
+            return I18n.get('completed the loading.');
         case 'UnloadingComplete':
-            return `completed the unloading.`;
+            return I18n.get('completed the unloading.');
         case "AssignDriver":
-            return `assigned transport to driver ${event.assignedDriver ? event.assignedDriver.name : "unknown"}.`;
+            return I18n.get('assigned transport to driver {driver}.')
+                .replace('{driver}', event.assignedDriver ? event.assignedDriver.name : "unknown");
         case "Acknowledge":
-            return `acknowledged the transport`;
+            return I18n.get('acknowledged the transport');
         default:
-            return `completed ${event.type}`;
+            return I18n.get('completed {eventType}').replace('{eventType}', event.type);
     }
 };
 
@@ -73,7 +76,7 @@ const Events = ({names, events}) => {
         <Container>
             <ViewPhoto open={!!photo} photo={photo} close={() => setPhoto(null)}/>
             <Comment.Group >
-                <Header as={'h4'}>Events</Header>
+                <Header as={'h4'}>{I18n.get('Events')}</Header>
                 {
                     events.map(event => (
                         <Comment>
@@ -108,7 +111,7 @@ const SignatureEvent = ({event: { signature, signatoryObservation, driverObserva
                     <List.Item>
                         <List.Icon name='user' verticalAlign={"middle"}/>
                         <List.Content>
-                            <List.Header>Signed by</List.Header>
+                            <List.Header>{I18n.get('Signed by')}</List.Header>
                             <List.Description>{signature.signatoryName} {signature.signatoryEmail && `(${signature.signatoryEmail})`}</List.Description>
                         </List.Content>
                     </List.Item>
@@ -118,7 +121,7 @@ const SignatureEvent = ({event: { signature, signatoryObservation, driverObserva
                     <List.Item>
                         <List.Icon name='warning sign' verticalAlign={"middle"} />
                         <List.Content>
-                            <List.Header>Signatory observation</List.Header>
+                            <List.Header>{I18n.get('Signatory observation')}</List.Header>
                             <List.Description>{signatoryObservation}</List.Description>
                         </List.Content>
                     </List.Item>
@@ -166,7 +169,7 @@ class AssignDriverModal extends Component {
 
     render() {
         return (<Modal key={"showLoad"} open={this.props.show} size='small'>
-            <Header icon={"truck"} content={"Assign driver"}/>
+            <Header icon={"truck"} content={I18n.get('Assign driver')}/>
             <Modal.Content>
                 <Form id={"item"}>
                     <DriverPicker driverId={this.state.driver && this.state.driver.id} driverSelected={this.onDriverSelected}/>
@@ -174,10 +177,10 @@ class AssignDriverModal extends Component {
             </Modal.Content>
             <Modal.Actions>
                 <Button color='red' inverted onClick={() => this.props.hide()}>
-                    <Icon name='remove'/> Cancel
+                    <Icon name='remove'/> {I18n.get('Cancel')}
                 </Button>
                 <Button color='green' inverted onClick={this.save}>
-                    <Icon name='checkmark'/> Assign
+                    <Icon name='checkmark'/> {I18n.get('Assign')}
                 </Button>
             </Modal.Actions>
         </Modal>)
@@ -199,7 +202,7 @@ const Driver = ({contract}) =>
         <List.Item>
             <List.Icon name={"user"}/>
             <List.Content>{contract.driver && contract.driver.name}
-                {contract.needAcknowledge && <Label color='yellow' size={'small'}>not acknowledged yet</Label>}
+                {contract.needAcknowledge && <Label color='yellow' size={'small'}>{I18n.get('not acknowledged yet')}</Label>}
             </List.Content>
         </List.Item>
         <List.Item>
@@ -256,9 +259,9 @@ class Transport extends Component {
                     <List.Item>
                         {load.quantity} {load.category}
                         {load.description && `, ${load.description}`}
-                        {load.volume && `, ${load.volume} m³`}
-                        {load.netWeight && `, ${load.netWeight} kg`}
-                        {load.loadMeters && `, ${load.loadMeters} m`}
+                        {load.volume && `, ${load.volume} ${I18n.get('m³')}`}
+                        {load.netWeight && `, ${load.netWeight} ${I18n.get('kg')}`}
+                        {load.loadMeters && `, ${load.loadMeters} ${I18n.get('m')}`}
                     </List.Item>
                 )}
             </List>;
@@ -272,45 +275,48 @@ class Transport extends Component {
                 {
                     contract.driverDriverId && contract.carrierUsername === "-" &&
                         <Message warning>
-                            <Message.Header>Transport assigned to a driver that is not yet linked</Message.Header>
-                            <p>The driver needs to enter the association code in the app, please see the drivers page.</p>
+                            <Message.Header>{I18n.get('Transport assigned to a driver that is not yet linked')}</Message.Header>
+                            <p>{I18n.get('The driver needs to enter the association code in the app, please see the drivers page.')}</p>
                         </Message>
                 }
                 <Button.Group floated='right'>
                     <Button onClick={() => this.showAssignDriver()}>
                         <Icon name='truck'/>
-                        Assign driver
+                        {I18n.get('Assign driver')}
                     </Button>
                     <Button onClick={() => this.delete()}>
                         <Icon name='delete'/>
-                        Delete
+                        {I18n.get('Delete')}
                     </Button>
                     <Button onClick={() => this.copy()}>
                         <Icon name='copy'/>
-                        Copy
+                        {I18n.get('Copy')}
                     </Button>
                 </Button.Group>
                 <Header as={'h1'}>
-                    <Header.Content>Transport {contract.id.substring(0, 8)}</Header.Content>
-                    <Header.Subheader>Created
-                        by {contract.creator ? contract.creator.name : contract.owner} on {moment(contract.createdAt).format("LLLL")}</Header.Subheader>
+                    <Header.Content>{I18n.get('Transport {number}').replace('{number}', contract.id.substring(0, 8))}</Header.Content>
+                    <Header.Subheader>
+                        {I18n.get('Created by {creator} on {date}')
+                            .replace('{creator}', contract.creator ? contract.creator.name : contract.owner)
+                            .replace('{date}', moment(contract.createdAt).format("LLLL"))}
+                    </Header.Subheader>
                 </Header>
 
                 <Step.Group fluid size={"mini"}>
-                    <Step content='Created' active={contract.status === 'CREATED' || contract.status === 'DRAFT'}/>
-                    <Step content='Ongoing' active={contract.status === 'IN_PROGRESS'}/>
-                    <Step content='Done' active={contract.status === 'DONE'}/>
-                    <Step content='Archived' active={contract.status === 'ARCHIVED'}/>
+                    <Step content={I18n.get('Created')} active={contract.status === 'CREATED' || contract.status === 'DRAFT'}/>
+                    <Step content={I18n.get('Ongoing')} active={contract.status === 'IN_PROGRESS'}/>
+                    <Step content={I18n.get('Done')} active={contract.status === 'DONE'}/>
+                    <Step content={I18n.get('Archived')} active={contract.status === 'ARCHIVED'}/>
                 </Step.Group>
                 <Segment>
 
                     <Grid columns={3}>
                         <Grid.Row>
                             <Grid.Column>
-                                <Address address={contract.shipper} icon={'building'} label={'Shipper'}/>
+                                <Address address={contract.shipper} icon={'building'} label={I18n.get('Shipper')}/>
                             </Grid.Column>
                             <Grid.Column>
-                                <Address address={contract.carrier} icon={'truck'} label={'Carrier'}/>
+                                <Address address={contract.carrier} icon={'truck'} label={I18n.get('Carrier')}/>
                             </Grid.Column>
                             <Grid.Column>
                                 {/*Transport code*/}
@@ -321,15 +327,15 @@ class Transport extends Component {
                 <Segment>
                     <Grid columns={5} divided>
                         <Grid.Row divided>
-                            <Grid.Column><Header as={'h5'}>Activity</Header></Grid.Column>
-                            <Grid.Column><Header as={'h5'}>Address</Header></Grid.Column>
-                            <Grid.Column><Header as={'h5'}>Loads</Header></Grid.Column>
-                            <Grid.Column><Header as={'h5'}>Arrival</Header></Grid.Column>
-                            <Grid.Column><Header as={'h5'}>Driver</Header></Grid.Column>
+                            <Grid.Column><Header as={'h5'}>{I18n.get('Activity')}</Header></Grid.Column>
+                            <Grid.Column><Header as={'h5'}>{I18n.get('Address')}</Header></Grid.Column>
+                            <Grid.Column><Header as={'h5'}>{I18n.get('Loads')}</Header></Grid.Column>
+                            <Grid.Column><Header as={'h5'}>{I18n.get('Arrival')}</Header></Grid.Column>
+                            <Grid.Column><Header as={'h5'}>{I18n.get('Driver')}</Header></Grid.Column>
                         </Grid.Row>
                         <Grid.Row>
                             <Grid.Column>
-                                <Label circular={true}>1</Label>Pickup
+                                <Label circular={true}>1</Label>{I18n.get('Pickup')}
                             </Grid.Column>
                             <Grid.Column>
                                 <Address address={contract.pickup}/>
@@ -338,14 +344,16 @@ class Transport extends Component {
                                 {goods}
                             </Grid.Column>
                             <Grid.Column>
-                                <Header sub>Planned</Header>
-                                On {moment(contract.arrivalDate).format('ll')}<br/>
+                                <Header sub>{I18n.get('Planned')}</Header>
+                                {I18n.get('On {date}').replace('{date}', moment(contract.arrivalDate).format('ll'))}<br/>
                                 {contract.arrivalTime &&
-                                <div>From {contract.arrivalTime.start} to {contract.arrivalTime.end}</div>}
+                                <div>{I18n.get('From {start} to {end}')
+                                    .replace('{start}', contract.arrivalTime.start)
+                                    .replace('{end}', contract.arrivalTime.end)}</div>}
 
                                 {loadingComplete &&
                                     <div style={{paddingTop: "10px"}}>
-                                        <Header sub>Actual</Header>
+                                        <Header sub>{I18n.get('Actual')}</Header>
                                         {moment(loadingComplete.createdAt).format('llll')}
                                     </div>
                                 }
@@ -356,7 +364,7 @@ class Transport extends Component {
                         </Grid.Row>
                         <Grid.Row>
                             <Grid.Column>
-                                <Label circular={true}>2</Label>Delivery
+                                <Label circular={true}>2</Label>{I18n.get('Delivery')}
                             </Grid.Column>
                             <Grid.Column>
                                 <Address address={contract.delivery}/>
@@ -365,16 +373,18 @@ class Transport extends Component {
                                 {goods}
                             </Grid.Column>
                             <Grid.Column>
-                                <Header sub>Planned</Header>
-                                On {moment(contract.deliveryDate).format('ll')}
+                                <Header sub>{I18n.get('Planned')}</Header>
+                                {I18n.get('On {date}').replace('{date}', moment(contract.deliveryDate).format('ll'))}<br/>
                                 {contract.deliveryTime &&
-                                <div>From {contract.deliveryTime.start} to {contract.deliveryTime.end}</div>}
+                                <div>{I18n.get('From {start} to {end}')
+                                    .replace('{start}', contract.deliveryTime.start)
+                                    .replace('{end}', contract.deliveryTime.end)}</div>}
 
                                 {unloadingComplete &&
-                                    <div style={{paddingTop: "10px"}}>
-                                        <Header sub>Actual</Header>
-                                        {moment(unloadingComplete.createdAt).format('llll')}
-                                    </div>
+                                <div style={{paddingTop: "10px"}}>
+                                    <Header sub>{I18n.get('Actual')}</Header>
+                                    {moment(unloadingComplete.createdAt).format('llll')}
+                                </div>
                                 }
                             </Grid.Column>
                             <Grid.Column>
@@ -387,15 +397,15 @@ class Transport extends Component {
                     <Grid.Row>
                         <Grid.Column>
                             <Segment>
-                                <Header as={'h4'}>Documents and photos</Header>
+                                <Header as={'h4'}>{I18n.get('Documents and photos')}</Header>
                                 <Grid columns={2} divided>
                                     <Grid.Row divided>
-                                        <Grid.Column><Header as={'h5'}>Type</Header></Grid.Column>
-                                        <Grid.Column><Header as={'h5'}>Name</Header></Grid.Column>
+                                        <Grid.Column><Header as={'h5'}>{I18n.get('Type')}</Header></Grid.Column>
+                                        <Grid.Column><Header as={'h5'}>{I18n.get('Name')}</Header></Grid.Column>
                                     </Grid.Row>
                                     <Grid.Row>
                                         <Grid.Column>
-                                            <Icon name='file'/> Consignment note
+                                            <Icon name='file'/> {I18n.get('Consignment note')}
                                         </Grid.Column>
                                         <Grid.Column>
                                             <a onClick={() => this.downloadPdf()}

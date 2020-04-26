@@ -11,6 +11,7 @@
     "aws-amplify": "^2.2.0",
     "aws-amplify-react": "^3.1.1",
     "graphql-tag": "^2.10.1",
+    "i18next-scanner": "^2.11.0",
     "lodash": "^4.17.15",
     "moment": "^2.24.0",
     "react": "^16.5.0",
@@ -26,7 +27,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "i18n": "i18next-scanner --config i18next-scanner.config.js 'src/**/*.{js,jsx}'"
   },
   "browserslist": {
     "production": [

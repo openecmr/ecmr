@@ -11,7 +11,7 @@ import {
     Modal, List, Dropdown
 } from "semantic-ui-react";
 import React from "react";
-import {API, Auth, graphqlOperation} from 'aws-amplify';
+import {API, Auth, graphqlOperation, I18n} from 'aws-amplify';
 import * as mutations from './graphql/mutations'
 import * as queries from "./graphql/queries";
 import moment from "moment";
@@ -74,7 +74,7 @@ class ContactPicker extends Component {
             username: (await Auth.currentAuthenticatedUser()).getUsername()
         }));
         this.setState({
-            options: response.data.listContacts.items.map(e => ({text: `${e.name}, ${e.address}, ${e.country}`, key: e.id, value: e.id}))
+            options: response.data.listContacts.items.map(e => ({text: [e.name, e.address, e.country].filter(Boolean).join(", "), key: e.id, value: e.id}))
         });
     }
 
@@ -84,7 +84,7 @@ class ContactPicker extends Component {
         return (
             <div style={{marginBottom: '15px'}}>
                 <Dropdown
-                    placeholder='Select contact'
+                    placeholder={I18n.get('Select contact')}
                     fluid
                     search
                     clearable
@@ -145,7 +145,7 @@ class DriverPicker extends Component {
         return (
             <div style={{marginBottom: '15px'}}>
                 <Dropdown
-                    placeholder='Select driver'
+                    placeholder={I18n.get('Select driver')}
                     fluid
                     search
                     clearable
@@ -194,7 +194,7 @@ class VehiclePicker extends Component {
         return (
             <div style={{marginBottom: '15px'}}>
                 <Dropdown
-                    placeholder='Select vehicle'
+                    placeholder={I18n.get('Select vehicle')}
                     fluid
                     search
                     clearable
@@ -215,7 +215,7 @@ class Carrier extends Component {
 
     render() {
         return (<div>
-            <Header as={'h3'}>Enter carrier information</Header>
+            <Header as={'h3'}>{I18n.get('Enter carrier information')}</Header>
             <ContactPicker contactSelected={(contactId) => {this.props.contactSelected(contactId)}}
                            contactId={this.props.contactId} />
 
@@ -232,7 +232,7 @@ class Shipper extends NewTransportForm {
 
     render() {
         return (<div>
-            <Header as={'h3'}>Enter shipper information</Header>
+            <Header as={'h3'}>{I18n.get('Enter shipper information')}</Header>
             <ContactPicker contactSelected={(contactId) => {this.props.contactSelected(contactId)}}
                            contactId={this.props.contactId} />
 
@@ -244,7 +244,7 @@ class Delivery extends NewTransportForm {
     constructor(props) {
         super(props);
 
-        this.label = "Enter delivery address";
+        this.label = I18n.get("Enter delivery address");
     }
 
     renderFields() {
@@ -256,17 +256,17 @@ class Delivery extends NewTransportForm {
                                contactId={this.props.contactId} />
 
                 <Form.Field key={"pickup"}>
-                    <label>Planned delivery date</label>
+                    <label>{I18n.get('Planned delivery date')}</label>
                     <Form.Group inline >
-                        <Form.Input label="On" onChange={this.handleInput} name="deliveryDate" value={this.props.value["deliveryDate"]} type={'date'}/>
+                        <Form.Input label={I18n.get("On")} onChange={this.handleInput} name="deliveryDate" value={this.props.value["deliveryDate"]} type={'date'}/>
                         <Form.Input
-                            label={"Between"}
+                            label={I18n.get("Between")}
                             placeholder={"12:05"}
                             onChange={this.handleInput}
                             name="deliveryFromTime"
                             value={this.props.value["deliveryFromTime"]} type={'time'} />
                         <Form.Input
-                            label={"And"}
+                            label={I18n.get("And")}
                             placeholder={"12:15"}
                             onChange={this.handleInput}
                             name="deliveryEndTime"
@@ -279,10 +279,10 @@ class Delivery extends NewTransportForm {
 }
 
 const categoryOptions = [
-    {text: 'pallets', value: 'pallets'},
-    {text: 'packages', value: 'packages'},
-    {text: 'roll containers', value: 'roll containers'},
-    {text: 'bulk', value: 'bulk'}
+    {text: I18n.get('pallets'), value: 'pallets'},
+    {text: I18n.get('packages'), value: 'packages'},
+    {text: I18n.get('roll containers'), value: 'roll containers'},
+    {text: I18n.get('bulk'), value: 'bulk'}
 ];
 const CategoryDropdown = ({onChange, value}) =>
     <Dropdown options={categoryOptions} clearable={true} fluid
@@ -310,7 +310,7 @@ class Pickup extends NewTransportForm {
     constructor(props) {
         super(props);
 
-        this.label = "Add a loading point";
+        this.label = I18n.get("Add a loading point");
     }
 
     handleChangeForLoad = (e, { name, value }) => {
@@ -332,25 +332,26 @@ class Pickup extends NewTransportForm {
                                contactId={this.props.contactId} />
 
                 <Form.Field key={"pickup"}>
-                    <label>Planned pickup date</label>
+                    <label>{I18n.get('Planned pickup date')}</label>
                     <Form.Group inline >
-                        <Form.Input label="On" onChange={this.handleInput} name="pickupDate" value={this.props.value["pickupDate"]} type={'date'} />
+                        <Form.Input label={I18n.get("On")} onChange={this.handleInput} name="pickupDate"
+                                    value={this.props.value["pickupDate"]} type={'date'} />
 
                         <Form.Input
-                            label={"Between"}
+                            label={I18n.get("Between")}
                             placeholder={"12:05"}
                             onChange={this.handleInput}
                             name="pickupFromTime"
                             value={this.props.value["pickupFromTime"]} type={'time'} />
                         <Form.Input
-                            label={"And"}
+                            label={I18n.get("And")}
                             placeholder={"12:15"}
                             onChange={this.handleInput}
                             name="pickupEndTime"
                             value={this.props.value["pickupEndTime"]} type={'time'} />
                     </Form.Group>
                 </Form.Field>
-                <Header as={'h3'} key={"header"}>Loads</Header>
+                <Header as={'h3'} key={"header"}>{I18n.get('Loads')}</Header>
                 {this.showLoad()}
                 {this.renderLoads()}
             </Fragment>
@@ -358,45 +359,45 @@ class Pickup extends NewTransportForm {
     }
 
     showLoad() {
-        const trigger = <Button content={"Add a load"} icon={"plus square"} labelPosition={"left"} onClick={() => this.setState({ modalOpen: true, index: null, ...this.emptyLoad })}/>;
+        const trigger = <Button content={I18n.get("Add a load")} icon={"plus square"} labelPosition={"left"} onClick={() => this.setState({ modalOpen: true, index: null, ...this.emptyLoad })}/>;
 
         return (<Modal open={this.state.modalOpen}  trigger={trigger} size='small' key={this.state.index}>
-            <Header icon={"plus square"} content={"Add load"} />
+            <Header icon={"plus square"} content={I18n.get("Add load")} />
             <Modal.Content>
                 <Form id={"item"}>
-                    <Form.Field label='Category'
+                    <Form.Field label={I18n.get('Category')}
                                 name={"category"}
                                 control={CategoryDropdown}
                                 value={this.state.category}
                                 onChange={this.handleChangeForLoad}/>
                     {/*<CategoryDropdown />*/}
                     <Form.Group>
-                        <Form.Input label='Quantity' type='text' size={"mini"} name={"quantity"} value={this.state.quantity || ''} onChange={this.handleChangeForLoad}/>
+                        <Form.Input label={I18n.get('Quantity')} type='text' size={"mini"} name={"quantity"} value={this.state.quantity || ''} onChange={this.handleChangeForLoad}/>
                     </Form.Group>
                     <Form.Group>
-                        <Form.Input label='Volume (m³)' type={'text'} size={"mini"} name={"volume"} value={this.state.volume || ''} onChange={this.handleChangeForLoad}/>
+                        <Form.Input label={I18n.get('Volume (m³)')} type={'text'} size={"mini"} name={"volume"} value={this.state.volume || ''} onChange={this.handleChangeForLoad}/>
                     </Form.Group>
                     <Form.Group>
-                        <Form.Input  label='Net weight (kg)' type={'text'} size={"mini"} name={"netWeight"} value={this.state.netWeight || ''} onChange={this.handleChangeForLoad}/>
+                        <Form.Input  label={I18n.get('Net weight (kg)')} type={'text'} size={"mini"} name={"netWeight"} value={this.state.netWeight || ''} onChange={this.handleChangeForLoad}/>
                     </Form.Group>
                     <Form.Group>
-                        <Form.Input  label='Load meters (m)' type={'text'} size={"mini"} name={"loadMeters"} value={this.state.loadMeters || ''} onChange={this.handleChangeForLoad}/>
+                        <Form.Input  label={I18n.get('Load meters (m)')} type={'text'} size={"mini"} name={"loadMeters"} value={this.state.loadMeters || ''} onChange={this.handleChangeForLoad}/>
                     </Form.Group>
-                    <Form.Input label='Description' type='input' name={"description"} value={this.state.description} onChange={this.handleChangeForLoad}/>
+                    <Form.Input label={I18n.get('Description')} type='input' name={"description"} value={this.state.description} onChange={this.handleChangeForLoad}/>
 
                 </Form>
             </Modal.Content>
             <Modal.Actions>
                 {this.state.index !== null &&
                 (<Button color='red' inverted onClick={() => this.removeLoad()}>
-                    <Icon name='remove' /> Remove
+                    <Icon name='remove' /> {I18n.get('Remove')}
                 </Button>)}
 
                 <Button color='red' inverted onClick={() => this.setState({modalOpen: false})}>
-                    <Icon name='cancel' /> Cancel
+                    <Icon name='cancel' /> {I18n.get('Cancel')}
                 </Button>
                 <Button color='green' inverted onClick={() => this.addLoad()}>
-                    <Icon name='checkmark' /> Add load
+                    <Icon name='checkmark' /> {I18n.get('Add load')}
                 </Button>
             </Modal.Actions>
         </Modal>);
@@ -447,7 +448,7 @@ class Driver extends Component {
 
     render() {
         return (<div>
-            <Header as={'h3'}>Enter driver information</Header>
+            <Header as={'h3'}>{I18n.get('Enter driver information')}</Header>
             <DriverPicker driverSelected={(driver) => {this.props.driverSelected(driver)}}
                            driverId={this.props.driverId} />
 
@@ -459,13 +460,13 @@ class Vehicle extends NewTransportForm {
     constructor(props) {
         super(props);
 
-        this.label = "Enter vehicle information";
+        this.label = I18n.get("Enter vehicle information");
     }
 
     render() {
         return (
             <div>
-                <Header as={'h3'}>Enter truck information</Header>
+                <Header as={'h3'}>{I18n.get('Enter truck information')}</Header>
                 <VehiclePicker type={"TRUCK"}  companyId={this.props.companyId}
                                vehicleSelected={(vehicleId) => {this.props.truckSelected(vehicleId)}}
                                vehicleId={this.props.truckId} />
@@ -483,7 +484,7 @@ class Trailer extends NewTransportForm {
     render() {
         return (
             <div>
-                <Header as={'h3'}>Enter trailer information</Header>
+                <Header as={'h3'}>{I18n.get('Enter trailer information')}</Header>
                 <VehiclePicker type={"TRAILER"}  companyId={this.props.companyId}
                                vehicleSelected={(vehicleId) => {this.props.trailerSelected(vehicleId)}}
                                vehicleId={this.props.trailerId} />
@@ -498,21 +499,21 @@ class NewTransport extends Component {
 
         this.form = [
             {
-                section: 'Carrier',
+                section: I18n.get('Carrier'),
                 items: [
-                    {label: 'Carrier', icon: 'truck', form: () =>
+                    {label: I18n.get('Carrier'), icon: 'truck', form: () =>
                             <Carrier
                                 contactSelected={(contactId) => this.setState({'carrierContactId' : contactId})}
                                 contactId={this.state.carrierContactId}
                             />},
-                    {label: 'Driver', icon: 'user', form: () => <Driver
+                    {label: I18n.get('Driver'), icon: 'user', form: () => <Driver
                             driverSelected={(driver) => this.setState({
                                 driverDriverId : driver.id,
                                 carrierUsername: driver.carrier ? driver.carrier : "-"
                             })}
                             driverId={this.state.driverDriverId}
                         />},
-                    {label: 'Vehicle license plate', icon: 'truck', form: () => <Vehicle
+                    {label: I18n.get('Vehicle license plate'), icon: 'truck', form: () => <Vehicle
                             companyId={this.props.company.id}
                             truckSelected={(vehicle) => this.setState({
                                 truckVehicleId: vehicle ? vehicle.id : null,
@@ -520,7 +521,7 @@ class NewTransport extends Component {
                             })}
                             truckId={this.state.truckVehicleId}
                         />},
-                    {label: 'Trailer license plate', icon: 'truck', form: () => <Trailer
+                    {label: I18n.get('Trailer license plate'), icon: 'truck', form: () => <Trailer
                             companyId={this.props.company.id}
                             trailerSelected={(vehicle) => this.setState({
                                 trailerVehicleId: vehicle.id,
@@ -533,17 +534,17 @@ class NewTransport extends Component {
                 ]
             },
             {
-                section: 'Shipper',
+                section: I18n.get('Shipper'),
                 items: [
-                    {label: 'Shipper', icon: 'building', form: () =>
+                    {label: I18n.get('Shipper'), icon: 'building', form: () =>
                             <Shipper  contactSelected={(contactId) => this.setState({'shipperContactId' : contactId})}
                                       contactId={this.state.shipperContactId} />}
                 ]
             },
             {
-                section: 'Pickup',
+                section: I18n.get('Pickup'),
                 items: [
-                    {label: 'Pickup', icon: 'sign-out', form: () =>
+                    {label: I18n.get('Pickup'), icon: 'sign-out', form: () =>
                             <Pickup contactSelected={(contactId) => this.setState({
                                 'pickup': {
                                     ...this.state.pickup,
@@ -559,9 +560,9 @@ class NewTransport extends Component {
                 ]
             },
             {
-                section: 'Delivery',
+                section: I18n.get('Delivery'),
                 items: [
-                    {label: 'Delivery', icon: 'sign-in', form: () =>
+                    {label: I18n.get('Delivery'), icon: 'sign-in', form: () =>
                             <Delivery onChange={this.createOnUpdateFor('delivery')}
                                       contactSelected={(contactId) => this.setState({'delivery': {
                                           ...this.state.delivery,
@@ -705,7 +706,7 @@ class NewTransport extends Component {
                 <Grid columns={2} container stackable style={{ padding: '1em 0em' }}>
                     <Grid.Row>
                         <Grid.Column>
-                            <Header as={'h2'}>New A -> B Transport</Header>
+                            <Header as={'h2'}>{I18n.get('New A -&gt; B Transport')}</Header>
                         </Grid.Column>
                     </Grid.Row>
                     <Grid.Row>
@@ -721,7 +722,7 @@ class NewTransport extends Component {
                                         this.state.error
                                     ]}
                                 />}
-                                <Button floated={"right"} loading={this.state.loading} onClick={() => this.save()}>Save</Button>
+                                <Button floated={"right"} loading={this.state.loading} onClick={() => this.save()}>{I18n.get('Save')}</Button>
                                 <Divider clearing hidden fitted />
                             </Segment>
                         </Grid.Column>
@@ -741,23 +742,23 @@ class NewTransport extends Component {
     validate() {
         let error;
         if (!this.state.carrierContactId) {
-            error = "Missing carrier address";
+            error = I18n.get("Missing carrier address");
         } else if (!this.state.truckVehicleId) {
-            error = "Missing truck";
+            error = I18n.get("Missing truck");
         } else if (!this.state.trailerVehicleId) {
-            error = "Missing trailer vehicle";
+            error = I18n.get("Missing trailer vehicle");
         } else if (!this.state.shipperContactId) {
-            error = "Missing shipper address";
+            error = I18n.get("Missing shipper address");
         } else if (!this.state.pickup.contactId) {
-            error = "Missing pickup address";
+            error = I18n.get("Missing pickup address");
         } else if (!this.state.pickup.pickupDate) {
-            error = "Missing pickup date";
+            error = I18n.get("Missing pickup date");
         } else if (!this.state.delivery.contactId) {
-            error = "Missing delivery address";
+            error = I18n.get("Missing delivery address");
         }  else if (!this.state.delivery.deliveryDate) {
-            error = "Missing delivery date";
+            error = I18n.get("Missing delivery date");
         } else if (this.state.loads.length === 0) {
-            error = "Need at least one load item";
+            error = I18n.get("Need at least one load item");
         }
         this.setState({
             error
@@ -870,7 +871,7 @@ class NewTransport extends Component {
         } catch (ex) {
             console.warn("error while creating transport" + JSON.stringify(ex));
             this.setState({
-                error: "Cannot create transport because validation failed. Please ensure all fields are filled in.",
+                error: I18n.get("Cannot create transport because validation failed. Please ensure all fields are filled in."),
                 loading: false
             })
         }
