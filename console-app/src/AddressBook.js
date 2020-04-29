@@ -1,6 +1,6 @@
 import {Button, Form, Header, Icon, Modal, Table} from "semantic-ui-react";
 import React, {Component} from "react";
-import {API, graphqlOperation} from "aws-amplify";
+import {API, graphqlOperation, I18n} from "aws-amplify";
 import * as queries from "./graphql/queries";
 import * as mutations from "./graphql/mutations";
 
@@ -38,22 +38,22 @@ class AddAddressModal extends Component {
         const { name, address, postalCode, city, country } = this.state.contact;
 
         return (<Modal key={"showLoad"} open={this.props.show} size='small'>
-            <Header icon={"plus square"} content={"Address"}/>
+            <Header icon={"plus square"} content={I18n.get("Address")}/>
             <Modal.Content>
                 <Form id={"item"}>
-                    <Form.Input onChange={this.handleChange} label='Name' type='input' name={"name"} value={name} placeholder={"The Trucking Company"}/>
-                    <Form.Input onChange={this.handleChange} label='Address' type='input' name={"address"} value={address} placeholder={"22 Oxford street"}/>
-                    <Form.Input onChange={this.handleChange} label='Postal code' type='input' name={"postalCode"} value={postalCode} placeholder={"23411"}/>
-                    <Form.Input onChange={this.handleChange} label='City' type='input' name={"city"} value={city} placeholder={"London"}/>
-                    <Form.Input onChange={this.handleChange} label='Country' type='input' name={"country"} value={country} placeholder={"United Kingdom"}/>
+                    <Form.Input onChange={this.handleChange} label={I18n.get('Name')} type='input' name={"name"} value={name} placeholder={I18n.get("The Trucking Company")}/>
+                    <Form.Input onChange={this.handleChange} label={I18n.get('Address')} type='input' name={"address"} value={address} placeholder={I18n.get("22 Oxford street")}/>
+                    <Form.Input onChange={this.handleChange} label={I18n.get('Postal code')} type='input' name={"postalCode"} value={postalCode} placeholder={I18n.get("23411")}/>
+                    <Form.Input onChange={this.handleChange} label={I18n.get('City')} type='input' name={"city"} value={city} placeholder={I18n.get("London")}/>
+                    <Form.Input onChange={this.handleChange} label={I18n.get('Country')} type='input' name={"country"} value={country} placeholder={I18n.get("United Kingdom")}/>
                 </Form>
             </Modal.Content>
             <Modal.Actions>
                 <Button color='red' inverted onClick={() => this.props.hide()}>
-                    <Icon name='remove'/> Cancel
+                    <Icon name='remove'/> {I18n.get('Cancel')}
                 </Button>
                 <Button color='green' inverted onClick={() => this.add()}>
-                    <Icon name='checkmark'/> {this.state.contact.id ? 'Update contact' : 'Add contact'}
+                    <Icon name='checkmark'/> {this.state.contact.id ? I18n.get('Update contact') : I18n.get('Add contact')}
                 </Button>
             </Modal.Actions>
         </Modal>)
@@ -105,23 +105,23 @@ class AddressBook extends Component {
                                         newAddress: true,
                                         selectedContact: null
                                     })}>
-                                <Icon name='plus'/> New contact
+                                <Icon name='plus'/> {I18n.get('New contact')}
                             </Button>
 
                             <Button floated='right' icon labelPosition='left' primary size='small'
                                     disabled={selectedContact == null}
                                     onClick={() => this.setState({showAddress: true, newAddress: false})}>
-                                <Icon name='edit'/> Edit contact
+                                <Icon name='edit'/> {I18n.get('Edit contact')}
                             </Button>
                         </Table.HeaderCell>
                     </Table.Row>
                     <Table.Row>
                         <Table.HeaderCell collapsing/>
-                        <Table.HeaderCell>Name</Table.HeaderCell>
-                        <Table.HeaderCell>Address</Table.HeaderCell>
-                        <Table.HeaderCell>Postal code</Table.HeaderCell>
-                        <Table.HeaderCell>City</Table.HeaderCell>
-                        <Table.HeaderCell>Country</Table.HeaderCell>
+                        <Table.HeaderCell>{I18n.get('Name')}</Table.HeaderCell>
+                        <Table.HeaderCell>{I18n.get('Address')}</Table.HeaderCell>
+                        <Table.HeaderCell>{I18n.get('Postal code')}</Table.HeaderCell>
+                        <Table.HeaderCell>{I18n.get('City')}</Table.HeaderCell>
+                        <Table.HeaderCell>{I18n.get('Country')}</Table.HeaderCell>
                     </Table.Row>
                 </Table.Header>
                 <Table.Body>

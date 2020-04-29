@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {Button, Form, Header, Icon, Image, List, Modal, Popup, Table} from "semantic-ui-react";
-import {API, Auth, graphqlOperation} from "aws-amplify";
+import {API, Auth, graphqlOperation, I18n} from "aws-amplify";
 import * as queries from "./graphql/queries";
 import * as mutations from "./graphql/mutations";
 import * as ConsoleUtils from "./ConsoleUtils";
@@ -16,21 +16,21 @@ const AssociationSecretCell = ({associationSecret}) =>
 
         on='click'
         content={<div>
-            In order for a driver to activate an account he needs to install the Open e-CMR app, create an account and link the account using this secret code.
-            The steps for the driver are:
+            {I18n.get('In order for a driver to activate an account he needs to install the Open e-CMR app, create an account and link the account using this secret code.')}{' '}
+            {I18n.get('The steps for the driver are:')}
             <List bulleted>
-                <List.Item>Install the Open e-CMR app
+                <List.Item>{I18n.get('Install the Open e-CMR app')}
                     <List.List>
-                        <List.Item href='https://play.google.com/store/apps/details?id=com.ecmrapp'>Search for open ecmr in Google Play</List.Item>
+                        <List.Item href='https://play.google.com/store/apps/details?id=com.ecmrapp'>{I18n.get('Search for open ecmr in Google Play')}</List.Item>
                     </List.List>
                 </List.Item>
-                <List.Item>Create an account (the easiest way is to use Google sign in)
+                <List.Item>{I18n.get('Create an account (the easiest way is to use Google sign in)')}
                 </List.Item>
-                <List.Item>Go to <em>Settings &gt; Link to company</em> and enter the secret code</List.Item>
+                <List.Item>{I18n.get('Go to ')}<em>{I18n.get('Settings')} &gt; {I18n.get('Link to company')}</em> {I18n.get('and enter the secret code')}</List.Item>
             </List>
-            After activation the secret code will disappear and the account name will be filled in.
+            {I18n.get('After activation the secret code will disappear and the account name will be filled in.')}
         </div>}
-        header={"Activating an account"}
+        header={I18n.get("Activating an account")}
         trigger={<div style={{textDecoration: "underline"}}>{associationSecret}</div>}
     /></Table.Cell>
 
@@ -62,18 +62,19 @@ class AddDriverModal extends Component {
         const { name, address } = this.state.driver;
 
         return (<Modal key={"showLoad"} open={this.props.show} size='small'>
-            <Header icon={"plus square"} content={"Driver"}/>
+            <Header icon={"plus square"} content={I18n.get('Driver')}/>
             <Modal.Content>
                 <Form id={"item"}>
-                    <Form.Input onChange={this.handleChange} label='Name' type='input' name={"name"} value={name} placeholder={"Name of driver"}/>
+                    <Form.Input onChange={this.handleChange} label={I18n.get('Name')} type='input' name={"name"}
+                                value={name} placeholder={I18n.get('Name of driver')}/>
                 </Form>
             </Modal.Content>
             <Modal.Actions>
                 <Button color='red' inverted onClick={() => this.props.hide()}>
-                    <Icon name='remove'/> Cancel
+                    <Icon name='remove'/> {I18n.get('Cancel')}
                 </Button>
                 <Button color='green' inverted onClick={() => this.add()}>
-                    <Icon name='checkmark'/> {this.state.driver.id ? 'Update driver' : 'Add driver'}
+                    <Icon name='checkmark'/> {this.state.driver.id ? I18n.get('Update driver') : I18n.get('Add driver')}
                 </Button>
             </Modal.Actions>
         </Modal>)
@@ -130,27 +131,27 @@ class Drivers extends Component {
                                     newDriver: true,
                                     selectedDriver: null
                                 })}>
-                            <Icon name='plus'/> New driver
+                            <Icon name='plus'/> {I18n.get('New driver')}
                         </Button>
 
                         <Button floated='right' icon labelPosition='left' primary size='small'
                                 disabled={selectedDriver == null}
                                 onClick={() => this.setState({showAddDriver: true, newDriver: false})}>
-                            <Icon name='edit'/> Edit driver
+                            <Icon name='edit'/> {I18n.get('Edit driver')}
                         </Button>
 
                         <Button floated='right' icon labelPosition='left' primary size='small'
                                 disabled={selectedDriver == null}
                                 onClick={() => this.deleteDriver()}>
-                            <Icon name='edit'/> Delete driver
+                            <Icon name='edit'/> {I18n.get('Delete driver')}
                         </Button>
                     </Table.HeaderCell>
                 </Table.Row>
                 <Table.Row>
                     <Table.HeaderCell collapsing/>
-                    <Table.HeaderCell>Name</Table.HeaderCell>
-                    <Table.HeaderCell>Linked account</Table.HeaderCell>
-                    <Table.HeaderCell>Association secret</Table.HeaderCell>
+                    <Table.HeaderCell>{I18n.get('Name')}</Table.HeaderCell>
+                    <Table.HeaderCell>{I18n.get('Linked account')}</Table.HeaderCell>
+                    <Table.HeaderCell>{I18n.get('Association secret')}</Table.HeaderCell>
                 </Table.Row>
             </Table.Header>
             <Table.Body>
