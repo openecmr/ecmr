@@ -18,7 +18,7 @@ const AddressCell = ({address}) => {
 const ConsignmentCell = ({loads}) => {
     return (
         <Table.Cell verticalAlign="top" width="3">
-            {loads.map((e) => [e.quantity, e.category, e.description].join(" ")).join(" ")}
+            {loads.map((e) => [e.quantity, I18n.get(e.category), e.description].join(" ")).join(" ")}
         </Table.Cell>
     )
 };

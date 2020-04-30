@@ -278,14 +278,14 @@ class Delivery extends NewTransportForm {
     }
 }
 
-const categoryOptions = [
+const categoryOptions = () => [
     {text: I18n.get('pallets'), value: 'pallets'},
     {text: I18n.get('packages'), value: 'packages'},
     {text: I18n.get('roll containers'), value: 'roll containers'},
     {text: I18n.get('bulk'), value: 'bulk'}
 ];
 const CategoryDropdown = ({onChange, value}) =>
-    <Dropdown options={categoryOptions} clearable={true} fluid
+    <Dropdown options={categoryOptions()} clearable={true} fluid
               // onChange={(e, data) => {onChange(data.value)}}
               onChange={(e, data) => onChange(e, {
                   name: "category",
@@ -430,7 +430,7 @@ class Pickup extends NewTransportForm {
                         })}>
                             <List.Icon name='archive' size='large' verticalAlign='middle' />
                             <List.Content>
-                                <List.Header as='a'>{load.quantity} {load.category}</List.Header>
+                                <List.Header as='a'>{load.quantity} {I18n.get(load.category)}</List.Header>
                                 <List.Description as='a'>{load.description}</List.Description>
                             </List.Content>
                         </List.Item>);
@@ -508,8 +508,8 @@ class NewTransport extends Component {
                             />},
                     {label: I18n.get('Driver'), icon: 'user', form: () => <Driver
                             driverSelected={(driver) => this.setState({
-                                driverDriverId : driver.id,
-                                carrierUsername: driver.carrier ? driver.carrier : "-"
+                                driverDriverId : driver ? driver.id : null,
+                                carrierUsername: (driver && driver.carrier) ? driver.carrier : "-"
                             })}
                             driverId={this.state.driverDriverId}
                         />},
@@ -706,7 +706,7 @@ class NewTransport extends Component {
                 <Grid columns={2} container stackable style={{ padding: '1em 0em' }}>
                     <Grid.Row>
                         <Grid.Column>
-                            <Header as={'h2'}>{I18n.get('New A -&gt; B Transport')}</Header>
+                            <Header as={'h2'}>{I18n.get('New A -&gt; B Transport').replace('&gt;', '>')}</Header>
                         </Grid.Column>
                     </Grid.Row>
                     <Grid.Row>

@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {Button, Dropdown, Form, Header, Icon, Modal, Table} from "semantic-ui-react";
-import {API, Auth, graphqlOperation} from "aws-amplify";
+import {API, Auth, graphqlOperation, I18n} from "aws-amplify";
 import * as queries from "./graphql/queries";
 import * as mutations from "./graphql/mutations";
 
@@ -10,12 +10,12 @@ const TextCell = ({text}) => {
     )
 };
 
-const typeOptions = [
-    {text: 'truck', value: 'TRUCK'},
-    {text: 'trailer', value: 'TRAILER'}
+const typeOptions = () => [
+    {text: I18n.get('truck'), value: 'TRUCK'},
+    {text: I18n.get('trailer'), value: 'TRAILER'}
 ];
 const TypeDropdown = ({onChange, value}) =>
-    <Dropdown options={typeOptions} clearable={true} fluid
+    <Dropdown options={typeOptions()} clearable={true} fluid
         // onChange={(e, data) => {onChange(data.value)}}
               onChange={(e, data) => onChange(e, {
                   name: "type",
@@ -52,24 +52,26 @@ class AddVehicleModal extends Component {
         const { licensePlateNumber, type, description } = this.state.vehicle;
 
         return (<Modal key={"showLoad"} open={this.props.show} size='small'>
-            <Header icon={"plus square"} content={"Vehicle"}/>
+            <Header icon={"plus square"} content={I18n.get("Vehicle")}/>
             <Modal.Content>
                 <Form id={"item"}>
-                    <Form.Field label='Type'
+                    <Form.Field label={I18n.get('Type')}
                                 name={"type"}
                                 control={TypeDropdown}
                                 value={type}
                                 onChange={this.handleChange}/>
-                    <Form.Input onChange={this.handleChange} label='License plate number' type='input' name={"licensePlateNumber"} value={licensePlateNumber} placeholder={"License plate number"}/>
-                    <Form.Input onChange={this.handleChange} label='Description' type='input' name={"description"} value={description} placeholder={"Description"}/>
+                    <Form.Input onChange={this.handleChange} label={I18n.get('License plate number')} type='input' name={"licensePlateNumber"} value={licensePlateNumber}
+                                placeholder={I18n.get("License plate number")}/>
+                    <Form.Input onChange={this.handleChange} label={I18n.get('Description')} type='input' name={"description"} value={description}
+                                placeholder={I18n.get("Description")}/>
                 </Form>
             </Modal.Content>
             <Modal.Actions>
                 <Button color='red' inverted onClick={() => this.props.hide()}>
-                    <Icon name='remove'/> Cancel
+                    <Icon name='remove'/> {I18n.get('Cancel')}
                 </Button>
                 <Button color='green' inverted onClick={() => this.add()}>
-                    <Icon name='checkmark'/> {this.state.vehicle.id ? 'Update vehicle' : 'Add vehicle'}
+                    <Icon name='checkmark'/> {this.state.vehicle.id ? I18n.get('Update vehicle') : I18n.get('Add vehicle')}
                 </Button>
             </Modal.Actions>
         </Modal>)
@@ -129,27 +131,27 @@ class Vehicles extends Component {
                                     newVehicle: true,
                                     selectedVehicle: null
                                 })}>
-                            <Icon name='plus'/> New vehicle
+                            <Icon name='plus'/> {I18n.get('New vehicle')}
                         </Button>
 
                         <Button floated='right' icon labelPosition='left' primary size='small'
-                                disabled={selectedVehicle == null}
+                                disabled={!selectedVehicle}
                                 onClick={() => this.setState({showAddVehicle: true, newVehicle: false})}>
-                            <Icon name='edit'/> Edit vehicle
+                            <Icon name='edit'/> {I18n.get('Edit vehicle')}
                         </Button>
 
                         <Button floated='right' icon labelPosition='left' primary size='small'
-                                disabled={selectedVehicle == null}
+                                disabled={!selectedVehicle}
                                 onClick={() => this.deleteVehicle()}>
-                            <Icon name='edit'/> Delete vehicle
+                            <Icon name='edit'/> {I18n.get('Delete vehicle')}
                         </Button>
                     </Table.HeaderCell>
                 </Table.Row>
                 <Table.Row>
                     <Table.HeaderCell collapsing/>
-                    <Table.HeaderCell>License plate number</Table.HeaderCell>
-                    <Table.HeaderCell>Type</Table.HeaderCell>
-                    <Table.HeaderCell>Description</Table.HeaderCell>
+                    <Table.HeaderCell>{I18n.get('License plate number')}</Table.HeaderCell>
+                    <Table.HeaderCell>{I18n.get('Type')}</Table.HeaderCell>
+                    <Table.HeaderCell>{I18n.get('Description')}</Table.HeaderCell>
                 </Table.Row>
             </Table.Header>
             <Table.Body>
@@ -169,7 +171,7 @@ class Vehicles extends Component {
                                        onChange={(event, {checked}) => this.handleCheck(e, checked)}/>
                     </Table.Cell>
                     <TextCell text={e.licensePlateNumber}/>
-                    <TextCell text={e.type.toLowerCase()}/>
+                    <TextCell text={I18n.get(e.type.toLowerCase())}/>
                     <TextCell text={e.description}/>
                 </Table.Row>
             )

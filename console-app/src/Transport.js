@@ -257,7 +257,7 @@ class Transport extends Component {
             <List>
                 {contract.loads.map((load) =>
                     <List.Item>
-                        {load.quantity} {load.category}
+                        {load.quantity} {I18n.get(load.category)}
                         {load.description && `, ${load.description}`}
                         {load.volume && `, ${load.volume} ${I18n.get('m³')}`}
                         {load.netWeight && `, ${load.netWeight} ${I18n.get('kg')}`}

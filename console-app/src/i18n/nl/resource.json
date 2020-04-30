@@ -107,7 +107,7 @@
   "m³": "m³",
   "kg": "kg",
   "m": "m",
-  "Transport assigned to a driver that is not yet linked": "Transport is toegekend aan een chauffeur die nog gelinkt is",
+  "Transport assigned to a driver that is not yet linked": "Transport is toegekend aan een chauffeur die nog niet gekoppeld is",
   "The driver needs to enter the association code in the app, please see the drivers page.": "De chauffeur moet de link-code invoeren in zijn app, zie 'chauffeurs' voor meer informatie.",
   "Delete": "Verwijderen",
   "Copy": "Kopiëren",
@@ -157,5 +157,14 @@
   "Edit driver": "Chauffeur bijwerken",
   "Delete driver": "Chauffeur verwijderen",
   "Linked account": "Gekoppeld account",
-  "Association secret": "Code voor koppelen"
+  "Association secret": "Code voor koppelen",
+  "Vehicle": "Voertuig",
+  "License plate number": "Kenteken",
+  "Update vehicle": "Voertuig bijwerken",
+  "Add vehicle": "Voertuig toevoegen",
+  "New vehicle": "Nieuw voertuig",
+  "Edit vehicle": "Voertuig bewerken",
+  "Delete vehicle": "Verwijder voertuig",
+  "truck": "trekker",
+  "trailer": "trailer"
 }
