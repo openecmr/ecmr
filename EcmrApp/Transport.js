@@ -2,20 +2,16 @@ import {Component} from "react";
 import React from "react";
 import {
     Alert,
-    SectionList,
     StyleSheet,
     Text,
     View,
-    FlatList,
     ScrollView,
     TouchableOpacity,
-    ActivityIndicator, Image
-} from "react-native";
+    ActivityIndicator} from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
-import {Address, ArrivalDate, LicensePlates, LoadDetailText, MyText, Packages} from "./Components";
+import {Address, ArrivalDate, LicensePlates, LoadDetailText, MyText} from "./Components";
 import { API, graphqlOperation } from 'aws-amplify';
 import * as queries from "./graphql/queries";
-import * as mutations from "./graphql/mutations";
 import moment from "moment";
 import { Auth } from 'aws-amplify';
 import {S3Image} from "aws-amplify-react-native";
@@ -53,19 +49,7 @@ const SignatureEvent = ({signature, signatoryObservation, photos}) => (
         }
         {
             !!photos.length &&
-            <View style={styles.photoFrameContainer}>
-            {
-                [0, 1, 2].map((photo, idx) =>
-                    <View
-                        style={[styles.photoFrame, idx === 2 && styles.photoFrameLast, idx > photos.length - 1 && styles.photoFrameHidden]}
-                        key={idx}>
-                        {photos[photo] && <S3Image style={styles.photo}
-                                                   level={"public"}
-                                                   imgKey={photos[photo].key}/>}
-                    </View>
-                )
-            }
-            </View>
+            Photos(photos)
         }
     </View>
 );
@@ -78,7 +62,7 @@ const LoadDetail = ({load}) => (
 );
 
 class Transport extends Component {
-    static navigationOptions = ({ navigation, screenProps }) => {
+    static navigationOptions = ({ navigation }) => {
         const site = navigation.getParam('site');
         const item = navigation.getParam('item');
         return {
@@ -102,6 +86,7 @@ class Transport extends Component {
 
     render() {
         const contract = this.state.item;
+        const loading = this.state.loading;
         if (!contract || !contract.id) {
             return <MyText>Loading...</MyText>
         }
@@ -136,9 +121,9 @@ class Transport extends Component {
                 <LicensePlates truck={contract.truck} trailer={contract.trailer} style={{paddingTop: 10, ...styles.address}}/>
 
                 <View style={styles.action}>
-                    {firstAction === 'Acknowledge' && <Button title={"Acknowledge transport"} buttonStyle={styles.actionButton} onPress={() => this.confirmAcknowledge()} />}
-                    {firstAction === 'ArrivalOnSite' && <Button title={`Notify arrival at ${direction} site`} buttonStyle={styles.actionButton} onPress={() => this.confirmNotifyArrival()}/>}
-                    {(firstAction === 'LoadingComplete' || firstAction === 'UnloadingComplete') && <Button title={`Confirm ${direction}`} buttonStyle={styles.actionButton} onPress={() => this.confirmLoading()}/>}
+                    {firstAction === 'Acknowledge' && <Button title={"Acknowledge transport"} loading={loading} buttonStyle={styles.actionButton} onPress={() => this.confirmAcknowledge()} />}
+                    {firstAction === 'ArrivalOnSite' && <Button title={`Notify arrival at ${direction} site`} loading={loading} buttonStyle={styles.actionButton} onPress={() => this.confirmNotifyArrival()}/>}
+                    {(firstAction === 'LoadingComplete' || firstAction === 'UnloadingComplete') && <Button loading={loading} title={`Confirm ${direction}`} buttonStyle={styles.actionButton} onPress={() => this.confirmLoading()}/>}
                     {!firstAction &&
                         <View style={{flexDirection: 'row', alignItems: 'center'}}>
                             <Icon color={activityDoneColor} size={30} name='check-circle'/>
@@ -234,10 +219,15 @@ class Transport extends Component {
     }
 
     async acknowledge() {
+        this.setState({
+            loading: true
+        });
+        this.setState({
+            loading: true
+        });
         const item = createUpdateContractInput(this.props.navigation.getParam('item'));
         const now = moment().format();
         const user = await Auth.currentAuthenticatedUser();
-        const userInfo = await Auth.currentUserInfo();
 
         if (!item.events) {
             item.events = [];
@@ -261,6 +251,10 @@ class Transport extends Component {
             });
         } catch (ex) {
             console.log(ex);
+        } finally {
+            this.setState({
+                loading: false
+            });
         }
     }
 
@@ -281,10 +275,12 @@ class Transport extends Component {
     }
 
     async notifyArrival() {
+        this.setState({
+            loading: true
+        });
         const item = createUpdateContractInput(this.props.navigation.getParam('item'));
         const now = moment().format();
         const user = await Auth.currentAuthenticatedUser();
-        const userInfo = await Auth.currentUserInfo();
 
         if (!item.events) {
             item.events = [];
@@ -309,6 +305,10 @@ class Transport extends Component {
             });
         } catch (ex) {
             console.log(ex);
+        } finally {
+            this.setState({
+                loading: false
+            });
         }
     }
 
@@ -330,7 +330,7 @@ class Transport extends Component {
     componentDidMount() {
         this.navigationEventSubscription = this.props.navigation.addListener(
             'willFocus',
-            payload => {
+            () => {
                 this.refresh();
             }
         );
@@ -424,3 +424,11 @@ const styles = StyleSheet.create({
 });
 
 export default Transport;
+
+function Photos(photos) {
+    return <View style={styles.photoFrameContainer}>
+        {[0, 1, 2].map((photo, idx) => <View style={[styles.photoFrame, idx === 2 && styles.photoFrameLast, idx > photos.length - 1 && styles.photoFrameHidden]} key={idx}>
+            {photos[photo] && <S3Image style={styles.photo} level={"public"} imgKey={photos[photo].key} />}
+        </View>)}
+    </View>;
+}
