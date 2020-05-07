@@ -7,7 +7,8 @@
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "i18n": "i18next-scanner --config i18next-scanner.config.js"
   },
   "dependencies": {
     "amazon-cognito-identity-js": "^3.2.1",
@@ -38,7 +39,8 @@
     "babel-jest": "^24.7.1",
     "jest": "^24.7.1",
     "metro-react-native-babel-preset": "^0.57.0",
-    "react-test-renderer": "16.12.0"
+    "react-test-renderer": "16.12.0",
+    "i18next-scanner": "^2.11.0"
   },
   "jest": {
     "preset": "react-native"

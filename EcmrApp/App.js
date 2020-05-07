@@ -1,5 +1,5 @@
 import React from 'react';
-import Amplify from 'aws-amplify';
+import Amplify, {I18n} from 'aws-amplify';
 import awsmobile from './aws-exports';
 import {Authenticator, ConfirmSignUp, SignUp, withAuthenticator} from 'aws-amplify-react-native';
 import { createAppContainer} from 'react-navigation';
@@ -23,6 +23,22 @@ import ForgotPassword from "aws-amplify-react-native/dist/Auth/ForgotPassword";
 import RequireNewPassword from "aws-amplify-react-native/dist/Auth/RequireNewPassword";
 import {Icon} from "react-native-elements";
 import AddPhotos from "./AddPhotos";
+import i18nDictionaryNl from './i18n/nl/resource';
+import { Platform, NativeModules } from 'react-native';
+
+
+const deviceLanguage =
+    Platform.OS === 'ios'
+        ? NativeModules.SettingsManager.settings.AppleLocale ||
+        NativeModules.SettingsManager.settings.AppleLanguages[0] //iOS 13
+        : NativeModules.I18nManager.localeIdentifier;
+
+const vocabularies = {
+    nl: i18nDictionaryNl
+};
+
+I18n.setLanguage(deviceLanguage.split("_")[0]);
+I18n.putVocabularies(vocabularies);
 
 Amplify.configure(awsmobile);
 Amplify.Logger.LOG_LEVEL = 'DEBUG';
@@ -55,7 +71,7 @@ const TabNavigator = createBottomTabNavigator({
             tabBarIcon: ({ focused, tintColor }) => {
                 return <Icon name={"local-shipping"}/>
             },
-            tabBarLabel: "Transports"
+            tabBarLabel: I18n.get("Transports")
         }
     },
     Settings: {
@@ -64,7 +80,7 @@ const TabNavigator = createBottomTabNavigator({
             tabBarIcon: ({ focused, tintColor }) => {
                 return <Icon name="settings"/>
             },
-            tabBarLabel: "Settings"
+            tabBarLabel: I18n.get("Settings")
         }
     }
 });
