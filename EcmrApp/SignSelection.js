@@ -3,6 +3,7 @@ import {FlatList, StyleSheet, TouchableOpacity, View, Text, Alert} from "react-n
 import React from "react";
 import Icon from "react-native-vector-icons/FontAwesome";
 import {Address, MyText} from "./Components";
+import {I18n} from "aws-amplify";
 
 const SigningOption = ({onPress, iconName, title}) =>
     <TouchableOpacity style={styles.signingOption} onPress={onPress}>
@@ -21,13 +22,15 @@ class SignSelection extends Component {
     }
 
     render() {
-        const partyName = this.state.site === 'pickup' ? 'sender' : 'receiver';
         return (
             <View style={styles.container}>
-                <Text style={styles.header}>How does the {partyName} sign?</Text>
+                <Text style={styles.header}>{this.state.site === 'pickup' ?
+                    I18n.get('How does the sender sign?') :
+                    I18n.get('How does the receiver sign?')}
+                </Text>
                 <View style={styles.options}>
-                    <SigningOption onPress={() => this.signOnPhone()} iconName={"pencil-square-o"} title={"On the phone"}/>
-                    <SigningOption onPress={() => this.noOtherParty()} iconName={"ban"} title={"No one on site"}/>
+                    <SigningOption onPress={() => this.signOnPhone()} iconName={"pencil-square-o"} title={I18n.get("On the phone")}/>
+                    <SigningOption onPress={() => this.noOtherParty()} iconName={"ban"} title={I18n.get("No one on site")}/>
                 </View>
             </View>
         )
@@ -44,10 +47,10 @@ class SignSelection extends Component {
 
     noOtherParty() {
         Alert.alert(
-            'Not available',
-            'This option is not yet available.',
+            I18n.get('Not available'),
+            I18n.get('This option is not yet available.'),
             [
-                {text: 'OK'}
+                {text: I18n.get('OK')}
             ],
             {cancelable: true}
         );

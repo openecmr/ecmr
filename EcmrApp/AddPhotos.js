@@ -5,6 +5,7 @@ import {MyText} from "./Components";
 import {Button} from "react-native-elements";
 import ImagePicker from 'react-native-image-picker';
 import ImageResizer from 'react-native-image-resizer';
+import {I18n} from "aws-amplify";
 
 const options = {
     title: 'Select photo',
@@ -16,7 +17,7 @@ const options = {
 
 class AddPhotos extends Component {
     static navigationOptions = ({navigation, screenProps}) => ({
-        title: 'Add photos?'
+        title: I18n.get('Add photos?')
     });
 
     constructor(props) {
@@ -36,7 +37,7 @@ class AddPhotos extends Component {
     render() {
         return (
             <View style={styles.baseContainer}>
-                <MyText style={styles.header}>E.g. photos of the load, delivery documents, etc.</MyText>
+                <MyText style={styles.header}>{I18n.get('E.g. photos of the load, delivery documents, etc.')}</MyText>
 
                 <View style={styles.photoFrameContainer}>
                     {
@@ -54,7 +55,7 @@ class AddPhotos extends Component {
                 <View style={styles.alignBottom}>
                     <Button buttonStyle={{height: 60}}
                             containerStyle={{flex: 1, padding: 0}}
-                            title={"Continue with signature"}
+                            title={I18n.get("Continue with signature")}
                             onPress={this.signature}/>
                 </View>
             </View>
@@ -64,24 +65,20 @@ class AddPhotos extends Component {
     addPhoto(idx) {
         ImagePicker.showImagePicker(options, (response) => {
             if (response.uri) {
-                if (response.fileSize > 100000) {
-                    const portrait = response.height > response.width;
-                    ImageResizer.createResizedImage(response.uri,
-                        portrait ? response.width : 800,
-                        portrait ? 600 : response.height,
-                        "JPEG", 60, 0, null)
-                        .then(async (response) => {
-                            if (response.size > 250000) {
-                                console.warn(`image still too big ${response.size}`);
-                                return;
-                            }
-                            this.addPhotoState(response, idx);
+                const portrait = response.height > response.width;
+                ImageResizer.createResizedImage(response.uri,
+                    portrait ? response.width : 800,
+                    portrait ? 600 : response.height,
+                    "JPEG", 60, 0, null)
+                    .then(async (response) => {
+                        if (response.size > 250000) {
+                            console.warn(`image still too big ${response.size}`);
+                            return;
+                        }
+                        this.addPhotoState(response, idx);
                     }).catch((err) => {
-                        console.warn(`cannot resize image ${err}`)
-                    });
-                } else {
-                    this.addPhotoState(response, idx);
-                }
+                    console.warn(`cannot resize image ${err}`)
+                });
             }
         });
     }

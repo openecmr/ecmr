@@ -3,6 +3,7 @@ import {Alert, FlatList, StyleSheet, Text, TouchableOpacity, View, Modal, TextIn
 import React from "react";
 import {Address, HandOverModal, MyText} from "./Components";
 import {Button, CheckBox} from "react-native-elements";
+import {I18n} from "aws-amplify";
 
 class Signature extends Component {
 
@@ -35,13 +36,13 @@ class Signature extends Component {
                                 numberOfLines={5}
                                 value={this.state.signatoryObservation}
                                 style={{textAlignVertical: 'top',  borderColor: 'gray', borderWidth: 1, marginTop: 5, marginBottom: 15}}
-                                placeholder="Enter an observation..."
+                                placeholder={I18n.get("Enter an observation...")}
                                 onChangeText={(signatoryObservation) => this.setState({signatoryObservation})}/>
 
                             <Button
                                 buttonStyle={{height: 60}}
                                 color={"rgb(60,176,60)"}
-                                title={"Save"}
+                                title={I18n.get("Save")}
                                 onPress={() => this.setState({addingRemark: false})}/>
                         </View>
                     </View>
@@ -50,15 +51,15 @@ class Signature extends Component {
                 <HandOverModal
                     onPress={() => this.setState({handoverPhone: false})}
                     visible={this.state.handoverPhone}
-                               text={`Please hand the phone to ${this.state.signatoryName}`}/>
+                               text={I18n.get("Please hand the phone to ${signatoryName}").replace("${signatoryName}", this.state.signatoryName)}/>
 
-                <MyText style={{fontWeight: 'bold', fontSize: 17, textAlign: 'center'}}>{this.state.signatoryName}, please check the information below before signing</MyText>
-                <MyText style={{marginTop: 10, color: 'rgb(66,133,244)', textAlign: 'center'}}>By checking the box below, I agree with the terms and conditions of this carrier.</MyText>
+                <MyText style={{fontWeight: 'bold', fontSize: 17, textAlign: 'center'}}>{this.state.signatoryName}, {I18n.get("please check the information below before signing")}</MyText>
+                <MyText style={{marginTop: 10, color: 'rgb(66,133,244)', textAlign: 'center'}}>{I18n.get("By checking the box below, I agree with the terms and conditions of this carrier.")}</MyText>
 
 
                 <CheckBox
                     onPress={() => this.toggleAgreeWithInformation()}
-                    title={'I agree with this information'}
+                    title={I18n.get('I agree with this information')}
                     containerStyle={{backgroundColor: 'white', marginTop: 10}}
                     center
                     checkedIcon='check-square'
@@ -66,7 +67,7 @@ class Signature extends Component {
                     checked={this.state.agree}
                 />
 
-                <MyText style={{fontWeight: 'bold'}}>Loads:</MyText>
+                <MyText style={{fontWeight: 'bold'}}>{I18n.get("Loads:")}</MyText>
                 <View style={{marginLeft: 10}}>
                     <FlatList
                         data={this.state.contract.loads}
@@ -77,16 +78,16 @@ class Signature extends Component {
                         )}/>
                 </View>
 
-                <MyText style={{fontWeight: 'bold', marginTop: 5}}>Driver observations:</MyText>
-                <MyText style={{marginLeft: 10}}>No observations</MyText>
+                <MyText style={{fontWeight: 'bold', marginTop: 5}}>{I18n.get("Driver observations:")}</MyText>
+                <MyText style={{marginLeft: 10}}>{I18n.get("No observations")}</MyText>
 
-                <MyText style={{fontWeight: 'bold', marginTop: 5}}>Signatory observations:</MyText>
-                <MyText style={{marginLeft: 10}}>{this.state.signatoryObservation || "No observations"}</MyText>
+                <MyText style={{fontWeight: 'bold', marginTop: 5}}>{I18n.get("Signatory observations:")}</MyText>
+                <MyText style={{marginLeft: 10}}>{this.state.signatoryObservation || I18n.get("No observations")}</MyText>
 
                 <View style={{flexDirection: 'row', margin: 10, marginTop: 5, position: 'absolute', bottom: 0, left: 10}}>
-                    <Button containerStyle={{flex: 1, marginRight: 15}} buttonStyle={{height: 60}} title={"Add observations"}
+                    <Button containerStyle={{flex: 1, marginRight: 15}} buttonStyle={{height: 60}} title={I18n.get("Add observations")}
                             onPress={() => this.setState({addingRemark: true})}/>
-                    <Button containerStyle={{flex: 1}} title={"Sign"} buttonStyle={{height: 60, backgroundColor: 'rgb(60,176,60)'}}
+                    <Button containerStyle={{flex: 1}} title={I18n.get("Sign")} buttonStyle={{height: 60, backgroundColor: 'rgb(60,176,60)'}}
                             onPress={() => this.captureSignature()}/>
                 </View>
             </View>
@@ -102,10 +103,10 @@ class Signature extends Component {
     captureSignature() {
         if (!this.state.agree) {
             Alert.alert(
-                'Agree with information',
-                'In order to sign you must agree with the provided information',
+                I18n.get('Agree with information'),
+                I18n.get('In order to sign you must agree with the provided information'),
                 [
-                    {text: 'OK'}
+                    {text: I18n.get('OK')}
                 ],
                 {cancelable: true}
             );

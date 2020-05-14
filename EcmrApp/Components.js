@@ -3,6 +3,7 @@ import {Modal, Text, View} from "react-native";
 import Icon, {default as FIcon} from "react-native-vector-icons/FontAwesome";
 import {Button} from "react-native-elements";
 import moment from "moment";
+import {I18n} from 'aws-amplify';
 
 const formatTime = time => moment(time, "HH:mm").format('LT');
 
@@ -49,7 +50,7 @@ const HandOverModal = ({visible, text, onPress}) =>
             </View>
             <Button
                 buttonStyle={{height: 60, backgroundColor: "rgb(60,176,60)"}}
-                title={"Ready"}
+                title={I18n.get("Ready")}
                 onPress={onPress}/>
         </View>
     </Modal>;
@@ -58,9 +59,9 @@ const LoadDetailText = ({load, style}) =>
     <MyText style={style}>
         {load.quantity} {load.category}
         {load.description && `, ${load.description}`}
-        {load.volume && `, ${load.volume} m³`}
-        {load.netWeight && `, ${load.netWeight} kg`}
-        {load.loadMeters && `, ${load.loadMeters} m`}
+        {load.volume && `, ${load.volume} ${I18n.get('m³')}`}
+        {load.netWeight && `, ${load.netWeight} ${I18n.get('kg')}`}
+        {load.loadMeters && `, ${load.loadMeters} ${I18n.get('m')}`}
     </MyText>;
 
 const LicensePlates = ({trailer, truck, style}) =>

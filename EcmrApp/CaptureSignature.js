@@ -4,7 +4,7 @@ import React from "react";
 import Icon from "react-native-vector-icons/FontAwesome";
 import {Address, HandOverModal, MyText} from "./Components";
 import {Button, CheckBox} from "react-native-elements";
-import { Auth, Storage, graphqlOperation, API } from 'aws-amplify';
+import {Auth, Storage, graphqlOperation, API, I18n} from 'aws-amplify';
 import SignatureCapture from 'react-native-signature-capture';
 import UUIDGenerator from "react-native-uuid-generator";
 import {Buffer} from "buffer";
@@ -30,7 +30,7 @@ class CaptureSignature extends Component {
                 <HandOverModal
                     onPress={() => this.props.navigation.popToTop()}
                     visible={this.state.handoverPhone}
-                    text={`Please return the phone to the driver`}/>
+                    text={I18n.get("Please return the phone to the driver")}/>
                 <View style={{borderWidth: 1, borderColor: '#000033', padding: 5, margin: 5, flex: 1}}>
                     <SignatureCapture
                         style={{flex:1}}
@@ -43,7 +43,7 @@ class CaptureSignature extends Component {
                         viewMode={"portrait"}/>
                 </View>
                 <View>
-                    <Button title={"Save"} buttonStyle={{height: 60, backgroundColor: 'rgb(60,176,60)'}}
+                    <Button title={I18n.get("Save")} buttonStyle={{height: 60, backgroundColor: 'rgb(60,176,60)'}}
                             onPress={() => this.save()} disabled={this.state.saving}/>
                     <ActivityIndicator size="small" color="rgb(0, 115, 209)" animating={this.state.saving}/>
                 </View>
@@ -69,7 +69,6 @@ class CaptureSignature extends Component {
             const file = await Storage.put('signature-' + filename + '.png', buffer);
             const now = moment().format();
             const user = await Auth.currentAuthenticatedUser();
-            const userInfo = await Auth.currentUserInfo();
 
             const photos = await Promise.all(this.props.navigation.getParam("photos").map(async (photo) => {
                 const fetchResponse = await fetch(photo.uri);
@@ -90,7 +89,7 @@ class CaptureSignature extends Component {
                 site: this.state.site,
                 createdAt: now,
                 author: {
-                    username: user.username.indexOf("Google") !== -1 ? userInfo.attributes.email : user.username
+                    username: user.username
                 },
                 signature: {
                     method: 'SIGN_ON_GLASS',

@@ -46,9 +46,9 @@ export default class EcmrSignIn extends Component {
                         </View>
                         {this.state.action === 'choose' &&
                         <View style={{marginTop: 50, width: '100%', padding: 15}}>
-                            <Button containerStyle={{marginBottom: 10}} title={"Login with Google"}
+                            <Button containerStyle={{marginBottom: 10}} title={I18n.get("Login with Google")}
                                     onPress={() => this.googleLogin()} color={'rgb(60, 167, 60)'}/>
-                            <Button containerStyle={{marginBottom: 10}} style={{}} title={"Login with username"}
+                            <Button containerStyle={{marginBottom: 10}} style={{}} title={I18n.get("Login with username")}
                                     onPress={() => this.setState({action: 'login'})} color={'rgb(60, 167, 60)'}/>
                             <Text style={{
                                 marginBottom: 10, textAlign: "center", fontWeight: "bold",
@@ -56,10 +56,10 @@ export default class EcmrSignIn extends Component {
                                 borderBottomWidth: StyleSheet.hairlineWidth,
                                 borderColor: "black",
                                 borderTopWidth: StyleSheet.hairlineWidth
-                            }}>or</Text>
-                            <Button title={"Create an account with Google"} color={'rgb(60, 167, 60)'} containerStyle={{marginBottom: 10}}
+                            }}>{I18n.get("or")}</Text>
+                            <Button title={I18n.get("Create an account with Google")} color={'rgb(60, 167, 60)'} containerStyle={{marginBottom: 10}}
                                     onPress={() => this.googleLogin()}/>
-                            <Button title={"Create an account using email"} color={'rgb(60, 167, 60)'}
+                            <Button title={I18n.get("Create an account using email")} color={'rgb(60, 167, 60)'}
                                     onPress={() => this.changeState("signUp")}/>
                         </View>
                         }
@@ -98,7 +98,7 @@ export default class EcmrSignIn extends Component {
                 </ScrollView>
                 {this.state.action === 'choose' &&
                     <Text onPress={() => {Linking.openURL("https://www.openecmr.com/?utm_source=app&utm_content=login")}}
-                          style={{textAlign: "center", textDecorationLine: "underline", color: "blue", bottom: 50, padding: 10, position: "absolute", fontSize: 20}}>Find more information on Open e-CMR at www.openecmr.com</Text>}
+                          style={{textAlign: "center", textDecorationLine: "underline", color: "blue", bottom: 50, padding: 10, position: "absolute", fontSize: 20}}>{I18n.get('Find more information on Open e-CMR at www.openecmr.com')}</Text>}
 
             </View>
 

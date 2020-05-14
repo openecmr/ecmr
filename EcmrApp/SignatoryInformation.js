@@ -3,10 +3,11 @@ import React from "react";
 import {MyText} from "./Components";
 import {View, TextInput, Text, Alert, StyleSheet} from "react-native";
 import {Button} from "react-native-elements";
+import {I18n} from "aws-amplify";
 
 export default class SignatoryInformation extends Component {
     static navigationOptions = ({ navigation, screenProps }) => ({
-        title: 'Signatory information'
+        title: I18n.get('Signatory information')
     });
 
     constructor(props) {
@@ -23,28 +24,28 @@ export default class SignatoryInformation extends Component {
         return (
 
             <View style={{backgroundColor: 'white', flex: 1}}>
-                <Text style={{padding: 10, color: 'rgb(0, 115, 209)', fontSize: 25, paddingBottom: 10}}>Please enter the details of the signatory:</Text>
+                <Text style={{padding: 10, color: 'rgb(0, 115, 209)', fontSize: 25, paddingBottom: 10}}>{I18n.get("Please enter the details of the signatory:")}</Text>
                 <View style={{padding: 10, flex: 1, flexDirection: 'column', paddingTop: 0}}>
 
 
-                    <MyText>Name of signatory</MyText>
+                    <MyText>{I18n.get("Name of signatory")}</MyText>
                     <TextInput
                         value={this.signatoryName}
                         style={styles.textInput}
-                        placeholder="e.g. John Smith..."
+                        placeholder={I18n.get("e.g. John Smith...")}
                         onChangeText={(signatoryName) => this.setState({signatoryName})}/>
-                    <MyText>Email of signatory (optional)</MyText>
+                    <MyText>{I18n.get("Email of signatory (optional)")}</MyText>
                     <TextInput
                         autoCapitalize={"none"}
                         autoCompleteType={"email"}
                         keyboardType={"email-address"}
                         value={this.signatoryEmail}
                         style={{height: 40, borderColor: 'gray', borderWidth: 1, marginTop: 5, marginBottom: 15}}
-                        placeholder="e.g. john@smith.com..."
+                        placeholder={I18n.get("e.g. john@smith.com...")}
                         onChangeText={(signatoryEmail) => this.setState({signatoryEmail})}/>
                     <Button
                         buttonStyle={{height: 60, backgroundColor: "rgb(60,176,60)"}}
-                        title={"Save"}
+                        title={I18n.get("Save")}
                         onPress={() => this.save()}/>
                 </View>
             </View>);
@@ -53,10 +54,10 @@ export default class SignatoryInformation extends Component {
     save() {
         if (!this.state.signatoryName) {
             Alert.alert(
-                'Required information',
-                'Please enter the name of the signatory',
+                I18n.get('Required information'),
+                I18n.get('Please enter the name of the signatory'),
                 [
-                    {text: 'OK'}
+                    {text: I18n.get('OK')}
                 ],
                 {cancelable: true}
             );

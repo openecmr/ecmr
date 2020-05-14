@@ -2,12 +2,12 @@ import {Button, Modal, View, TextInput} from "react-native";
 import {MyText} from "./Components";
 import React from "react";
 import {Component} from "react";
-import {API, graphqlOperation} from "aws-amplify";
+import {API, graphqlOperation, I18n} from "aws-amplify";
 import * as mutations from "./graphql/mutations";
 
 export default class SettingsScreen extends Component {
     static navigationOptions = ({ navigation, screenProps }) => ({
-        title: 'Link account'
+        title: I18n.get('Link account')
     });
 
     constructor(props) {
@@ -22,19 +22,18 @@ export default class SettingsScreen extends Component {
         return (
             <View style={{marginTop: 22}}>
                 <View style={{padding: 10}}>
-                    <MyText>Please enter the activation code that you received from the company to which you want to
-                        link</MyText>
+                    <MyText>{I18n.get('Please enter the activation code that you received from the company to which you want to link')}</MyText>
 
-                    {this.state.success && <MyText>Successfully linked account</MyText>}
-                    {this.state.error && <MyText>Invalid link code, please check the code and try again.</MyText>}
+                    {this.state.success && <MyText>{I18n.get('Successfully linked account')}</MyText>}
+                    {this.state.error && <MyText>{I18n.get('Invalid link code, please check the code and try again.')}</MyText>}
 
                     <TextInput
                         value={this.code}
                         style={{height: 40, borderColor: 'gray', borderWidth: 1, marginTop: 5, marginBottom: 15}}
-                        placeholder="Enter code..."
+                        placeholder={I18n.get('Enter code...')}
                         onChangeText={(code) => this.setState({code})}/>
                     <Button
-                        title={"Link account"}
+                        title={I18n.get('Link account')}
                         onPress={() => this.activate()}/>
                 </View>
             </View>);

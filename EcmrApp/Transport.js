@@ -10,7 +10,7 @@ import {
     ActivityIndicator} from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import {Address, ArrivalDate, LicensePlates, LoadDetailText, MyText} from "./Components";
-import { API, graphqlOperation } from 'aws-amplify';
+import {API, graphqlOperation, I18n} from 'aws-amplify';
 import * as queries from "./graphql/queries";
 import moment from "moment";
 import { Auth } from 'aws-amplify';
@@ -33,14 +33,14 @@ const SignatureEvent = ({signature, signatoryObservation, photos}) => (
         {
             signature.signatoryName &&
             <View style={{flexDirection: 'row'}}>
-                <MyText>Signed by: </MyText>
+                <MyText>{I18n.get("Signed by:")} </MyText>
                 <MyText style={{fontStyle: 'italic'}}>{signature.signatoryName} {signature.signatoryEmail && `(${signature.signatoryEmail})`}</MyText>
             </View>
         }
         {
             signatoryObservation &&
             <View style={{flexDirection: 'row'}}>
-                <MyText>Signatory observation: </MyText>
+                <MyText>{I18n.get("Signatory observation:")} </MyText>
                 <MyText style={{fontStyle: 'italic'}}>{signatoryObservation}</MyText>
             </View>
         }
@@ -65,8 +65,9 @@ class Transport extends Component {
     static navigationOptions = ({ navigation }) => {
         const site = navigation.getParam('site');
         const item = navigation.getParam('item');
+        const activityName = site === 'pickup' ? I18n.get("pickup") : I18n.get("delivery");
         return {
-            title: site + ': ' + item[site].name
+            title: activityName + ': ' + item[site].name
         }
     };
 
@@ -88,13 +89,12 @@ class Transport extends Component {
         const contract = this.state.item;
         const loading = this.state.loading;
         if (!contract || !contract.id) {
-            return <MyText>Loading...</MyText>
+            return <MyText>{I18n.get("Loading...")}</MyText>
         }
 
         const item = new ContractModel(contract);
         const site = this.state.site;
 
-        const direction = site === 'pickup' ? "loading" : "unloading";
         const arrivalDate = site === 'pickup' ? item.arrivalDate : item.deliveryDate;
         const arrivalTime = site === 'pickup' ? item.arrivalTime : item.deliveryTime;
         const actions = site === 'pickup' ?
@@ -110,7 +110,7 @@ class Transport extends Component {
 
         return (
             <ScrollView style={styles.transport}>
-                <Header>Details</Header>
+                <Header>{I18n.get("Details")}</Header>
                 <Address address={item[site]} style={styles.address} />
                 <ArrivalDate date={arrivalDate} time={arrivalTime}  style={{paddingTop: 10, ...styles.address}} />
 
@@ -121,28 +121,33 @@ class Transport extends Component {
                 <LicensePlates truck={contract.truck} trailer={contract.trailer} style={{paddingTop: 10, ...styles.address}}/>
 
                 <View style={styles.action}>
-                    {firstAction === 'Acknowledge' && <Button title={"Acknowledge transport"} loading={loading} buttonStyle={styles.actionButton} onPress={() => this.confirmAcknowledge()} />}
-                    {firstAction === 'ArrivalOnSite' && <Button title={`Notify arrival at ${direction} site`} loading={loading} buttonStyle={styles.actionButton} onPress={() => this.confirmNotifyArrival()}/>}
-                    {(firstAction === 'LoadingComplete' || firstAction === 'UnloadingComplete') && <Button loading={loading} title={`Confirm ${direction}`} buttonStyle={styles.actionButton} onPress={() => this.confirmLoading()}/>}
+                    {firstAction === 'Acknowledge' && <Button title={I18n.get("Acknowledge transport")} loading={loading} buttonStyle={styles.actionButton} onPress={() => this.confirmAcknowledge()} />}
+                    {firstAction === 'ArrivalOnSite' && <Button title={site === 'pickup' ? I18n.get("Notify arrival at loading site") : I18n.get("Notify arrival at unloading site")}
+                                                                loading={loading}
+                                                                buttonStyle={styles.actionButton}
+                                                                onPress={() => this.confirmNotifyArrival()}/>}
+                    {(firstAction === 'LoadingComplete' || firstAction === 'UnloadingComplete') && <Button loading={loading}
+                                                                                                           title={site === 'pickup' ? I18n.get("Confirm loading") : I18n.get("Confirm unloading")}
+                                                                                                           buttonStyle={styles.actionButton} onPress={() => this.confirmLoading()}/>}
                     {!firstAction &&
                         <View style={{flexDirection: 'row', alignItems: 'center'}}>
                             <Icon color={activityDoneColor} size={30} name='check-circle'/>
-                            <Text style={styles.activityDoneText}>Activity done</Text>
+                            <Text style={styles.activityDoneText}>{I18n.get("Activity done")}</Text>
                         </View>
                     }
                 </View>
-                <Header>Consignment note</Header>
+                <Header>{I18n.get("Consignment note")}</Header>
                 <TouchableOpacity style={{borderBottomWidth: StyleSheet.hairlineWidth,
                     borderBottomColor: 'black',
                     padding: 15}} onPress={() => this.showConsignmentNote()} disabled={this.state.downloadingPdf}>
                     <View style={{flexDirection: "row"}}>
                         <Icon name={'file'} style={{color: 'rgb(0, 115, 209)', marginRight: 5, textAlignVertical: "center"}} size={15}/>
-                        <MyText style={{fontWeight: "bold"}}>Display the consignment note</MyText>
+                        <MyText style={{fontWeight: "bold"}}>{I18n.get("Display the consignment note")}</MyText>
                         <ActivityIndicator size="small" color="rgb(0, 115, 209)" animating={this.state.downloadingPdf}/>
                     </View>
                 </TouchableOpacity>
 
-                <Header>Activity feed</Header>
+                <Header>{I18n.get("Activity feed")}</Header>
                 {relevantItems.map((item, index) =>
                     (<View style={styles.activityItemContainer} key={index}>
                             <Text style={{fontSize: 12}}>{moment(item.createdAt).format('llll')}</Text>
@@ -180,17 +185,21 @@ class Transport extends Component {
         const name = names[event.author.username] || event.author.username;
         switch (event.type) {
             case 'ArrivalOnSite':
-                return `${name} arrived on ${event.site} site.`;
+                return event.site === 'pickup' ?
+                    I18n.get("${name} arrived on pickup site.").replace("${name}", name) :
+                    I18n.get("${name} arrived on delivery site.").replace("${name}", name);
             case 'LoadingComplete':
-                return `${name} completed the loading.`;
+                return I18n.get("${name} completed the loading.").replace("${name}", name);
             case 'UnloadingComplete':
-                return `${name} completed the unloading.`;
+                return I18n.get("${name} completed the unloading.").replace("${name}", name);
             case 'AssignDriver':
-                return `${name} assigned transport to driver ${event.assignedDriver ? event.assignedDriver.name : "unknown"}.`;
+                return I18n.get("${name} assigned transport to driver ${driver}.")
+                    .replace("${name}", name)
+                    .replace("${driver}", event.assignedDriver ? event.assignedDriver.name : I18n.get("unknown"));
             case 'Acknowledge':
-                return `${name} acknowledged the transport`;
+                return I18n.get("${name} acknowledged the transport").replace("${name}", name);
             default:
-                return `${name} completed ${event.type}`;
+                return I18n.get("${name} completed ${type}").replace("${name}", name).replace("${type}", event.type);
         }
     }
 
@@ -204,15 +213,15 @@ class Transport extends Component {
 
     confirmAcknowledge() {
         Alert.alert(
-            'Confirmation',
-            'Are you sure you want to acknowledge the transport?',
+            I18n.get('Confirmation'),
+            I18n.get('Are you sure you want to acknowledge the transport?'),
             [
                 {
-                    text: 'Cancel',
+                    text: I18n.get('Cancel'),
                     onPress: () => console.log('Cancel Pressed'),
                     style: 'cancel',
                 },
-                {text: 'OK', onPress: () => this.acknowledge()}
+                {text: I18n.get('OK'), onPress: () => this.acknowledge()}
             ],
             {cancelable: true}
         );
@@ -260,15 +269,15 @@ class Transport extends Component {
 
     confirmNotifyArrival() {
         Alert.alert(
-            'Confirmation',
-            'Are you sure you want to notify your arrival at site?',
+            I18n.get('Confirmation'),
+            I18n.get('Are you sure you want to notify your arrival at site?'),
             [
                 {
-                    text: 'Cancel',
+                    text: I18n.get('Cancel'),
                     onPress: () => console.log('Cancel Pressed'),
                     style: 'cancel',
                 },
-                {text: 'OK', onPress: () => this.notifyArrival()}
+                {text: I18n.get('OK'), onPress: () => this.notifyArrival()}
             ],
             {cancelable: true}
         );

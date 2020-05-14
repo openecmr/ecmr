@@ -2,7 +2,7 @@ import {Component} from "react";
 import React from "react";
 import {MyText} from "./Components";
 import {Button, View, Modal, TouchableHighlight} from "react-native";
-import { Auth } from 'aws-amplify';
+import {Auth, I18n} from 'aws-amplify';
 
 class SettingsScreen extends Component {
     constructor(props) {
@@ -21,16 +21,19 @@ class SettingsScreen extends Component {
 
         return (
             <View style={{padding: 10}}>
-                <MyText style={{marginBottom: 10}}>Account</MyText>
-                <MyText style={{marginBottom: 20}}>Logged in as {user.username} (email: {user.attributes['email']},
-                    verified: {user.attributes['email_verified'] ? "yes" : "no"})</MyText>
+                <MyText style={{marginBottom: 10}}>{I18n.get('Account')}</MyText>
+                <MyText style={{marginBottom: 20}}>{
+                    I18n.get('Logged in as ${username} (email: ${email})')
+                        .replace('${username}', user.username)
+                        .replace('${email}', user.attributes['email'])},
+                    {I18n.get('verified: ')}{user.attributes['email_verified'] ? I18n.get("yes") : I18n.get("no")})</MyText>
 
-                <MyText style={{marginBottom: 10}}>Settings</MyText>
+                <MyText style={{marginBottom: 10}}>{I18n.get('Settings')}</MyText>
                 <View>
-                    <Button title={"Link to company"} color={"rgb(60,176,60)"} onPress={() => this.linkToCompany()}/>
+                    <Button title={I18n.get("Link to company")} color={"rgb(60,176,60)"} onPress={() => this.linkToCompany()}/>
                 </View>
                 <View style={{marginTop: 25}}>
-                    <Button title={"Logout"} color={"rgb(60,176,60)"} onPress={() => this.logout()} containerStyle={{marginTop: 25}} />
+                    <Button title={I18n.get("Logout")} color={"rgb(60,176,60)"} onPress={() => this.logout()} containerStyle={{marginTop: 25}} />
                 </View>
             </View>);
     }

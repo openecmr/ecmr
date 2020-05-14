@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import {SectionList, StyleSheet, Text, TouchableOpacity, View, Dimensions, Linking} from "react-native";
 import * as queries from "./graphql/queries";
-import {API, graphqlOperation, Auth} from 'aws-amplify';
+import {API, graphqlOperation, Auth, I18n} from 'aws-amplify';
 import {Address, ArrivalDate, LicensePlates, MyText, Packages} from './Components';
 import {SceneMap, TabBar, TabView} from "react-native-tab-view";
 import ContractModel from "./ContractModel";
@@ -10,9 +10,9 @@ import {activate} from "./graphql/mutations";
 
 const NoContracts = () =>
     <View style={{justifyContent: 'center', alignItems: 'center', flex: 1, paddingTop: 40}}>
-        <MyText style={{"fontWeight": "bold"}}>All done, no pending transports assigned to you.</MyText>
-        <MyText style={{"marginTop": 10, "marginBottom": 15}}>Create new transports on the Open e-CMR portal</MyText>
-        <Button title={"Visit the Open e-CMR portal"} onPress={() => {Linking.openURL("https://app.openecmr.com/?utm_source=app")}}/>
+        <MyText style={{"fontWeight": "bold"}}>{I18n.get("All done, no pending transports assigned to you.")}</MyText>
+        <MyText style={{"marginTop": 10, "marginBottom": 15}}>{I18n.get("Create new transports on the Open e-CMR portal")}</MyText>
+        <Button title={I18n.get("Visit the Open e-CMR portal")} onPress={() => {Linking.openURL("https://app.openecmr.com/?utm_source=app")}}/>
     </View>;
 
 const ForwardIcon = () =>
@@ -40,13 +40,13 @@ class ContractsList extends Component {
 
                         return (<View style={styles.card}>
                             <View style={styles.transportCardHeader}>
-                                <MyText style={styles.transportCardHeaderId}>TRANSPORT {contract.id.substring(0, 8)}</MyText>
+                                <MyText style={styles.transportCardHeaderId}>{I18n.get("TRANSPORT")} {contract.id.substring(0, 8)}</MyText>
                                 <MyText style={styles.transportCardHeaderProgress}>{this.progressText(contract)}</MyText>
                             </View>
                             <TouchableOpacity onPress={() => this.props.open(contract, 'pickup')}>
                                 <View style={{...styles.transportCardPart, ...(isDone('pickup') && styles.transportCardPartDone)}}>
-                                    {isDone('pickup') && <MyText style={styles.doneLabel}>DONE</MyText>}
-                                    <MyText style={styles.upperCaseLabel}>pickup</MyText>
+                                    {isDone('pickup') && <MyText style={styles.doneLabel}>{I18n.get("DONE")}</MyText>}
+                                    <MyText style={styles.upperCaseLabel}>{I18n.get("pickup")}</MyText>
                                     <Address address={contract.pickup}/>
                                     <ArrivalDate date={contract.arrivalDate} time={contract.arrivalTime}/>
                                     <Packages total={contract.total()}/>
@@ -56,8 +56,8 @@ class ContractsList extends Component {
                             </TouchableOpacity>
                             <TouchableOpacity onPress={() => this.props.open(contract, 'delivery')}>
                                 <View style={{...styles.transportCardPart, ...(isDone('delivery') && styles.transportCardPartDone), ...styles.transportCardPartNotFirst}}>
-                                    {isDone('delivery') && <MyText style={styles.doneLabel}>DONE</MyText>}
-                                    <MyText style={styles.upperCaseLabel}>delivery</MyText>
+                                    {isDone('delivery') && <MyText style={styles.doneLabel}>{I18n.get("DONE")}</MyText>}
+                                    <MyText style={styles.upperCaseLabel}>{I18n.get("delivery")}</MyText>
                                     <Address address={contract.delivery}/>
                                     <ArrivalDate date={contract.deliveryDate} time={contract.deliveryTime}/>
                                     <Packages total={contract.total()}/>
@@ -68,7 +68,7 @@ class ContractsList extends Component {
                         </View>);
                     }}
                     renderSectionHeader={({section}) => <Text
-                        style={styles.sectionHeader}>{section.title ? section.title : "unknown date"}</Text>}
+                        style={styles.sectionHeader}>{section.title ? section.title : I18n.get("unknown date")}</Text>}
                     keyExtractor={(item, index) => item.id}
                 />
             </View>
@@ -77,21 +77,21 @@ class ContractsList extends Component {
 
     progressText(item) {
         const pickupLabels = {
-            Acknowledged: "acknowledged",
-            ArrivalOnSite: "arrived on pickup site",
-            LoadingComplete: "loading complete",
-            UnloadingComplete: "done"
+            Acknowledged: I18n.get("acknowledged"),
+            ArrivalOnSite: I18n.get("arrived on pickup site"),
+            LoadingComplete: I18n.get("loading complete"),
+            UnloadingComplete: I18n.get("done")
         };
 
         const deliveryLabels = {
-            Acknowledged: "acknowledged",
-            ArrivalOnSite: "arrived on delivery site",
-            LoadingComplete: "unloading complete",
-            UnloadingComplete: "done"
+            Acknowledged: I18n.get("acknowledged"),
+            ArrivalOnSite: I18n.get("arrived on delivery site"),
+            LoadingComplete: I18n.get("unloading complete"),
+            UnloadingComplete: I18n.get("done")
         };
 
         if (item.needAcknowledge) {
-            return "need acknowledge";
+            return I18n.get("need acknowledge");
         } else {
             const deliveryState = this.determineActionDelivery(item);
             if (deliveryState) {
@@ -131,8 +131,8 @@ class Transports extends Component {
             navigationState: {
                 index: 0,
                 routes: [
-                    { key: 'open', title: 'Pending' },
-                    { key: 'done', title: 'Done' }
+                    { key: 'open', title: I18n.get('Pending') },
+                    { key: 'done', title: I18n.get('Done') }
                 ]
             },
 
