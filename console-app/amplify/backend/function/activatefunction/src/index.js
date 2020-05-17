@@ -18,15 +18,20 @@ const graphqlMutation = require('./query.js').mutation;
 const apiKey = process.env.API_KEY;
 
 exports.handler = async (event, context) => { //eslint-disable-line
-  const driver = await getDriver(event.arguments.activationCode);
-  if (!driver) {
-    return "invalid code";
+  try {
+    const driver = await getDriver(event.arguments.activationCode);
+    if (!driver) {
+      return "invalid code";
+    }
+    driver.carrier = getUsername(event, context);
+    driver.associationSecret = null;
+    console.log(`assigning ${driver.id} to ${driver.carrier}`);
+    await updateDriver(driver);
+    return "success";
+  } catch (ex) {
+    console.log(`error activating driver: ${ex}`)
+    return "error";
   }
-  driver.carrier = getUsername(event, context);
-  driver.associationSecret = null;
-  console.log(`assigning ${driver.id} to ${driver.carrier}`);
-  await updateDriver(driver);
-  return "success";
 };
 
 const getUsername = (event, context) => {
@@ -38,11 +43,7 @@ const getDriver = async (activationCode) => {
   const body = JSON.stringify({
     query: graphqlQuery,
     variables: {
-      filter: {
-        associationSecret: {
-          eq: activationCode
-        }
-      }
+      associationSecret: activationCode
     }
   });
 
@@ -52,7 +53,7 @@ const getDriver = async (activationCode) => {
     return null;
   }
 
-  return data.data.listDrivers.items[0];
+  return data.data.driverByAssociationSecret.items[0];
 };
 
 const updateDriver = async (driver) => {

@@ -673,3 +673,29 @@ export const listDrivers = /* GraphQL */ `
     }
   }
 `;
+export const driverByAssociationSecret = /* GraphQL */ `
+  query DriverByAssociationSecret(
+    $associationSecret: String
+    $sortDirection: ModelSortDirection
+    $filter: ModelDriverFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    driverByAssociationSecret(
+      associationSecret: $associationSecret
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        owner
+        name
+        carrier
+        associationSecret
+      }
+      nextToken
+    }
+  }
+`;

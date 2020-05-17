@@ -64,9 +64,11 @@ const styles = StyleSheet.create({
         flex: 1
     },
     header: {
+        padding: 10,
         paddingTop: 20,
         color: 'rgb(0, 115, 209)',
-        fontSize: 25
+        fontSize: 25,
+        textAlign: 'center'
     },
     options: {
         flexDirection: 'row',

@@ -173,6 +173,7 @@ type Driver
         { allow: owner },
         { allow: private, provider: iam, operations: [read, update] }
     ])
+    @key(name: "AssociationSecret", fields: ["associationSecret"], queryField: "driverByAssociationSecret")
 {
     id: ID!
     owner: String

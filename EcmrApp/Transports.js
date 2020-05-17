@@ -9,9 +9,9 @@ import {Button, Icon} from "react-native-elements";
 import {activate} from "./graphql/mutations";
 
 const NoContracts = () =>
-    <View style={{justifyContent: 'center', alignItems: 'center', flex: 1, paddingTop: 40}}>
-        <MyText style={{"fontWeight": "bold"}}>{I18n.get("All done, no pending transports assigned to you.")}</MyText>
-        <MyText style={{"marginTop": 10, "marginBottom": 15}}>{I18n.get("Create new transports on the Open e-CMR portal")}</MyText>
+    <View style={{justifyContent: 'center', alignItems: 'center', flex: 1,  padding: 5, paddingTop: 40}}>
+        <MyText style={{"fontWeight": "bold", textAlign: 'center'}}>{I18n.get("All done, no pending transports assigned to you.")}</MyText>
+        <MyText style={{"marginTop": 10, "marginBottom": 15, textAlign: 'center'}}>{I18n.get("Create new transports on the Open e-CMR portal")}</MyText>
         <Button title={I18n.get("Visit the Open e-CMR portal")} onPress={() => {Linking.openURL("https://app.openecmr.com/?utm_source=app")}}/>
     </View>;
 

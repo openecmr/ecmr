@@ -5,15 +5,28 @@ module.exports = {
       }
     }`,
 
-  listDrivers: `query listDrivers($filter: ModelDriverFilterInput) {
-      listDrivers(filter: $filter) {
-        items {
-          id
-          owner
-          name
-          carrier
-          associationSecret
-        }
+  listDrivers: `query DriverByAssociationSecret(
+    $associationSecret: String
+    $sortDirection: ModelSortDirection
+    $filter: ModelDriverFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    driverByAssociationSecret(
+      associationSecret: $associationSecret
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        owner
+        name
+        carrier
+        associationSecret
       }
-    }`
+      nextToken
+    }
+  }`
 };

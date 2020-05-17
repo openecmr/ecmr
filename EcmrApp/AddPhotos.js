@@ -7,14 +7,6 @@ import ImagePicker from 'react-native-image-picker';
 import ImageResizer from 'react-native-image-resizer';
 import {I18n} from "aws-amplify";
 
-const options = {
-    title: 'Select photo',
-    storageOptions: {
-        skipBackup: true,
-        path: 'images',
-    }
-};
-
 class AddPhotos extends Component {
     static navigationOptions = ({navigation, screenProps}) => ({
         title: I18n.get('Add photos?')
@@ -63,13 +55,35 @@ class AddPhotos extends Component {
     }
 
     addPhoto(idx) {
+        const options = {
+            title: I18n.get('Select photo'),
+            cancelButtonTitle: I18n.get('Cancel'),
+            takePhotoButtonTitle: I18n.get('Take photo...'),
+            chooseFromLibraryButtonTitle: I18n.get('Choose from library...'),
+            chooseWhichLibraryTitle: I18n.get('Choose which library'),
+            storageOptions: {
+                skipBackup: true,
+                path: 'images',
+            },
+            rotation: 360
+        };
+
         ImagePicker.showImagePicker(options, (response) => {
             if (response.uri) {
-                const portrait = response.height > response.width;
+                let rotation = 0
+                if (response.originalRotation === 90) {
+                    rotation = 90
+                } else if (response.originalRotation === 270) {
+                    rotation = -90
+                } else if (response.isVertical) {
+                    rotation = 90;
+                }
+
+
                 ImageResizer.createResizedImage(response.uri,
-                    portrait ? response.width : 800,
-                    portrait ? 600 : response.height,
-                    "JPEG", 60, 0, null)
+                    800,
+                    600,
+                    "JPEG", 60, rotation, null)
                     .then(async (response) => {
                         if (response.size > 250000) {
                             console.warn(`image still too big ${response.size}`);

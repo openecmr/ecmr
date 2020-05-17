@@ -23,10 +23,11 @@ class SettingsScreen extends Component {
             <View style={{padding: 10}}>
                 <MyText style={{marginBottom: 10}}>{I18n.get('Account')}</MyText>
                 <MyText style={{marginBottom: 20}}>{
-                    I18n.get('Logged in as ${username} (email: ${email})')
+                    I18n.get('Logged in as ${username} (email: ${email}, verified: ${verified})')
                         .replace('${username}', user.username)
-                        .replace('${email}', user.attributes['email'])},
-                    {I18n.get('verified: ')}{user.attributes['email_verified'] ? I18n.get("yes") : I18n.get("no")})</MyText>
+                        .replace('${email}', user.attributes['email'])
+                        .replace("${verified}", user.attributes['email_verified'] ? I18n.get("yes") : I18n.get("no"))}
+                </MyText>
 
                 <MyText style={{marginBottom: 10}}>{I18n.get('Settings')}</MyText>
                 <View>

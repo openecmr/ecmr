@@ -104,5 +104,10 @@
   "On the phone": "Op de telefoon",
   "No one on site": "Niemand aanwezig op locatie",
   "Ready": "Gereed",
-  "Find more information on Open e-CMR at www.openecmr.com": "Meer informatie over Open e-CMR kun je vinden op www.openecmr.com"
+  "Find more information on Open e-CMR at www.openecmr.com": "Meer informatie over Open e-CMR kun je vinden op www.openecmr.com",
+  "Logged in as ${username} (email: ${email}, verified: ${verified})": "Ingelogd als ${username} (email: ${email}, gecontroleerd: ${verified})",
+  "Select photo": "Foto selecteren",
+  "Take photo...": "Nieuwe foto maken...",
+  "Choose from library...": "Bestaande foto kiezen...",
+  "Choose which library": "Kies fotoalbum"
 }
