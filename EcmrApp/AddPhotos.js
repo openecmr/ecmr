@@ -64,26 +64,15 @@ class AddPhotos extends Component {
             storageOptions: {
                 skipBackup: true,
                 path: 'images',
-            },
-            rotation: 360
+            }
         };
 
         ImagePicker.showImagePicker(options, (response) => {
             if (response.uri) {
-                let rotation = 0
-                if (response.originalRotation === 90) {
-                    rotation = 90
-                } else if (response.originalRotation === 270) {
-                    rotation = -90
-                } else if (response.isVertical) {
-                    rotation = 90;
-                }
-
-
                 ImageResizer.createResizedImage(response.uri,
                     800,
                     600,
-                    "JPEG", 60, rotation, null)
+                    "JPEG", 60, 0, null, true)
                     .then(async (response) => {
                         if (response.size > 250000) {
                             console.warn(`image still too big ${response.size}`);
