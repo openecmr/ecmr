@@ -1,6 +1,6 @@
 import {Button, Form, Header, Icon, Modal, Table} from "semantic-ui-react";
 import React, {Component} from "react";
-import {API, graphqlOperation, I18n} from "aws-amplify";
+import {API, Auth, graphqlOperation, I18n} from "aws-amplify";
 import * as queries from "./graphql/queries";
 import * as mutations from "./graphql/mutations";
 
@@ -158,10 +158,12 @@ class AddressBook extends Component {
     }
 
     async componentDidMount() {
-        const response = await API.graphql(graphqlOperation(queries.listContacts, {
-            limit: 1000
+        const user = await Auth.currentAuthenticatedUser();
+        const response = await API.graphql(graphqlOperation(queries.contactByOwner, {
+            limit: 50,
+            owner: user.getUsername()
         }));
-        const contacts = response.data.listContacts.items;
+        const contacts = response.data.contactByOwner.items;
 
         this.setState({
             contacts: contacts

@@ -198,15 +198,11 @@ class Vehicles extends Component {
 
     async componentDidMount() {
         const user = await Auth.currentAuthenticatedUser();
-        const response = await API.graphql(graphqlOperation(queries.listVehicles, {
-            limit: 1000,
-            filter: {
-                "owner": {
-                    "eq": user.getUsername()
-                }
-            }
+        const response = await API.graphql(graphqlOperation(queries.vehicleByOwner, {
+            limit: 50,
+            owner: user.getUsername()
         }));
-        const vehicles = response.data.listVehicles.items;
+        const vehicles = response.data.vehicleByOwner.items;
 
         this.setState({
             vehicles: vehicles

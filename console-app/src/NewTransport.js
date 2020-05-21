@@ -69,12 +69,13 @@ class ContactPicker extends Component {
     }
 
     async loadContacts() {
-        const response = await API.graphql(graphqlOperation(queries.listContacts, {
-            limit: 1000,
-            username: (await Auth.currentAuthenticatedUser()).getUsername()
+        const user = await Auth.currentAuthenticatedUser();
+        const response = await API.graphql(graphqlOperation(queries.contactByOwner, {
+            limit: 50,
+            owner: user.getUsername()
         }));
         this.setState({
-            options: response.data.listContacts.items.map(e => ({text: [e.name, e.address, e.country].filter(Boolean).join(", "), key: e.id, value: e.id}))
+            options: response.data.contactByOwner.items.map(e => ({text: [e.name, e.address, e.country].filter(Boolean).join(", "), key: e.id, value: e.id}))
         });
     }
 
@@ -129,12 +130,14 @@ class DriverPicker extends Component {
     }
 
     async loadDrivers() {
-        const response = await API.graphql(graphqlOperation(queries.listDrivers, {
-            limit: 1000
+        const user = await Auth.currentAuthenticatedUser();
+        const response = await API.graphql(graphqlOperation(queries.driverByOwner, {
+            limit: 50,
+            owner: user.getUsername()
         }));
         this.setState({
-            options: response.data.listDrivers.items.map(e => ({text: `${e.name}`, key: e.id, value: e.id})),
-            drivers: response.data.listDrivers.items.reduce((map, obj) => {
+            options: response.data.driverByOwner.items.map(e => ({text: `${e.name}`, key: e.id, value: e.id})),
+            drivers: response.data.driverByOwner.items.reduce((map, obj) => {
                 map[obj.id] = obj;
                 return map;
             }, {})
@@ -170,20 +173,19 @@ class VehiclePicker extends Component {
     }
 
     async loadVehicles() {
-        const response = await API.graphql(graphqlOperation(queries.listVehicles, {
-            limit: 1000,
+        const user = await Auth.currentAuthenticatedUser();
+        const response = await API.graphql(graphqlOperation(queries.vehicleByOwner, {
+            limit: 50,
+            owner: user.getUsername(),
             filter: {
-                companyId: {
-                    eq: this.props.companyId
-                },
                 type: {
                     eq: this.props.type
                 }
             }
         }));
         this.setState({
-            options: response.data.listVehicles.items.map(e => ({text: `${e.licensePlateNumber}, ${e.description}`, key: e.id, value: e.id})),
-            vehicles: response.data.listVehicles.items.reduce((map, obj) => {
+            options: response.data.vehicleByOwner.items.map(e => ({text: `${e.licensePlateNumber}, ${e.description}`, key: e.id, value: e.id})),
+            vehicles: response.data.vehicleByOwner.items.reduce((map, obj) => {
                 map[obj.id] = obj;
                 return map;
             }, {})

@@ -99,6 +99,93 @@ export const listCompanys = /* GraphQL */ `
     }
   }
 `;
+export const vehicleByOwner = /* GraphQL */ `
+  query VehicleByOwner(
+    $owner: String
+    $licensePlateNumber: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelVehicleFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    vehicleByOwner(
+      owner: $owner
+      licensePlateNumber: $licensePlateNumber
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        owner
+        companyId
+        type
+        licensePlateNumber
+        description
+      }
+      nextToken
+    }
+  }
+`;
+export const contactByOwner = /* GraphQL */ `
+  query ContactByOwner(
+    $owner: String
+    $name: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelContactFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    contactByOwner(
+      owner: $owner
+      name: $name
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        owner
+        name
+        postalCode
+        address
+        city
+        country
+        phone
+        email
+      }
+      nextToken
+    }
+  }
+`;
+export const companyByOwner = /* GraphQL */ `
+  query CompanyByOwner(
+    $owner: String
+    $name: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelCompanyFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    companyByOwner(
+      owner: $owner
+      name: $name
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        owner
+        name
+      }
+      nextToken
+    }
+  }
+`;
 export const getContract = /* GraphQL */ `
   query GetContract($id: ID!) {
     getContract(id: $id) {
@@ -683,6 +770,34 @@ export const driverByAssociationSecret = /* GraphQL */ `
   ) {
     driverByAssociationSecret(
       associationSecret: $associationSecret
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        owner
+        name
+        carrier
+        associationSecret
+      }
+      nextToken
+    }
+  }
+`;
+export const driverByOwner = /* GraphQL */ `
+  query DriverByOwner(
+    $owner: String
+    $name: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelDriverFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    driverByOwner(
+      owner: $owner
+      name: $name
       sortDirection: $sortDirection
       filter: $filter
       limit: $limit

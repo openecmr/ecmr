@@ -198,15 +198,11 @@ class Drivers extends Component {
 
     async componentDidMount() {
         const user = await Auth.currentAuthenticatedUser();
-        const response = await API.graphql(graphqlOperation(queries.listDrivers, {
-            limit: 1000,
-            filter: {
-                "owner": {
-                    "eq": user.getUsername()
-                }
-            }
+        const response = await API.graphql(graphqlOperation(queries.driverByOwner, {
+            limit: 50,
+            owner: user.getUsername()
         }));
-        const drivers = response.data.listDrivers.items;
+        const drivers = response.data.driverByOwner.items;
 
         this.setState({
             drivers: drivers

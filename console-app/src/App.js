@@ -292,18 +292,14 @@ class App extends Component {
     }
 
     async checkCompany() {
-        const response = await API.graphql(graphqlOperation(queries.listCompanys, {
-            "filter": {
-                "owner": {
-                    "eq": this.state.user.username
-                }
-            },
-            "limit": 1000
+        const response = await API.graphql(graphqlOperation(queries.companyByOwner, {
+            owner: this.state.user.username,
+            "limit": 1
         }));
 
-        if (response.data.listCompanys.items.length > 0) {
+        if (response.data.companyByOwner.items.length > 0) {
             this.setState({
-                company: response.data.listCompanys.items[0],
+                company: response.data.companyByOwner.items[0],
                 noCompany: false
             });
         } else {
