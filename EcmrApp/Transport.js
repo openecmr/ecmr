@@ -24,6 +24,30 @@ import {Button, Divider} from "react-native-elements";
 const activityDoneColor = 'rgb(5, 172, 5)';
 const actionButtonColor = 'rgb(60,176,60)';
 
+const formatInt = (int: number): string => {
+    if (int < 10) {
+        return `0${int}`;
+    }
+    return `${int}`;
+};
+
+const formatDuration = (time: string): string => {
+    const seconds = moment.duration(time).seconds();
+    const minutes = moment.duration(time).minutes();
+    const hours = moment.duration(time).hours();
+    const days = moment.duration(time).days();
+    if (days > 0) {
+        return `${days}d ${formatInt(hours)}:${formatInt(minutes)}:${formatInt(seconds)}`
+    }
+    if (hours > 0) {
+        return `${formatInt(hours)}:${formatInt(minutes)}:${formatInt(seconds)}`;
+    }
+    if (minutes > 0) {
+        return `${formatInt(minutes)}:${formatInt(seconds)}`;
+    }
+    return `00:${formatInt(seconds)}`;
+};
+
 const SignatureEvent = ({signature, signatoryObservation, photos}) => (
     <View>
         <S3Image style={{width: 150, height: 150}}
@@ -78,38 +102,116 @@ class Transport extends Component {
 
         const item = this.props.navigation.getParam('item');
 
+        const site = navigation.getParam('site');
         this.state = {
-            'site': navigation.getParam('site'),
-            'item': item,
-            downloadingPdf: false
+            'site': site,
+            downloadingPdf: false,
+            ...this.setContract(item, site)
         };
     }
 
-    render() {
-        const contract = this.state.item;
-        const loading = this.state.loading;
-        if (!contract || !contract.id) {
-            return <MyText>{I18n.get("Loading...")}</MyText>
-        }
-
+    setContract(contract, site) {
         const item = new ContractModel(contract);
-        const site = this.state.site;
 
         const arrivalDate = site === 'pickup' ? item.arrivalDate : item.deliveryDate;
         const arrivalTime = site === 'pickup' ? item.arrivalTime : item.deliveryTime;
         const actions = site === 'pickup' ?
-            ['ArrivalOnSite', 'LoadingComplete', /*'DepartureFromSite'*/] :
+            ['ArrivalOnSite', 'LoadingComplete'] :
             ['ArrivalOnSite', 'UnloadingComplete'];
-        const events = (item.events || []).filter(e => e.site === site && actions.indexOf(e.type) !== -1).map(e => e.type);
-        actions.splice(0, events.length === 0 ? 0 : actions.indexOf(events[events.length - 1]) + 1);
-        const firstAction = contract.needAcknowledge ?
-            "Acknowledge" :
-            (actions.length === 0 || !this.isPending(contract) ? '' : actions[0]);
+        const events = (item.events || []).filter(e => e.site === site && actions.indexOf(e.type) !== -1);
+
+        let lastRelevantEvent;
+        let firstAction;
+        if (events.length === 0) {
+            firstAction = contract.needAcknowledge ? "Acknowledge" : actions[0];
+        } else {
+            lastRelevantEvent = events[events.length - 1];
+            const lastAction = actions.indexOf(lastRelevantEvent.type);
+            const nextAction = lastAction + 1 < actions.length ? actions[lastAction + 1] : '';
+            firstAction = contract.needAcknowledge ?
+                "Acknowledge" : (!nextAction || !this.isPending(contract) ? '' : nextAction);
+        }
+
         const relevantItems = [...item.events || []].filter(e => e.site === site || !e.site).reverse();
         const names = item.names();
 
+        const lastRelevantEventDuration = lastRelevantEvent ? moment().diff(moment(lastRelevantEvent.createdAt)) : 0;
+
+        return {
+            arrivalDate,
+            arrivalTime,
+            lastRelevantEvent,
+            firstAction,
+            relevantItems,
+            names,
+            contract,
+            item,
+            lastRelevantEventDuration
+        }
+    }
+
+    render() {
+        const {
+            arrivalDate,
+            arrivalTime,
+            lastRelevantEvent,
+            lastRelevantEventDuration,
+            firstAction,
+            relevantItems,
+            names,
+            loading,
+            item,
+            contract,
+            site
+        } = this.state;
+
+        const states = {
+            'Acknowledge': "Awaiting acknowledgement",
+            'ArrivalOnSite': 'Awaiting arrival on site',
+            'LoadingComplete': 'Arrived on location / loading',
+            'UnloadingComplete': 'Arrived on location / unloading',
+            '': 'Activity done'
+        };
+
+        const awaitingSomething = !!(lastRelevantEvent && firstAction);
+
         return (
             <ScrollView style={styles.transport}>
+                <Header>{I18n.get("Current status")}</Header>
+                <View style={{padding: 10}}>
+                    <View style={{paddingTop: 15, paddingBottom: 15}}>
+                        <View style={{flexDirection: 'row', justifyContent: "center", flex: 1}}>
+                            {!!!firstAction && <Icon color={activityDoneColor} size={30} style={{marginRight: 5}} name='check-circle'/>}
+                            <MyText style={{fontSize: 20, textAlign: 'center', fontWeight: 'bold', marginBottom: 5}}>{states[firstAction]}</MyText>
+                        </View>
+                        {awaitingSomething && <MyText style={{fontSize: 18, textAlign: 'center',  fontWeight: 'bold', color: '#FF5C00'}}>
+                            {formatDuration(lastRelevantEventDuration)}
+                        </MyText>}
+                    </View>
+                    <Divider style={{backgroundColor: '#FF5C00', marginLeft: 30, marginRight: 30, height: 2}}/>
+                    {awaitingSomething && <View style={{flexDirection: "row", flex: 1, marginTop: 15}}>
+                        <MyText style={{fontWeight: 'bold'}}>Started on:</MyText>
+                        <MyText style={{marginLeft: 3, fontWeight: 'bold'}}>
+                            {moment(lastRelevantEvent.createdAt).format('llll')}
+                        </MyText>
+                    </View>}
+                    {!awaitingSomething && <View style={{flexDirection: "row", flex: 1, marginTop: 15}}>
+                        <MyText style={{fontWeight: 'bold'}}>Finished on:</MyText>
+                        <MyText style={{marginLeft: 3, fontWeight: 'bold'}}>
+                            {moment(lastRelevantEvent.createdAt).format('llll')}
+                        </MyText>
+                    </View>}
+                </View>
+                <View style={styles.action}>
+                    {firstAction === 'Acknowledge' && <Button title={I18n.get("Acknowledge transport")} loading={loading} buttonStyle={styles.actionButton} onPress={() => this.confirmAcknowledge()} />}
+                    {firstAction === 'ArrivalOnSite' && <Button title={site === 'pickup' ? I18n.get("Notify arrival at loading site") : I18n.get("Notify arrival at unloading site")}
+                                                                loading={loading}
+                                                                buttonStyle={styles.actionButton}
+                                                                onPress={() => this.confirmNotifyArrival()}/>}
+                    {(firstAction === 'LoadingComplete' || firstAction === 'UnloadingComplete') && <Button loading={loading}
+                                                                                                           title={site === 'pickup' ? I18n.get("Confirm loading") : I18n.get("Confirm unloading")}
+                                                                                                           buttonStyle={styles.actionButton} onPress={() => this.confirmLoading()}/>}
+                </View>
                 <Header>{I18n.get("Details")}</Header>
                 <Address address={item[site]} style={styles.address} />
                 <ArrivalDate date={arrivalDate} time={arrivalTime}  style={{paddingTop: 10, ...styles.address}} />
@@ -120,22 +222,6 @@ class Transport extends Component {
 
                 <LicensePlates truck={contract.truck} trailer={contract.trailer} style={{paddingTop: 10, ...styles.address}}/>
 
-                <View style={styles.action}>
-                    {firstAction === 'Acknowledge' && <Button title={I18n.get("Acknowledge transport")} loading={loading} buttonStyle={styles.actionButton} onPress={() => this.confirmAcknowledge()} />}
-                    {firstAction === 'ArrivalOnSite' && <Button title={site === 'pickup' ? I18n.get("Notify arrival at loading site") : I18n.get("Notify arrival at unloading site")}
-                                                                loading={loading}
-                                                                buttonStyle={styles.actionButton}
-                                                                onPress={() => this.confirmNotifyArrival()}/>}
-                    {(firstAction === 'LoadingComplete' || firstAction === 'UnloadingComplete') && <Button loading={loading}
-                                                                                                           title={site === 'pickup' ? I18n.get("Confirm loading") : I18n.get("Confirm unloading")}
-                                                                                                           buttonStyle={styles.actionButton} onPress={() => this.confirmLoading()}/>}
-                    {!firstAction &&
-                        <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                            <Icon color={activityDoneColor} size={30} name='check-circle'/>
-                            <Text style={styles.activityDoneText}>{I18n.get("Activity done")}</Text>
-                        </View>
-                    }
-                </View>
                 <Header>{I18n.get("Consignment note")}</Header>
                 <TouchableOpacity style={{borderBottomWidth: StyleSheet.hairlineWidth,
                     borderBottomColor: 'black',
@@ -256,7 +342,7 @@ class Transport extends Component {
                 item: result
             });
             this.setState({
-                item: result
+                ...this.setContract(result, this.state.site)
             });
         } catch (ex) {
             console.log(ex);
@@ -310,7 +396,7 @@ class Transport extends Component {
                 item: result
             });
             this.setState({
-                item: result
+                ...this.setContract(result, this.state.site)
             });
         } catch (ex) {
             console.log(ex);
@@ -328,12 +414,14 @@ class Transport extends Component {
             id: id
         }));
         this.setState({
-            item: response.data.getContract
+            ...this.setContract(response.data.getContract, this.state.site)
         })
     }
 
     componentWillUnmount() {
         this.navigationEventSubscription.remove();
+
+        clearInterval(this.state.timer);
     }
 
     componentDidMount() {
@@ -343,6 +431,16 @@ class Transport extends Component {
                 this.refresh();
             }
         );
+
+        const timer = setInterval(() => {
+            const lastRelevantEventDuration = this.state.lastRelevantEvent ? moment().diff(moment(this.state.lastRelevantEvent.createdAt)) : 0;
+            this.setState({
+                lastRelevantEventDuration
+            });
+        }, 1000);
+        this.setState({
+            timer
+        });
     }
 }
 
@@ -382,11 +480,9 @@ const styles = StyleSheet.create({
         flex: 10
     },
     action: {
-        backgroundColor: 'rgb(240,240,240)',
-        padding: 10,
-
-        borderTopColor: 'rgb(219, 219, 219)',
-        borderTopWidth:  StyleSheet.hairlineWidth
+        paddingTop: 0,
+        // backgroundColor: 'rgb(240,240,240)',
+        padding: 10
     },
     activityDoneText: {
         color: activityDoneColor,
