@@ -109,5 +109,12 @@
   "Select photo": "Foto selecteren",
   "Take photo...": "Nieuwe foto maken...",
   "Choose from library...": "Bestaande foto kiezen...",
-  "Choose which library": "Kies fotoalbum"
+  "Choose which library": "Kies fotoalbum",
+  "Awaiting acknowledgement": "Bevestiging nodig",
+  "Awaiting arrival on site": "Wachtend op aankomst",
+  "Arrived on location / loading": "Op laadadres / laden",
+  "Arrived on location / unloading": "Op afleveradres / lossen",
+  "Current status": "Huidige status",
+  "Started on:": "Gestart op:",
+  "Finished on:": "Afgerond op:"
 }

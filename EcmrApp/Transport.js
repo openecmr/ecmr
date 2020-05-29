@@ -24,14 +24,14 @@ import {Button, Divider} from "react-native-elements";
 const activityDoneColor = 'rgb(5, 172, 5)';
 const actionButtonColor = 'rgb(60,176,60)';
 
-const formatInt = (int: number): string => {
+const formatInt = int => {
     if (int < 10) {
         return `0${int}`;
     }
     return `${int}`;
 };
 
-const formatDuration = (time: string): string => {
+const formatDuration = time => {
     const seconds = moment.duration(time).seconds();
     const minutes = moment.duration(time).minutes();
     const hours = moment.duration(time).hours();
@@ -166,14 +166,14 @@ class Transport extends Component {
         } = this.state;
 
         const states = {
-            'Acknowledge': "Awaiting acknowledgement",
-            'ArrivalOnSite': 'Awaiting arrival on site',
-            'LoadingComplete': 'Arrived on location / loading',
-            'UnloadingComplete': 'Arrived on location / unloading',
-            '': 'Activity done'
+            'Acknowledge': I18n.get('Awaiting acknowledgement'),
+            'ArrivalOnSite': I18n.get('Awaiting arrival on site'),
+            'LoadingComplete': I18n.get('Arrived on location / loading'),
+            'UnloadingComplete': I18n.get('Arrived on location / unloading'),
+            '': I18n.get('Activity done')
         };
 
-        const awaitingSomething = !!(lastRelevantEvent && firstAction);
+        const ongoingEvent = !!(lastRelevantEvent && firstAction);
 
         return (
             <ScrollView style={styles.transport}>
@@ -184,19 +184,13 @@ class Transport extends Component {
                             {!!!firstAction && <Icon color={activityDoneColor} size={30} style={{marginRight: 5}} name='check-circle'/>}
                             <MyText style={{fontSize: 20, textAlign: 'center', fontWeight: 'bold', marginBottom: 5}}>{states[firstAction]}</MyText>
                         </View>
-                        {awaitingSomething && <MyText style={{fontSize: 18, textAlign: 'center',  fontWeight: 'bold', color: '#FF5C00'}}>
+                        {ongoingEvent && <MyText style={{fontSize: 18, textAlign: 'center',  fontWeight: 'bold', color: '#FF5C00'}}>
                             {formatDuration(lastRelevantEventDuration)}
                         </MyText>}
                     </View>
                     <Divider style={{backgroundColor: '#FF5C00', marginLeft: 30, marginRight: 30, height: 2}}/>
-                    {awaitingSomething && <View style={{flexDirection: "row", flex: 1, marginTop: 15}}>
-                        <MyText style={{fontWeight: 'bold'}}>Started on:</MyText>
-                        <MyText style={{marginLeft: 3, fontWeight: 'bold'}}>
-                            {moment(lastRelevantEvent.createdAt).format('llll')}
-                        </MyText>
-                    </View>}
-                    {!awaitingSomething && <View style={{flexDirection: "row", flex: 1, marginTop: 15}}>
-                        <MyText style={{fontWeight: 'bold'}}>Finished on:</MyText>
+                    {lastRelevantEvent && <View style={{flexDirection: "row", flex: 1, marginTop: 15}}>
+                        <MyText style={{fontWeight: 'bold'}}>{firstAction ? I18n.get("Started on:") : I18n.get("Finished on:")}</MyText>
                         <MyText style={{marginLeft: 3, fontWeight: 'bold'}}>
                             {moment(lastRelevantEvent.createdAt).format('llll')}
                         </MyText>

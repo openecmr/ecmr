@@ -157,7 +157,7 @@ class Transports extends Component {
                                           contracts={this.state.ongoingContracts}
                                           onRefresh={() => this.onRefresh()}
                                           showFirstAction={true}
-                                          showEmpty={true}
+                                          showEmpty={!this.state.refreshing}
                                           refreshing={this.state.refreshing} />;
                 case 'done':
                     return <ContractsList open={(item, site) => this.open(item, site)}
