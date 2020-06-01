@@ -28,7 +28,8 @@ export default class EcmrSignIn extends Component {
     }
 
     render() {
-        if (this.props.authState !== 'signIn') {
+        const validStates = ['signIn', 'signedOut', 'signedUp'];
+        if (!validStates.includes(this.props.authState)) {
             return null;
         }
 
@@ -85,10 +86,14 @@ export default class EcmrSignIn extends Component {
                                 required={true}
                             />
 
+                            <LinkCell onPress={() => this.changeState('forgotPassword', this.state.username)}>{I18n.get('Forgot password?')}</LinkCell>
+
                             <View style={{marginTop: 15}}>
                                 <Button title={I18n.get("Login")} color={'rgb(60, 167, 60)'}
                                         onPress={() => this.signIn()} disabled={this.state.signingIn}/>
                             </View>
+
+
                         </View>
                         }
                         {this.state.action !== 'choose' &&
@@ -201,3 +206,13 @@ I18n.get('Email');
 I18n.get('Phone Number');
 I18n.get('Sign Up')
 I18n.get('Username');
+I18n.get('Invalid password format');
+I18n.get('Invalid email address format');
+I18n.get('Resend code');
+I18n.get('Back to Sign In');
+I18n.get('Confirmation Code');
+I18n.get('Enter your confirmation code');
+I18n.get('Please Sign In / Sign Up');
+I18n.get('Create a new account');
+I18n.get('Reset your password');
+I18n.get('Send');

@@ -128,5 +128,16 @@
   "Email": "Emailadres",
   "Phone Number": "Telefoonnummer",
   "Sign Up": "Account aanmaken",
-  "Username": "Gebruikersnaam"
+  "Username": "Gebruikersnaam",
+  "Invalid password format": "Wachtwoord is niet ingewikkeld genoeg",
+  "Invalid email address format": "Ongeldig emailadres",
+  "Resend code": "Bevestigingscode opnieuw sturen",
+  "Back to Sign In": "Terug naar inloggen",
+  "Confirmation Code": "Bevestigingscode",
+  "Enter your confirmation code": "Voer je bevestigingscode in",
+  "Please Sign In / Sign Up": "Inloggen / Aanmelden",
+  "Create a new account": "Nieuw account aanmaken",
+  "Forgot password?": "Wachtwoord vergeten?",
+  "Reset your password": "Wachtwoord opnieuw aanvragen",
+  "Send": "Versturen"
 }
