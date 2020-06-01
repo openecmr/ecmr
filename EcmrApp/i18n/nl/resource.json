@@ -116,5 +116,17 @@
   "Arrived on location / unloading": "Op afleveradres / lossen",
   "Current status": "Huidige status",
   "Started on:": "Gestart op:",
-  "Finished on:": "Afgerond op:"
+  "Finished on:": "Afgerond op:",
+  "Login": "Inloggen",
+  "using your username": "met je gebruikersnaam",
+  "Back": "Vorige",
+  "Required fields": "Verplichte velden",
+  "Please enter username and password": "Vul je gebruikersnaam en wachtwoord in",
+  "Failed login": "Inloggen mislukt",
+  "Confirm a Code": "Bevestigingscode invoeren",
+  "Sign In": "Inloggen",
+  "Email": "Emailadres",
+  "Phone Number": "Telefoonnummer",
+  "Sign Up": "Account aanmaken",
+  "Username": "Gebruikersnaam"
 }

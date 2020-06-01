@@ -65,8 +65,8 @@ export default class EcmrSignIn extends Component {
                         }
                         {this.state.action === 'login' &&
                         <View style={{width: '100%', padding: 15}}>
-                            <Text style={{fontSize: 25, fontWeight: "bold"}}>Login</Text>
-                            <Text style={{marginBottom: 10}}>using your username</Text>
+                            <Text style={{fontSize: 25, fontWeight: "bold"}}>{I18n.get('Login')}</Text>
+                            <Text style={{marginBottom: 10}}>{I18n.get('using your username')}</Text>
 
                             <FormField
                                 theme={theme}
@@ -86,13 +86,13 @@ export default class EcmrSignIn extends Component {
                             />
 
                             <View style={{marginTop: 15}}>
-                                <Button title={"Login"} color={'rgb(60, 167, 60)'}
+                                <Button title={I18n.get("Login")} color={'rgb(60, 167, 60)'}
                                         onPress={() => this.signIn()} disabled={this.state.signingIn}/>
                             </View>
                         </View>
                         }
                         {this.state.action !== 'choose' &&
-                        <LinkCell onPress={() => this.setState({action: 'choose'})}>Back</LinkCell>}
+                        <LinkCell onPress={() => this.setState({action: 'choose'})}>{I18n.get('Back')}</LinkCell>}
                     </View>
                     <ErrorRow>{this.state.error}</ErrorRow>
                 </ScrollView>
@@ -127,10 +127,10 @@ export default class EcmrSignIn extends Component {
                 signingIn: false
             });
             Alert.alert(
-                'Required fields',
-                'Please enter username and password',
+                I18n.get('Required fields'),
+                I18n.get('Please enter username and password'),
                 [
-                    {text: 'OK'}
+                    {text: I18n.get('OK')}
                 ],
                 {cancelable: true}
             );
@@ -185,12 +185,19 @@ export default class EcmrSignIn extends Component {
         const map = this.props.errorMessage || this.props.messageMap || AmplifyMessageMap;
         msg = typeof map === 'string' ? map : map(msg);
         Alert.alert(
-            'Failed login',
+            I18n.get('Failed login'),
             msg,
             [
-                {text: 'OK'}
+                {text: I18n.get('OK')}
             ],
             {cancelable: true}
         );
     }
 }
+
+I18n.get('Confirm a Code');
+I18n.get('Sign In');
+I18n.get('Email');
+I18n.get('Phone Number');
+I18n.get('Sign Up')
+I18n.get('Username');
