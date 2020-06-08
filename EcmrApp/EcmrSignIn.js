@@ -40,13 +40,15 @@ export default class EcmrSignIn extends Component {
             <View style={{flex: 1, width: '100%', alignItems: 'center', backgroundColor: 'white'}}>
                 <ScrollView style={{flex: 1, width: '100%'}}>
                     <View style={{flex: 1, width: '100%', alignItems: 'center'}}>
+                        {this.state.action === 'choose' &&
                         <View>
                             <Image style={{marginLeft: 50, width: 50, height: 50}}
                                    source={require('./images/logo.png')}/>
                             <Text style={{fontSize: 30, fontWeight: "bold"}}>Open e-CMR</Text>
-                        </View>
+                        </View>}
+
                         {this.state.action === 'choose' &&
-                        <View style={{marginTop: 50, width: '100%', padding: 15}}>
+                        <View style={{width: '100%', padding: 15}}>
                             <Button containerStyle={{marginBottom: 10}} title={I18n.get("Login with Google")}
                                     onPress={() => this.googleLogin()} color={'rgb(60, 167, 60)'}/>
                             <Button containerStyle={{marginBottom: 10}} style={{}} title={I18n.get("Login with username")}
@@ -67,10 +69,10 @@ export default class EcmrSignIn extends Component {
                         {this.state.action === 'login' &&
                         <View style={{width: '100%', padding: 15}}>
                             <Text style={{fontSize: 25, fontWeight: "bold"}}>{I18n.get('Login')}</Text>
-                            <Text style={{marginBottom: 10}}>{I18n.get('using your username')}</Text>
 
                             <FormField
                                 theme={theme}
+                                testID={'username'}
                                 onChangeText={text => this.setState({username: text})}
                                 label={I18n.get('Enter your username')}
                                 placeholder={I18n.get('Enter your username')}
@@ -79,6 +81,7 @@ export default class EcmrSignIn extends Component {
 
                             <FormField
                                 theme={theme}
+                                testID={'password'}
                                 onChangeText={text => this.setState({password: text})}
                                 label={I18n.get('Password')}
                                 placeholder={I18n.get('Enter your password')}
@@ -89,7 +92,7 @@ export default class EcmrSignIn extends Component {
                             <LinkCell onPress={() => this.changeState('forgotPassword', this.state.username)}>{I18n.get('Forgot password?')}</LinkCell>
 
                             <View style={{marginTop: 15}}>
-                                <Button title={I18n.get("Login")} color={'rgb(60, 167, 60)'}
+                                <Button title={I18n.get("Login")} testID={'login'} color={'rgb(60, 167, 60)'}
                                         onPress={() => this.signIn()} disabled={this.state.signingIn}/>
                             </View>
 
@@ -142,7 +145,7 @@ export default class EcmrSignIn extends Component {
             return;
         }
 
-        Auth.signIn(username, password)
+        Auth.signIn(username.trim(), password.trim())
             .then(user => {
                 logger.debug(user);
                 const requireMFA = user.Session !== null;
