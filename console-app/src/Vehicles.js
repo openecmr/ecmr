@@ -103,13 +103,13 @@ class Vehicles extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            showAddDriver: false,
+            showAddVehicle: false,
             vehicles: []
         };
     }
 
     render() {
-        const {selectedVehicle} = this.state;
+        const {selectedVehicle, showAddVehicle} = this.state;
 
         return ([
             <AddVehicleModal show={this.state.showAddVehicle}
@@ -119,7 +119,7 @@ class Vehicles extends Component {
                              }}
                              company={this.props.company}
                              selectedVehicle={selectedVehicle}
-                             key={selectedVehicle ? selectedVehicle.id : null}/>,
+                             key={showAddVehicle}/>,
             <Table className="App-text-with-newlines" selectable compact='very'>
             <Table.Header>
                 <Table.Row>
@@ -185,7 +185,7 @@ class Vehicles extends Component {
     }
 
     async deleteVehicle() {
-        await API.graphql(graphqlOperation(mutations.deleteDriver, {
+        await API.graphql(graphqlOperation(mutations.deleteVehicle, {
             input: {
                 id: this.state.selectedVehicle.id
             }
@@ -205,7 +205,8 @@ class Vehicles extends Component {
         const vehicles = response.data.vehicleByOwner.items;
 
         this.setState({
-            vehicles: vehicles
+            vehicles: vehicles,
+            selectedVehicle: this.state.selectedVehicle && vehicles.find(v => v.id === this.state.selectedVehicle.id),
         });
     }
 }

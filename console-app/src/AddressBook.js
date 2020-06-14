@@ -84,7 +84,7 @@ class AddressBook extends Component {
     }
 
     render() {
-        const {selectedContact} = this.state;
+        const {selectedContact, showAddress} = this.state;
 
         return ([
             <AddAddressModal show={this.state.showAddress}
@@ -93,7 +93,7 @@ class AddressBook extends Component {
                                  this.componentDidMount();
                              }}
                              selectedContact={selectedContact}
-                             key={selectedContact ? selectedContact.id : null}/>,
+                             key={showAddress}/>,
             <Table className="App-text-with-newlines" selectable compact='very'>
                 <Table.Header>
                     <Table.Row>
@@ -166,7 +166,8 @@ class AddressBook extends Component {
         const contacts = response.data.contactByOwner.items;
 
         this.setState({
-            contacts: contacts
+            contacts: contacts,
+            selectedContact: this.state.selectedContact && contacts.find(v => v.id === this.state.selectedContact.id)
         });
     }
 }

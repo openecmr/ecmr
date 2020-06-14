@@ -110,7 +110,7 @@ class Drivers extends Component {
     }
 
     render() {
-        const {selectedDriver} = this.state;
+        const {selectedDriver, showAddDriver} = this.state;
 
         return ([
             <AddDriverModal show={this.state.showAddDriver}
@@ -119,7 +119,7 @@ class Drivers extends Component {
                                  this.componentDidMount();
                              }}
                              selectedDriver={selectedDriver}
-                             key={selectedDriver ? selectedDriver.id : null}/>,
+                             key={showAddDriver}/>,
             <Table className="App-text-with-newlines" selectable compact='very'>
             <Table.Header>
                 <Table.Row>
@@ -205,7 +205,8 @@ class Drivers extends Component {
         const drivers = response.data.driverByOwner.items;
 
         this.setState({
-            drivers: drivers
+            drivers: drivers,
+            selectedDriver: this.state.selectedDriver && drivers.find(v => v.id === this.state.selectedDriver.id),
         });
     }
 }
