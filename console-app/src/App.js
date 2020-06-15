@@ -20,6 +20,7 @@ import Vehicles from "./Vehicles";
 import * as ConsoleUtils from "./ConsoleUtils"
 import ReactGA from 'react-ga';
 import i18nDictionaryNl from './i18n/nl/resource';
+import moment from 'moment/min/moment-with-locales';
 
 let config;
 const pdfServiceKey = window.location.hash.substr(1);
@@ -337,5 +338,8 @@ const vocabularies = {
 
 // I18n.setLanguage('nl');
 I18n.putVocabularies(vocabularies);
+moment.locale(navigator.languages
+    ? navigator.languages[0]
+    : (navigator.language || navigator.userLanguage));
 
 export default App;

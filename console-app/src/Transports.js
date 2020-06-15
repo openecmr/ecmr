@@ -4,7 +4,7 @@ import {Button, Dimmer, Icon, Loader, Progress, Segment, Table} from "semantic-u
 import {Link} from "react-router-dom";
 import * as queries from "./graphql/queries";
 import {API, Auth, graphqlOperation, I18n} from 'aws-amplify';
-import moment from 'moment';
+import moment from 'moment/min/moment-with-locales';
 
 const AddressCell = ({address}) => {
     return (
@@ -44,7 +44,7 @@ const DateCell = ({date}) => (
     </Table.Cell>
 );
 
-const StatusMappings = {
+const StatusMappings = () => ({
     DRAFT: {
         progress: 0,
         label: I18n.get('draft'),
@@ -70,10 +70,10 @@ const StatusMappings = {
         label: I18n.get('archived'),
         color: 'grey'
     }
-};
+});
 
 const Status = ({status, updatedAt}) => {
-    const statusMapping = StatusMappings[status];
+    const statusMapping = StatusMappings()[status];
     return <Table.Cell width={1}>
         <Progress percent={statusMapping.progress} size='tiny' color={statusMapping.color}>
             {statusMapping.label}

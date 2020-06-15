@@ -10,7 +10,7 @@ import {
     List, Label, Segment, Comment, Loader, Modal, Form, Message, Card
 } from "semantic-ui-react";
 import {API, graphqlOperation, Auth, I18n} from 'aws-amplify';
-import moment from 'moment';
+import moment from 'moment/min/moment-with-locales';
 import * as queries from "./graphql/queries";
 import * as mutations from "./graphql/mutations";
 import {S3Image} from "aws-amplify-react";
