@@ -49,21 +49,22 @@ export default class EcmrSignIn extends Component {
 
                         {this.state.action === 'choose' &&
                         <View style={{width: '100%', padding: 15}}>
-                            <Button containerStyle={{marginBottom: 10}} title={I18n.get("Login with Google")}
-                                    onPress={() => this.googleLogin()} color={'rgb(60, 167, 60)'}/>
-                            <Button containerStyle={{marginBottom: 10}} style={{}} title={I18n.get("Login with username")}
-                                    onPress={() => this.setState({action: 'login'})} color={'rgb(60, 167, 60)'}/>
+                            <Button title={I18n.get("Create an account with Google")} color={'rgb(60, 167, 60)'} containerStyle={{marginBottom: 10}}
+                                    onPress={() => this.googleLogin()}/>
+                            <Button title={I18n.get("Create an account using email")} color={'rgb(60, 167, 60)'}
+                                    onPress={() => this.changeState("signUp")}/>
                             <Text style={{
+                                marginTop: 10,
                                 marginBottom: 10, textAlign: "center", fontWeight: "bold",
                                 borderBottomColor: "black",
                                 borderBottomWidth: StyleSheet.hairlineWidth,
                                 borderColor: "black",
                                 borderTopWidth: StyleSheet.hairlineWidth
                             }}>{I18n.get("or")}</Text>
-                            <Button title={I18n.get("Create an account with Google")} color={'rgb(60, 167, 60)'} containerStyle={{marginBottom: 10}}
-                                    onPress={() => this.googleLogin()}/>
-                            <Button title={I18n.get("Create an account using email")} color={'rgb(60, 167, 60)'}
-                                    onPress={() => this.changeState("signUp")}/>
+                            <Button containerStyle={{marginBottom: 10}} title={I18n.get("Login with Google")}
+                                    onPress={() => this.googleLogin()} color={'rgb(60, 167, 60)'}/>
+                            <Button containerStyle={{marginBottom: 10}} style={{}} title={I18n.get("Login with username")}
+                                    onPress={() => this.setState({action: 'login'})} color={'rgb(60, 167, 60)'}/>
                         </View>
                         }
                         {this.state.action === 'login' &&

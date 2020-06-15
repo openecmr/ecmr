@@ -319,9 +319,11 @@ class Pickup extends NewTransportForm {
         const floatFields = ["volume", "netWeight", "loadMeters"];
         if (name === 'quantity' && !/^[0-9]*$/.test(value)) {
             return;
-        } else if (floatFields.indexOf(name) !== -1 && !/^[0-9]+(\.[0-9]*)?$/.test(value)) {
+        } else if (floatFields.indexOf(name) !== -1 && !/^[0-9]*([.,][0-9]{0,3})?$/.test(value)) {
             return;
         }
+
+        value = floatFields.indexOf(name) !== -1 ? value.replace(",", ".") : value;
         this.setState({ [name]: value });
     };
 
@@ -840,7 +842,7 @@ class NewTransport extends Component {
                     creatorCompanyId: this.props.company.id
                 }),
                 events: [],
-                needAcknowledge: true,
+                needAcknowledge: !!this.state.driverDriverId,
                 shipperContactId: this.state.shipperContactId,
                 carrierContactId: this.state.carrierContactId,
                 deliveryContactId: this.state.delivery.contactId,
