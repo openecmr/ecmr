@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Open e-CMR",
+  "name": "Open e-CMR - manage your consignment notes",
   "icons": [
     {
       "src": "favicon.ico",
