@@ -139,5 +139,10 @@
   "Create a new account": "Nieuw account aanmaken",
   "Forgot password?": "Wachtwoord vergeten?",
   "Reset your password": "Wachtwoord opnieuw aanvragen",
-  "Send": "Versturen"
+  "Send": "Versturen",
+  "Draw signature": "Zet handtekening",
+  "Reset": "Wissen",
+  "Check loads": "Controleer lading",
+  "Check information": "Controleer informatie",
+  "Select signing method": "Selecteer tekenmethode"
 }

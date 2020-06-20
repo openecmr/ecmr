@@ -52,6 +52,12 @@ const MainNavigator = createStackNavigator({
     CaptureSignature: {screen: CaptureSignature},
     SignatoryInformation: {screen: SignatoryInformation},
     AddPhotos: {screen: AddPhotos}
+}, {
+    defaultNavigationOptions: {
+        cardStyle: {
+            backgroundColor: 'rgb(245,245,245)'
+        }
+    }
 });
 
 const SettingsNavigator = createStackNavigator({
@@ -81,6 +87,12 @@ const TabNavigator = createBottomTabNavigator({
                 return <Icon name="settings"/>
             },
             tabBarLabel: I18n.get("Settings")
+        }
+    }
+}, {
+    tabBarOptions: {
+        style: {
+            elevation: 15
         }
     }
 });

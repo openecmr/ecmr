@@ -7,7 +7,7 @@ import {I18n} from "aws-amplify";
 
 class ConfirmLoading extends Component {
     static navigationOptions = ({navigation, screenProps}) => ({
-        title: I18n.get('Consignment note')
+        title: I18n.get('Check loads')
     });
 
     constructor(props) {
@@ -26,6 +26,7 @@ class ConfirmLoading extends Component {
         const loads = contract.loads;
 
         return (
+
             <FlatList
                 data={loads}
                 extraData={this.state}

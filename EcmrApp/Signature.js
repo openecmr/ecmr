@@ -6,7 +6,9 @@ import {Button, CheckBox} from "react-native-elements";
 import {I18n} from "aws-amplify";
 
 class Signature extends Component {
-
+    static navigationOptions = ({navigation, screenProps}) => ({
+        title: I18n.get('Check information')
+    });
 
     constructor(props) {
         super(props);

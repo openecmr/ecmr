@@ -13,6 +13,10 @@ const SigningOption = ({onPress, iconName, title}) =>
 
 class SignSelection extends Component {
 
+    static navigationOptions = ({navigation, screenProps}) => ({
+        title: I18n.get('Select signing method')
+    });
+
     constructor(props) {
         super(props);
         this.state = {

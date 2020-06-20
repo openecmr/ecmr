@@ -23,7 +23,7 @@ export default class SignatoryInformation extends Component {
     render() {
         return (
 
-            <View style={{backgroundColor: 'white', flex: 1}}>
+            <View style={{flex: 1}}>
                 <Text style={{padding: 10, color: 'rgb(0, 115, 209)', fontSize: 25, paddingBottom: 10}}>{I18n.get("Please enter the details of the signatory:")}</Text>
                 <View style={{padding: 10, flex: 1, flexDirection: 'column', paddingTop: 0}}>
 

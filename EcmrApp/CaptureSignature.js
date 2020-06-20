@@ -1,5 +1,14 @@
 import {Component} from "react";
-import {ActivityIndicator, FlatList, SectionList, StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import {
+    ActivityIndicator,
+    FlatList,
+    SectionList,
+    StyleSheet,
+    Text,
+    TouchableHighlight,
+    TouchableOpacity,
+    View
+} from "react-native";
 import React from "react";
 import Icon from "react-native-vector-icons/FontAwesome";
 import {Address, HandOverModal, MyText} from "./Components";
@@ -14,6 +23,10 @@ import {createUpdateContractInput, updateContract} from "./DataUtil";
 
 
 class CaptureSignature extends Component {
+    static navigationOptions = ({navigation, screenProps}) => ({
+        title: I18n.get('Draw signature')
+    });
+
     constructor(props) {
         super(props);
         this.state = {
@@ -31,7 +44,7 @@ class CaptureSignature extends Component {
                     onPress={() => this.props.navigation.popToTop()}
                     visible={this.state.handoverPhone}
                     text={I18n.get("Please return the phone to the driver")}/>
-                <View style={{borderWidth: 1, borderColor: '#000033', padding: 5, margin: 5, flex: 1}}>
+                <View style={{borderWidth: 1, borderColor: '#000033', padding: 0, margin: 5, flex: 1}}>
                     <SignatureCapture
                         style={{flex:1}}
                         ref="sign"
@@ -41,7 +54,19 @@ class CaptureSignature extends Component {
                         showBorder={true}
                         onSaveEvent={(result) => this._onSaveEvent(result)}
                         viewMode={"portrait"}/>
+
+
+                    <TouchableHighlight style={{
+                        position: "absolute",
+                        left: 5,
+                        bottom: 5,
+                        alignItems: "center",
+                        backgroundColor: "white"}}
+                                        onPress={() => { this.refs["sign"].resetImage() } }>
+                        <Text>{I18n.get("Reset")}</Text>
+                    </TouchableHighlight>
                 </View>
+
                 <View>
                     <Button title={I18n.get("Save")} buttonStyle={{height: 60, backgroundColor: 'rgb(60,176,60)'}}
                             onPress={() => this.save()} disabled={this.state.saving}/>
