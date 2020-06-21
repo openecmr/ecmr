@@ -4,10 +4,11 @@ import * as queries from "./graphql/queries";
 import "./TransportPdf.css"
 import {Header, Icon, List, Table} from "semantic-ui-react";
 import {S3Image} from "aws-amplify-react";
+import moment from "moment/min/moment-with-locales.min";
 
 const PdfHeader = ({label, icon}) => (
     <Header as={'h5'}>
-        <Icon name={icon} />
+        {icon && <Icon name={icon} />}
         <Header.Content>{label}</Header.Content>
     </Header>
 );
@@ -31,8 +32,8 @@ const Address = ({address, label, icon}) => (
     </div>
 );
 
-const Row = ({children, max}) => (
-    <div className={"row " + (max ? ' max' : '')}>
+const Row = ({children, max, fill}) => (
+    <div className={"row " + (max ? ' max' : '') + ' ' + (fill ? ' fill' : '')}>
         {React.Children.map(children, c =>
             <div className={"cell"}>
                 {c}
@@ -53,17 +54,21 @@ const ListOfLoads = ({loads}) => (
     <Table className="App-text-with-newlines" compact='very'>
         <Table.Header>
             <Table.Row>
-                <Table.HeaderCell>Category</Table.HeaderCell>
                 <Table.HeaderCell>Quantity</Table.HeaderCell>
-                <Table.HeaderCell>Description</Table.HeaderCell>
+                <Table.HeaderCell>Method of packaging</Table.HeaderCell>
+                <Table.HeaderCell>Nature of the goods</Table.HeaderCell>
+                <Table.HeaderCell>Net weight (kg)</Table.HeaderCell>
+                <Table.HeaderCell>Volume (m³)</Table.HeaderCell>
             </Table.Row>
         </Table.Header>
         <Table.Body>
             {loads.map((g, index) =>
                 <Table.Row key={index}>
-                    <Table.Cell>{g.category}</Table.Cell>
                     <Table.Cell>{g.quantity}</Table.Cell>
+                    <Table.Cell>{g.category}</Table.Cell>
                     <Table.Cell>{g.description}</Table.Cell>
+                    <Table.Cell>{g.netWeight}</Table.Cell>
+                    <Table.Cell>{g.volume}</Table.Cell>
                 </Table.Row>
 
         )}
@@ -71,15 +76,45 @@ const ListOfLoads = ({loads}) => (
     </Table>
 );
 
+const Legal = ({id}) => (
+    <div>
+        <div className={"inner-row"} style={{fontWeight: "bold"}}>
+            <div className={"inner-cell"}>International consignment note</div>
+            <div className={"inner-cell"}>
+                {/*Internationale vrachtbrief*/}
+            </div>
+        </div>
+
+        <div className={"inner-row"}>
+            <div className={"inner-cell"}>
+                Open e-CMR id: {id}
+            </div>
+        </div>
+
+        <div className={"inner-row"} >
+            <div className={"inner-cell small-text"}>
+                This carriage is subject, notwithstanding any clause to the contrary, to the Convention on the Contract for the International Carriage of Goods by Road (CMR)
+            </div>
+            <div className={"inner-cell small-text"}>
+                {/*Dit vervoer, ongeacht enig tegenstrijdig beding, is onderworpen aan de bepalingen van het CMR-verdrag.*/}
+            </div>
+        </div>
+    </div>
+);
+
 const Signature = ({event, label}) => (
     <div>
         <PdfHeader icon={'building'} label={label}/>
         {event &&
-        <S3Image
-            theme={{photoImg: {width: '100px', height: '100px'}}}
-            resizeMode={'center'}
-            level={"public"}
-            imgKey={event.signature.signatureImageSignatory.key}/>
+            <React.Fragment>
+                <S3Image
+                    theme={{photoImg: {width: '100px', height: '100px'}}}
+                    resizeMode={'center'}
+                    level={"public"}
+                    imgKey={event.signature.signatureImageSignatory.key}/>
+                <div>{event.signature.signatoryName} {event.signature.signatoryEmail && <span>({event.signature.signatoryEmail})</span>}</div>
+                <div>{moment(event.createdAt).format('lll')}</div>
+            </React.Fragment>
         }
         {!event &&
             <div style={{width: "100px", height: "100px"}}/>
@@ -117,7 +152,7 @@ export default class TransportPdf extends Component {
             <div className={"pdf"}>
                 <Row>
                     <Address address={contract.shipper} icon={'building'} label={'1. Shipper'}/>
-                    <span/>
+                    <Legal id={contract.id.substring(0, 8)}/>
                 </Row>
                 <Row>
                     <Address address={contract.delivery} icon={'building'} label={'2. Consignee'}/>
@@ -127,8 +162,17 @@ export default class TransportPdf extends Component {
                     <Address address={contract.delivery} icon={'building'} label={'3. Place designated for delivery of goods (place, country)'}/>
                     <LicensePlates contract={contract}/>
                 </Row>
-                <Row max={true}>
+                <Row max={true} fill={true}>
                     <ListOfLoads loads={contract.loads}/>
+                </Row>
+                <Row>
+                    <div>
+                        <PdfHeader  label={"13. Sender's instructions"}/>
+
+                        <div>Planned pickup date: {moment(contract.arrivalDate).format('ll')}</div>
+                        <div>Planned delivery date: {moment(contract.deliveryDate).format('ll')}</div>
+                    </div>
+                    <span></span>
                 </Row>
                 <Row>
                     <Signature event={this.selectSignature(contract.events, 'pickup')}

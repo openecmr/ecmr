@@ -1,11 +1,38 @@
-.pdf {
-    width: 612px;
-    height: 792px;
+
+    @page {
+        size: A4; /* DIN A4 standard, Europe */
+        margin-left: 5mm;
+        margin-right: 5mm;
+    }
+    html, body {
+        width: 200mm;
+        height: 100%;
+        font-size: 11px;
+        background: #FFF;
+        overflow:visible;
+    }
+    body {
+        padding-top:5mm;
+    }
+
+
+#root {
     background-color: white;
     margin: 0 auto;
+    height: 100%;
     display: flex;
     flex-direction: column;
     border: 1px solid black;
+}
+
+#root > div {
+    height: 100%;
+}
+
+.pdf {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
 .pdf .row {
@@ -15,7 +42,7 @@
     flex-direction: row;
 }
 
-.pdf .row.max {
+.pdf .row.fill {
     flex: 1
 }
 
@@ -27,4 +54,19 @@
 .pdf .cell:not(:first-child) {
     border-left: 1px solid black;
     border-collapse: collapse;
+}
+
+.pdf .inner-row {
+    display: flex;
+    flex-direction: row;
+}
+
+.pdf .inner-cell {
+    padding: 5px;
+    flex: 1
+}
+
+.pdf .small-text {
+    font-size: 7pt;
+    line-height: 1em;
 }
