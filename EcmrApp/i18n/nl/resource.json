@@ -144,5 +144,9 @@
   "Reset": "Wissen",
   "Check loads": "Controleer lading",
   "Check information": "Controleer informatie",
-  "Select signing method": "Selecteer tekenmethode"
+  "Select signing method": "Selecteer tekenmethode",
+  "A copy of the consignment note will be delivered to this address": "Een kopie van de vrachtbrief wordt verstuurd naar dit adres",
+  "Email invalid": "Email niet juist",
+  "Please enter a valid email address": "Voer een geldig email-adres in",
+  "A copy of the consignment note is sent to:": "Een kopie van de vrachtbrief wordt verstuurd naar:"
 }

@@ -18,6 +18,7 @@
     "aws-amplify": "^3.0.13",
     "aws-amplify-react-native": "^4.2.0",
     "buffer": "^5.6.0",
+    "email-validator": "^2.0.4",
     "eslint": "^7.1.0",
     "moment": "^2.26.0",
     "react": "16.13.1",

@@ -69,7 +69,13 @@ class Signature extends Component {
                     checked={this.state.agree}
                 />
 
-                <MyText style={{fontWeight: 'bold'}}>{I18n.get("Loads:")}</MyText>
+                {!!this.state.signatoryEmail &&
+                    <View>
+                        <MyText style={{fontWeight: 'bold', marginTop: 5}}>{I18n.get("A copy of the consignment note is sent to:")}</MyText>
+                        <MyText style={{marginLeft: 10}}>{this.state.signatoryEmail}</MyText>
+                    </View>
+                }
+                <MyText style={{fontWeight: 'bold', marginTop: 5}}>{I18n.get("Loads:")}</MyText>
                 <View style={{marginLeft: 10}}>
                     <FlatList
                         data={this.state.contract.loads}
