@@ -99,6 +99,21 @@
             "service": "Lambda",
             "providerPlugin": "awscloudformation",
             "build": true
+        },
+        "emailtrigger": {
+            "build": true,
+            "providerPlugin": "awscloudformation",
+            "service": "Lambda",
+            "dependsOn": [
+                {
+                    "category": "api",
+                    "resourceName": "openecmr",
+                    "attributes": [
+                        "GraphQLAPIIdOutput",
+                        "GraphQLAPIEndpointOutput"
+                    ]
+                }
+            ]
         }
     }
 }

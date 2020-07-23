@@ -1,0 +1,310 @@
+{
+	"AWSTemplateFormatVersion": "2010-09-09",
+	"Description": "Lambda resource stack creation using Amplify CLI",
+	"Parameters": {
+		"CloudWatchRule": {
+			"Type": "String",
+			"Default": "NONE",
+			"Description": " Schedule Expression"
+		},
+		"env": {
+			"Type": "String"
+		},
+		"apiopenecmrGraphQLAPIIdOutput": {
+			"Type": "String",
+			"Default": "apiopenecmrGraphQLAPIIdOutput"
+		},
+		"apiopenecmrGraphQLAPIEndpointOutput": {
+			"Type": "String",
+			"Default": "apiopenecmrGraphQLAPIEndpointOutput"
+		}
+	},
+	"Conditions": {
+		"ShouldNotCreateEnvResources": {
+			"Fn::Equals": [
+				{
+					"Ref": "env"
+				},
+				"NONE"
+			]
+		}
+	},
+	"Resources": {
+		"LambdaFunction": {
+			"Type": "AWS::Lambda::Function",
+			"Metadata": {
+				"aws:asset:path": "./src",
+				"aws:asset:property": "Code"
+			},
+			"Properties": {
+				"Handler": "index.handler",
+				"FunctionName": {
+					"Fn::If": [
+						"ShouldNotCreateEnvResources",
+						"emailtrigger",
+						{
+							"Fn::Join": [
+								"",
+								[
+									"emailtrigger",
+									"-",
+									{
+										"Ref": "env"
+									}
+								]
+							]
+						}
+					]
+				},
+				"Environment": {
+					"Variables": {
+						"ENV": {
+							"Ref": "env"
+						},
+						"REGION": {
+							"Ref": "AWS::Region"
+						},
+						"API_OPENECMR_GRAPHQLAPIIDOUTPUT": {
+							"Ref": "apiopenecmrGraphQLAPIIdOutput"
+						},
+						"API_OPENECMR_GRAPHQLAPIENDPOINTOUTPUT": {
+							"Ref": "apiopenecmrGraphQLAPIEndpointOutput"
+						}
+					}
+				},
+				"Role": {
+					"Fn::GetAtt": [
+						"LambdaExecutionRole",
+						"Arn"
+					]
+				},
+				"Runtime": "nodejs12.x",
+				"Timeout": "25",
+				"Code": {
+					"S3Bucket": "openecmr-master-20191019170631-deployment",
+					"S3Key": "amplify-builds/emailtrigger-49337136556d77717652-build.zip"
+				}
+			}
+		},
+		"LambdaExecutionRole": {
+			"Type": "AWS::IAM::Role",
+			"Properties": {
+				"RoleName": {
+					"Fn::If": [
+						"ShouldNotCreateEnvResources",
+						"openecmrLambdaRole16d49ea9",
+						{
+							"Fn::Join": [
+								"",
+								[
+									"openecmrLambdaRole16d49ea9",
+									"-",
+									{
+										"Ref": "env"
+									}
+								]
+							]
+						}
+					]
+				},
+				"AssumeRolePolicyDocument": {
+					"Version": "2012-10-17",
+					"Statement": [
+						{
+							"Effect": "Allow",
+							"Principal": {
+								"Service": [
+									"lambda.amazonaws.com"
+								]
+							},
+							"Action": [
+								"sts:AssumeRole"
+							]
+						}
+					]
+				}
+			}
+		},
+		"lambdaexecutionpolicy": {
+			"DependsOn": [
+				"LambdaExecutionRole"
+			],
+			"Type": "AWS::IAM::Policy",
+			"Properties": {
+				"PolicyName": "lambda-execution-policy",
+				"Roles": [
+					{
+						"Ref": "LambdaExecutionRole"
+					}
+				],
+				"PolicyDocument": {
+					"Version": "2012-10-17",
+					"Statement": [
+						{
+							"Effect": "Allow",
+							"Action": [
+								"logs:CreateLogGroup",
+								"logs:CreateLogStream",
+								"logs:PutLogEvents"
+							],
+							"Resource": {
+								"Fn::Sub": [
+									"arn:aws:logs:${region}:${account}:log-group:/aws/lambda/${lambda}:log-stream:*",
+									{
+										"region": {
+											"Ref": "AWS::Region"
+										},
+										"account": {
+											"Ref": "AWS::AccountId"
+										},
+										"lambda": {
+											"Ref": "LambdaFunction"
+										}
+									}
+								]
+							}
+						},
+						{
+							"Effect": "Allow",
+							"Action": [
+								"ses:SendEmail",
+								"ses:SendRawEmail"
+							],
+							"Resource": "*"
+						}
+					]
+				}
+			}
+		},
+		"LambdaTriggerPolicyContract": {
+			"DependsOn": [
+				"LambdaExecutionRole"
+			],
+			"Type": "AWS::IAM::Policy",
+			"Properties": {
+				"PolicyName": "amplify-lambda-execution-policy-Contract",
+				"Roles": [
+					{
+						"Ref": "LambdaExecutionRole"
+					}
+				],
+				"PolicyDocument": {
+					"Version": "2012-10-17",
+					"Statement": [
+						{
+							"Effect": "Allow",
+							"Action": [
+								"dynamodb:DescribeStream",
+								"dynamodb:GetRecords",
+								"dynamodb:GetShardIterator",
+								"dynamodb:ListStreams"
+							],
+							"Resource": {
+								"Fn::ImportValue": {
+									"Fn::Sub": "${apiopenecmrGraphQLAPIIdOutput}:GetAtt:ContractTable:StreamArn"
+								}
+							}
+						}
+					]
+				}
+			}
+		},
+		"LambdaEventSourceMappingContract": {
+			"Type": "AWS::Lambda::EventSourceMapping",
+			"DependsOn": [
+				"LambdaTriggerPolicyContract",
+				"LambdaExecutionRole"
+			],
+			"Properties": {
+				"BatchSize": 100,
+				"Enabled": true,
+				"EventSourceArn": {
+					"Fn::ImportValue": {
+						"Fn::Sub": "${apiopenecmrGraphQLAPIIdOutput}:GetAtt:ContractTable:StreamArn"
+					}
+				},
+				"FunctionName": {
+					"Fn::GetAtt": [
+						"LambdaFunction",
+						"Arn"
+					]
+				},
+				"StartingPosition": "LATEST"
+			}
+		},
+		"AmplifyResourcesPolicy": {
+			"DependsOn": [
+				"LambdaExecutionRole"
+			],
+			"Type": "AWS::IAM::Policy",
+			"Properties": {
+				"PolicyName": "amplify-lambda-execution-policy",
+				"Roles": [
+					{
+						"Ref": "LambdaExecutionRole"
+					}
+				],
+				"PolicyDocument": {
+					"Version": "2012-10-17",
+					"Statement": [
+						{
+							"Effect": "Allow",
+							"Action": [
+								"appsync:GraphQL",
+								"appsync:Get*",
+								"appsync:List*"
+							],
+							"Resource": [
+								{
+									"Fn::Join": [
+										"",
+										[
+											"arn:aws:appsync:",
+											{
+												"Ref": "AWS::Region"
+											},
+											":",
+											{
+												"Ref": "AWS::AccountId"
+											},
+											":apis/",
+											{
+												"Ref": "apiopenecmrGraphQLAPIIdOutput"
+											},
+											"/*"
+										]
+									]
+								}
+							]
+						}
+					]
+				}
+			}
+		}
+	},
+	"Outputs": {
+		"Name": {
+			"Value": {
+				"Ref": "LambdaFunction"
+			}
+		},
+		"Arn": {
+			"Value": {
+				"Fn::GetAtt": [
+					"LambdaFunction",
+					"Arn"
+				]
+			}
+		},
+		"Region": {
+			"Value": {
+				"Ref": "AWS::Region"
+			}
+		},
+		"LambdaExecutionRole": {
+			"Value": {
+				"Ref": "LambdaExecutionRole"
+			}
+		}
+	}
+}

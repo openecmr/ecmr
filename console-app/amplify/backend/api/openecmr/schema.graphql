@@ -192,7 +192,7 @@ type Mutation {
 }
 
 type Query {
-    pdfexport(id: String): String @function(name : "pdfexport-${env}")
+    pdfexport(id: String): String @aws_iam @aws_cognito_user_pools @function(name : "pdfexport-${env}")
 }
 
 type Reference @aws_api_key @aws_cognito_user_pools @aws_iam {

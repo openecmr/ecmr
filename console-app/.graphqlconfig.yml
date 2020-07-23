@@ -1,6 +1,6 @@
 projects:
   openecmr:
-    schemaPath: src/graphql/schema.json
+    schemaPath: amplify/backend/api/openecmr/build/schema.graphql
     includes:
       - src/graphql/**/*.js
     excludes:

@@ -1,0 +1,874 @@
+{
+  "Records": [
+    {
+      "eventID": "65b433295a9e6040bce3aafc80221a98",
+      "eventName": "MODIFY",
+      "eventVersion": "1.1",
+      "eventSource": "aws:dynamodb",
+      "awsRegion": "eu-central-1",
+      "dynamodb": {
+        "ApproximateCreationDateTime": 1593636688,
+        "Keys": {
+          "id": {
+            "S": "6b7a32c2-c563-4677-9651-c70409559984"
+          }
+        },
+        "NewImage": {
+          "shipper": {
+            "M": {
+              "country": {
+                "S": "NL"
+              },
+              "address": {
+                "S": "Dekkerpark 186"
+              },
+              "city": {
+                "S": "Breedeweg"
+              },
+              "postalCode": {
+                "S": "1505 MF"
+              },
+              "name": {
+                "S": "Linden"
+              }
+            }
+          },
+          "deliveryTime": {
+            "M": {
+              "start": {
+                "S": "16:00"
+              },
+              "end": {
+                "S": "17:00"
+              }
+            }
+          },
+          "pickupContactId": {
+            "S": "e514ff9b-86d3-4e1a-8c33-cf1996ebdcec"
+          },
+          "__typename": {
+            "S": "Contract"
+          },
+          "truck": {
+            "S": "432432"
+          },
+          "driverDriverId": {
+            "S": "28e2ff8b-c8b9-4ed0-8b33-dfa60af03a44"
+          },
+          "trailer": {
+            "S": "ewqeq"
+          },
+          "trailerVehicleId": {
+            "S": "27277f5e-62c4-4bcb-bbdc-d03cc69ed1dc"
+          },
+          "createdAt": {
+            "S": "2020-06-26T11:17:22.747Z"
+          },
+          "needAcknowledge": {
+            "BOOL": false
+          },
+          "truckVehicleId": {
+            "S": "0d814a72-1ff3-428c-a155-bc3a323a026a"
+          },
+          "arrivalTime": {
+            "M": {
+              "start": {
+                "S": "18:00"
+              },
+              "end": {
+                "S": "19:00"
+              }
+            }
+          },
+          "id": {
+            "S": "6b7a32c2-c563-4677-9651-c70409559984"
+          },
+          "deliveryDate": {
+            "S": "2020-05-27"
+          },
+          "events": {
+            "L": [
+              {
+                "M": {
+                  "createdAt": {
+                    "S": "2020-06-26T11:17:22.747Z"
+                  },
+                  "site": {
+                    "NULL": true
+                  },
+                  "signatoryObservation": {
+                    "NULL": true
+                  },
+                  "signature": {
+                    "NULL": true
+                  },
+                  "author": {
+                    "M": {
+                      "username": {
+                        "S": "Google_101696558391179033806"
+                      }
+                    }
+                  },
+                  "latitude": {
+                    "NULL": true
+                  },
+                  "type": {
+                    "S": "AssignDriver"
+                  },
+                  "assignedDriver": {
+                    "M": {
+                      "name": {
+                        "S": "bob57"
+                      },
+                      "username": {
+                        "S": "bob57"
+                      }
+                    }
+                  },
+                  "photos": {
+                    "NULL": true
+                  },
+                  "driverObservation": {
+                    "NULL": true
+                  },
+                  "longitude": {
+                    "NULL": true
+                  }
+                }
+              },
+              {
+                "M": {
+                  "createdAt": {
+                    "S": "2020-06-26T13:20:37+02:00"
+                  },
+                  "site": {
+                    "NULL": true
+                  },
+                  "signatoryObservation": {
+                    "NULL": true
+                  },
+                  "signature": {
+                    "NULL": true
+                  },
+                  "author": {
+                    "M": {
+                      "username": {
+                        "S": "bob57"
+                      }
+                    }
+                  },
+                  "latitude": {
+                    "NULL": true
+                  },
+                  "type": {
+                    "S": "Acknowledge"
+                  },
+                  "assignedDriver": {
+                    "NULL": true
+                  },
+                  "photos": {
+                    "NULL": true
+                  },
+                  "driverObservation": {
+                    "NULL": true
+                  },
+                  "longitude": {
+                    "NULL": true
+                  }
+                }
+              },
+              {
+                "M": {
+                  "createdAt": {
+                    "S": "2020-06-26T13:20:47+02:00"
+                  },
+                  "site": {
+                    "S": "pickup"
+                  },
+                  "signatoryObservation": {
+                    "NULL": true
+                  },
+                  "signature": {
+                    "NULL": true
+                  },
+                  "author": {
+                    "M": {
+                      "username": {
+                        "S": "bob57"
+                      }
+                    }
+                  },
+                  "latitude": {
+                    "NULL": true
+                  },
+                  "type": {
+                    "S": "ArrivalOnSite"
+                  },
+                  "assignedDriver": {
+                    "NULL": true
+                  },
+                  "photos": {
+                    "NULL": true
+                  },
+                  "driverObservation": {
+                    "NULL": true
+                  },
+                  "longitude": {
+                    "NULL": true
+                  }
+                }
+              },
+              {
+                "M": {
+                  "createdAt": {
+                    "S": "2020-06-26T13:24:00+02:00"
+                  },
+                  "site": {
+                    "S": "pickup"
+                  },
+                  "signatoryObservation": {
+                    "S": "Ldoos beschadigd"
+                  },
+                  "signature": {
+                    "M": {
+                      "signatoryEmail": {
+                        "S": "test@desert-spring.nl"
+                      },
+                      "method": {
+                        "S": "SIGN_ON_GLASS"
+                      },
+                      "signatureImageDriver": {
+                        "NULL": true
+                      },
+                      "signatoryName": {
+                        "S": "Jan de Vries"
+                      },
+                      "signatureImageSignatory": {
+                        "M": {
+                          "bucket": {
+                            "S": "bucket"
+                          },
+                          "region": {
+                            "S": "eu-central-1"
+                          },
+                          "key": {
+                            "S": "signature-c56101ef-76bb-42cf-b689-6959c202e305.png"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "author": {
+                    "M": {
+                      "username": {
+                        "S": "bob57"
+                      }
+                    }
+                  },
+                  "latitude": {
+                    "NULL": true
+                  },
+                  "type": {
+                    "S": "LoadingComplete"
+                  },
+                  "assignedDriver": {
+                    "NULL": true
+                  },
+                  "photos": {
+                    "L": []
+                  },
+                  "driverObservation": {
+                    "NULL": true
+                  },
+                  "longitude": {
+                    "NULL": true
+                  }
+                }
+              },
+              {
+                "M": {
+                  "createdAt": {
+                    "S": "2020-07-01T22:50:37+02:00"
+                  },
+                  "site": {
+                    "S": "delivery"
+                  },
+                  "signatoryObservation": {
+                    "NULL": true
+                  },
+                  "signature": {
+                    "NULL": true
+                  },
+                  "author": {
+                    "M": {
+                      "username": {
+                        "S": "bob57"
+                      }
+                    }
+                  },
+                  "latitude": {
+                    "NULL": true
+                  },
+                  "type": {
+                    "S": "ArrivalOnSite"
+                  },
+                  "assignedDriver": {
+                    "NULL": true
+                  },
+                  "photos": {
+                    "NULL": true
+                  },
+                  "driverObservation": {
+                    "NULL": true
+                  },
+                  "longitude": {
+                    "NULL": true
+                  }
+                }
+              }
+            ]
+          },
+          "updatedAt": {
+            "S": "2020-06-26T11:17:22.747Z"
+          },
+          "owner": {
+            "S": "bob57"
+          },
+          "delivery": {
+            "M": {
+              "country": {
+                "S": "NL"
+              },
+              "address": {
+                "S": "Dekkerpark 186"
+              },
+              "city": {
+                "S": "Breedeweg"
+              },
+              "postalCode": {
+                "S": "1505 MF"
+              },
+              "name": {
+                "S": "Linden"
+              }
+            }
+          },
+          "creator": {
+            "M": {
+              "name": {
+                "S": "Desert Spring"
+              }
+            }
+          },
+          "carrierContactId": {
+            "S": "9279a8a0-1ace-49f9-b195-8e07d774141c"
+          },
+          "loads": {
+            "L": [
+              {
+                "M": {
+                  "volume": {
+                    "NULL": true
+                  },
+                  "netWeight": {
+                    "NULL": true
+                  },
+                  "quantity": {
+                    "N": "22"
+                  },
+                  "loadMeters": {
+                    "NULL": true
+                  },
+                  "hazardousGoodsItems": {
+                    "NULL": true
+                  },
+                  "description": {
+                    "S": "This is really cool"
+                  },
+                  "category": {
+                    "S": "packages"
+                  }
+                }
+              }
+            ]
+          },
+          "pickup": {
+            "M": {
+              "country": {
+                "S": "NL"
+              },
+              "address": {
+                "S": "Bakkerplantsoen 969"
+              },
+              "city": {
+                "S": "Emmastroom"
+              },
+              "postalCode": {
+                "S": "1588 FD"
+              },
+              "name": {
+                "S": "Vries"
+              }
+            }
+          },
+          "deliveryContactId": {
+            "S": "4f1bbe61-de4e-4517-b6e9-b98788860832"
+          },
+          "arrivalDate": {
+            "S": "2020-05-27"
+          },
+          "creatorCompanyId": {
+            "S": "e0d29df2-767a-4407-aa75-d8012c386a0b"
+          },
+          "carrier": {
+            "M": {
+              "country": {
+                "S": "NL"
+              },
+              "address": {
+                "S": "Dekkerpark 186"
+              },
+              "city": {
+                "S": "Breedeweg"
+              },
+              "postalCode": {
+                "S": "1505 MF"
+              },
+              "name": {
+                "S": "Linden"
+              }
+            }
+          },
+          "carrierUsername": {
+            "S": "bob57"
+          },
+          "driver": {
+            "M": {
+              "name": {
+                "S": "bob57"
+              },
+              "username": {
+                "NULL": true
+              }
+            }
+          },
+          "shipperContactId": {
+            "S": "9279a8a0-1ace-49f9-b195-8e07d774141c"
+          },
+          "status": {
+            "S": "DONE"
+          }
+        },
+        "OldImage": {
+          "shipper": {
+            "M": {
+              "country": {
+                "S": "NL"
+              },
+              "address": {
+                "S": "Dekkerpark 186"
+              },
+              "city": {
+                "S": "Breedeweg"
+              },
+              "postalCode": {
+                "S": "1505 MF"
+              },
+              "name": {
+                "S": "Linden"
+              }
+            }
+          },
+          "deliveryTime": {
+            "M": {
+              "start": {
+                "S": "16:00"
+              },
+              "end": {
+                "S": "17:00"
+              }
+            }
+          },
+          "pickupContactId": {
+            "S": "e514ff9b-86d3-4e1a-8c33-cf1996ebdcec"
+          },
+          "__typename": {
+            "S": "Contract"
+          },
+          "truck": {
+            "S": "432432"
+          },
+          "driverDriverId": {
+            "S": "28e2ff8b-c8b9-4ed0-8b33-dfa60af03a44"
+          },
+          "trailer": {
+            "S": "ewqeq"
+          },
+          "trailerVehicleId": {
+            "S": "27277f5e-62c4-4bcb-bbdc-d03cc69ed1dc"
+          },
+          "createdAt": {
+            "S": "2020-06-26T11:17:22.747Z"
+          },
+          "needAcknowledge": {
+            "BOOL": false
+          },
+          "truckVehicleId": {
+            "S": "0d814a72-1ff3-428c-a155-bc3a323a026a"
+          },
+          "arrivalTime": {
+            "M": {
+              "start": {
+                "S": "18:00"
+              },
+              "end": {
+                "S": "19:00"
+              }
+            }
+          },
+          "id": {
+            "S": "6b7a32c2-c563-4677-9651-c70409559984"
+          },
+          "deliveryDate": {
+            "S": "2020-05-27"
+          },
+          "events": {
+            "L": [
+              {
+                "M": {
+                  "createdAt": {
+                    "S": "2020-06-26T11:17:22.747Z"
+                  },
+                  "site": {
+                    "NULL": true
+                  },
+                  "signatoryObservation": {
+                    "NULL": true
+                  },
+                  "signature": {
+                    "NULL": true
+                  },
+                  "author": {
+                    "M": {
+                      "username": {
+                        "S": "Google_101696558391179033806"
+                      }
+                    }
+                  },
+                  "latitude": {
+                    "NULL": true
+                  },
+                  "type": {
+                    "S": "AssignDriver"
+                  },
+                  "assignedDriver": {
+                    "M": {
+                      "name": {
+                        "S": "bob57"
+                      },
+                      "username": {
+                        "S": "bob57"
+                      }
+                    }
+                  },
+                  "photos": {
+                    "NULL": true
+                  },
+                  "driverObservation": {
+                    "NULL": true
+                  },
+                  "longitude": {
+                    "NULL": true
+                  }
+                }
+              },
+              {
+                "M": {
+                  "createdAt": {
+                    "S": "2020-06-26T13:20:37+02:00"
+                  },
+                  "site": {
+                    "NULL": true
+                  },
+                  "signatoryObservation": {
+                    "NULL": true
+                  },
+                  "signature": {
+                    "NULL": true
+                  },
+                  "author": {
+                    "M": {
+                      "username": {
+                        "S": "bob57"
+                      }
+                    }
+                  },
+                  "latitude": {
+                    "NULL": true
+                  },
+                  "type": {
+                    "S": "Acknowledge"
+                  },
+                  "assignedDriver": {
+                    "NULL": true
+                  },
+                  "photos": {
+                    "NULL": true
+                  },
+                  "driverObservation": {
+                    "NULL": true
+                  },
+                  "longitude": {
+                    "NULL": true
+                  }
+                }
+              },
+              {
+                "M": {
+                  "createdAt": {
+                    "S": "2020-06-26T13:20:47+02:00"
+                  },
+                  "site": {
+                    "S": "pickup"
+                  },
+                  "signatoryObservation": {
+                    "NULL": true
+                  },
+                  "signature": {
+                    "NULL": true
+                  },
+                  "author": {
+                    "M": {
+                      "username": {
+                        "S": "bob57"
+                      }
+                    }
+                  },
+                  "latitude": {
+                    "NULL": true
+                  },
+                  "type": {
+                    "S": "ArrivalOnSite"
+                  },
+                  "assignedDriver": {
+                    "NULL": true
+                  },
+                  "photos": {
+                    "NULL": true
+                  },
+                  "driverObservation": {
+                    "NULL": true
+                  },
+                  "longitude": {
+                    "NULL": true
+                  }
+                }
+              },
+              {
+                "M": {
+                  "createdAt": {
+                    "S": "2020-06-26T13:24:00+02:00"
+                  },
+                  "site": {
+                    "S": "pickup"
+                  },
+                  "signatoryObservation": {
+                    "S": "Ldoos beschadigd"
+                  },
+                  "signature": {
+                    "M": {
+                      "signatoryEmail": {
+                        "S": "test@desert-spring.nl"
+                      },
+                      "method": {
+                        "S": "SIGN_ON_GLASS"
+                      },
+                      "signatureImageDriver": {
+                        "NULL": true
+                      },
+                      "signatoryName": {
+                        "S": "Jan de Vries"
+                      },
+                      "signatureImageSignatory": {
+                        "M": {
+                          "bucket": {
+                            "S": "bucket"
+                          },
+                          "region": {
+                            "S": "eu-central-1"
+                          },
+                          "key": {
+                            "S": "signature-c56101ef-76bb-42cf-b689-6959c202e305.png"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "author": {
+                    "M": {
+                      "username": {
+                        "S": "bob57"
+                      }
+                    }
+                  },
+                  "latitude": {
+                    "NULL": true
+                  },
+                  "type": {
+                    "S": "LoadingComplete"
+                  },
+                  "assignedDriver": {
+                    "NULL": true
+                  },
+                  "photos": {
+                    "L": []
+                  },
+                  "driverObservation": {
+                    "NULL": true
+                  },
+                  "longitude": {
+                    "NULL": true
+                  }
+                }
+              }
+            ]
+          },
+          "updatedAt": {
+            "S": "2020-06-26T11:17:22.747Z"
+          },
+          "owner": {
+            "S": "bob57"
+          },
+          "delivery": {
+            "M": {
+              "country": {
+                "S": "NL"
+              },
+              "address": {
+                "S": "Dekkerpark 186"
+              },
+              "city": {
+                "S": "Breedeweg"
+              },
+              "postalCode": {
+                "S": "1505 MF"
+              },
+              "name": {
+                "S": "Linden"
+              }
+            }
+          },
+          "creator": {
+            "M": {
+              "name": {
+                "S": "Desert Spring"
+              }
+            }
+          },
+          "carrierContactId": {
+            "S": "9279a8a0-1ace-49f9-b195-8e07d774141c"
+          },
+          "loads": {
+            "L": [
+              {
+                "M": {
+                  "volume": {
+                    "NULL": true
+                  },
+                  "netWeight": {
+                    "NULL": true
+                  },
+                  "quantity": {
+                    "N": "22"
+                  },
+                  "loadMeters": {
+                    "NULL": true
+                  },
+                  "hazardousGoodsItems": {
+                    "NULL": true
+                  },
+                  "description": {
+                    "S": "This is really cool"
+                  },
+                  "category": {
+                    "S": "packages"
+                  }
+                }
+              }
+            ]
+          },
+          "pickup": {
+            "M": {
+              "country": {
+                "S": "NL"
+              },
+              "address": {
+                "S": "Bakkerplantsoen 969"
+              },
+              "city": {
+                "S": "Emmastroom"
+              },
+              "postalCode": {
+                "S": "1588 FD"
+              },
+              "name": {
+                "S": "Vries"
+              }
+            }
+          },
+          "deliveryContactId": {
+            "S": "4f1bbe61-de4e-4517-b6e9-b98788860832"
+          },
+          "arrivalDate": {
+            "S": "2020-05-27"
+          },
+          "creatorCompanyId": {
+            "S": "e0d29df2-767a-4407-aa75-d8012c386a0b"
+          },
+          "carrier": {
+            "M": {
+              "country": {
+                "S": "NL"
+              },
+              "address": {
+                "S": "Dekkerpark 186"
+              },
+              "city": {
+                "S": "Breedeweg"
+              },
+              "postalCode": {
+                "S": "1505 MF"
+              },
+              "name": {
+                "S": "Linden"
+              }
+            }
+          },
+          "carrierUsername": {
+            "S": "bob57"
+          },
+          "driver": {
+            "M": {
+              "name": {
+                "S": "bob57"
+              },
+              "username": {
+                "NULL": true
+              }
+            }
+          },
+          "shipperContactId": {
+            "S": "9279a8a0-1ace-49f9-b195-8e07d774141c"
+          },
+          "status": {
+            "S": "IN_PROGRESS"
+          }
+        },
+        "SequenceNumber": "1219295600000000003378237141",
+        "SizeBytes": 5218,
+        "StreamViewType": "NEW_AND_OLD_IMAGES"
+      },
+      "eventSourceARN": "arn:aws:dynamodb:eu-central-1:173648348160:table/Contract-fqu2xamusbcdtcjq53gihm34iu-master/stream/2019-10-19T15:12:39.443"
+    }
+  ]
+}
