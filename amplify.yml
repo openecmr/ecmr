@@ -24,7 +24,7 @@ test:
   phases:
     preTest:
       commands:
-        - cd consolea-pp
+        - cd console-app
         - npm install
         - npm install wait-on
         - npm install mocha mochawesome mochawesome-merge mochawesome-report-generator
