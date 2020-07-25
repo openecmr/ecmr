@@ -24,6 +24,7 @@
     "typescript": "^3.4.2"
   },
   "devDependencies": {
+    "cypress": "^4.11.0",
     "i18next-scanner": "^2.11.0"
   },
   "scripts": {
