@@ -27,6 +27,7 @@ test:
         - cd console-app
         - yarn install
         - yarn run citests
-  cache:
-    paths:
-      - console-app/node_modules/
+#  cache:
+#    paths:
+#      - console-app/node_modules/
+#      - /root/.cache/
