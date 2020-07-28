@@ -25,14 +25,22 @@
   },
   "devDependencies": {
     "cypress": "^4.11.0",
-    "i18next-scanner": "^2.11.0"
+    "i18next-scanner": "^2.11.0",
+    "mocha": "^8.0.1",
+    "mochawesome": "^6.1.1",
+    "mochawesome-merge": "^4.1.0",
+    "mochawesome-report-generator": "^5.1.0",
+    "start-server-and-test": "^1.11.2",
+    "wait-on": "^5.1.0"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "i18n": "i18next-scanner --config i18next-scanner.config.js 'src/**/*.{js,jsx}'"
+    "i18n": "i18next-scanner --config i18next-scanner.config.js 'src/**/*.{js,jsx}'",
+    "e2etest": "npx cypress run --reporter mochawesome --reporter-options 'reportDir=cypress/report/mochawesome-report,overwrite=false,html=false,json=true,timestamp=mmddyyyy_HHMMss' && npx mochawesome-merge cypress/report/mochawesome-report/mochawesome*.json > cypress/report/mochawesome.json",
+    "citests": "start-server-and-test start http://localhost:3000 e2etest"
   },
   "browserslist": {
     "production": [

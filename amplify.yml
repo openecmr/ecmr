@@ -16,29 +16,17 @@ frontend:
         - console-app/node_modules/
 test:
   artifacts:
-    baseDirectory: cypress
+    baseDirectory: /console-app/cypress
     configFilePath: "**/mochawesome.json"
     files:
       - "**/*.png"
       - "**/*.mp4"
   phases:
-    preTest:
-      commands:
-        - export CI=true
-        - cd console-app
-        - npm install
-        - npm install wait-on
-        - npm install mocha@5.2.0 mochawesome mochawesome-merge mochawesome-report-generator
-        - npm start&
-        - npx wait-on http://127.0.0.1:3000
     test:
       commands:
         - cd console-app
-        - 'npx cypress run --reporter mochawesome --reporter-options "reportDir=cypress/report/mochawesome-report,overwrite=false,html=false,json=true,timestamp=mmddyyyy_HHMMss"'
-    postTest:
-      commands:
-        - cd console-app
-        - npx mochawesome-merge@4 cypress/report/mochawesome-report/*.json > cypress/report/mochawesome.json
+        - yarn install
+        - yarn run e2etests
   cache:
     paths:
       - console-app/node_modules/

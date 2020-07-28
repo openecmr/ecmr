@@ -33,3 +33,6 @@ aws-exports.js
 awsconfiguration.json
 amplify/team-provider-info.json
 cypress.env.json
+cypress/videos
+cypress/screenshots
+cypress/report
