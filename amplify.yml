@@ -26,7 +26,7 @@ test:
       commands:
         - cd console-app
         - yarn install
-        - yarn run e2etests
+        - yarn run citests
   cache:
     paths:
       - console-app/node_modules/
