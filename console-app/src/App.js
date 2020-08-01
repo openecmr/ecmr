@@ -34,7 +34,7 @@ if (pdfServiceKey) {
     window.location.hash = '#';
 } else {
     config = awsmobile;
-    config.oauth.domain = "auth.openecmr.com";
+    config['oauth']['domain'] = "auth.openecmr.com";
 }
 
 Amplify.configure(config);
