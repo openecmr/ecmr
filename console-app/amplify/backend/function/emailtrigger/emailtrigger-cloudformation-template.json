@@ -82,7 +82,7 @@
 				"Timeout": "25",
 				"Code": {
 					"S3Bucket": "openecmr-master-20191019170631-deployment",
-					"S3Key": "amplify-builds/emailtrigger-49337136556d77717652-build.zip"
+					"S3Key": "amplify-builds/emailtrigger-4b67794a5049506b5863-build.zip"
 				}
 			}
 		},

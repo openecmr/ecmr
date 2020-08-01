@@ -36,6 +36,8 @@ if (pdfServiceKey) {
     config = awsmobile;
 }
 
+config.oauth.domain = "auth.openecmr.com";
+
 Amplify.configure(config);
 
 class CompanyDialog extends Component {

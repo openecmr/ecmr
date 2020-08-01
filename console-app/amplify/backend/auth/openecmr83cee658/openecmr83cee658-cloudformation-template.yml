@@ -142,10 +142,14 @@ Parameters:
               
   hostedUIProviderCreds:
     Type: String
+
+  useCustomDomain:
+    Type: String
+    Default: true
             
 Conditions:
   ShouldNotCreateEnvResources: !Equals [ !Ref env, NONE ]
-
+  UseCustomDomain: !Equals [ !Ref useCustomDomain, "true" ]
 Resources:
   
   
@@ -777,7 +781,15 @@ Resources:
           unauthenticated: !Ref unauthRoleArn
           authenticated: !Ref authRoleArn
     DependsOn: IdentityPool
-  
+
+  CustomDomain:
+    Condition: UseCustomDomain
+    Type: AWS::Cognito::UserPoolDomain
+    Properties:
+      UserPoolId: !Ref UserPool
+      Domain: auth.openecmr.com
+      CustomDomainConfig:
+        CertificateArn: arn:aws:acm:us-east-1:173648348160:certificate/ac102bc9-8902-4f3b-949b-ab7c4f5ad262
 
 Outputs :
   
