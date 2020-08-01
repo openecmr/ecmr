@@ -22,10 +22,10 @@ In most countries the CMR consignment note can also be used for domestic transpo
 ## Usage
 Open eCMR has a cloud offering which is available at https://www.openecmr.com. Usage is free for the first 100 consignment notes per month.
 
-You can also op to self-host and create custom builds of the applications.
+You can also self-host the application and create custom builds of the applications.
 
 ## Participate
-Right now we are most interested in getting feedback from shippers and carriers. Please create an account at https://www.openecmr.com and try out the app. Create a Github issue if the app doesn't support your workflow, if you see a bug, if things are not user-friendly. Let's build Open eCMR together.
+We are interested in getting feedback from shippers and carriers. Please create an account at https://www.openecmr.com and try out the app. Create a Github issue if the app doesn't support your workflow, if you see a bug, if things are not user-friendly. Let's build Open eCMR together.
 
 ## License
 
