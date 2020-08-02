@@ -76,7 +76,7 @@
 				"Runtime": "nodejs10.x",
 				"Timeout": "25",
 				"Code": {
-					"S3Bucket": "openecmr-master-20191019170631-deployment",
+					"S3Bucket": "amplify-openecmr-develop-212345-deployment",
 					"S3Key": "amplify-builds/activatefunction-754a44777a554b62326b-build.zip"
 				}
 			}

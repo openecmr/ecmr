@@ -25,47 +25,79 @@ AWS.config.update({
 });
 
 const ses = new AWS.SES();
-
+const dynamodb = new AWS.DynamoDB();
 
 exports.handler = async function(event, context) {
-  //eslint-disable-line
-  if (!event.Records) {
-    event = JSON.parse(event);
-  }
-  for (const record of event.Records) {
-    console.log(record.eventName)
-    if (record.eventName === 'MODIFY') {
+  try {
+    //eslint-disable-line
+    if (!event.Records) {
+      event = JSON.parse(event);
+    }
+    for (const record of event.Records) {
+      console.log(record.eventName)
+      if (record.eventName === 'MODIFY') {
 
-      const oldImage = AWS.DynamoDB.Converter.unmarshall(record.dynamodb.OldImage);
-      const newImage = AWS.DynamoDB.Converter.unmarshall(record.dynamodb.NewImage);
+        const oldImage = AWS.DynamoDB.Converter.unmarshall(record.dynamodb.OldImage);
+        const newImage = AWS.DynamoDB.Converter.unmarshall(record.dynamodb.NewImage);
 
-      if (oldImage.owner !== "bob57") {
-        console.log('owner not bob57 skipping');
-        continue;
-      }
+        let allowedSendingResult = await allowedSending(newImage.owner);
+        if (!allowedSendingResult) {
+          console.log('owner %s not allowed to send', newImage.owner);
+          continue;
+        }
 
-      const addedEvents = calculateAddedEvents(oldImage, newImage);
-      const loadingEvents = addedEvents
-          .filter(e => e.type === 'LoadingComplete' || e.type === 'UnloadingComplete')
-          .filter(e => e.signature && e.signature.signatoryEmail);
+        const addedEvents = calculateAddedEvents(oldImage, newImage);
+        const loadingEvents = addedEvents
+            .filter(e => e.type === 'LoadingComplete' || e.type === 'UnloadingComplete')
+            .filter(e => e.signature && e.signature.signatoryEmail);
 
-      if (loadingEvents.length > 0) {
-        try {
-          const pdf = await fetchPdf(newImage.id);
-          for (const loadingEvent of loadingEvents) {
-            const htmlEmail = generateHtmlEmail(loadingEvent, newImage);
-            await sendEmail(loadingEvent.signature.signatoryEmail, htmlEmail,
-                "cn_" + newImage.id.substring(0, 8) + ".pdf", pdf);
+        if (loadingEvents.length > 0) {
+          try {
+            const pdf = await fetchPdf(newImage.id);
+            for (const loadingEvent of loadingEvents) {
+              const htmlEmail = generateHtmlEmail(loadingEvent, newImage);
+              await sendEmail(newImage.id, loadingEvent.signature.signatoryEmail, htmlEmail,
+                  "cn_" + newImage.id.substring(0, 8) + ".pdf", pdf);
+            }
+          } catch (ex) {
+            console.warn("cannot send email: %o", ex)
+            return;
           }
-        } catch (ex) {
-          console.warn("cannot send email: %o", ex)
-          return;
         }
       }
     }
+    context.done(null, 'Successfully processed DynamoDB record'); // SUCCESS with message
+  } catch(ex) {
+    console.log(ex);
+    context.fail(ex);
   }
-  context.done(null, 'Successfully processed DynamoDB record'); // SUCCESS with message
 };
+
+const allowedSending = async (owner) => {
+  console.log("ok gonna: %s", process.env.ENV)
+
+  let params = {
+    TableName: "Company" + "-" + process.env.API_OPENECMR_GRAPHQLAPIIDOUTPUT + "-" + process.env.ENV,
+    IndexName: "OwnerName",
+    KeyConditionExpression: "#o = :v_owner",
+    ExpressionAttributeNames: {
+      "#o": "owner"
+    },
+    ExpressionAttributeValues: {
+      ":v_owner": {
+        "S": owner
+      }
+    }
+  };
+  console.log(params);
+  let company = await dynamodb.query(params).promise();
+
+  console.log(company);
+
+  return company.Items.length === 0 ||
+      !company.Items[0].allowedSendingEmail ||
+      company.Items[0].allowedSendingEmail.BOOL
+}
 
 const fetchPdf = async (id) => {
   const pdfexport = /* GraphQL */ `
@@ -112,7 +144,7 @@ const calculateAddedEvents = (oldImage, newImage) => {
   }
 }
 
-const sendEmail = async (signatoryEmail, e, pdfFileName, pdf) => {
+const sendEmail = async (documentId, signatoryEmail, htmlEmail, pdfFileName, pdf) => {
   let transporter = nodemailer.createTransport({
     SES: ses
   });
@@ -121,7 +153,7 @@ const sendEmail = async (signatoryEmail, e, pdfFileName, pdf) => {
     to: signatoryEmail,
     from: "notifications@openecmr.com",
     subject: "Digital copy of consignment note",
-    html: e,
+    html: htmlEmail,
     text: "Digital copy of consignment note, please enable html email to view the details",
     attachments: [
       {
@@ -145,7 +177,7 @@ const sendEmail = async (signatoryEmail, e, pdfFileName, pdf) => {
         console.warn(err);
         reject(err)
       } else {
-        console.log(info.messageId);
+        console.log("sent email to %s with message id %s for document %s", signatoryEmail, info.messageId, documentId);
         resolve(info);
       }
     })

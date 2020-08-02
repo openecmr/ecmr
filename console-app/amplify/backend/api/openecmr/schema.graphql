@@ -149,6 +149,9 @@ type Company
     id: ID!
     owner: String
     name: String!
+    allowedSendingEmail: Boolean @auth(rules: [
+        { allow: owner, operations: [read]}
+    ])
 }
 
 type Load @aws_api_key @aws_cognito_user_pools @aws_iam {
