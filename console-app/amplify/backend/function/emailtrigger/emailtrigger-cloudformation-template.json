@@ -81,8 +81,8 @@
 				"Runtime": "nodejs12.x",
 				"Timeout": "25",
 				"Code": {
-					"S3Bucket": "amplify-openecmr-develop-212345-deployment",
-					"S3Key": "amplify-builds/emailtrigger-424977454c6c32754234-build.zip"
+					"S3Bucket": "openecmr-master-20191019170631-deployment",
+					"S3Key": "amplify-builds/emailtrigger-62486178764d6f307767-build.zip"
 				}
 			}
 		},
@@ -171,6 +171,69 @@
 								"ses:SendRawEmail"
 							],
 							"Resource": "*"
+						},
+						{
+							"Effect": "Allow",
+							"Action": [
+								"dynamodb:Query"
+							],
+							"Resource": [
+								{
+									"Fn::Join": [
+										"",
+										[
+											"arn:aws:dynamodb:",
+											{
+												"Ref": "AWS::Region"
+											},
+											":",
+											{
+												"Ref": "AWS::AccountId"
+											},
+											":table/Company-",
+											{
+												"Ref": "apiopenecmrGraphQLAPIIdOutput"
+											},
+											"-",
+											{
+												"Ref": "env"
+											},
+											"/index/*"
+										]
+									]
+								}
+							]
+						},
+						{
+							"Effect": "Allow",
+							"Action": [
+								"dynamodb:Query"
+							],
+							"Resource": [
+								{
+									"Fn::Join": [
+										"",
+										[
+											"arn:aws:dynamodb:",
+											{
+												"Ref": "AWS::Region"
+											},
+											":",
+											{
+												"Ref": "AWS::AccountId"
+											},
+											":table/Company-",
+											{
+												"Ref": "apiopenecmrGraphQLAPIIdOutput"
+											},
+											"-",
+											{
+												"Ref": "env"
+											}
+										]
+									]
+								}
+							]
 						}
 					]
 				}
@@ -229,7 +292,8 @@
 						"Arn"
 					]
 				},
-				"StartingPosition": "LATEST"
+				"StartingPosition": "LATEST",
+				"MaximumRetryAttempts": 2
 			}
 		},
 		"AmplifyResourcesPolicy": {

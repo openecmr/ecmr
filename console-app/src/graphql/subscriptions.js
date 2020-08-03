@@ -466,6 +466,7 @@ export const onCreateCompany = /* GraphQL */ `
       id
       owner
       name
+      allowedSendingEmail
     }
   }
 `;
@@ -475,6 +476,7 @@ export const onUpdateCompany = /* GraphQL */ `
       id
       owner
       name
+      allowedSendingEmail
     }
   }
 `;
@@ -484,6 +486,7 @@ export const onDeleteCompany = /* GraphQL */ `
       id
       owner
       name
+      allowedSendingEmail
     }
   }
 `;

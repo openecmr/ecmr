@@ -34,7 +34,6 @@ exports.handler = async function(event, context) {
       event = JSON.parse(event);
     }
     for (const record of event.Records) {
-      console.log(record.eventName)
       if (record.eventName === 'MODIFY') {
 
         const oldImage = AWS.DynamoDB.Converter.unmarshall(record.dynamodb.OldImage);

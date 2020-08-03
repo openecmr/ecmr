@@ -80,6 +80,7 @@ export const getCompany = /* GraphQL */ `
       id
       owner
       name
+      allowedSendingEmail
     }
   }
 `;
@@ -94,6 +95,7 @@ export const listCompanys = /* GraphQL */ `
         id
         owner
         name
+        allowedSendingEmail
       }
       nextToken
     }
@@ -181,6 +183,7 @@ export const companyByOwner = /* GraphQL */ `
         id
         owner
         name
+        allowedSendingEmail
       }
       nextToken
     }

@@ -24,7 +24,7 @@ exports.handler = async (event, context) => { //eslint-disable-line
 
     console.info("loading page");
     const page = await browser.newPage();
-    await page.goto('https://testaws.desert-spring.nl/transports/' + event.arguments.id + '/pdf#' + process.env.API_KEY);
+    await page.goto('https://app.openecmr.com/transports/' + event.arguments.id + '/pdf#' + process.env.API_KEY);
     await page.waitForSelector('div.content');
     await page.waitFor(1000);
 
