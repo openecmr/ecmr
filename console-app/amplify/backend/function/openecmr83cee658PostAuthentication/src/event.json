@@ -1,5 +1,24 @@
 {
-    "key1": "value1",
-    "key2": "value2",
-    "key3": "value3"
+    "version": 1,
+    "triggerSource": "CustomMessage_SignUp",
+    "region": "<region>",
+    "userPoolId": "<userPoolId>",
+    "userName": "<userName>",
+    "callerContext": {
+        "awsSdk": "<calling aws sdk with version>",
+        "clientId": "<apps client id>"
+    },
+    "request": {
+        "userAttributes": {
+            "phone_number_verified": false,
+            "email_verified": true
+        },
+        "codeParameter": "####",
+        "clientMetadata": {
+            "language": "en"
+        }
+    },
+    "response": {
+
+    }
 }

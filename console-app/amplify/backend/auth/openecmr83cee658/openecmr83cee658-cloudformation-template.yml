@@ -201,12 +201,12 @@ Resources:
       
       
       LambdaConfig:
-        
-        
-        
-        
+
+
+
+
           PostAuthentication: !Ref functionopenecmr83cee658PostAuthenticationArn
-        
+          CustomMessage: !Ref functionopenecmr83cee658PostAuthenticationArn
         
         
         

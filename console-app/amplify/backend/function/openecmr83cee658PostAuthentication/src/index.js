@@ -4,9 +4,15 @@
   "MODULES" is a comma-delimmited string.
 */
 
+let modulesEnv = process.env.MODULES;
+if (modulesEnv) {
+  modulesEnv = 'custom';
+}
+
 exports.handler = (event, context, callback) => {
-  const modules = process.env.MODULES.split(',');
+  const modules = modulesEnv.split(',');
   for (let i = 0; i < modules.length; i += 1) {
+    console.log(modules[i])
     const { handler } = require("./" + modules[i]);
     handler(event, context, callback);
   }
