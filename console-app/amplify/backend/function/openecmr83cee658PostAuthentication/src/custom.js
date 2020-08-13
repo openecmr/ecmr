@@ -5,7 +5,7 @@ const handlebars = require('handlebars'),
 const supportedLanguages = ['en', 'nl'];
 const subjects = {
   'en': 'Your activation code - Open e-CMR',
-  'nl': 'Uw activatiecode - Open e-CMR'
+  'nl': 'Je activatiecode - Open e-CMR'
 }
 
 exports.handler = (event, context, callback) => {

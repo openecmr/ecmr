@@ -8,7 +8,15 @@ import {NewTransport} from "./NewTransport";
 import Amplify, {API, graphqlOperation} from 'aws-amplify';
 import { Auth, Hub, I18n } from 'aws-amplify';
 import awsmobile from './aws-exports';
-import {Container, withAuthenticator} from 'aws-amplify-react';
+import {
+    ConfirmSignIn,
+    ConfirmSignUp,
+    Container, ForgotPassword,
+    Loading, RequireNewPassword, SignIn,
+    SignUp,
+    VerifyContact,
+    withAuthenticator
+} from 'aws-amplify-react';
 import Transport from "./Transport";
 import style from "./Style"
 import AddressBook from "./AddressBook";
@@ -21,6 +29,7 @@ import * as ConsoleUtils from "./ConsoleUtils"
 import ReactGA from 'react-ga';
 import i18nDictionaryNl from './i18n/nl/resource';
 import moment from 'moment/min/moment-with-locales';
+import SignUpWithLanguage from "./SignUpWithLanguage";
 
 let config;
 const pdfServiceKey = window.location.hash.substr(1);
@@ -228,7 +237,18 @@ const signUpConfig = {
     ]
 };
 
-const MainWithAuth = pdfServiceKey ?  Main : withAuthenticator(Main, {
+const MainWithAuth = pdfServiceKey ?  Main : withAuthenticator(Main, false,
+    [
+        <SignUpWithLanguage hide={false} override={'SignUp'} signUpConfig={signUpConfig} />,
+        <SignIn  />,
+        <Loading />,
+        <ConfirmSignIn />,
+        <VerifyContact />,
+        <ConfirmSignUp />,
+        <ForgotPassword />,
+        <RequireNewPassword />
+    ],
+    {
     signUpConfig
 });
 

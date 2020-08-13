@@ -95,7 +95,7 @@
 				"Timeout": "25",
 				"Code": {
 					"S3Bucket": "openecmr-master-20191019170631-deployment",
-					"S3Key": "amplify-builds/openecmr83cee658PostAuthentication-73515562445275666647-build.zip"
+					"S3Key": "amplify-builds/openecmr83cee658PostAuthentication-56384137614530535163-build.zip"
 				}
 			}
 		},
