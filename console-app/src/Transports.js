@@ -172,7 +172,7 @@ class Transports extends Component {
     async retrieveAppSync() {
         const user = await Auth.currentAuthenticatedUser();
         const response = await API.graphql(graphqlOperation(queries.contractsByOwnerArrivalDate, {
-            limit: 50,
+            limit: 500,
             owner: user.getUsername(),
             sortDirection: "DESC"
         }));
