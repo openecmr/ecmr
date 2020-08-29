@@ -1,6 +1,6 @@
 import {Component} from "react";
 import React from "react";
-import {Button, Dimmer, Icon, Loader, Progress, Segment, Table} from "semantic-ui-react";
+import {Button, Dimmer, Icon, Loader, Menu, Progress, Segment, Table} from "semantic-ui-react";
 import {Link} from "react-router-dom";
 import * as queries from "./graphql/queries";
 import {API, Auth, graphqlOperation, I18n} from 'aws-amplify';
@@ -87,8 +87,13 @@ class Transports extends Component {
 
         this.state = {
             notes: [],
-            loading: true
+            loading: true,
+            previousTokens: [],
+            nextToken: null
         };
+
+        this.onNext = this.onNext.bind(this);
+        this.onPrev = this.onPrev.bind(this);
     }
 
     render() {
@@ -103,6 +108,14 @@ class Transports extends Component {
                                     <Icon name='plus'/> {I18n.get('New transport')}
                                 </Button>
                             </Link>
+                            <Menu pagination>
+                                <Menu.Item as='a' icon onClick={this.onPrev} disabled={!this.state.currentPageToken}>
+                                    <Icon name='chevron left' />
+                                </Menu.Item>
+                                <Menu.Item as='a' icon onClick={this.onNext} disabled={!this.state.nextToken}>
+                                    <Icon name='chevron right' />
+                                </Menu.Item>
+                            </Menu>
                         </Table.HeaderCell>
                     </Table.Row>
                     <Table.Row>
@@ -141,6 +154,20 @@ class Transports extends Component {
                         </Table.Row>
                     }
                 </Table.Body>
+                <Table.Footer>
+                    <Table.Row>
+                        <Table.HeaderCell colSpan='11'>
+                            <Menu floated='right' pagination>
+                                <Menu.Item as='a' icon onClick={this.onPrev} disabled={!this.state.currentPageToken}>
+                                    <Icon name='chevron left' />
+                                </Menu.Item>
+                                <Menu.Item as='a' icon onClick={this.onNext} disabled={!this.state.nextToken}>
+                                    <Icon name='chevron right' />
+                                </Menu.Item>
+                            </Menu>
+                        </Table.HeaderCell>
+                    </Table.Row>
+                </Table.Footer>
             </Table>
         );
     }
@@ -169,17 +196,49 @@ class Transports extends Component {
         this.retrieveAppSync();
     }
 
-    async retrieveAppSync() {
+    async retrieveAppSync(token) {
+        this.setState({
+            loading: true
+        });
         const user = await Auth.currentAuthenticatedUser();
         const response = await API.graphql(graphqlOperation(queries.contractsByOwnerArrivalDate, {
-            limit: 500,
+            limit: 15,
             owner: user.getUsername(),
-            sortDirection: "DESC"
+            sortDirection: "DESC",
+            ...token && {nextToken: token}
         }));
+
+        const nextToken = response.data.contractsByOwnerArrivalDate.nextToken;
         this.setState({
+            nextToken: nextToken,
             notes: response.data.contractsByOwnerArrivalDate.items,
             loading: false
         });
+    }
+
+    onNext() {
+        if (this.state.currentPageToken) {
+            const previousTokens = [...this.state.previousTokens];
+            previousTokens.push(this.state.currentPageToken);
+            this.setState({
+                previousTokens
+            });
+        }
+        this.setState({
+            currentPageToken: this.state.nextToken
+        });
+
+        this.retrieveAppSync(this.state.nextToken)
+    }
+
+    onPrev() {
+        const {previousTokens} = this.state;
+        const previousToken = previousTokens[previousTokens.length - 1];
+        this.setState({
+            previousTokens: previousTokens.slice(0, previousTokens.length - 1),
+            currentPageToken: previousToken
+        });
+        this.retrieveAppSync(previousToken);
     }
 }
 
