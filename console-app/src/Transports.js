@@ -89,7 +89,8 @@ class Transports extends Component {
             notes: [],
             loading: true,
             previousTokens: [],
-            nextToken: null
+            nextToken: null,
+            sortOrder: "descending"
         };
 
         this.onNext = this.onNext.bind(this);
@@ -99,7 +100,7 @@ class Transports extends Component {
     render() {
         return (
 
-            <Table className="App-text-with-newlines" selectable compact='very'>
+            <Table className="App-text-with-newlines" selectable compact='very' sortable>
                 <Table.Header>
                     <Table.Row>
                         <Table.HeaderCell colSpan='11'>
@@ -123,7 +124,7 @@ class Transports extends Component {
                         <Table.HeaderCell>{I18n.get('Carrier reference')}</Table.HeaderCell>
                         <Table.HeaderCell>{I18n.get('Status')}</Table.HeaderCell>
                         <Table.HeaderCell>{I18n.get('Pick-up address')}</Table.HeaderCell>
-                        <Table.HeaderCell>{I18n.get('Pick-up date')}</Table.HeaderCell>
+                        <Table.HeaderCell onClick={() => this.changeSort()} sorted={this.state.sortOrder}>{I18n.get('Pick-up date')}</Table.HeaderCell>
                         <Table.HeaderCell>{I18n.get('Delivery address')}</Table.HeaderCell>
                         <Table.HeaderCell>{I18n.get('Delivery date')}</Table.HeaderCell>
                         <Table.HeaderCell>{I18n.get('Shipper')}</Table.HeaderCell>
@@ -204,7 +205,7 @@ class Transports extends Component {
         const response = await API.graphql(graphqlOperation(queries.contractsByOwnerArrivalDate, {
             limit: 15,
             owner: user.getUsername(),
-            sortDirection: "DESC",
+            sortDirection: this.state.sortOrder === 'descending' ? "DESC" : "ASC",
             ...token && {nextToken: token}
         }));
 
@@ -239,6 +240,16 @@ class Transports extends Component {
             currentPageToken: previousToken
         });
         this.retrieveAppSync(previousToken);
+    }
+
+    changeSort() {
+        this.setState({
+            sortOrder: this.state.sortOrder === 'ascending' ? 'descending' : 'ascending',
+            previousTokens: [],
+            nextToken: null,
+            currentPageToken: null
+        });
+        this.retrieveAppSync()
     }
 }
 
