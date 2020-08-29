@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {API, graphqlOperation} from "aws-amplify";
+import {API, graphqlOperation, I18n} from "aws-amplify";
 import * as queries from "./graphql/queries";
 import "./TransportPdf.css"
 import {Header, Icon, List, Table} from "semantic-ui-react";
@@ -13,7 +13,7 @@ const PdfHeader = ({label, icon}) => (
     </Header>
 );
 
-const Address = ({address, label, icon}) => (
+const Address = ({address, label, icon, children}) => (
     <div>
         { label &&
         <PdfHeader label={label} icon={icon}/>
@@ -29,6 +29,7 @@ const Address = ({address, label, icon}) => (
                 <List.Content>{address.postalCode} {address.city}, {address.country}</List.Content>
             </List.Item>
         </List>
+        {children}
     </div>
 );
 
@@ -159,8 +160,48 @@ export default class TransportPdf extends Component {
                     <Address address={contract.carrier} icon={'truck'} label={'16. Carrier'}/>
                 </Row>
                 <Row>
-                    <Address address={contract.delivery} icon={'building'} label={'3. Place designated for delivery of goods (place, country)'}/>
+                    <Address address={contract.delivery} icon={'building'} label={'3. Place designated for delivery of goods (place, country)'}>
+                        <div>
+                            Planned delivery date: {moment(contract.deliveryDate).format('ll')}
+                            {contract.deliveryTime &&
+                            <span style={{paddingLeft: 5}}>
+                                    {I18n.get('({start} to {end})')
+                                        .replace('{start}', contract.deliveryTime.start)
+                                        .replace('{end}', contract.deliveryTime.end)}</span>}
+                        </div>
+                    </Address>
                     <LicensePlates contract={contract}/>
+                </Row>
+                <Row>
+                    <Address address={contract.pickup} icon={'building'} label={'4. Place and date of taking over the goods'}>
+                        <div>
+                            Planned pickup date: {moment(contract.arrivalDate).format('ll')}
+                            {contract.arrivalTime &&
+                            <span style={{paddingLeft: 5}}>{I18n.get('({start} to {end})')
+                                .replace('{start}', contract.arrivalTime.start)
+                                .replace('{end}', contract.arrivalTime.end)}</span>}
+                        </div>
+                    </Address>
+                    <div>
+                        <PdfHeader label={'18. Reservations and observations'}/>
+
+                        <h5>Loading</h5>
+                        {
+                            contract.events
+                                .filter(e => e.type === 'LoadingComplete' && e.signatoryObservation && e.signature)
+                                .map(e => <div>
+                                    <span>{e.signature.signatoryName}: {e.signatoryObservation}</span>
+                                </div>)
+                        }
+                        <h5>Delivery</h5>
+                        {
+                            contract.events
+                                .filter(e => e.type === 'UnloadingComplete' && e.signatoryObservation && e.signature)
+                                .map(e => <div>
+                                    <span>{e.signature.signatoryName}: {e.signatoryObservation}</span>
+                                </div>)
+                        }
+                    </div>
                 </Row>
                 <Row max={true} fill={true}>
                     <ListOfLoads loads={contract.loads}/>
@@ -169,10 +210,7 @@ export default class TransportPdf extends Component {
                     <div>
                         <PdfHeader  label={"13. Sender's instructions"}/>
 
-                        <div>Planned pickup date: {moment(contract.arrivalDate).format('ll')}</div>
-                        <div>Planned delivery date: {moment(contract.deliveryDate).format('ll')}</div>
                     </div>
-                    <span></span>
                 </Row>
                 <Row>
                     <Signature event={this.selectSignature(contract.events, 'pickup')}
