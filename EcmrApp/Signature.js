@@ -31,13 +31,13 @@ class Signature extends Component {
                     transparent={false}
                     visible={this.state.addingRemark}
                     onRequestClose={() => this.setState({addingRemark: false})}>
-                    <View style={{padding: 10}}>
+                    <View style={{padding: 10, flex:1, justifyContent: "center", alignContent: "center"}}>
                         <View>
                             <TextInput
                                 multiline
                                 numberOfLines={5}
                                 value={this.state.signatoryObservation}
-                                style={{textAlignVertical: 'top',  borderColor: 'gray', borderWidth: 1, marginTop: 5, marginBottom: 15}}
+                                style={{textAlignVertical: 'top', minHeight: 120, maxHeight: 120, borderColor: 'gray', borderWidth: 1, marginTop: 5, marginBottom: 15}}
                                 placeholder={I18n.get("Enter an observation...")}
                                 onChangeText={(signatoryObservation) => this.setState({signatoryObservation})}/>
 

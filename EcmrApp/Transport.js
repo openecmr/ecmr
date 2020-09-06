@@ -255,7 +255,11 @@ class Transport extends Component {
         const path = `${dirs.CacheDir}/cn-${this.state.item.id.substring(0,8)}.pdf`;
         const result = await API.graphql(graphqlOperation(queries.pdfexport, {id: this.state.item.id}));
         await RNFetchBlob.fs.writeFile(path, result.data.pdfexport, 'base64');
-        await RNFetchBlob.android.actionViewIntent(path, 'application/pdf');
+        if (Platform.OS === 'android') {
+            await RNFetchBlob.android.actionViewIntent(path, 'application/pdf');
+        } else if (Platform.OS === 'ios') {
+            await RNFetchBlob.ios.openDocument(path);
+        }
         this.setState({
             downloadingPdf: false
         });

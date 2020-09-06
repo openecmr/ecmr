@@ -83,6 +83,7 @@ class AddPhotos extends Component {
                     console.warn(`cannot resize image ${err}`)
                 });
             }
+
         });
     }
 
