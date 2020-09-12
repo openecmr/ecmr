@@ -8,7 +8,7 @@ import {
     ScrollView,
     TouchableOpacity,
     ActivityIndicator} from "react-native";
-import Icon from "react-native-vector-icons/FontAwesome";
+import Icon from "react-native-vector-icons/FontAwesome5";
 import {Address, ArrivalDate, LicensePlates, LoadDetailText, MyText, Sizes} from "./Components";
 import {API, graphqlOperation, I18n} from 'aws-amplify';
 import * as queries from "./graphql/queries";
@@ -20,6 +20,7 @@ import {createUpdateContractInput, updateContract} from "./DataUtil";
 const Header = ({children}) => <MyText style={styles.header}>{children}</MyText>;
 import RNFetchBlob from 'rn-fetch-blob'
 import {Button, Divider} from "react-native-elements";
+import openMap from 'react-native-open-maps';
 
 const activityDoneColor = 'rgb(5, 172, 5)';
 const actionButtonColor = 'rgb(60,176,60)';
@@ -108,6 +109,18 @@ class Transport extends Component {
             downloadingPdf: false,
             ...this.setContract(item, site)
         };
+
+        this.launchNavigation = this.launchNavigation.bind(this);
+    }
+
+    launchNavigation() {
+        const {
+            item,
+            site
+        } = this.state;
+        const address = item[site];
+        const query = address.name + ", " + ", " + address.address + ", " + address.postalCode + ", " + address.city + ", " + address.country;
+        openMap({query: query})
     }
 
     setContract(contract, site) {
@@ -208,7 +221,13 @@ class Transport extends Component {
                 </View>
                 <Header>{I18n.get("Details")}</Header>
                 <View style={{paddingLeft: Sizes.PADDING_FROM_SCREEN_BORDER}}>
-                    <Address address={item[site]} style={styles.address} />
+                    <TouchableOpacity
+                        onPress={this.launchNavigation}>
+                        <View style={{flexDirection: "row", alignItems: "center", ...styles.address}}>
+                            <Address address={item[site]} style={{flex: 1}} />
+                            <Icon size={30} style={{...styles.navigateIcon, paddingRight: Sizes.PADDING_FROM_SCREEN_BORDER}} name='directions'/>
+                        </View>
+                    </TouchableOpacity>
                     <ArrivalDate date={arrivalDate} time={arrivalTime}  style={{paddingTop: 10, ...styles.address}} />
 
                     {
@@ -479,6 +498,9 @@ const styles = StyleSheet.create({
     packageIcon: {
         width: Sizes.ICON_WIDTH,
         color: 'rgb(0, 115, 209)'
+    },
+    navigateIcon: {
+        color: actionButtonColor
     },
     packageText: {
         paddingLeft: 5
