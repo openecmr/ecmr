@@ -9,10 +9,10 @@ import {
     TouchableOpacity,
     ActivityIndicator} from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
-import {Address, ArrivalDate, LicensePlates, LoadDetailText, MyText} from "./Components";
+import {Address, ArrivalDate, LicensePlates, LoadDetailText, MyText, Sizes} from "./Components";
 import {API, graphqlOperation, I18n} from 'aws-amplify';
 import * as queries from "./graphql/queries";
-import moment from "moment";
+import moment from "moment/min/moment-with-locales";
 import { Auth } from 'aws-amplify';
 import {S3Image} from "aws-amplify-react-native";
 import ContractModel from "./ContractModel";
@@ -80,7 +80,7 @@ const SignatureEvent = ({signature, signatoryObservation, photos}) => (
 
 const LoadDetail = ({load}) => (
     <View style={styles.package}>
-        <Icon name="dropbox" style={styles.packageIcon} size={20} />
+        <Icon name="dropbox" style={[styles.packageIcon]} size={Sizes.ICON_WIDTH} />
         <LoadDetailText style={styles.packageText} load={load} />
     </View>
 );
@@ -178,8 +178,8 @@ class Transport extends Component {
         return (
             <ScrollView style={styles.transport}>
                 <Header>{I18n.get("Current status")}</Header>
-                <View style={{padding: 10}}>
-                    <View style={{paddingTop: 15, paddingBottom: 15}}>
+                <View style={{padding: 5, paddingLeft: Sizes.PADDING_FROM_SCREEN_BORDER, paddingRight: Sizes.PADDING_FROM_SCREEN_BORDER}}>
+                    <View style={{paddingTop: 10, paddingBottom: 10}}>
                         <View style={{flexDirection: 'row', justifyContent: "center", flex: 1}}>
                             {!!!firstAction && <Icon color={activityDoneColor} size={30} style={{marginRight: 5}} name='check-circle'/>}
                             <MyText style={{fontSize: 20, textAlign: 'center', fontWeight: 'bold', marginBottom: 5}}>{states[firstAction]}</MyText>
@@ -189,7 +189,7 @@ class Transport extends Component {
                         </MyText>}
                     </View>
                     <Divider style={{backgroundColor: '#FF5C00', marginLeft: 30, marginRight: 30, height: 2}}/>
-                    {lastRelevantEvent && <View style={{flexDirection: "row", flex: 1, marginTop: 15}}>
+                    {lastRelevantEvent && <View style={{flexDirection: "row", flex: 1, justifyContent: "center", marginTop: 15}}>
                         <MyText style={{fontWeight: 'bold'}}>{firstAction ? I18n.get("Started on:") : I18n.get("Finished on:")}</MyText>
                         <MyText style={{marginLeft: 3, fontWeight: 'bold'}}>
                             {moment(lastRelevantEvent.createdAt).format('llll')}
@@ -207,27 +207,30 @@ class Transport extends Component {
                                                                                                            buttonStyle={styles.actionButton} onPress={() => this.confirmLoading()}/>}
                 </View>
                 <Header>{I18n.get("Details")}</Header>
-                <Address address={item[site]} style={styles.address} />
-                <ArrivalDate date={arrivalDate} time={arrivalTime}  style={{paddingTop: 10, ...styles.address}} />
+                <View style={{paddingLeft: Sizes.PADDING_FROM_SCREEN_BORDER}}>
+                    <Address address={item[site]} style={styles.address} />
+                    <ArrivalDate date={arrivalDate} time={arrivalTime}  style={{paddingTop: 10, ...styles.address}} />
 
-                {
-                    contract.loads.map((load, index) => <LoadDetail key={index} load={load}/>)
-                }
+                    {
+                        contract.loads.map((load, index) => <LoadDetail key={index} load={load}/>)
+                    }
 
-                <LicensePlates truck={contract.truck} trailer={contract.trailer} style={{paddingTop: 10, ...styles.address}}/>
+                    <LicensePlates truck={contract.truck} trailer={contract.trailer} style={{paddingTop: 10, ...styles.address}}/>
+                </View>
 
                 <Header>{I18n.get("Consignment note")}</Header>
-                <TouchableOpacity style={{borderBottomWidth: StyleSheet.hairlineWidth,
-                    borderBottomColor: 'black',
-                    padding: 15}} onPress={() => this.showConsignmentNote()} disabled={this.state.downloadingPdf}>
+                <View style={{paddingLeft: Sizes.PADDING_FROM_SCREEN_BORDER}}>
+                <TouchableOpacity style={{padding: 15}} onPress={() => this.showConsignmentNote()} disabled={this.state.downloadingPdf}>
                     <View style={{flexDirection: "row"}}>
-                        <Icon name={'file'} style={{color: 'rgb(0, 115, 209)', marginRight: 5, textAlignVertical: "center"}} size={15}/>
+                        <Icon name={'file'} style={{color: 'rgb(0, 115, 209)', marginRight: 5, textAlignVertical: "center", width: Sizes.ICON_WIDTH}} size={Sizes.ICON_WIDTH}/>
                         <MyText style={{fontWeight: "bold"}}>{I18n.get("Display the consignment note")}</MyText>
                         <ActivityIndicator size="small" color="rgb(0, 115, 209)" animating={this.state.downloadingPdf}/>
                     </View>
                 </TouchableOpacity>
+                </View>
 
                 <Header>{I18n.get("Activity feed")}</Header>
+                <View style={{paddingLeft: Sizes.PADDING_FROM_SCREEN_BORDER}}>
                 {relevantItems.map((item, index) =>
                     (<View style={styles.activityItemContainer} key={index}>
                             <Text style={{fontSize: 12}}>{moment(item.createdAt).format('llll')}</Text>
@@ -239,6 +242,7 @@ class Transport extends Component {
                             }
                         </View>))
                     }
+                </View>
             </ScrollView>
         );
     }
@@ -460,7 +464,9 @@ const styles = StyleSheet.create({
     address: {
         borderBottomWidth: StyleSheet.hairlineWidth,
         borderBottomColor: 'rgb(200, 200, 200)',
-        padding: 10
+        paddingLeft: 10,
+        paddingTop: 10,
+        paddingBottom: 10
     },
     package: {
         borderBottomWidth: StyleSheet.hairlineWidth,
@@ -471,11 +477,11 @@ const styles = StyleSheet.create({
         alignItems: "center"
     },
     packageIcon: {
-        flex: 1,
+        width: Sizes.ICON_WIDTH,
         color: 'rgb(0, 115, 209)'
     },
     packageText: {
-        flex: 10
+        paddingLeft: 5
     },
     action: {
         paddingTop: 0,
@@ -490,7 +496,7 @@ const styles = StyleSheet.create({
     activityItemContainer: {
         padding: 10,
         borderBottomWidth: StyleSheet.hairlineWidth,
-        borderBottomColor: 'black'
+        borderBottomColor: 'rgb(200, 200, 200)'
     },
     actionButton: {
         backgroundColor: actionButtonColor

@@ -25,6 +25,7 @@ import {Icon} from "react-native-elements";
 import AddPhotos from "./AddPhotos";
 import i18nDictionaryNl from './i18n/nl/resource';
 import { Platform, NativeModules } from 'react-native';
+import moment from 'moment/min/moment-with-locales';
 
 
 const deviceLanguage =
@@ -37,8 +38,10 @@ const vocabularies = {
     nl: i18nDictionaryNl
 };
 
-I18n.setLanguage(deviceLanguage.split("_")[0]);
+const language = deviceLanguage.split("_")[0];
+I18n.setLanguage(language);
 I18n.putVocabularies(vocabularies);
+moment.locale(language);
 
 Amplify.configure(awsmobile);
 Amplify.Logger.LOG_LEVEL = 'DEBUG';

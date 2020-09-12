@@ -148,5 +148,12 @@
   "A copy of the consignment note will be delivered to this address": "Een kopie van de vrachtbrief wordt verstuurd naar dit adres",
   "Email invalid": "Email niet juist",
   "Please enter a valid email address": "Voer een geldig email-adres in",
-  "A copy of the consignment note is sent to:": "Een kopie van de vrachtbrief wordt verstuurd naar:"
+  "A copy of the consignment note is sent to:": "Een kopie van de vrachtbrief wordt verstuurd naar:",
+  "Between ${begin} and ${end}": "Tussen ${begin} en ${end}",
+  "${total} packages": "${total} stuks",
+  "pallets": "pallets",
+  "packages": "pakketten",
+  "roll containers": "rol-containers",
+  "bulk": "bulk",
+  "no trailer": "geen trailer"
 }

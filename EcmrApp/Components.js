@@ -2,7 +2,7 @@ import React from "react";
 import {Modal, Text, View} from "react-native";
 import Icon, {default as FIcon} from "react-native-vector-icons/FontAwesome";
 import {Button} from "react-native-elements";
-import moment from "moment";
+import moment from "moment/min/moment-with-locales";
 import {I18n} from 'aws-amplify';
 
 const formatTime = time => moment(time, "HH:mm").format('LT');
@@ -11,8 +11,8 @@ const MyText = ({style, children}) => <Text style={{...style, color: style && st
 
 const Address = ({address, style, hideIcon}) => (
     <View style={{ flexDirection: 'row', alignItems: "center", ...style}}>
-        {!hideIcon && <Icon name="location-arrow" style={{flex: 1, color: 'rgb(0, 115, 209)'}} size={20} />}
-        <View style={{flex: 10}}>
+        {!hideIcon && <Icon name="location-arrow" style={{color: 'rgb(0, 115, 209)', width: Sizes.ICON_WIDTH}} size={Sizes.ICON_WIDTH} />}
+        <View style={{flex: 1, paddingLeft: 5}}>
             <MyText><MyText style={{fontWeight: 'bold'}}>{address.postalCode}</MyText> {address.city} {address.country}</MyText>
             <MyText>{address.address}</MyText>
             <MyText style={{fontWeight: 'bold'}}>{address.name}</MyText>
@@ -22,18 +22,20 @@ const Address = ({address, style, hideIcon}) => (
 
 const ArrivalDate = ({date, time, style}) => (
     <View style={{flexDirection: 'row', paddingTop: 5, alignItems: "center", ...style}}>
-        <Icon name={"clock-o"} style={{flex: 1, color: 'rgb(0, 115, 209)'}} size={20}/>
-        <View style={{flex: 10, flexDirection: "column"}}>
+        <Icon name={"clock-o"} style={{color: 'rgb(0, 115, 209)', width: Sizes.ICON_WIDTH}} size={Sizes.ICON_WIDTH}/>
+        <View style={{flex: 1, paddingLeft: 5, flexDirection: "column"}}>
             <MyText>{moment(date).format('ll')}</MyText>
-            {time && <MyText>Between {formatTime(time.start)} and {formatTime(time.end)}</MyText>}
+            {time && <MyText>{I18n.get("Between ${begin} and ${end}")
+                .replace("${begin}", formatTime(time.start))
+                .replace("${end}", formatTime(time.end))}</MyText>}
         </View>
     </View>
 );
 
 const Packages = ({total}) => (
     <View style={{flexDirection: 'row', alignItems: "center", paddingTop: 5}}>
-        <Icon name="cube" style={{flex: 1, color: 'rgb(0, 115, 209)'}} size={20} />
-        <MyText style={{flex: 10}}>{total} packages</MyText>
+        <Icon name="cube" style={{color: 'rgb(0, 115, 209)', width: Sizes.ICON_WIDTH}} size={Sizes.ICON_WIDTH} />
+        <MyText style={{flex: 1, paddingLeft: 5}}>{I18n.get("${total} packages").replace("${total}", total)}</MyText>
     </View>
 );
 
@@ -55,9 +57,14 @@ const HandOverModal = ({visible, text, onPress}) =>
         </View>
     </Modal>;
 
+// force translations
+I18n.get('pallets');
+I18n.get('packages');
+I18n.get('roll containers');
+I18n.get('bulk');
 const LoadDetailText = ({load, style}) =>
     <MyText style={style}>
-        {load.quantity} {load.category}
+        {load.quantity} {I18n.get(load.category)}
         {load.description && `, ${load.description}`}
         {load.volume && `, ${load.volume} ${I18n.get('m³')}`}
         {load.netWeight && `, ${load.netWeight} ${I18n.get('kg')}`}
@@ -67,14 +74,19 @@ const LoadDetailText = ({load, style}) =>
 const LicensePlates = ({trailer, truck, style}) =>
     ((trailer || truck) && <View style={{flex: 1, flexDirection: "row", ...style}}>
         <View style={{flexDirection: 'row', alignItems: "center", paddingTop: 5, flex: 1}}>
-            <FIcon name="truck" style={{flex: 1, color: 'rgb(0, 115, 209)'}} size={20} />
-            <MyText style={{flex: 5}}>{truck}</MyText>
+            <FIcon name="truck" style={{color: 'rgb(0, 115, 209)', width: Sizes.ICON_WIDTH}} size={Sizes.ICON_WIDTH} />
+            <MyText style={{flex: 1, paddingLeft: 5}}>{truck}</MyText>
         </View>
         <View style={{flexDirection: 'row', alignItems: "center", paddingTop: 5, flex: 1}}>
-            <FIcon name="truck" style={{flex: 1, color: 'rgb(0, 115, 209)'}} size={20} />
-            <MyText style={{flex: 5}}>{trailer || "no trailer"}</MyText>
+            <FIcon name="truck" style={{color: 'rgb(0, 115, 209)', width: Sizes.ICON_WIDTH}} size={Sizes.ICON_WIDTH} />
+            <MyText style={{flex: 1, paddingLeft: 5}}>{trailer || I18n.get("no trailer")}</MyText>
         </View>
     </View>);
+
+const Sizes = {
+    PADDING_FROM_SCREEN_BORDER: 15,
+    ICON_WIDTH: 20
+}
 
 export {
     MyText,
@@ -83,5 +95,6 @@ export {
     HandOverModal,
     ArrivalDate,
     LoadDetailText,
-    LicensePlates
+    LicensePlates,
+    Sizes
 };

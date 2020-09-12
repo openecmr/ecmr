@@ -2,11 +2,10 @@ import React, {Component} from "react";
 import {SectionList, StyleSheet, Text, TouchableOpacity, View, Dimensions, Linking} from "react-native";
 import * as queries from "./graphql/queries";
 import {API, graphqlOperation, Auth, I18n} from 'aws-amplify';
-import {Address, ArrivalDate, LicensePlates, MyText, Packages} from './Components';
-import {SceneMap, TabBar, TabView} from "react-native-tab-view";
+import {Address, ArrivalDate, LicensePlates, MyText, Packages, Sizes} from './Components';
+import {TabBar, TabView} from "react-native-tab-view";
 import ContractModel from "./ContractModel";
 import {Button, Icon} from "react-native-elements";
-import {activate} from "./graphql/mutations";
 
 const NoContracts = () =>
     <View style={{justifyContent: 'center', alignItems: 'center', flex: 1,  padding: 5, paddingTop: 40}}>
@@ -39,29 +38,33 @@ class ContractsList extends Component {
                         const activeSite = contract.activeSite();
 
                         return (<View style={styles.card}>
-                            <View style={styles.transportCardHeader}>
+                            <View style={{...styles.transportCardHeader}}>
                                 <MyText style={styles.transportCardHeaderId}>{I18n.get("TRANSPORT")} {contract.id.substring(0, 8)}</MyText>
                                 <MyText style={styles.transportCardHeaderProgress}>{this.progressText(contract)}</MyText>
                             </View>
                             <TouchableOpacity onPress={() => this.props.open(contract, 'pickup')}>
                                 <View style={{...styles.transportCardPart, ...(isDone('pickup') && styles.transportCardPartDone)}}>
                                     {isDone('pickup') && <MyText style={styles.doneLabel}>{I18n.get("DONE")}</MyText>}
-                                    <MyText style={styles.upperCaseLabel}>{I18n.get("pickup")}</MyText>
-                                    <Address address={contract.pickup}/>
-                                    <ArrivalDate date={contract.arrivalDate} time={contract.arrivalTime}/>
-                                    <Packages total={contract.total()}/>
-                                    <LicensePlates truck={contract.truck} trailer={contract.trailer}/>
+                                    <MyText style={{...styles.transportCardPartTitle}}>{I18n.get("pickup")}</MyText>
+                                    <View style={{paddingLeft: 5}}>
+                                        <Address address={contract.pickup}/>
+                                        <ArrivalDate date={contract.arrivalDate} time={contract.arrivalTime}/>
+                                        <Packages total={contract.total()}/>
+                                        <LicensePlates truck={contract.truck} trailer={contract.trailer}/>
+                                    </View>
                                     {activeSite === 'pickup' && <ForwardIcon/>}
                                 </View>
                             </TouchableOpacity>
                             <TouchableOpacity onPress={() => this.props.open(contract, 'delivery')}>
                                 <View style={{...styles.transportCardPart, ...(isDone('delivery') && styles.transportCardPartDone), ...styles.transportCardPartNotFirst}}>
                                     {isDone('delivery') && <MyText style={styles.doneLabel}>{I18n.get("DONE")}</MyText>}
-                                    <MyText style={styles.upperCaseLabel}>{I18n.get("delivery")}</MyText>
-                                    <Address address={contract.delivery}/>
-                                    <ArrivalDate date={contract.deliveryDate} time={contract.deliveryTime}/>
-                                    <Packages total={contract.total()}/>
-                                    <LicensePlates truck={contract.truck} trailer={contract.trailer}/>
+                                    <MyText style={styles.transportCardPartTitle}>{I18n.get("delivery")}</MyText>
+                                    <View style={{paddingLeft: 5}}>
+                                        <Address address={contract.delivery}/>
+                                        <ArrivalDate date={contract.deliveryDate} time={contract.deliveryTime}/>
+                                        <Packages total={contract.total()}/>
+                                        <LicensePlates truck={contract.truck} trailer={contract.trailer}/>
+                                    </View>
                                     {activeSite === 'delivery' && <ForwardIcon/>}
                                 </View>
                             </TouchableOpacity>
@@ -287,12 +290,13 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         backgroundColor: 'rgb(225,236,254)',
         paddingTop: 10,
-        paddingBottom: 10
+        paddingBottom: 10,
+        paddingLeft: Sizes.PADDING_FROM_SCREEN_BORDER,
+        paddingRight: Sizes.PADDING_FROM_SCREEN_BORDER,
     },
     transportCardHeaderId: {
         fontWeight: 'bold',
         paddingRight: 5,
-        paddingLeft: 10,
         paddingTop: 5,
         paddingBottom: 5
     },
@@ -314,18 +318,20 @@ const styles = StyleSheet.create({
     transportCardPart: {
         flex: 1,
         padding: 5,
-        paddingLeft: 10,
-        paddingRight: 10,
+        paddingLeft: Sizes.PADDING_FROM_SCREEN_BORDER,
+        paddingRight: Sizes.PADDING_FROM_SCREEN_BORDER,
+        paddingBottom: Sizes.PADDING_FROM_SCREEN_BORDER,
         elevation: 1,
         backgroundColor: 'white'
     },
     transportCardPartNotFirst: {
         borderTopWidth: StyleSheet.hairlineWidth,
-        borderTopColor: 'black',
+        borderTopColor: 'rgb(200, 200, 200)'
     },
-    upperCaseLabel: {
+    transportCardPartTitle: {
         fontWeight: 'bold',
-        textTransform: 'uppercase'
+        textTransform: 'uppercase',
+        paddingBottom: 5
     },
     transportCardPartDone: {
         backgroundColor: 'rgb(226, 255, 225)'

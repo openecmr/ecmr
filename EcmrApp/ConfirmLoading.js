@@ -52,9 +52,9 @@ class ConfirmLoading extends Component {
                             </View>
                         </View>
                         <View style={{flexDirection: "row", marginTop: 10,
-                            borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: 'black',
-                            borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: 'black'}}>
-                            <TouchableOpacity style={{flex: 1, padding: 10, alignItems: 'center', borderRightWidth: StyleSheet.hairlineWidth, borderRightColor: 'black'}}
+                            borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: 'rgb(200, 200, 200)',
+                            borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: 'rgb(200, 200, 200)'}}>
+                            <TouchableOpacity style={{flex: 1, padding: 10, alignItems: 'center', borderRightWidth: StyleSheet.hairlineWidth, borderRightColor: 'rgb(200, 200, 200)'}}
                                               onPress={() => this.editLoad()}>
                                 <Icon name="pencil" style={{flex: 1, color: 'rgb(0, 115, 209)'}} size={30} />
                                 <MyText>{I18n.get('Edit')}</MyText>

@@ -17,7 +17,7 @@ import {Auth, Storage, graphqlOperation, API, I18n} from 'aws-amplify';
 import SignatureCapture from 'react-native-signature-capture';
 import UUIDGenerator from "react-native-uuid-generator";
 import {Buffer} from "buffer";
-import moment from "moment";
+import moment from "moment/min/moment-with-locales";
 import * as mutations from "./graphql/mutations";
 import {createUpdateContractInput, updateContract} from "./DataUtil";
 
