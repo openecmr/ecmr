@@ -1,4 +1,4 @@
-import {Button, Form, Header, Icon, Modal, Table} from "semantic-ui-react";
+import {Button, Dropdown, Form, Header, Icon, Modal, Table} from "semantic-ui-react";
 import React, {Component} from "react";
 import {API, Auth, graphqlOperation, I18n} from "aws-amplify";
 import * as queries from "./graphql/queries";
@@ -105,13 +105,13 @@ class AddressBook extends Component {
                                         newAddress: true,
                                         selectedContact: null
                                     })}>
-                                <Icon name='plus'/> {I18n.get('New contact')}
+                                <Icon name='plus'/> {I18n.get('New address')}
                             </Button>
 
                             <Button floated='right' icon labelPosition='left' primary size='small'
                                     disabled={selectedContact == null}
                                     onClick={() => this.setState({showAddress: true, newAddress: false})}>
-                                <Icon name='edit'/> {I18n.get('Edit contact')}
+                                <Icon name='edit'/> {I18n.get('Edit address')}
                             </Button>
                         </Table.HeaderCell>
                     </Table.Row>

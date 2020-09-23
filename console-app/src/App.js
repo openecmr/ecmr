@@ -30,6 +30,7 @@ import ReactGA from 'react-ga';
 import i18nDictionaryNl from './i18n/nl/resource';
 import moment from 'moment/min/moment-with-locales';
 import SignUpWithLanguage from "./SignUpWithLanguage";
+import Contacts from "./Contacts";
 
 let config;
 const pdfServiceKey = window.location.hash.substr(1);
@@ -147,6 +148,12 @@ const AppMenu = withRouter(({location, onLogout, menuVisible}) => (
             as={Link}
         />
         <Menu.Item
+            name={I18n.get('Contacts')}
+            active={location.pathname.startsWith('/contacts')}
+            to={'/contacts'}
+            as={Link}
+        />
+        <Menu.Item
             name={I18n.get('drivers')}
             active={location.pathname.startsWith('/drivers')}
             to={'/drivers'}
@@ -197,6 +204,7 @@ const Main = withRouter(({location, onLogout, user, company, noCompany, onCompan
                         />
                         <Route exact path="/transports/:id" component={Transport}/>
                         <Route exact path="/addressbook" component={AddressBook}/>
+                        <Route exact path="/contacts" component={Contacts}/>
                         <Route exact path="/drivers" component={Drivers}/>
                         <Route exact path="/vehicles"
                                render={(props) => <Vehicles {...props} company={company}/>}/>

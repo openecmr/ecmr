@@ -393,6 +393,8 @@ export const createVehicle = /* GraphQL */ `
       type
       licensePlateNumber
       description
+      createdAt
+      updatedAt
     }
   }
 `;
@@ -405,6 +407,8 @@ export const updateVehicle = /* GraphQL */ `
       type
       licensePlateNumber
       description
+      createdAt
+      updatedAt
     }
   }
 `;
@@ -417,6 +421,8 @@ export const deleteVehicle = /* GraphQL */ `
       type
       licensePlateNumber
       description
+      createdAt
+      updatedAt
     }
   }
 `;
@@ -432,6 +438,47 @@ export const createContact = /* GraphQL */ `
       country
       phone
       email
+      contactPersons {
+        items {
+          id
+          owner
+          contactId
+          name
+          email
+          phone
+          address {
+            id
+            owner
+            name
+            postalCode
+            address
+            city
+            country
+            phone
+            email
+            contactPersons {
+              nextToken
+            }
+            createdAt
+            updatedAt
+          }
+          addedByDriverDriverId
+          createdAt
+          updatedAt
+          addedByDriver {
+            id
+            owner
+            name
+            carrier
+            associationSecret
+            createdAt
+            updatedAt
+          }
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
     }
   }
 `;
@@ -447,6 +494,47 @@ export const updateContact = /* GraphQL */ `
       country
       phone
       email
+      contactPersons {
+        items {
+          id
+          owner
+          contactId
+          name
+          email
+          phone
+          address {
+            id
+            owner
+            name
+            postalCode
+            address
+            city
+            country
+            phone
+            email
+            contactPersons {
+              nextToken
+            }
+            createdAt
+            updatedAt
+          }
+          addedByDriverDriverId
+          createdAt
+          updatedAt
+          addedByDriver {
+            id
+            owner
+            name
+            carrier
+            associationSecret
+            createdAt
+            updatedAt
+          }
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
     }
   }
 `;
@@ -462,6 +550,266 @@ export const deleteContact = /* GraphQL */ `
       country
       phone
       email
+      contactPersons {
+        items {
+          id
+          owner
+          contactId
+          name
+          email
+          phone
+          address {
+            id
+            owner
+            name
+            postalCode
+            address
+            city
+            country
+            phone
+            email
+            contactPersons {
+              nextToken
+            }
+            createdAt
+            updatedAt
+          }
+          addedByDriverDriverId
+          createdAt
+          updatedAt
+          addedByDriver {
+            id
+            owner
+            name
+            carrier
+            associationSecret
+            createdAt
+            updatedAt
+          }
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createContactPerson = /* GraphQL */ `
+  mutation CreateContactPerson($input: CreateContactPersonInput!) {
+    createContactPerson(input: $input) {
+      id
+      owner
+      contactId
+      name
+      email
+      phone
+      address {
+        id
+        owner
+        name
+        postalCode
+        address
+        city
+        country
+        phone
+        email
+        contactPersons {
+          items {
+            id
+            owner
+            contactId
+            name
+            email
+            phone
+            address {
+              id
+              owner
+              name
+              postalCode
+              address
+              city
+              country
+              phone
+              email
+              createdAt
+              updatedAt
+            }
+            addedByDriverDriverId
+            createdAt
+            updatedAt
+            addedByDriver {
+              id
+              owner
+              name
+              carrier
+              associationSecret
+              createdAt
+              updatedAt
+            }
+          }
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      addedByDriverDriverId
+      createdAt
+      updatedAt
+      addedByDriver {
+        id
+        owner
+        name
+        carrier
+        associationSecret
+        createdAt
+        updatedAt
+      }
+    }
+  }
+`;
+export const updateContactPerson = /* GraphQL */ `
+  mutation UpdateContactPerson($input: UpdateContactPersonInput!) {
+    updateContactPerson(input: $input) {
+      id
+      owner
+      contactId
+      name
+      email
+      phone
+      address {
+        id
+        owner
+        name
+        postalCode
+        address
+        city
+        country
+        phone
+        email
+        contactPersons {
+          items {
+            id
+            owner
+            contactId
+            name
+            email
+            phone
+            address {
+              id
+              owner
+              name
+              postalCode
+              address
+              city
+              country
+              phone
+              email
+              createdAt
+              updatedAt
+            }
+            addedByDriverDriverId
+            createdAt
+            updatedAt
+            addedByDriver {
+              id
+              owner
+              name
+              carrier
+              associationSecret
+              createdAt
+              updatedAt
+            }
+          }
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      addedByDriverDriverId
+      createdAt
+      updatedAt
+      addedByDriver {
+        id
+        owner
+        name
+        carrier
+        associationSecret
+        createdAt
+        updatedAt
+      }
+    }
+  }
+`;
+export const deleteContactPerson = /* GraphQL */ `
+  mutation DeleteContactPerson($input: DeleteContactPersonInput!) {
+    deleteContactPerson(input: $input) {
+      id
+      owner
+      contactId
+      name
+      email
+      phone
+      address {
+        id
+        owner
+        name
+        postalCode
+        address
+        city
+        country
+        phone
+        email
+        contactPersons {
+          items {
+            id
+            owner
+            contactId
+            name
+            email
+            phone
+            address {
+              id
+              owner
+              name
+              postalCode
+              address
+              city
+              country
+              phone
+              email
+              createdAt
+              updatedAt
+            }
+            addedByDriverDriverId
+            createdAt
+            updatedAt
+            addedByDriver {
+              id
+              owner
+              name
+              carrier
+              associationSecret
+              createdAt
+              updatedAt
+            }
+          }
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      addedByDriverDriverId
+      createdAt
+      updatedAt
+      addedByDriver {
+        id
+        owner
+        name
+        carrier
+        associationSecret
+        createdAt
+        updatedAt
+      }
     }
   }
 `;
@@ -472,6 +820,8 @@ export const createCompany = /* GraphQL */ `
       owner
       name
       allowedSendingEmail
+      createdAt
+      updatedAt
     }
   }
 `;
@@ -482,6 +832,8 @@ export const updateCompany = /* GraphQL */ `
       owner
       name
       allowedSendingEmail
+      createdAt
+      updatedAt
     }
   }
 `;
@@ -492,6 +844,8 @@ export const deleteCompany = /* GraphQL */ `
       owner
       name
       allowedSendingEmail
+      createdAt
+      updatedAt
     }
   }
 `;
@@ -503,6 +857,8 @@ export const createDriver = /* GraphQL */ `
       name
       carrier
       associationSecret
+      createdAt
+      updatedAt
     }
   }
 `;
@@ -514,6 +870,8 @@ export const deleteDriver = /* GraphQL */ `
       name
       carrier
       associationSecret
+      createdAt
+      updatedAt
     }
   }
 `;
@@ -525,6 +883,8 @@ export const updateDriver = /* GraphQL */ `
       name
       carrier
       associationSecret
+      createdAt
+      updatedAt
     }
   }
 `;

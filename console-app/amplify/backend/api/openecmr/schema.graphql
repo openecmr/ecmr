@@ -121,6 +121,7 @@ type Vehicle
     description: String!
 }
 
+# TODO rename to address
 type Contact
     @model
     @auth(rules: [
@@ -137,6 +138,23 @@ type Contact
     country: String
     phone: String
     email: String
+    contactPersons: [ContactPerson] @connection(keyName: "byContact", fields: ["id"])
+}
+
+# TODO rename to contact
+type ContactPerson @model(subscriptions: null)
+    @auth(rules: [{ allow: owner }])
+    @key(name: "byContact", fields: ["contactId", "name"])
+    @key(name: "byOwnerContactName", fields: ["owner", "contactId", "name"], queryField: "contactPersonByOwner") {
+    id: ID!
+    owner: String
+    contactId: ID!
+    name: String!
+    email: String
+    phone: String
+    address: Contact @connection(fields: ["contactId"])
+    addedByDriverDriverId: ID
+    addedByDriver: Driver @connection
 }
 
 type Company

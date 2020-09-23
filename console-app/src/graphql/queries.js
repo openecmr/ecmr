@@ -15,6 +15,8 @@ export const getVehicle = /* GraphQL */ `
       type
       licensePlateNumber
       description
+      createdAt
+      updatedAt
     }
   }
 `;
@@ -32,6 +34,8 @@ export const listVehicles = /* GraphQL */ `
         type
         licensePlateNumber
         description
+        createdAt
+        updatedAt
       }
       nextToken
     }
@@ -49,6 +53,47 @@ export const getContact = /* GraphQL */ `
       country
       phone
       email
+      contactPersons {
+        items {
+          id
+          owner
+          contactId
+          name
+          email
+          phone
+          address {
+            id
+            owner
+            name
+            postalCode
+            address
+            city
+            country
+            phone
+            email
+            contactPersons {
+              nextToken
+            }
+            createdAt
+            updatedAt
+          }
+          addedByDriverDriverId
+          createdAt
+          updatedAt
+          addedByDriver {
+            id
+            owner
+            name
+            carrier
+            associationSecret
+            createdAt
+            updatedAt
+          }
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
     }
   }
 `;
@@ -69,6 +114,175 @@ export const listContacts = /* GraphQL */ `
         country
         phone
         email
+        contactPersons {
+          items {
+            id
+            owner
+            contactId
+            name
+            email
+            phone
+            address {
+              id
+              owner
+              name
+              postalCode
+              address
+              city
+              country
+              phone
+              email
+              createdAt
+              updatedAt
+            }
+            addedByDriverDriverId
+            createdAt
+            updatedAt
+            addedByDriver {
+              id
+              owner
+              name
+              carrier
+              associationSecret
+              createdAt
+              updatedAt
+            }
+          }
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getContactPerson = /* GraphQL */ `
+  query GetContactPerson($id: ID!) {
+    getContactPerson(id: $id) {
+      id
+      owner
+      contactId
+      name
+      email
+      phone
+      address {
+        id
+        owner
+        name
+        postalCode
+        address
+        city
+        country
+        phone
+        email
+        contactPersons {
+          items {
+            id
+            owner
+            contactId
+            name
+            email
+            phone
+            address {
+              id
+              owner
+              name
+              postalCode
+              address
+              city
+              country
+              phone
+              email
+              createdAt
+              updatedAt
+            }
+            addedByDriverDriverId
+            createdAt
+            updatedAt
+            addedByDriver {
+              id
+              owner
+              name
+              carrier
+              associationSecret
+              createdAt
+              updatedAt
+            }
+          }
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      addedByDriverDriverId
+      createdAt
+      updatedAt
+      addedByDriver {
+        id
+        owner
+        name
+        carrier
+        associationSecret
+        createdAt
+        updatedAt
+      }
+    }
+  }
+`;
+export const listContactPersons = /* GraphQL */ `
+  query ListContactPersons(
+    $filter: ModelContactPersonFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listContactPersons(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        owner
+        contactId
+        name
+        email
+        phone
+        address {
+          id
+          owner
+          name
+          postalCode
+          address
+          city
+          country
+          phone
+          email
+          contactPersons {
+            items {
+              id
+              owner
+              contactId
+              name
+              email
+              phone
+              addedByDriverDriverId
+              createdAt
+              updatedAt
+            }
+            nextToken
+          }
+          createdAt
+          updatedAt
+        }
+        addedByDriverDriverId
+        createdAt
+        updatedAt
+        addedByDriver {
+          id
+          owner
+          name
+          carrier
+          associationSecret
+          createdAt
+          updatedAt
+        }
       }
       nextToken
     }
@@ -81,6 +295,8 @@ export const getCompany = /* GraphQL */ `
       owner
       name
       allowedSendingEmail
+      createdAt
+      updatedAt
     }
   }
 `;
@@ -96,6 +312,8 @@ export const listCompanys = /* GraphQL */ `
         owner
         name
         allowedSendingEmail
+        createdAt
+        updatedAt
       }
       nextToken
     }
@@ -125,6 +343,8 @@ export const vehicleByOwner = /* GraphQL */ `
         type
         licensePlateNumber
         description
+        createdAt
+        updatedAt
       }
       nextToken
     }
@@ -157,6 +377,112 @@ export const contactByOwner = /* GraphQL */ `
         country
         phone
         email
+        contactPersons {
+          items {
+            id
+            owner
+            contactId
+            name
+            email
+            phone
+            address {
+              id
+              owner
+              name
+              postalCode
+              address
+              city
+              country
+              phone
+              email
+              createdAt
+              updatedAt
+            }
+            addedByDriverDriverId
+            createdAt
+            updatedAt
+            addedByDriver {
+              id
+              owner
+              name
+              carrier
+              associationSecret
+              createdAt
+              updatedAt
+            }
+          }
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const contactPersonByOwner = /* GraphQL */ `
+  query ContactPersonByOwner(
+    $owner: String
+    $contactIdName: ModelContactPersonByOwnerContactNameCompositeKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelContactPersonFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    contactPersonByOwner(
+      owner: $owner
+      contactIdName: $contactIdName
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        owner
+        contactId
+        name
+        email
+        phone
+        address {
+          id
+          owner
+          name
+          postalCode
+          address
+          city
+          country
+          phone
+          email
+          contactPersons {
+            items {
+              id
+              owner
+              contactId
+              name
+              email
+              phone
+              addedByDriverDriverId
+              createdAt
+              updatedAt
+            }
+            nextToken
+          }
+          createdAt
+          updatedAt
+        }
+        addedByDriverDriverId
+        createdAt
+        updatedAt
+        addedByDriver {
+          id
+          owner
+          name
+          carrier
+          associationSecret
+          createdAt
+          updatedAt
+        }
       }
       nextToken
     }
@@ -184,6 +510,8 @@ export const companyByOwner = /* GraphQL */ `
         owner
         name
         allowedSendingEmail
+        createdAt
+        updatedAt
       }
       nextToken
     }
@@ -734,17 +1062,6 @@ export const contractsByCarrierArrivalDate = /* GraphQL */ `
     }
   }
 `;
-export const getDriver = /* GraphQL */ `
-  query GetDriver($id: ID!) {
-    getDriver(id: $id) {
-      id
-      owner
-      name
-      carrier
-      associationSecret
-    }
-  }
-`;
 export const listDrivers = /* GraphQL */ `
   query ListDrivers(
     $filter: ModelDriverFilterInput
@@ -758,8 +1075,23 @@ export const listDrivers = /* GraphQL */ `
         name
         carrier
         associationSecret
+        createdAt
+        updatedAt
       }
       nextToken
+    }
+  }
+`;
+export const getDriver = /* GraphQL */ `
+  query GetDriver($id: ID!) {
+    getDriver(id: $id) {
+      id
+      owner
+      name
+      carrier
+      associationSecret
+      createdAt
+      updatedAt
     }
   }
 `;
@@ -784,6 +1116,8 @@ export const driverByAssociationSecret = /* GraphQL */ `
         name
         carrier
         associationSecret
+        createdAt
+        updatedAt
       }
       nextToken
     }
@@ -812,6 +1146,8 @@ export const driverByOwner = /* GraphQL */ `
         name
         carrier
         associationSecret
+        createdAt
+        updatedAt
       }
       nextToken
     }
