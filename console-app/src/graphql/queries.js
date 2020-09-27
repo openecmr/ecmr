@@ -420,6 +420,74 @@ export const contactByOwner = /* GraphQL */ `
     }
   }
 `;
+export const contactPersonByContact = /* GraphQL */ `
+  query ContactPersonByContact(
+    $contactId: ID
+    $name: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelContactPersonFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    contactPersonByContact(
+      contactId: $contactId
+      name: $name
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        owner
+        contactId
+        name
+        email
+        phone
+        address {
+          id
+          owner
+          name
+          postalCode
+          address
+          city
+          country
+          phone
+          email
+          contactPersons {
+            items {
+              id
+              owner
+              contactId
+              name
+              email
+              phone
+              addedByDriverDriverId
+              createdAt
+              updatedAt
+            }
+            nextToken
+          }
+          createdAt
+          updatedAt
+        }
+        addedByDriverDriverId
+        createdAt
+        updatedAt
+        addedByDriver {
+          id
+          owner
+          name
+          carrier
+          associationSecret
+          createdAt
+          updatedAt
+        }
+      }
+      nextToken
+    }
+  }
+`;
 export const contactPersonByOwner = /* GraphQL */ `
   query ContactPersonByOwner(
     $owner: String

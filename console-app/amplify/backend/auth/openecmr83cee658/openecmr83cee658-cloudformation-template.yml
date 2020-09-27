@@ -207,7 +207,7 @@ Resources:
 
           PostAuthentication: !Ref functionopenecmr83cee658PostAuthenticationArn
           CustomMessage: !Ref functionopenecmr83cee658PostAuthenticationArn
-        
+          PreTokenGeneration: !Ref functionopenecmr83cee658PostAuthenticationArn
         
         
         

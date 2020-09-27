@@ -143,8 +143,11 @@ type Contact
 
 # TODO rename to contact
 type ContactPerson @model(subscriptions: null)
-    @auth(rules: [{ allow: owner }])
-    @key(name: "byContact", fields: ["contactId", "name"])
+    @auth(rules: [
+        { allow: owner },
+        { allow: groups, groupsField: "owner", operations: [read, create] }
+    ])
+    @key(name: "byContact", fields: ["contactId", "name"], queryField: "contactPersonByContact")
     @key(name: "byOwnerContactName", fields: ["owner", "contactId", "name"], queryField: "contactPersonByOwner") {
     id: ID!
     owner: String
