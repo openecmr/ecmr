@@ -26,6 +26,8 @@ import AddPhotos from "./AddPhotos";
 import i18nDictionaryNl from './i18n/nl/resource';
 import { Platform, NativeModules } from 'react-native';
 import moment from 'moment/min/moment-with-locales';
+import SelectSignatory from "./SelectSignatory";
+import AddContact from "./AddContact";
 
 
 const deviceLanguage =
@@ -54,7 +56,9 @@ const MainNavigator = createStackNavigator({
     Signature: {screen: Signature},
     CaptureSignature: {screen: CaptureSignature},
     SignatoryInformation: {screen: SignatoryInformation},
-    AddPhotos: {screen: AddPhotos}
+    AddPhotos: {screen: AddPhotos},
+    SelectSignatory: {screen: SelectSignatory},
+    AddContact: {screen: AddContact}
 }, {
     defaultNavigationOptions: {
         cardStyle: {

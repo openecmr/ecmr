@@ -17,10 +17,11 @@ import { Auth } from 'aws-amplify';
 import {S3Image} from "aws-amplify-react-native";
 import ContractModel from "./ContractModel";
 import {createUpdateContractInput, updateContract} from "./DataUtil";
-const Header = ({children}) => <MyText style={styles.header}>{children}</MyText>;
 import RNFetchBlob from 'rn-fetch-blob'
 import {Button, Divider} from "react-native-elements";
 import openMap from 'react-native-open-maps';
+
+const Header = ({children}) => <MyText style={styles.header}>{children}</MyText>;
 
 const activityDoneColor = 'rgb(5, 172, 5)';
 const actionButtonColor = 'rgb(60,176,60)';

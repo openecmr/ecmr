@@ -42,7 +42,7 @@ class SignSelection extends Component {
 
     signOnPhone() {
         const {navigate} = this.props.navigation;
-        navigate('SignatoryInformation', {
+        navigate('SelectSignatory', {
             item: this.state.contract,
             site: this.state.site,
             photos: this.props.navigation.getParam("photos")
