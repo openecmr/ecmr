@@ -18,7 +18,7 @@ const ContactItem = ({contact, addressName, onSelect}) =>
             <Icon size={30} style={{color: 'rgb(111, 111, 111)'}} name={"user-alt"}/>
             <View style={{marginLeft: 10}}>
                 <MyText style={{fontWeight: "bold"}}>{contact.item.name}</MyText>
-                <MyText style={{fontSize: 11}}>{addressName}</MyText>
+                <MyText style={{fontSize: 11}}>{addressName}{!!contact.item.email && ` · ${contact.item.email}`}</MyText>
             </View>
         </View>
     </TouchableOpacity>;
@@ -42,7 +42,7 @@ class SelectSignatory extends Component {
                         driverDriverId
                     })
                 }}
-                title="Add"
+                title={I18n.get("New")}
             />
         )
     });
@@ -64,25 +64,30 @@ class SelectSignatory extends Component {
     render() {
         const address = this.state.contract[this.state.site].name;
         return (
-            <View>
-                {false && <View style={{flexDirection: "row", alignItems: "center", backgroundColor: 'white', padding: 10, marginTop: 10}}>
-                    <Icon size={20} name={"search"}/>
-                    <TextInput
-                        value={this.signatoryName}
-                        style={{...styles.textInput, flex: 1, marginLeft: 10}}
-                        placeholder={I18n.get("e.g. John Smith...")}
-                        onChangeText={(signatoryName) => this.setState({signatoryName})}/>
-                </View>}
-
+            <View style={{flex: 1}}>
                 <FlatList renderItem={(contact) => <ContactItem onSelect={() => this.selectContact(contact.item)}
                                                                 contact={contact} addressName={address}/>}
                           keyExtractor={(item) => item.id}
                           data={this.state.contacts}
                           style={{marginTop: 5}}
+                          ListEmptyComponent={<MyText style={{fontWeight: "bold", padding: 20, textAlign: "center"}}>No contacts for this address. Add a contact or choose manual entry.</MyText>}
 
                 />
+                <Button containerStyle={{position: "absolute", start: 10, bottom: 10, end: 10}} title={I18n.get("Manual entry")}
+                        buttonStyle={{height: 50}}
+                        loading={this.state.loading}
+                        onPress={() => this.skip()}/>
             </View>
         )
+    }
+
+    skip() {
+        const {navigate} = this.props.navigation;
+        navigate('SignatoryInformation', {
+            item: this.state.contract,
+            site: this.state.site,
+            photos: this.props.navigation.getParam("photos")
+        });
     }
 
     selectContact(contact) {
@@ -97,6 +102,9 @@ class SelectSignatory extends Component {
     }
 
     async componentDidMount() {
+        this.setState({
+            loading: true
+        });
         const contactId = this.state.contract[this.state.site + "ContactId"];
         if (!contactId) {
             return;
@@ -107,7 +115,8 @@ class SelectSignatory extends Component {
             sortDirection: "ASC"
         }));
         this.setState({
-            contacts: response.data.contactPersonByContact.items
+            contacts: response.data.contactPersonByContact.items,
+            loading: false
         });
     }
 
