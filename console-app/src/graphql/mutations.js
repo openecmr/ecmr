@@ -110,6 +110,7 @@ export const createContract = /* GraphQL */ `
         }
         driverObservation
         signatoryObservation
+        sendCopy
         assignedDriver {
           name
           username
@@ -236,6 +237,7 @@ export const updateContract = /* GraphQL */ `
         }
         driverObservation
         signatoryObservation
+        sendCopy
         assignedDriver {
           name
           username
@@ -362,6 +364,7 @@ export const deleteContract = /* GraphQL */ `
         }
         driverObservation
         signatoryObservation
+        sendCopy
         assignedDriver {
           name
           username

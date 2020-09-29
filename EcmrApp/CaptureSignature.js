@@ -109,6 +109,7 @@ class CaptureSignature extends Component {
             const signatoryObservation = this.props.navigation.getParam("signatoryObservation");
             const signatoryName = this.props.navigation.getParam("signatoryName");
             const signatoryEmail = this.props.navigation.getParam("signatoryEmail");
+            const sendCopy = this.props.navigation.getParam("sendCopy");
             const event = {
                 type: this.state.site === 'pickup' ? 'LoadingComplete' : 'UnloadingComplete',
                 site: this.state.site,
@@ -127,6 +128,7 @@ class CaptureSignature extends Component {
                     ...signatoryEmail && {signatoryEmail}
                 },
                 ...signatoryObservation && {signatoryObservation},
+                sendCopy: sendCopy,
                 photos
             };
             const input = createUpdateContractInput(this.state.contract);

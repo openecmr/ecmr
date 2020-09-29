@@ -259,7 +259,8 @@ type Event @aws_api_key @aws_cognito_user_pools @aws_iam {
     longitude: Float
     signature: Signature
     driverObservation: String
-    signatoryObservation: String
+    signatoryObservation: String,
+    sendCopy: Boolean,
     assignedDriver: DriverDetail,
     photos: [S3Object!]
 }

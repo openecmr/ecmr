@@ -18,7 +18,8 @@ class Signature extends Component {
             signatoryName: props.navigation.getParam("signatoryName"),
             signatoryEmail: props.navigation.getParam("signatoryEmail"),
             addingRemark: false,
-            handoverPhone: true
+            handoverPhone: true,
+            sendCopy: false
         };
     }
 
@@ -63,15 +64,23 @@ class Signature extends Component {
                     onPress={() => this.toggleAgreeWithInformation()}
                     title={I18n.get('I agree with this information')}
                     containerStyle={{backgroundColor: 'white', marginTop: 10}}
-                    center
                     checkedIcon='check-square'
                     uncheckedIcon='square'
                     checked={this.state.agree}
                 />
 
+                {!!this.state.signatoryEmail && <CheckBox
+                    onPress={() => this.toggleSendCopy()}
+                    title={I18n.get('Send a copy of the consignment to ${email}').replace("${email}", this.state.signatoryEmail)}
+                    containerStyle={{backgroundColor: 'white', marginTop: 10}}
+                    checkedIcon='check-square'
+                    uncheckedIcon='square'
+                    checked={this.state.sendCopy}
+                />}
+
                 {!!this.state.signatoryEmail &&
                     <View>
-                        <MyText style={{fontWeight: 'bold', marginTop: 5}}>{I18n.get("A copy of the consignment note is sent to:")}</MyText>
+                        <MyText style={{fontWeight: 'bold', marginTop: 5}}>{I18n.get("Email address:")}</MyText>
                         <MyText style={{marginLeft: 10}}>{this.state.signatoryEmail}</MyText>
                     </View>
                 }
@@ -108,6 +117,12 @@ class Signature extends Component {
         })
     }
 
+    toggleSendCopy() {
+        this.setState({
+            sendCopy: !this.state.sendCopy
+        })
+    }
+
     captureSignature() {
         if (!this.state.agree) {
             Alert.alert(
@@ -128,7 +143,8 @@ class Signature extends Component {
             signatoryName: this.state.signatoryName,
             signatoryEmail: this.state.signatoryEmail,
             signatoryObservation: this.state.signatoryObservation,
-            photos: this.props.navigation.getParam("photos")
+            photos: this.props.navigation.getParam("photos"),
+            sendCopy: this.state.sendCopy
         });
     }
 }

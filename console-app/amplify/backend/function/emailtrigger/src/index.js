@@ -48,7 +48,7 @@ exports.handler = async function(event, context) {
         const addedEvents = calculateAddedEvents(oldImage, newImage);
         const loadingEvents = addedEvents
             .filter(e => e.type === 'LoadingComplete' || e.type === 'UnloadingComplete')
-            .filter(e => e.signature && e.signature.signatoryEmail);
+            .filter(e => e.signature && e.signature.signatoryEmail && e.sendCopy);
 
         if (loadingEvents.length > 0) {
           try {

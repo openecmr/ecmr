@@ -689,6 +689,7 @@ export const getContract = /* GraphQL */ `
         }
         driverObservation
         signatoryObservation
+        sendCopy
         assignedDriver {
           name
           username
@@ -820,6 +821,7 @@ export const listContracts = /* GraphQL */ `
           }
           driverObservation
           signatoryObservation
+          sendCopy
           assignedDriver {
             name
             username
@@ -963,6 +965,7 @@ export const contractsByOwnerArrivalDate = /* GraphQL */ `
           }
           driverObservation
           signatoryObservation
+          sendCopy
           assignedDriver {
             name
             username
@@ -1106,6 +1109,7 @@ export const contractsByCarrierArrivalDate = /* GraphQL */ `
           }
           driverObservation
           signatoryObservation
+          sendCopy
           assignedDriver {
             name
             username
