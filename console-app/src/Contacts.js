@@ -3,6 +3,7 @@ import React, {Component} from "react";
 import {API, Auth, graphqlOperation, I18n} from "aws-amplify";
 import * as queries from "./graphql/queries";
 import * as mutations from "./graphql/mutations";
+import * as EmailValidator from "email-validator";
 
 const TextCell = ({text}) => {
     return (
@@ -94,10 +95,10 @@ class AddContactModal extends Component {
             <Header icon={"plus square"} content={I18n.get("Contact")}/>
             <Modal.Content>
                 <Form id={"item"}>
-                    <Form.Input onChange={this.handleChange} label={I18n.get('Name')} type='input' name={"name"} value={name} placeholder={I18n.get("Jack")}/>
+                    <Form.Input required error={!!this.state.nameRequired && I18n.get("Required field")} onChange={this.handleChange} label={I18n.get('Name')} type='input' name={"name"} value={name} placeholder={I18n.get("Jack")}/>
                     <Form.Input onChange={this.handleChange} label={I18n.get('Phone')} type='input' name={"phone"} value={phone} placeholder={I18n.get("+1 20 123456")}/>
-                    <Form.Input onChange={this.handleChange} label={I18n.get('Email')} type='input' name={"email"} value={email} placeholder={I18n.get("jack@company.tld")}/>
-                    <Form.Field>
+                    <Form.Input error={!!this.state.emailInvalid && I18n.get("Invalid email address")} onChange={this.handleChange} label={I18n.get('Email')} type='input' name={"email"} value={email} placeholder={I18n.get("jack@company.tld")}/>
+                    <Form.Field required error={!!this.state.addressRequired && I18n.get("Required field")}>
                         <label>{I18n.get('Address')}</label>
                         <AddressPicker addressId={contactId}
                                        addressSelected={(address) => this.setState({contact: {
@@ -122,6 +123,10 @@ class AddContactModal extends Component {
     }
 
     async add() {
+        if (!this.validate()) {
+            return;
+        }
+
         try {
             if (this.state.contact.id) {
                 const response = await API.graphql(graphqlOperation(mutations.updateContactPerson, {input: this.state.contact}));
@@ -133,6 +138,34 @@ class AddContactModal extends Component {
             return;
         }
         this.props.hide(true);
+    }
+
+    validate() {
+        this.setState({
+            nameRequired: false,
+            emailInvalid: false,
+            addressRequired: false
+        });
+        let result = true;
+        if (!this.state.contact.name) {
+            this.setState({
+                nameRequired: true
+            });
+            result = false;
+        }
+        if (this.state.contact.email && !EmailValidator.validate(this.state.contact.email)) {
+            this.setState({
+                emailInvalid: true
+            });
+            result = false;
+        }
+        if (!this.state.contact.contactId) {
+            this.setState({
+                addressRequired: true
+            });
+            result = false;
+        }
+        return result;
     }
 
     async delete() {

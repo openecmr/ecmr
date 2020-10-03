@@ -202,7 +202,8 @@ type Driver
         { allow: private, provider: iam, operations: [read, update] }
     ])
     @key(name: "AssociationSecret", fields: ["associationSecret"], queryField: "driverByAssociationSecret")
-    @key(name: "OwnerName", fields: ["owner", "name"], queryField: "driverByOwner")
+    @key(name: "OwnerName", fields: ["owner", "name"], queryField: "driverByOwner"),
+    @key(name: "Carrier", fields: ["carrier"], queryField: "driverByCarrier")
 {
     id: ID!
     owner: String

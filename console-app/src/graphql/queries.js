@@ -1225,3 +1225,31 @@ export const driverByOwner = /* GraphQL */ `
     }
   }
 `;
+export const driverByCarrier = /* GraphQL */ `
+  query DriverByCarrier(
+    $carrier: String
+    $sortDirection: ModelSortDirection
+    $filter: ModelDriverFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    driverByCarrier(
+      carrier: $carrier
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        owner
+        name
+        carrier
+        associationSecret
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;

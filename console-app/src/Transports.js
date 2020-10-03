@@ -75,9 +75,9 @@ const StatusMappings = () => ({
 const Status = ({status, updatedAt}) => {
     const statusMapping = StatusMappings()[status];
     return <Table.Cell width={1}>
-        <Progress percent={statusMapping.progress} size='tiny' color={statusMapping.color}>
-            {statusMapping.label}
+        <Progress percent={statusMapping.progress} size={'tiny'} color={statusMapping.color}>
         </Progress>
+        <div style={{whiteSpace: "nowrap", marginTop: -30, textAlign: "center", fontWeight: "bold", fontSize: "x-small"}}>{statusMapping.label}</div>
     </Table.Cell>
 };
 
@@ -100,7 +100,7 @@ class Transports extends Component {
     render() {
         return (
 
-            <Table className="App-text-with-newlines" selectable compact='very' sortable>
+            <Table className="App-text-with-newlines" selectable compact='very' sortable collapsing={true}>
                 <Table.Header>
                     <Table.Row>
                         <Table.HeaderCell colSpan='11'>

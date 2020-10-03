@@ -22,13 +22,13 @@ exports.handler = (event, context, callback) => {
     } else if (event.triggerSource.startsWith('TokenGeneration_')) {
       const groups = event.request.groupConfiguration.groupsToOverride;
 
-      selectOwners(event.request.username)
+      selectOwners(event.userName)
           .then((owners) => {
             // add tenant to groups
             event.response = {
               claimsOverrideDetails: {
                 groupOverrideDetails: {
-                  groupsToOverride: [owners, ...groups],
+                  groupsToOverride: [...owners, ...groups],
                 },
               },
             }
@@ -44,36 +44,25 @@ exports.handler = (event, context, callback) => {
 };
 
 const selectOwners = async (username) => {
-  if (false) {
-    const AWS = require('aws-sdk');
-    AWS.config.update({
-      region: region
-    });
-    const dynamodb = new AWS.DynamoDB();
-    let params = {
-      TableName: "Drivers" + "-" + process.env.API_OPENECMR_GRAPHQLAPIIDOUTPUT + "-" + process.env.ENV,
-      IndexName: "OwnerName",
-      KeyConditionExpression: "#o = :v_owner",
-      ExpressionAttributeNames: {
-        "#o": "owner"
-      },
-      ExpressionAttributeValues: {
-        ":v_owner": {
-          "S": owner
-        }
+  const AWSXRay = require('aws-xray-sdk');
+  const AWS = AWSXRay.captureAWS(require('aws-sdk'));
+  AWS.config.update({
+    region: region
+  });
+  const dynamodb = new AWS.DynamoDB();
+  let params = {
+    TableName: "Driver" + "-" + process.env.API_OPENECMR_GRAPHQLAPIIDOUTPUT + "-" + process.env.ENV,
+    IndexName: "Carrier",
+    KeyConditionExpression: "carrier = :v_carrier",
+    ExpressionAttributeValues: {
+      ":v_carrier": {
+        "S": username
       }
-    };
-    console.log(params);
-    let company = await dynamodb.query(params).promise();
-
-    console.log(company);
-
-    return company.Items.length === 0 ||
-        !company.Items[0].allowedSendingEmail ||
-        company.Items[0].allowedSendingEmail.BOOL
-  } else {
-    return "bob57";
-  }
+    }
+  };
+  const drivers = await dynamodb.query(params).promise();
+  const owners = drivers.Items.map(d => d.owner.S);
+  return [...new Set(owners)];
 }
 
 const subject = (event, language) => {
