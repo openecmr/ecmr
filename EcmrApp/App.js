@@ -45,7 +45,12 @@ I18n.setLanguage(language);
 I18n.putVocabularies(vocabularies);
 moment.locale(language);
 
-Amplify.configure(awsmobile);
+Amplify.configure({
+    ...awsmobile,
+    Analytics: {
+        disabled: true,
+    }
+});
 Amplify.Logger.LOG_LEVEL = 'DEBUG';
 
 const MainNavigator = createStackNavigator({

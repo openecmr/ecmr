@@ -104,7 +104,7 @@ class AddContact extends Component {
             } else {
                 Alert.alert(
                     I18n.get('Error while adding contact'),
-                    I18n.get('Something went wrong: ') + JSON.stringify(ex.errors),
+                    I18n.get('You do not have permission to the address book. Please use manual entry.'),
                     [
                         {text: I18n.get('OK')}
                     ],

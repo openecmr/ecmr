@@ -73,19 +73,19 @@ const LoadDetailText = ({load, style}) =>
 
 const LicensePlates = ({trailer, truck, style}) =>
     ((trailer || truck) && <View style={{flex: 1, flexDirection: "row", ...style}}>
-        <View style={{flexDirection: 'row', alignItems: "center", paddingTop: 5, flex: 1}}>
+        <View style={{flexDirection: 'row', alignItems: "center", paddingTop: 5}}>
             <FIcon name="truck" style={{color: 'rgb(0, 115, 209)', width: Sizes.ICON_WIDTH}} size={Sizes.ICON_WIDTH} />
-            <MyText style={{flex: 1, paddingLeft: 5}}>{truck}</MyText>
+            <MyText style={{paddingLeft: 5}}>{truck}</MyText>
         </View>
-        <View style={{flexDirection: 'row', alignItems: "center", paddingTop: 5, flex: 1}}>
+        <View style={{flexDirection: 'row', alignItems: "center", paddingTop: 5, marginLeft: 10}}>
             <FIcon name="truck" style={{color: 'rgb(0, 115, 209)', width: Sizes.ICON_WIDTH}} size={Sizes.ICON_WIDTH} />
-            <MyText style={{flex: 1, paddingLeft: 5}}>{trailer || I18n.get("no trailer")}</MyText>
+            <MyText style={{paddingLeft: 5}}>{trailer || I18n.get("no trailer")}</MyText>
         </View>
     </View>);
 
 const Sizes = {
     PADDING_FROM_SCREEN_BORDER: 15,
-    ICON_WIDTH: 20
+    ICON_WIDTH: 15
 }
 
 export {

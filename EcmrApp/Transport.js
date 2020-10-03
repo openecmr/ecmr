@@ -60,14 +60,16 @@ const SignatureEvent = ({signature, signatoryObservation, photos}) => (
             signature.signatoryName &&
             <View style={{flexDirection: 'row'}}>
                 <MyText>{I18n.get("Signed by:")} </MyText>
-                <MyText style={{fontStyle: 'italic'}}>{signature.signatoryName} {signature.signatoryEmail && `(${signature.signatoryEmail})`}</MyText>
+                <View style={{flex: 1}}>
+                    <MyText style={{fontStyle: 'italic'}}>{signature.signatoryName} {signature.signatoryEmail && `(${signature.signatoryEmail})`}</MyText>
+                </View>
             </View>
         }
         {
             signatoryObservation &&
             <View style={{flexDirection: 'row'}}>
                 <MyText>{I18n.get("Signatory observation:")} </MyText>
-                <MyText style={{fontStyle: 'italic'}}>{signatoryObservation}</MyText>
+                <MyText style={{fontStyle: 'italic', flex: 1}}>{signatoryObservation}</MyText>
             </View>
         }
         {
@@ -82,7 +84,7 @@ const SignatureEvent = ({signature, signatoryObservation, photos}) => (
 
 const LoadDetail = ({load}) => (
     <View style={styles.package}>
-        <Icon name="dropbox" style={[styles.packageIcon]} size={Sizes.ICON_WIDTH} />
+        <Icon name="archive" style={[styles.packageIcon]} size={Sizes.ICON_WIDTH} />
         <LoadDetailText style={styles.packageText} load={load} />
     </View>
 );

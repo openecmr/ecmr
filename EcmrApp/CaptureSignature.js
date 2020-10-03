@@ -41,7 +41,10 @@ class CaptureSignature extends Component {
         return (
             <View style={{padding: 5, flex: 1}}>
                 <HandOverModal
-                    onPress={() => this.props.navigation.popToTop()}
+                    onPress={() => this.props.navigation.navigate('Transport', {
+                        item: this.state.finalContract,
+                        site: this.state.site
+                    })}
                     visible={this.state.handoverPhone}
                     text={I18n.get("Please return the phone to the driver")}/>
                 <View style={{borderWidth: 1, borderColor: '#000033', padding: 0, margin: 5, flex: 1}}>
@@ -136,10 +139,11 @@ class CaptureSignature extends Component {
             input.status = this.state.site === 'pickup' ? 'IN_PROGRESS' : 'DONE';
 
 
-            await updateContract(input);
+            const finalContract = await updateContract(input);
 
             this.setState({
-                handoverPhone: true
+                handoverPhone: true,
+                finalContract
             });
         } catch (error) {
             console.warn(error);
