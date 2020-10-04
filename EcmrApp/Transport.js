@@ -197,7 +197,7 @@ class Transport extends Component {
                 <View style={{padding: 5, paddingLeft: Sizes.PADDING_FROM_SCREEN_BORDER, paddingRight: Sizes.PADDING_FROM_SCREEN_BORDER}}>
                     <View style={{paddingTop: 10, paddingBottom: 10}}>
                         <View style={{flexDirection: 'row', justifyContent: "center", flex: 1}}>
-                            {!!!firstAction && <Icon color={activityDoneColor} size={30} style={{marginRight: 5}} name='check-circle'/>}
+                            {!firstAction && <Icon color={activityDoneColor} size={30} style={{marginRight: 5}} name='check-circle'/>}
                             <MyText style={{fontSize: 20, textAlign: 'center', fontWeight: 'bold', marginBottom: 5}}>{states[firstAction]}</MyText>
                         </View>
                         {ongoingEvent && <MyText style={{fontSize: 18, textAlign: 'center',  fontWeight: 'bold', color: '#FF5C00'}}>

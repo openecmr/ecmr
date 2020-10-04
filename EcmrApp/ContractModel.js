@@ -1,3 +1,6 @@
+const PENDING_STATES = ["CREATED", "IN_PROGRESS"]
+
+
 class ContractModel {
     constructor(contract) {
         Object.assign(this, contract);
@@ -13,7 +16,7 @@ class ContractModel {
 
     activeSite() {
         const sites = ['pickup', 'delivery'];
-        return sites.find(site => !this.siteDone(site));
+        return PENDING_STATES.indexOf(this.status) !== -1 ? sites.find(site => !this.siteDone(site)) : undefined;
     }
 
     names() {
@@ -29,5 +32,9 @@ class ContractModel {
         return result;
     }
 }
+
+export {
+    PENDING_STATES
+};
 
 export default ContractModel;
