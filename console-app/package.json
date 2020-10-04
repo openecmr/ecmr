@@ -13,7 +13,7 @@
     "email-validator": "^2.0.4",
     "graphql-tag": "^2.10.1",
     "handlebars": "^4.7.6",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "moment": "^2.24.0",
     "react": "^16.5.0",
     "react-dom": "^16.5.0",
