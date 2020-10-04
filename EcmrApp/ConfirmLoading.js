@@ -2,7 +2,7 @@ import {Component} from "react";
 import {Alert, FlatList, StyleSheet, TouchableOpacity, View} from "react-native";
 import React from "react";
 import Icon from "react-native-vector-icons/FontAwesome";
-import {Address, LoadDetailText, MyText} from "./Components";
+import {Address, LoadDetailText, MyText, Sizes} from "./Components";
 import {I18n} from "aws-amplify";
 
 class ConfirmLoading extends Component {
@@ -36,8 +36,8 @@ class ConfirmLoading extends Component {
                         marginBottom: 10}}>
                         <View style={{padding: 10}}>
                             <View style={{flexDirection: "row", alignItems: "center"}}>
-                                <Icon name="dropbox" style={{color: 'rgb(0, 115, 209)', paddingRight: 10}} size={30} />
-                                <LoadDetailText load={item} />
+                                <Icon name="archive" style={{width: Sizes.ICON_WIDTH, color: 'rgb(0, 115, 209)'}} size={Sizes.ICON_WIDTH} />
+                                <LoadDetailText style={{padding: 10}} load={item} />
                             </View>
 
                             <View style={{flexDirection: "row"}}>

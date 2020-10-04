@@ -141,7 +141,8 @@ class Transports extends Component {
 
             ongoingContracts: [],
             doneContracts: [],
-            refreshing: false
+            refreshing: false,
+            firstLoad: true
         };
 
         this.navigationEventSubscription = this.props.navigation.addListener(
@@ -160,7 +161,7 @@ class Transports extends Component {
                                           contracts={this.state.ongoingContracts}
                                           onRefresh={() => this.onRefresh()}
                                           showFirstAction={true}
-                                          showEmpty={!this.state.refreshing}
+                                          showEmpty={!this.state.firstLoad}
                                           refreshing={this.state.refreshing} />;
                 case 'done':
                     return <ContractsList open={(item, site) => this.open(item, site)}
@@ -209,7 +210,8 @@ class Transports extends Component {
         });
         await this.loadData();
         this.setState({
-            refreshing: false
+            refreshing: false,
+            firstLoad: false
         });
     }
 

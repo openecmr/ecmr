@@ -1,7 +1,7 @@
 import React from 'react';
 import Amplify, {I18n} from 'aws-amplify';
 import awsmobile from './aws-exports';
-import {Authenticator, ConfirmSignUp, Greetings, SignUp, withAuthenticator} from 'aws-amplify-react-native';
+import {Authenticator, ConfirmSignUp, SignUp, withAuthenticator} from 'aws-amplify-react-native';
 import { createAppContainer} from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack'
 import Transports from "./Transports";
@@ -24,10 +24,11 @@ import RequireNewPassword from "aws-amplify-react-native/dist/Auth/RequireNewPas
 import {Icon} from "react-native-elements";
 import AddPhotos from "./AddPhotos";
 import i18nDictionaryNl from './i18n/nl/resource';
-import { Platform, NativeModules } from 'react-native';
+import {Platform, NativeModules, Text} from 'react-native';
 import moment from 'moment/min/moment-with-locales';
 import SelectSignatory from "./SelectSignatory";
 import AddContact from "./AddContact";
+import EcmrLoading from "./EcmrLoading";
 
 
 const deviceLanguage =
@@ -118,9 +119,9 @@ const MySectionHeader = Object.assign({}, AmplifyTheme.button, { backgroundColor
 const MyTheme = Object.assign({}, AmplifyTheme, {button: MySectionHeader});
 
 
-export default withAuthenticator(AppWithPersistence,false, [
+export default withAuthenticator(AppWithPersistence, false, [
     <EcmrSignIn override={'SignIn'}/>,
-    <Loading />,
+    <EcmrLoading />,
     <SignUp />,
     <ConfirmSignIn />,
     <VerifyContact />,

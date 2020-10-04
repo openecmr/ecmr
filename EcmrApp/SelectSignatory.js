@@ -70,7 +70,8 @@ class SelectSignatory extends Component {
                           keyExtractor={(item) => item.id}
                           data={this.state.contacts}
                           style={{marginTop: 5, marginBottom: 70}}
-                          ListEmptyComponent={<MyText style={{fontWeight: "bold", padding: 20, textAlign: "center"}}>No contacts for this address. Add a contact or choose manual entry.</MyText>}
+                          ListEmptyComponent={<MyText style={{fontWeight: "bold", padding: 20, textAlign: "center"}}>
+                              {I18n.get("No contacts for this address. Add a contact or choose manual entry.")}</MyText>}
 
                 />
                 <Button containerStyle={{position: "absolute", start: 10, bottom: 10, end: 10}} title={I18n.get("Manual entry")}

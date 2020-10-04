@@ -60,11 +60,11 @@ export default class SettingsScreen extends Component {
 
                 Alert.alert(
                     I18n.get('Success'),
-                    I18n.get('Successfully linked account'),
+                    I18n.get('Successfully linked account. The company can now assign transports to you.'),
                     [
-                        {text: I18n.get('OK')}
+                        {text: I18n.get('OK'), onPress: () => this.props.navigation.goBack()}
                     ],
-                    {cancelable: true}
+                    {cancelable: false}
                 );
                 const cognitoUser = await Auth.currentAuthenticatedUser();
                 const currentSession = await Auth.currentSession();

@@ -28,43 +28,43 @@ class AddContact extends Component {
             <View style={{flex: 1}}>
                 <View style={{flexDirection: "row", paddingStart: 10, paddingEnd: 10, paddingTop: 15, paddingBottom: 15, alignItems: "center", backgroundColor: 'rgb(229, 229, 229)'}}>
                     <Icon name={"warehouse"} size={20} style={{width: 30, marginEnd: 15}}/>
-                    <MyText style={{marginEnd: 30}}>Address</MyText>
+                    <MyText style={{marginEnd: 30}}>{I18n.get("Address")}</MyText>
                     <MyText style={{textAlign: "right", flex: 1, fontWeight: "bold"}}>{this.state.addressName}</MyText>
                 </View>
                 <View style={{backgroundColor: 'white', }}>
                     <View style={{flexDirection: "row", marginTop: 5, alignItems: "center", padding: 10,  borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: 'rgb(200, 200, 200)'}}>
                         <Icon size={20} style={{textAlign: "center", width: 30, marginEnd: 15}} name={"user-alt"}/>
-                        <MyText>Name</MyText>
+                        <MyText>{I18n.get("Name")}</MyText><MyText style={{color: "red"}}>*</MyText>
                         <TextInput
                             autoCapitalize={"words"}
                             value={this.state.name}
-                            style={{...styles.textInput, flex: 1, marginLeft: 10}}
+                            style={styles.textInput}
                             placeholder={I18n.get("e.g. John Smith...")}
                             onChangeText={(name) => this.setState({name})}/>
                     </View>
                     <View style={{flexDirection: "row", marginTop: 5, padding: 10, alignItems: "center", borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: 'rgb(200, 200, 200)'}}>
                         <Icon size={20} style={{textAlign: "center", width: 30, marginEnd: 15}} name={"envelope"}/>
-                        <MyText>Email</MyText>
+                        <MyText>{I18n.get("Email")}</MyText>
                         <TextInput
                             keyboardType={"email-address"}
                             autoCapitalize={"none"}
                             autoCompleteType={"email"}
                             autoCorrect={false}
                             value={this.state.email}
-                            style={{...styles.textInput, flex: 1, marginLeft: 15}}
+                            style={styles.textInput}
                             placeholder={I18n.get("e.g. john@smith.com...")}
                             onChangeText={(email) => this.setState({email})}/>
                     </View>
                     <View style={{flexDirection: "row", marginTop: 5, padding: 10, alignItems: "center", borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: 'rgb(200, 200, 200)'}}>
                         <Icon size={20} style={{textAlign: "center", width: 30, marginEnd: 15}} name={"phone"}/>
-                        <MyText>Phone</MyText>
+                        <MyText>{I18n.get("Phone")}</MyText>
                         <TextInput
                             keyboardType={"phone-pad"}
                             autoCapitalize={"none"}
                             autoCompleteType={"tel"}
                             autoCorrect={false}
                             value={this.signatoryName}
-                            style={{...styles.textInput, flex: 1, marginLeft: 15}}
+                            style={styles.textInput}
                             placeholder={I18n.get("e.g. +3112345678")}
                             onChangeText={(phone) => this.setState({phone})}/>
                     </View>
@@ -163,9 +163,10 @@ class AddContact extends Component {
 const styles = StyleSheet.create({
     textInput: {
         height: 40,
-
         borderBottomColor: 'gray',
-        borderBottomWidth: 1
+        borderBottomWidth: 1,
+        flex: 1,
+        marginLeft: 10
     },
     baseContainer: {
         flex: 1, padding: 10
