@@ -198,7 +198,6 @@ class Contacts extends Component {
                 <Table.Header>
                     <Table.Row>
                         <Table.HeaderCell collapsing colSpan='6'>
-
                             <Button floated='right' icon labelPosition='left' primary size='small'
                                     onClick={() => this.setState({
                                         showContact: true,
@@ -212,6 +211,11 @@ class Contacts extends Component {
                                     disabled={selectedContact == null}
                                     onClick={() => this.setState({showContact: true, newContact: false})}>
                                 <Icon name='edit'/> {I18n.get('Edit contact')}
+                            </Button>
+                            <Button floated='right' icon labelPosition='left' negative size='small'
+                                    disabled={selectedContact == null}
+                                    onClick={() => this.deleteContact()}>
+                                <Icon name='edit'/> {I18n.get('Delete')}
                             </Button>
                         </Table.HeaderCell>
                     </Table.Row>
@@ -253,6 +257,18 @@ class Contacts extends Component {
         this.setState({
             selectedContact: checked ? contact : null
         });
+    }
+
+    async deleteContact() {
+        await API.graphql(graphqlOperation(mutations.deleteContactPerson, {
+            input: {
+                id: this.state.selectedContact.id
+            }
+        }));
+        this.setState({
+            selectedContact: null
+        });
+        this.componentDidMount();
     }
 
     async componentDidMount() {

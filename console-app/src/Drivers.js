@@ -140,10 +140,10 @@ class Drivers extends Component {
                             <Icon name='edit'/> {I18n.get('Edit driver')}
                         </Button>
 
-                        <Button floated='right' icon labelPosition='left' primary size='small'
+                        <Button floated='right' icon labelPosition='left' negative size='small'
                                 disabled={selectedDriver == null}
                                 onClick={() => this.deleteDriver()}>
-                            <Icon name='edit'/> {I18n.get('Delete driver')}
+                            <Icon name='edit'/> {I18n.get('Delete')}
                         </Button>
                     </Table.HeaderCell>
                 </Table.Row>

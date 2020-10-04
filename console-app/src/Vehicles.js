@@ -140,10 +140,10 @@ class Vehicles extends Component {
                             <Icon name='edit'/> {I18n.get('Edit vehicle')}
                         </Button>
 
-                        <Button floated='right' icon labelPosition='left' primary size='small'
+                        <Button floated='right' icon labelPosition='left' negative size='small'
                                 disabled={!selectedVehicle}
                                 onClick={() => this.deleteVehicle()}>
-                            <Icon name='edit'/> {I18n.get('Delete vehicle')}
+                            <Icon name='edit'/> {I18n.get('Delete')}
                         </Button>
                     </Table.HeaderCell>
                 </Table.Row>

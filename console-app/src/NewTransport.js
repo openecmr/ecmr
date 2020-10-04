@@ -528,8 +528,8 @@ class NewTransport extends Component {
                     {label: I18n.get('Trailer license plate'), icon: 'truck', form: () => <Trailer
                             companyId={this.props.company.id}
                             trailerSelected={(vehicle) => this.setState({
-                                trailerVehicleId: vehicle.id,
-                                trailer: vehicle.licensePlateNumber
+                                trailerVehicleId: vehicle ? vehicle.id : null,
+                                trailer: vehicle ? vehicle.licensePlateNumber : null
                             })}
                             trailerId={this.state.trailerVehicleId}
                         />
@@ -749,9 +749,7 @@ class NewTransport extends Component {
             error = I18n.get("Missing carrier address");
         } else if (!this.state.truckVehicleId) {
             error = I18n.get("Missing truck");
-        } else if (!this.state.trailerVehicleId) {
-            error = I18n.get("Missing trailer vehicle");
-        } else if (!this.state.shipperContactId) {
+        }  else if (!this.state.shipperContactId) {
             error = I18n.get("Missing shipper address");
         } else if (!this.state.pickup.contactId) {
             error = I18n.get("Missing pickup address");

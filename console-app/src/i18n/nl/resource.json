@@ -166,5 +166,18 @@
   "Edit vehicle": "Voertuig bewerken",
   "Delete vehicle": "Verwijder voertuig",
   "truck": "trekker",
-  "trailer": "trailer"
+  "trailer": "trailer",
+  "New address": "Nieuw adres",
+  "Edit address": "Adres bewerken",
+  "Contacts": "Contactpersonen",
+  "Select address": "Selecteer adres",
+  "Contact": "Contact",
+  "Required field": "Verplicht veld",
+  "Jack": "Jan",
+  "Phone": "Telefoon",
+  "+1 20 123456": "+31 12345678",
+  "Invalid email address": "Onjuist emailadres",
+  "Email": "Emailadres",
+  "jack@company.tld": "jan@bedrijft.tld",
+  "({start} to {end})": "({start} tot {end})"
 }
