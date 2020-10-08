@@ -46,12 +46,14 @@ I18n.setLanguage(language);
 I18n.putVocabularies(vocabularies);
 moment.locale(language);
 
-Amplify.configure({
+const config = {
     ...awsmobile,
     Analytics: {
         disabled: true,
     }
-});
+};
+config['oauth']['domain'] = "auth.openecmr.com";
+Amplify.configure(config);
 Amplify.Logger.LOG_LEVEL = 'DEBUG';
 
 const MainNavigator = createStackNavigator({

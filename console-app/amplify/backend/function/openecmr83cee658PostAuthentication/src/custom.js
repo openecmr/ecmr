@@ -8,7 +8,11 @@ const subjects = {
   'nl': 'Je activatiecode - Open e-CMR'
 }
 const region = 'eu-central-1';
-
+const DynamoDB = require('aws-sdk/clients/dynamodb');
+const dynamodb = new DynamoDB();
+dynamodb.config.update({
+  region: region
+})
 exports.handler = (event, context, callback) => {
   try {
     console.log("incoming %o", event)
@@ -44,12 +48,6 @@ exports.handler = (event, context, callback) => {
 };
 
 const selectOwners = async (username) => {
-  const AWSXRay = require('aws-xray-sdk');
-  const AWS = AWSXRay.captureAWS(require('aws-sdk'));
-  AWS.config.update({
-    region: region
-  });
-  const dynamodb = new AWS.DynamoDB();
   let params = {
     TableName: "Driver" + "-" + process.env.API_OPENECMR_GRAPHQLAPIIDOUTPUT + "-" + process.env.ENV,
     IndexName: "Carrier",
@@ -60,7 +58,9 @@ const selectOwners = async (username) => {
       }
     }
   };
+  console.log("start query");
   const drivers = await dynamodb.query(params).promise();
+  console.log("query done");
   const owners = drivers.Items.map(d => d.owner.S);
   return [...new Set(owners)];
 }
