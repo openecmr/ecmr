@@ -473,6 +473,7 @@ class Transport extends Component {
                 username: driver.carrier
             }
         });
+        contract.updatedAt = now;
         this.setState({
             contract
         });

@@ -38,9 +38,11 @@ const IdCell = ({id}) => {
     )
 };
 
-const DateCell = ({date}) => (
-    <Table.Cell width={"1"} verticalAlign={"top"} style={{whiteSpace: "nowrap"}}>
+const DateCell = ({date, showTime}) => (
+    <Table.Cell width={"1"} verticalAlign={"top"} style={{whiteSpace: "nowrap"}} textAlign={'right'}>
         {moment(date).format('ll')}
+        {showTime && <br/>}
+        {showTime && moment(date).format('LTS')}
     </Table.Cell>
 );
 
@@ -98,12 +100,13 @@ class Transports extends Component {
     }
 
     render() {
+        const cols = 10;
         return (
 
-            <Table className="App-text-with-newlines" selectable compact='very' sortable collapsing={true}>
+            <Table className="App-text-with-newlines" selectable compact='very' sortable columns={cols} fixed>
                 <Table.Header>
                     <Table.Row>
-                        <Table.HeaderCell colSpan='11'>
+                        <Table.HeaderCell colSpan={cols}>
                             <Link to={"/transports-new"}>
                                 <Button floated='right' icon labelPosition='left' primary size='small'>
                                     <Icon name='plus'/> {I18n.get('New transport')}
@@ -121,12 +124,12 @@ class Transports extends Component {
                     </Table.Row>
                     <Table.Row>
                         <Table.HeaderCell>{I18n.get('Number')}</Table.HeaderCell>
-                        <Table.HeaderCell>{I18n.get('Carrier reference')}</Table.HeaderCell>
                         <Table.HeaderCell>{I18n.get('Status')}</Table.HeaderCell>
                         <Table.HeaderCell>{I18n.get('Pick-up address')}</Table.HeaderCell>
                         <Table.HeaderCell onClick={() => this.changeSort()} sorted={this.state.sortOrder}>{I18n.get('Pick-up date')}</Table.HeaderCell>
                         <Table.HeaderCell>{I18n.get('Delivery address')}</Table.HeaderCell>
                         <Table.HeaderCell>{I18n.get('Delivery date')}</Table.HeaderCell>
+                        <Table.HeaderCell>{I18n.get('Last change')}</Table.HeaderCell>
                         <Table.HeaderCell>{I18n.get('Shipper')}</Table.HeaderCell>
                         <Table.HeaderCell>{I18n.get('Driver')}</Table.HeaderCell>
                         <Table.HeaderCell>{I18n.get('Loads')}</Table.HeaderCell>
@@ -149,7 +152,7 @@ class Transports extends Component {
                     }
                     {this.state.loading &&
                         <Table.Row>
-                            <Table.Cell colSpan={'10'} textAlign={"center"} selectable={false}>
+                            <Table.Cell colSpan={cols} textAlign={"center"} selectable={false}>
                                 <Loader active={true} inline size={"large"}/>
                             </Table.Cell>
                         </Table.Row>
@@ -157,7 +160,7 @@ class Transports extends Component {
                 </Table.Body>
                 <Table.Footer>
                     <Table.Row>
-                        <Table.HeaderCell colSpan='11'>
+                        <Table.HeaderCell colSpan={cols}>
                             <Menu floated='right' pagination>
                                 <Menu.Item as='a' icon onClick={this.onPrev} disabled={!this.state.currentPageToken}>
                                     <Icon name='chevron left' />
@@ -179,12 +182,12 @@ class Transports extends Component {
                 <Table.Row key={e.id}>
                     {/*<TextCell text={moment(e.updatedAt).format("ll")}/>*/}
                     <IdCell id={e.id}/>
-                    <TextCell text={e.references ? e.references.carrier : null}/>
                     <Status status={e.status} lastUpdate={e.updatedAt}/>
                     <AddressCell address={e.pickup}/>
                     <DateCell date={e.arrivalDate}/>
                     <AddressCell address={e.delivery}/>
                     <DateCell date={e.deliveryDate}/>
+                    <DateCell date={e.updatedAt} showTime/>
                     <AddressCell address={e.shipper}/>
                     <TextCell text={e.driver ? e.driver.name : null}/>
                     <ConsignmentCell loads={e.loads}/>
@@ -203,7 +206,7 @@ class Transports extends Component {
         });
         const user = await Auth.currentAuthenticatedUser();
         const response = await API.graphql(graphqlOperation(queries.contractsByOwnerArrivalDate, {
-            limit: 15,
+            limit: 10,
             owner: user.getUsername(),
             sortDirection: this.state.sortOrder === 'descending' ? "DESC" : "ASC",
             ...token && {nextToken: token}
