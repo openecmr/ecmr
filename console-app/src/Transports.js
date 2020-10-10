@@ -97,6 +97,7 @@ class Transports extends Component {
 
         this.onNext = this.onNext.bind(this);
         this.onPrev = this.onPrev.bind(this);
+        this.refresh = this.refresh.bind(this);
     }
 
     render() {
@@ -118,6 +119,9 @@ class Transports extends Component {
                                 </Menu.Item>
                                 <Menu.Item as='a' icon onClick={this.onNext} disabled={!this.state.nextToken}>
                                     <Icon name='chevron right' />
+                                </Menu.Item>
+                                <Menu.Item as='a' icon onClick={this.refresh}>
+                                    <Icon name='refresh' />
                                 </Menu.Item>
                             </Menu>
                         </Table.HeaderCell>
@@ -233,6 +237,10 @@ class Transports extends Component {
         });
 
         this.retrieveAppSync(this.state.nextToken)
+    }
+
+    refresh() {
+        this.retrieveAppSync(this.state.currentPageToken);
     }
 
     onPrev() {
