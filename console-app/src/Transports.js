@@ -92,6 +92,7 @@ class Transports extends Component {
             loading: true,
             previousTokens: [],
             nextToken: null,
+            sort: "pickupDate",
             sortOrder: "descending"
         };
 
@@ -130,10 +131,10 @@ class Transports extends Component {
                         <Table.HeaderCell>{I18n.get('Number')}</Table.HeaderCell>
                         <Table.HeaderCell>{I18n.get('Status')}</Table.HeaderCell>
                         <Table.HeaderCell>{I18n.get('Pick-up address')}</Table.HeaderCell>
-                        <Table.HeaderCell onClick={() => this.changeSort()} sorted={this.state.sortOrder}>{I18n.get('Pick-up date')}</Table.HeaderCell>
+                        <Table.HeaderCell onClick={() => this.changeSort('pickupDate')} sorted={this.state.sort === 'pickupDate' && this.state.sortOrder}>{I18n.get('Pick-up date')}</Table.HeaderCell>
                         <Table.HeaderCell>{I18n.get('Delivery address')}</Table.HeaderCell>
                         <Table.HeaderCell>{I18n.get('Delivery date')}</Table.HeaderCell>
-                        <Table.HeaderCell>{I18n.get('Last change')}</Table.HeaderCell>
+                        <Table.HeaderCell onClick={() => this.changeSort('updatedAt')} sorted={this.state.sort === 'updatedAt' && this.state.sortOrder}>{I18n.get('Last change')}</Table.HeaderCell>
                         <Table.HeaderCell>{I18n.get('Shipper')}</Table.HeaderCell>
                         <Table.HeaderCell>{I18n.get('Driver')}</Table.HeaderCell>
                         <Table.HeaderCell>{I18n.get('Loads')}</Table.HeaderCell>
@@ -142,7 +143,7 @@ class Transports extends Component {
                 <Table.Body>
 
                     {!this.state.loading && this.renderConsignmentNotes()}
-                    {!this.state.loading && this.state.notes.length === 0 &&
+                    {!this.state.loading && this.state.notes.length === 0 && !this.state.currentPageToken &&
                         <Table.Row>
                             <Table.Cell colSpan={'10'} textAlign={"center"} selectable={false}>
                                 <div style={{padding: '50px', paddingTop: '200px', minHeight: '560px'}}>
@@ -205,21 +206,24 @@ class Transports extends Component {
     }
 
     async retrieveAppSync(token) {
+        const {sort} = this.state;
         this.setState({
             loading: true
         });
         const user = await Auth.currentAuthenticatedUser();
-        const response = await API.graphql(graphqlOperation(queries.contractsByOwnerArrivalDate, {
+        const key = sort === 'pickupDate' ? 'contractsByOwnerArrivalDate' : 'contractsByOwnerUpdatedAt';
+        const response = await API.graphql(graphqlOperation(
+            queries[key], {
             limit: 10,
             owner: user.getUsername(),
             sortDirection: this.state.sortOrder === 'descending' ? "DESC" : "ASC",
             ...token && {nextToken: token}
         }));
 
-        const nextToken = response.data.contractsByOwnerArrivalDate.nextToken;
+        const nextToken = response.data[key].nextToken;
         this.setState({
             nextToken: nextToken,
-            notes: response.data.contractsByOwnerArrivalDate.items,
+            notes: response.data[key].items,
             loading: false
         });
     }
@@ -253,14 +257,25 @@ class Transports extends Component {
         this.retrieveAppSync(previousToken);
     }
 
-    changeSort() {
+    changeSort(newSort) {
+        const {sort} = this.state;
+
+        let sortOrder;
+        if (newSort === sort) {
+            sortOrder = this.state.sortOrder === 'ascending' ? 'descending' : 'ascending'
+        } else {
+            sortOrder = 'descending';
+        }
+
         this.setState({
-            sortOrder: this.state.sortOrder === 'ascending' ? 'descending' : 'ascending',
+            sortOrder,
+            sort: newSort,
             previousTokens: [],
             nextToken: null,
             currentPageToken: null
+        }, () => {
+            this.retrieveAppSync()
         });
-        this.retrieveAppSync()
     }
 }
 

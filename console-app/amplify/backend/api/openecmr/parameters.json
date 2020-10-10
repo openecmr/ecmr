@@ -9,5 +9,6 @@
         ]
     },
     "APIKeyExpirationEpoch": -1,
-    "CreateAPIKey": 0
+    "CreateAPIKey": 0,
+    "DynamoDBEnablePointInTimeRecovery": "true"
 }
