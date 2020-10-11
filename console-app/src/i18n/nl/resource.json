@@ -179,5 +179,6 @@
   "Invalid email address": "Onjuist emailadres",
   "Email": "Emailadres",
   "jack@company.tld": "jan@bedrijft.tld",
-  "({start} to {end})": "({start} tot {end})"
+  "({start} to {end})": "({start} tot {end})",
+  "Last change": "Gewijzigd"
 }
