@@ -1,26 +1,12 @@
 import {API, graphqlOperation} from "aws-amplify";
 import * as mutations from "./graphql/mutations";
+import moment from "moment";
 
 function createUpdateContractInput(contract) {
     return {
         id: contract.id,
-        owner: contract.owner,
-        carrierUsername: contract.username,
-        status: contract.status,
-        arrivalDate: contract.arrivalDate,
-        deliveryDate: contract.deliveryDate,
-        loads: contract.loads,
-        driver: contract.driver,
-        trailer: contract.trailer,
-        truck: contract.truck,
-        references: contract.references,
-        updatedAt: contract.updatedAt,
-        createdAt: contract.createdAt,
-        events: contract.events,
-        contractShipperId: contract.shipper.id,
-        contractCarrierId: contract.carrier.id,
-        contractDeliveryId: contract.delivery.id,
-        contractPickupId: contract.pickup.id
+        updatedAt: moment().toISOString(),
+        events: contract.events
     };
 }
 
