@@ -131,10 +131,10 @@ class Transports extends Component {
                         <Table.HeaderCell>{I18n.get('Number')}</Table.HeaderCell>
                         <Table.HeaderCell>{I18n.get('Status')}</Table.HeaderCell>
                         <Table.HeaderCell>{I18n.get('Pick-up address')}</Table.HeaderCell>
-                        <Table.HeaderCell onClick={() => this.changeSort('pickupDate')} sorted={this.state.sort === 'pickupDate' && this.state.sortOrder}>{I18n.get('Pick-up date')}</Table.HeaderCell>
+                        <Table.HeaderCell className={"sort"} onClick={() => this.changeSort('pickupDate')} sorted={this.state.sort === 'pickupDate' && this.state.sortOrder}>{I18n.get('Pick-up date')}</Table.HeaderCell>
                         <Table.HeaderCell>{I18n.get('Delivery address')}</Table.HeaderCell>
                         <Table.HeaderCell>{I18n.get('Delivery date')}</Table.HeaderCell>
-                        <Table.HeaderCell onClick={() => this.changeSort('updatedAt')} sorted={this.state.sort === 'updatedAt' && this.state.sortOrder}>{I18n.get('Last change')}</Table.HeaderCell>
+                        <Table.HeaderCell className={"sort"} onClick={() => this.changeSort('updatedAt')} sorted={this.state.sort === 'updatedAt' && this.state.sortOrder}>{I18n.get('Last change')}</Table.HeaderCell>
                         <Table.HeaderCell>{I18n.get('Shipper')}</Table.HeaderCell>
                         <Table.HeaderCell>{I18n.get('Driver')}</Table.HeaderCell>
                         <Table.HeaderCell>{I18n.get('Loads')}</Table.HeaderCell>

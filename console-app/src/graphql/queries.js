@@ -1278,6 +1278,150 @@ export const contractsByOwnerUpdatedAt = /* GraphQL */ `
     }
   }
 `;
+export const contractsByCarrierUpdatedAt = /* GraphQL */ `
+  query ContractsByCarrierUpdatedAt(
+    $carrierUsername: String
+    $updatedAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelContractFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    contractsByCarrierUpdatedAt(
+      carrierUsername: $carrierUsername
+      updatedAt: $updatedAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        owner
+        carrierUsername
+        status
+        creator {
+          name
+        }
+        shipper {
+          name
+          postalCode
+          address
+          city
+          country
+          phone
+          email
+        }
+        carrier {
+          name
+          postalCode
+          address
+          city
+          country
+          phone
+          email
+        }
+        delivery {
+          name
+          postalCode
+          address
+          city
+          country
+          phone
+          email
+        }
+        arrivalDate
+        arrivalTime {
+          start
+          end
+        }
+        deliveryDate
+        deliveryTime {
+          start
+          end
+        }
+        pickup {
+          name
+          postalCode
+          address
+          city
+          country
+          phone
+          email
+        }
+        loads {
+          category
+          quantity
+          volume
+          loadMeters
+          netWeight
+          description
+          hazardousGoodsItems {
+            hazardLabel
+          }
+        }
+        driver {
+          name
+          username
+        }
+        trailer
+        truck
+        references {
+          carrier
+        }
+        updatedAt
+        createdAt
+        events {
+          author {
+            username
+          }
+          type
+          site
+          createdAt
+          latitude
+          longitude
+          signature {
+            method
+            signatureImageDriver {
+              bucket
+              region
+              key
+            }
+            signatureImageSignatory {
+              bucket
+              region
+              key
+            }
+            signatoryName
+            signatoryEmail
+          }
+          driverObservation
+          signatoryObservation
+          sendCopy
+          assignedDriver {
+            name
+            username
+          }
+          photos {
+            bucket
+            region
+            key
+          }
+        }
+        needAcknowledge
+        shipperContactId
+        carrierContactId
+        pickupContactId
+        deliveryContactId
+        driverDriverId
+        creatorCompanyId
+        trailerVehicleId
+        truckVehicleId
+      }
+      nextToken
+    }
+  }
+`;
 export const listDrivers = /* GraphQL */ `
   query ListDrivers(
     $filter: ModelDriverFilterInput

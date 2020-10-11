@@ -41,7 +41,7 @@ type Contract @model
     @key(name: "OwnerArrival", fields: ["owner", "arrivalDate"], queryField: "contractsByOwnerArrivalDate")
     @key(name: "CarrierArrival", fields: ["carrierUsername", "arrivalDate"], queryField: "contractsByCarrierArrivalDate"),
     @key(name: "OwnerUpdatedAt", fields: ["owner", "updatedAt"], queryField: "contractsByOwnerUpdatedAt"),
-#    @key(name: "CarrierUpdatedAt", fields: ["carrierUsername", "updatedAt"], queryField: "contractsByCarrierUpdatedAt")
+    @key(name: "CarrierUpdatedAt", fields: ["carrierUsername", "updatedAt"], queryField: "contractsByCarrierUpdatedAt")
 {
     id: ID!
     owner: String!
