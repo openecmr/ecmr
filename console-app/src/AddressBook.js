@@ -15,7 +15,7 @@ class AddAddressModal extends Component {
         super(props);
 
         const initialValue = {
-            ...props.selectedContact ? props.selectedContact : {}
+            ...props.selectedContact ? this.copy(props.selectedContact) : {}
         };
 
         this.state = {
@@ -23,6 +23,11 @@ class AddAddressModal extends Component {
         };
 
         this.handleChange = this.handleChange.bind(this);
+    }
+
+    copy(contact) {
+        const { id, name, address, postalCode, city, country } = contact;
+        return { id, name, address, postalCode, city, country }
     }
 
     handleChange(e, { name, value }) {

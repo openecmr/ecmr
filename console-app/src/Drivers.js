@@ -39,7 +39,7 @@ class AddDriverModal extends Component {
         super(props);
 
         const initialValue = {
-            ...props.selectedDriver ? props.selectedDriver : {}
+            ...props.selectedDriver ? this.copy(props.selectedDriver) : {}
         };
 
         this.state = {
@@ -47,6 +47,11 @@ class AddDriverModal extends Component {
         };
 
         this.handleChange = this.handleChange.bind(this);
+    }
+
+    copy(driver) {
+        const { id, name } = driver;
+        return { id, name };
     }
 
     handleChange(e, { name, value }) {
@@ -59,7 +64,7 @@ class AddDriverModal extends Component {
     }
 
     render() {
-        const { name, address } = this.state.driver;
+        const { name } = this.state.driver;
 
         return (<Modal key={"showLoad"} open={this.props.show} size='small'>
             <Header icon={"plus square"} content={I18n.get('Driver')}/>
