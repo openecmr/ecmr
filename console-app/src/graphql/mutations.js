@@ -120,6 +120,17 @@ export const createContract = /* GraphQL */ `
           region
           key
         }
+        attachments {
+          location {
+            bucket
+            region
+            key
+          }
+          size
+          filename
+          mimeType
+          extension
+        }
       }
       needAcknowledge
       shipperContactId
@@ -247,6 +258,17 @@ export const updateContract = /* GraphQL */ `
           region
           key
         }
+        attachments {
+          location {
+            bucket
+            region
+            key
+          }
+          size
+          filename
+          mimeType
+          extension
+        }
       }
       needAcknowledge
       shipperContactId
@@ -373,6 +395,17 @@ export const deleteContract = /* GraphQL */ `
           bucket
           region
           key
+        }
+        attachments {
+          location {
+            bucket
+            region
+            key
+          }
+          size
+          filename
+          mimeType
+          extension
         }
       }
       needAcknowledge

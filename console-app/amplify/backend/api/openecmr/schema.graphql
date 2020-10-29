@@ -234,7 +234,8 @@ enum EventType {
     Created,
     Archived,
     AssignDriver,
-    Acknowledge
+    Acknowledge,
+    AddAttachment
 }
 
 type Author @aws_api_key @aws_cognito_user_pools @aws_iam {
@@ -265,5 +266,14 @@ type Event @aws_api_key @aws_cognito_user_pools @aws_iam {
     signatoryObservation: String,
     sendCopy: Boolean,
     assignedDriver: DriverDetail,
-    photos: [S3Object!]
+    photos: [S3Object!],
+    attachments: [Attachment!]
+}
+
+type Attachment @aws_api_key @aws_cognito_user_pools @aws_iam {
+    location: S3Object
+    size: Int
+    filename: String!
+    mimeType: String!
+    extension: String!
 }

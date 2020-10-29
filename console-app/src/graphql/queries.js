@@ -699,6 +699,17 @@ export const getContract = /* GraphQL */ `
           region
           key
         }
+        attachments {
+          location {
+            bucket
+            region
+            key
+          }
+          size
+          filename
+          mimeType
+          extension
+        }
       }
       needAcknowledge
       shipperContactId
@@ -830,6 +841,17 @@ export const listContracts = /* GraphQL */ `
             bucket
             region
             key
+          }
+          attachments {
+            location {
+              bucket
+              region
+              key
+            }
+            size
+            filename
+            mimeType
+            extension
           }
         }
         needAcknowledge
@@ -975,6 +997,17 @@ export const contractsByOwnerArrivalDate = /* GraphQL */ `
             region
             key
           }
+          attachments {
+            location {
+              bucket
+              region
+              key
+            }
+            size
+            filename
+            mimeType
+            extension
+          }
         }
         needAcknowledge
         shipperContactId
@@ -1118,6 +1151,17 @@ export const contractsByCarrierArrivalDate = /* GraphQL */ `
             bucket
             region
             key
+          }
+          attachments {
+            location {
+              bucket
+              region
+              key
+            }
+            size
+            filename
+            mimeType
+            extension
           }
         }
         needAcknowledge
@@ -1263,6 +1307,17 @@ export const contractsByOwnerUpdatedAt = /* GraphQL */ `
             region
             key
           }
+          attachments {
+            location {
+              bucket
+              region
+              key
+            }
+            size
+            filename
+            mimeType
+            extension
+          }
         }
         needAcknowledge
         shipperContactId
@@ -1406,6 +1461,17 @@ export const contractsByCarrierUpdatedAt = /* GraphQL */ `
             bucket
             region
             key
+          }
+          attachments {
+            location {
+              bucket
+              region
+              key
+            }
+            size
+            filename
+            mimeType
+            extension
           }
         }
         needAcknowledge

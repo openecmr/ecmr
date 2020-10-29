@@ -9,14 +9,15 @@ import {
     Step,
     List, Label, Segment, Comment, Loader, Modal, Form, Message, Card
 } from "semantic-ui-react";
-import {API, graphqlOperation, Auth, I18n} from 'aws-amplify';
+import {API, graphqlOperation, Storage, Auth, I18n} from 'aws-amplify';
 import moment from 'moment/min/moment-with-locales';
 import * as queries from "./graphql/queries";
 import * as mutations from "./graphql/mutations";
 import {S3Image} from "aws-amplify-react";
 import {DriverPicker} from "./NewTransport";
+import { v4 as uuidv4 } from 'uuid';
 
-
+const MAX_FILE_SIZE = 1024 * 1024;
 const Address = ({address, label, icon}) => (
     <Container>
         {label &&
@@ -216,10 +217,14 @@ const Driver = ({contract}) =>
     </List>;
 
 class Transport extends Component {
+    fileInputRef = React.createRef()
+
     constructor(props) {
         super(props);
 
-        this.state = {};
+        this.state = {
+        };
+        this.fileChange = this.fileChange.bind(this);
     }
 
     async componentDidMount() {
@@ -269,6 +274,10 @@ class Transport extends Component {
         const loadingComplete = contract.events.find(e => e.type === 'LoadingComplete');
         const unloadingComplete = contract.events.find(e => e.type === 'UnloadingComplete');
         const names = this.names(contract);
+
+        const attachments = contract.events.filter(e => e.type === 'AddAttachment').map(e => e.attachments).flat()
+
+        console.warn(contract.events)
 
         return (
             <div>
@@ -413,6 +422,36 @@ class Transport extends Component {
                                             <Loader size='mini' active={this.state.downloadingPdf} inline/>
                                         </Grid.Column>
                                     </Grid.Row>
+                                    {
+                                        attachments.map( attachment =>
+                                            (<Grid.Row>
+                                                <Grid.Column>
+                                                    <Icon name='file'/> {I18n.get('Document')}
+                                                </Grid.Column>
+                                                <Grid.Column>
+                                                    <a onClick={() => this.downloadPdf()}
+                                                       href={'#'}>{`${attachment.filename}`}</a>&nbsp;
+                                                    <Loader size='mini' active={this.state.downloadingPdf} inline/>
+                                                </Grid.Column>
+                                            </Grid.Row>)
+                                        )
+                                    }
+                                    <Grid.Row>
+                                        <Grid.Column width={16} >
+                                            {this.state.uploadErrorTooBig && <Message negative>
+                                                <Message.Header>File too big</Message.Header>
+                                                <p>You can only upload files smaller than 1MB</p>
+                                            </Message>}
+                                            <Button primary onClick={() => this.fileInputRef.current.click()}>Add Document</Button>
+                                            <input
+                                                ref={this.fileInputRef}
+                                                type="file"
+                                                accept="image/jpeg,application/pdf"
+                                                hidden
+                                                onChange={this.fileChange}
+                                            />
+                                        </Grid.Column>
+                                    </Grid.Row>
                                 </Grid>
                             </Segment>
                         </Grid.Column>
@@ -436,6 +475,66 @@ class Transport extends Component {
     copy() {
         const {history} = this.props;
         history.push('/transports-new/' + this.state.contract.id);
+    }
+
+    async fileChange(e) {
+        this.setState({
+            uploadErrorTooBig: false
+        });
+
+        const file = e.target.files[0];
+        if (file.size > MAX_FILE_SIZE) {
+            this.setState({
+                uploadErrorTooBig: true
+            });
+        } else {
+            try {
+                const extension = this.extension(file);
+                const uploadFilename = uuidv4() + "." + extension;
+                const result = await Storage.put(uploadFilename, file);
+                const attachment = {
+                    location: {
+                        bucket: 'bucket',
+                        region: 'eu-central-1',
+                        key: result.key
+                    },
+                    size: file.size,
+                    filename: file.name,
+                    mimeType: file.type,
+                    extension
+                }
+
+                const {contract} = this.state;
+                if (!contract.events) {
+                    contract.events = [];
+                }
+                const now = moment().toISOString();
+                contract.events.push({
+                    author: {
+                        username: (await Auth.currentAuthenticatedUser()).getUsername()
+                    },
+                    type: 'AddAttachment',
+                    createdAt: now,
+                    attachments: [attachment]
+                });
+                this.setState({
+                    contract
+                });
+                await API.graphql(graphqlOperation(mutations.updateContract, {
+                    "input": {
+                        id: contract.id,
+                        events: contract.events
+                    }
+                }));
+            } catch(ex) {
+                console.error(ex);
+            }
+        }
+    }
+
+    extension(file) {
+        const split = file.name.split(".");
+        return split[split.length - 1];
     }
 
     showAssignDriver() {
