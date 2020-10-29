@@ -29,7 +29,7 @@ class AddVehicleModal extends Component {
         super(props);
 
         const initialValue = {
-            ...props.selectedVehicle ? props.selectedVehicle : {}
+            ...props.selectedVehicle ? this.copy(props.selectedVehicle) : {}
         };
 
         this.state = {
@@ -37,6 +37,11 @@ class AddVehicleModal extends Component {
         };
 
         this.handleChange = this.handleChange.bind(this);
+    }
+
+    copy(vehicle) {
+        const { id, licensePlateNumber, type, description } = vehicle;
+        return { id, licensePlateNumber, type, description };
     }
 
     handleChange(e, { name, value }) {

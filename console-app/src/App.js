@@ -31,6 +31,7 @@ import i18nDictionaryNl from './i18n/nl/resource';
 import moment from 'moment/min/moment-with-locales';
 import SignUpWithLanguage from "./SignUpWithLanguage";
 import Contacts from "./Contacts";
+import '@aws-amplify/ui/dist/style.css';
 
 let config;
 const pdfServiceKey = window.location.hash.substr(1);
