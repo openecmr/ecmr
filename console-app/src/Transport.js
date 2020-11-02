@@ -52,6 +52,8 @@ const eventText = (event) => {
         case "AssignDriver":
             return I18n.get('assigned transport to driver {driver}.')
                 .replace('{driver}', event.assignedDriver ? event.assignedDriver.name : "unknown");
+        case "AddAttachment":
+            return I18n.get('added attachment {filename}').replace('{filename}', event.attachments.length && event.attachments[0].filename);
         case "Acknowledge":
             return I18n.get('acknowledged the transport');
         default:
@@ -62,11 +64,13 @@ const eventText = (event) => {
 const ViewPhoto = ({photo, open, close}) => (<Modal open={open} onClose={close} closeIcon>
     <Header icon={'archive'} content={`Photo ${photo && photo.key}`} />
     <Modal.Content>
+        <div style={{textAlign: "center"}}>
         {photo && <S3Image
             // theme={{photoImg: {width: '100px', height: '100px', marginRight: 5}}}
             resizeMode={'center'}
             level={"public"}
             imgKey={photo.key}/>}
+        </div>
     </Modal.Content>
 </Modal>);
 
@@ -78,8 +82,9 @@ const Events = ({names, events}) => {
             <ViewPhoto open={!!photo} photo={photo} close={() => setPhoto(null)}/>
             <Comment.Group >
                 <Header as={'h4'}>{I18n.get('Events')}</Header>
+                <div style={{maxHeight: '400px', overflowY: "scroll"}}>
                 {
-                    events.map(event => (
+                    [...events].reverse().map(event => (
                         <Comment>
 
                             <Comment.Content>
@@ -98,6 +103,7 @@ const Events = ({names, events}) => {
                         </Comment>
                     ))
                 }
+                </div>
             </Comment.Group>
         </Container>
     );
@@ -145,7 +151,7 @@ const SignatureEvent = ({event: { signature, signatoryObservation, driverObserva
                         (photos || []).map(photo =>
                             <S3Image
                                 onClick={() => showPhoto(photo)}
-                                theme={{photoImg: {width: '100px', height: '100px', marginRight: 5}}}
+                                theme={{photoImg: {width: '100px', height: '100px', marginRight: 5, cursor: "pointer"}}}
                                 resizeMode={'center'}
                                 level={"public"}
                                 imgKey={photo.key}/>)
@@ -154,6 +160,8 @@ const SignatureEvent = ({event: { signature, signatoryObservation, driverObserva
             </List>
         }
     </div>;
+
+const MyLink = ({onClick, children}) => <span onClick={onClick} style={{color: "#4183c4", cursor: "pointer"}}>{children}</span>
 
 class AssignDriverModal extends Component {
     constructor(props) {
@@ -277,8 +285,6 @@ class Transport extends Component {
 
         const attachments = contract.events.filter(e => e.type === 'AddAttachment').map(e => e.attachments).flat()
 
-        console.warn(contract.events)
-
         return (
             <div>
                 {
@@ -344,7 +350,7 @@ class Transport extends Component {
                         </Grid.Row>
                         <Grid.Row>
                             <Grid.Column>
-                                <Label circular={true}>1</Label>{I18n.get('Pickup')}
+                                <Label circular={true}>1</Label> {I18n.get('Pickup')}
                             </Grid.Column>
                             <Grid.Column>
                                 <Address address={contract.pickup}/>
@@ -373,7 +379,7 @@ class Transport extends Component {
                         </Grid.Row>
                         <Grid.Row>
                             <Grid.Column>
-                                <Label circular={true}>2</Label>{I18n.get('Delivery')}
+                                <Label circular={true}>2</Label> {I18n.get('Delivery')}
                             </Grid.Column>
                             <Grid.Column>
                                 <Address address={contract.delivery}/>
@@ -417,8 +423,7 @@ class Transport extends Component {
                                             <Icon name='file'/> {I18n.get('Consignment note')}
                                         </Grid.Column>
                                         <Grid.Column>
-                                            <a onClick={() => this.downloadPdf()}
-                                               href={'#'}>{`cmr-${this.state.contract.id.substring(0, 8)}.pdf`}</a>&nbsp;
+                                            <MyLink onClick={() => this.downloadPdf()}>{`cmr-${this.state.contract.id.substring(0, 8)}.pdf`}</MyLink>&nbsp;
                                             <Loader size='mini' active={this.state.downloadingPdf} inline/>
                                         </Grid.Column>
                                     </Grid.Row>
@@ -429,9 +434,8 @@ class Transport extends Component {
                                                     <Icon name='file'/> {I18n.get('Document')}
                                                 </Grid.Column>
                                                 <Grid.Column>
-                                                    <a onClick={() => this.downloadPdf()}
-                                                       href={'#'}>{`${attachment.filename}`}</a>&nbsp;
-                                                    <Loader size='mini' active={this.state.downloadingPdf} inline/>
+                                                    <MyLink onClick={() => this.downloadDocument(attachment)}>{`${attachment.filename}`}</MyLink>&nbsp;
+                                                    <Loader size='mini' active={this.state.downloading === attachment} inline/>
                                                 </Grid.Column>
                                             </Grid.Row>)
                                         )
@@ -442,7 +446,8 @@ class Transport extends Component {
                                                 <Message.Header>File too big</Message.Header>
                                                 <p>You can only upload files smaller than 1MB</p>
                                             </Message>}
-                                            <Button primary onClick={() => this.fileInputRef.current.click()}>Add Document</Button>
+                                            <Button primary disabled={this.state.uploading} loading={this.state.uploading}
+                                                    onClick={() => this.fileInputRef.current.click()}>Add Document</Button>
                                             <input
                                                 ref={this.fileInputRef}
                                                 type="file"
@@ -477,9 +482,32 @@ class Transport extends Component {
         history.push('/transports-new/' + this.state.contract.id);
     }
 
+    async downloadDocument(attachment) {
+        this.setState({
+            downloading: attachment
+        });
+        let s3file = await Storage.get(attachment.location.key, {download: true});
+        const url = URL.createObjectURL(s3file.Body);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = attachment.filename;
+        const clickHandler = () => {
+            setTimeout(() => {
+                URL.revokeObjectURL(url);
+                a.removeEventListener('click', clickHandler);
+            }, 150);
+        };
+        a.addEventListener('click', clickHandler, false);
+        a.click();
+        this.setState({
+            downloading: null
+        });
+    }
+
     async fileChange(e) {
         this.setState({
-            uploadErrorTooBig: false
+            uploadErrorTooBig: false,
+            uploading: true
         });
 
         const file = e.target.files[0];
@@ -530,6 +558,9 @@ class Transport extends Component {
                 console.error(ex);
             }
         }
+        this.setState({
+            uploading: false
+        });
     }
 
     extension(file) {
