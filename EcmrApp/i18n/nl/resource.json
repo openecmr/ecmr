@@ -171,5 +171,8 @@
   "No contacts for this address. Add a contact or choose manual entry.": "Geen contactpersonen voor dit adres bekend. Voeg een contactpersoon toe of ga door met handmatige invoer.",
   "Address": "Adres",
   "Name": "Naam",
-  "Phone": "Telefoon"
+  "Phone": "Telefoon",
+  "Attachments": "Bijlagen",
+  "${name} added attachment ${filename}": "${name} heeft bijlage ${filename} toegevoegd",
+  "${name} removed attachment": "${name} heeft bijlage verwijderd"
 }

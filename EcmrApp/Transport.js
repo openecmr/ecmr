@@ -10,7 +10,7 @@ import {
     ActivityIndicator} from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import {Address, ArrivalDate, LicensePlates, LoadDetailText, MyText, Sizes} from "./Components";
-import {API, graphqlOperation, I18n} from 'aws-amplify';
+import {API, graphqlOperation, I18n, Storage} from 'aws-amplify';
 import * as queries from "./graphql/queries";
 import moment from "moment/min/moment-with-locales";
 import { Auth } from 'aws-amplify';
@@ -87,6 +87,21 @@ const LoadDetail = ({load}) => (
         <Icon name="archive" style={[styles.packageIcon]} size={Sizes.ICON_WIDTH} />
         <LoadDetailText style={styles.packageText} load={load} />
     </View>
+);
+
+const ActionButton = ({ onPress, disabled, label }) => (
+    <TouchableOpacity style={{padding: 15}} onPress={onPress} disabled={disabled}>
+        <View style={{flexDirection: "row"}}>
+            <Icon name={"file"} style={{
+                color: "rgb(0, 115, 209)",
+                marginRight: 5,
+                textAlignVertical: "center",
+                width: Sizes.ICON_WIDTH
+            }} size={Sizes.ICON_WIDTH}/>
+            <MyText style={{fontWeight: "bold"}}>{label}</MyText>
+            <ActivityIndicator size="small" color="rgb(0, 115, 209)" animating={disabled}/>
+        </View>
+    </TouchableOpacity>
 );
 
 class Transport extends Component {
@@ -191,76 +206,106 @@ class Transport extends Component {
 
         const ongoingEvent = !!(lastRelevantEvent && firstAction);
 
+        const deletedAttachments = contract.events.filter(e => e.type === 'DeleteAttachment').map(e => e.deletesAttachments);
+        const attachments = contract.events
+            .filter(e => e.type === 'AddAttachment' && deletedAttachments.indexOf(e.createdAt) === -1)
+            .map(e => e.attachments).flat()
+
         return (
             <ScrollView style={styles.transport}>
                 <Header>{I18n.get("Current status")}</Header>
-                <View style={{padding: 5, paddingLeft: Sizes.PADDING_FROM_SCREEN_BORDER, paddingRight: Sizes.PADDING_FROM_SCREEN_BORDER}}>
+                <View style={{
+                    padding: 5,
+                    paddingLeft: Sizes.PADDING_FROM_SCREEN_BORDER,
+                    paddingRight: Sizes.PADDING_FROM_SCREEN_BORDER
+                }}>
                     <View style={{paddingTop: 10, paddingBottom: 10}}>
                         <View style={{flexDirection: 'row', justifyContent: "center", flex: 1}}>
-                            {!firstAction && <Icon color={activityDoneColor} size={30} style={{marginRight: 5}} name='check-circle'/>}
-                            <MyText style={{fontSize: 20, textAlign: 'center', fontWeight: 'bold', marginBottom: 5}}>{states[firstAction]}</MyText>
+                            {!firstAction &&
+                            <Icon color={activityDoneColor} size={30} style={{marginRight: 5}} name='check-circle'/>}
+                            <MyText style={{
+                                fontSize: 20,
+                                textAlign: 'center',
+                                fontWeight: 'bold',
+                                marginBottom: 5
+                            }}>{states[firstAction]}</MyText>
                         </View>
-                        {ongoingEvent && <MyText style={{fontSize: 18, textAlign: 'center',  fontWeight: 'bold', color: '#FF5C00'}}>
+                        {ongoingEvent &&
+                        <MyText style={{fontSize: 18, textAlign: 'center', fontWeight: 'bold', color: '#FF5C00'}}>
                             {formatDuration(lastRelevantEventDuration)}
                         </MyText>}
                     </View>
                     <Divider style={{backgroundColor: '#FF5C00', marginLeft: 30, marginRight: 30, height: 2}}/>
-                    {lastRelevantEvent && <View style={{flexDirection: "row", flex: 1, justifyContent: "center", marginTop: 15}}>
-                        <MyText style={{fontWeight: 'bold'}}>{firstAction ? I18n.get("Started on:") : I18n.get("Finished on:")}</MyText>
+                    {lastRelevantEvent &&
+                    <View style={{flexDirection: "row", flex: 1, justifyContent: "center", marginTop: 15}}>
+                        <MyText
+                            style={{fontWeight: 'bold'}}>{firstAction ? I18n.get("Started on:") : I18n.get("Finished on:")}</MyText>
                         <MyText style={{marginLeft: 3, fontWeight: 'bold'}}>
                             {moment(lastRelevantEvent.createdAt).format('llll')}
                         </MyText>
                     </View>}
                 </View>
                 <View style={styles.action}>
-                    {firstAction === 'Acknowledge' && <Button title={I18n.get("Acknowledge transport")} loading={loading} buttonStyle={styles.actionButton} onPress={() => this.confirmAcknowledge()} />}
-                    {firstAction === 'ArrivalOnSite' && <Button title={site === 'pickup' ? I18n.get("Notify arrival at loading site") : I18n.get("Notify arrival at unloading site")}
-                                                                loading={loading}
-                                                                buttonStyle={styles.actionButton}
-                                                                onPress={() => this.confirmNotifyArrival()}/>}
-                    {(firstAction === 'LoadingComplete' || firstAction === 'UnloadingComplete') && <Button loading={loading}
-                                                                                                           title={site === 'pickup' ? I18n.get("Confirm loading") : I18n.get("Confirm unloading")}
-                                                                                                           buttonStyle={styles.actionButton} onPress={() => this.confirmLoading()}/>}
+                    {firstAction === 'Acknowledge' &&
+                    <Button title={I18n.get("Acknowledge transport")} loading={loading}
+                            buttonStyle={styles.actionButton} onPress={() => this.confirmAcknowledge()}/>}
+                    {firstAction === 'ArrivalOnSite' && <Button
+                        title={site === 'pickup' ? I18n.get("Notify arrival at loading site") : I18n.get("Notify arrival at unloading site")}
+                        loading={loading}
+                        buttonStyle={styles.actionButton}
+                        onPress={() => this.confirmNotifyArrival()}/>}
+                    {(firstAction === 'LoadingComplete' || firstAction === 'UnloadingComplete') &&
+                    <Button loading={loading}
+                            title={site === 'pickup' ? I18n.get("Confirm loading") : I18n.get("Confirm unloading")}
+                            buttonStyle={styles.actionButton} onPress={() => this.confirmLoading()}/>}
                 </View>
                 <Header>{I18n.get("Details")}</Header>
                 <View style={{paddingLeft: Sizes.PADDING_FROM_SCREEN_BORDER}}>
                     <TouchableOpacity
                         onPress={this.launchNavigation}>
                         <View style={{flexDirection: "row", alignItems: "center", ...styles.address}}>
-                            <Address address={item[site]} style={{flex: 1}} />
-                            <Icon size={30} style={{...styles.navigateIcon, paddingRight: Sizes.PADDING_FROM_SCREEN_BORDER}} name='directions'/>
+                            <Address address={item[site]} style={{flex: 1}}/>
+                            <Icon size={30}
+                                  style={{...styles.navigateIcon, paddingRight: Sizes.PADDING_FROM_SCREEN_BORDER}}
+                                  name='directions'/>
                         </View>
                     </TouchableOpacity>
-                    <ArrivalDate date={arrivalDate} time={arrivalTime}  style={{paddingTop: 10, ...styles.address}} />
+                    <ArrivalDate date={arrivalDate} time={arrivalTime} style={{paddingTop: 10, ...styles.address}}/>
 
                     {
                         contract.loads.map((load, index) => <LoadDetail key={index} load={load}/>)
                     }
 
-                    <LicensePlates truck={contract.truck} trailer={contract.trailer} style={{paddingTop: 10, ...styles.address}}/>
+                    <LicensePlates truck={contract.truck} trailer={contract.trailer}
+                                   style={{paddingTop: 10, ...styles.address}}/>
                 </View>
 
                 <Header>{I18n.get("Consignment note")}</Header>
                 <View style={{paddingLeft: Sizes.PADDING_FROM_SCREEN_BORDER}}>
-                <TouchableOpacity style={{padding: 15}} onPress={() => this.showConsignmentNote()} disabled={this.state.downloadingPdf}>
-                    <View style={{flexDirection: "row"}}>
-                        <Icon name={'file'} style={{color: 'rgb(0, 115, 209)', marginRight: 5, textAlignVertical: "center", width: Sizes.ICON_WIDTH}} size={Sizes.ICON_WIDTH}/>
-                        <MyText style={{fontWeight: "bold"}}>{I18n.get("Display the consignment note")}</MyText>
-                        <ActivityIndicator size="small" color="rgb(0, 115, 209)" animating={this.state.downloadingPdf}/>
-                    </View>
-                </TouchableOpacity>
+                    <ActionButton onPress={() => this.showConsignmentNote()} label={I18n.get("Display the consignment note")} disabled={this.state.downloadingPdf}/>
+                </View>
+
+                <Header>{I18n.get("Attachments")}</Header>
+                <View style={{paddingLeft: Sizes.PADDING_FROM_SCREEN_BORDER}}>
+                    {attachments.map((a, index) => <ActionButton onPress={() => this.downloadAttachment(a)}
+                                                        label={a.filename}
+                                                        key={index}
+                                                        disabled={this.state.downloadingAttachment === a}/>)}
+
                 </View>
 
                 <Header>{I18n.get("Activity feed")}</Header>
                 <View style={{paddingLeft: Sizes.PADDING_FROM_SCREEN_BORDER}}>
-                {relevantItems.map((item, index) =>
-                    (<View style={styles.activityItemContainer} key={index}>
+                    {relevantItems.map((item, index) =>
+                        (<View style={styles.activityItemContainer} key={index}>
                             <Text style={{fontSize: 12}}>{moment(item.createdAt).format('llll')}</Text>
 
                             <MyText>{this.eventText(item, names)}</MyText>
                             {
                                 (item.type === 'UnloadingComplete' || item.type === 'LoadingComplete') &&
-                                    <SignatureEvent signature={item.signature} signatoryObservation={item.signatoryObservation} photos={item.photos || []}/>
+                                <SignatureEvent signature={item.signature}
+                                                signatoryObservation={item.signatoryObservation}
+                                                photos={item.photos || []}/>
                             }
                         </View>))
                     }
@@ -271,6 +316,28 @@ class Transport extends Component {
 
     isPending(contract) {
         return contract.status === 'CREATED' || contract.status === 'IN_PROGRESS';
+    }
+
+    async downloadAttachment(attachment) {
+        this.setState({
+            downloadingAttachment: attachment
+        })
+        const result = await Storage.get(attachment.location.key);
+        const res = await RNFetchBlob
+            .config({
+                fileCache : true,
+            })
+            .fetch('GET', result);
+
+
+        if (Platform.OS === 'android') {
+            await RNFetchBlob.android.actionViewIntent(res.data, attachment.mimeType);
+        } else if (Platform.OS === 'ios') {
+            await RNFetchBlob.ios.openDocument(res.data);
+        }
+        this.setState({
+            downloadingAttachment: null
+        })
     }
 
     async showConsignmentNote() {
@@ -308,6 +375,10 @@ class Transport extends Component {
                     .replace("${driver}", event.assignedDriver ? event.assignedDriver.name : I18n.get("unknown"));
             case 'Acknowledge':
                 return I18n.get("${name} acknowledged the transport").replace("${name}", name);
+            case 'AddAttachment':
+                return I18n.get('${name} added attachment ${filename}').replace('${name}', name).replace('${filename}', event.attachments.length && event.attachments[0].filename);
+            case "DeleteAttachment":
+                return I18n.get('${name} removed attachment').replace('${name}', name);
             default:
                 return I18n.get("${name} completed ${type}").replace("${name}", name).replace("${type}", event.type);
         }
