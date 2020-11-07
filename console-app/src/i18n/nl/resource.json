@@ -180,5 +180,11 @@
   "Email": "Emailadres",
   "jack@company.tld": "jan@bedrijft.tld",
   "({start} to {end})": "({start} tot {end})",
-  "Last change": "Gewijzigd"
+  "Last change": "Gewijzigd",
+  "added attachment {filename}": "bijlage {filename} toegevoegd",
+  "removed attachment": "bijlage verwijderd",
+  "Document": "Document",
+  "File too big": "Bestand te groot",
+  "You can only upload files smaller than 1MB": "Bestanden moeten kleiner zijn dan 1MB",
+  "Add Document": "Document toevoegen"
 }

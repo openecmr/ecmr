@@ -55,7 +55,7 @@ const eventText = (event) => {
         case "AddAttachment":
             return I18n.get('added attachment {filename}').replace('{filename}', event.attachments.length && event.attachments[0].filename);
         case "DeleteAttachment":
-            return I18n.get('deleted attachment');
+            return I18n.get('removed attachment');
         case "Acknowledge":
             return I18n.get('acknowledged the transport');
         default:
@@ -449,11 +449,11 @@ class Transport extends Component {
                                     <Grid.Row>
                                         <Grid.Column width={16}>
                                             {this.state.uploadErrorTooBig && <Message negative>
-                                                <Message.Header>File too big</Message.Header>
-                                                <p>You can only upload files smaller than 1MB</p>
+                                                <Message.Header>{I18n.get("File too big")}</Message.Header>
+                                                <p>{I18n.get("You can only upload files smaller than 1MB")}</p>
                                             </Message>}
                                             <Button primary disabled={this.state.uploading} loading={this.state.uploading}
-                                                    onClick={() => this.fileInputRef.current.click()}>Add Document</Button>
+                                                    onClick={() => this.fileInputRef.current.click()}>{I18n.get("Add Document")}</Button>
                                             <input
                                                 ref={this.fileInputRef}
                                                 type="file"
