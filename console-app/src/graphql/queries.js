@@ -710,6 +710,7 @@ export const getContract = /* GraphQL */ `
           mimeType
           extension
         }
+        deletesAttachments
       }
       needAcknowledge
       shipperContactId
@@ -853,6 +854,7 @@ export const listContracts = /* GraphQL */ `
             mimeType
             extension
           }
+          deletesAttachments
         }
         needAcknowledge
         shipperContactId
@@ -1008,6 +1010,7 @@ export const contractsByOwnerArrivalDate = /* GraphQL */ `
             mimeType
             extension
           }
+          deletesAttachments
         }
         needAcknowledge
         shipperContactId
@@ -1163,6 +1166,7 @@ export const contractsByCarrierArrivalDate = /* GraphQL */ `
             mimeType
             extension
           }
+          deletesAttachments
         }
         needAcknowledge
         shipperContactId
@@ -1318,6 +1322,7 @@ export const contractsByOwnerUpdatedAt = /* GraphQL */ `
             mimeType
             extension
           }
+          deletesAttachments
         }
         needAcknowledge
         shipperContactId
@@ -1473,6 +1478,7 @@ export const contractsByCarrierUpdatedAt = /* GraphQL */ `
             mimeType
             extension
           }
+          deletesAttachments
         }
         needAcknowledge
         shipperContactId

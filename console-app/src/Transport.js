@@ -54,6 +54,8 @@ const eventText = (event) => {
                 .replace('{driver}', event.assignedDriver ? event.assignedDriver.name : "unknown");
         case "AddAttachment":
             return I18n.get('added attachment {filename}').replace('{filename}', event.attachments.length && event.attachments[0].filename);
+        case "DeleteAttachment":
+            return I18n.get('deleted attachment');
         case "Acknowledge":
             return I18n.get('acknowledged the transport');
         default:
@@ -283,7 +285,10 @@ class Transport extends Component {
         const unloadingComplete = contract.events.find(e => e.type === 'UnloadingComplete');
         const names = this.names(contract);
 
-        const attachments = contract.events.filter(e => e.type === 'AddAttachment').map(e => e.attachments).flat()
+        const deletedAttachments = contract.events.filter(e => e.type === 'DeleteAttachment').map(e => e.deletesAttachments);
+        const attachments = contract.events
+            .filter(e => e.type === 'AddAttachment' && deletedAttachments.indexOf(e.createdAt) === -1)
+            .map(e => e.attachments.map(a => ({event: e, attachment: a}))).flat()
 
         return (
             <div>
@@ -325,7 +330,7 @@ class Transport extends Component {
                 </Step.Group>
                 <Segment>
 
-                    <Grid columns={3}>
+                    <Grid columns={3} stackable>
                         <Grid.Row>
                             <Grid.Column>
                                 <Address address={contract.shipper} icon={'building'} label={I18n.get('Shipper')}/>
@@ -340,7 +345,7 @@ class Transport extends Component {
                     </Grid>
                 </Segment>
                 <Segment>
-                    <Grid columns={5} divided>
+                    <Grid columns={5} divided stackable>
                         <Grid.Row divided>
                             <Grid.Column><Header as={'h5'}>{I18n.get('Activity')}</Header></Grid.Column>
                             <Grid.Column><Header as={'h5'}>{I18n.get('Address')}</Header></Grid.Column>
@@ -408,40 +413,41 @@ class Transport extends Component {
                         </Grid.Row>
                     </Grid>
                 </Segment>
-                <Grid columns={2}>
+                <Grid columns={2} stackable>
                     <Grid.Row stretched>
                         <Grid.Column>
                             <Segment>
                                 <Header as={'h4'}>{I18n.get('Documents and photos')}</Header>
-                                <Grid columns={2} divided>
+                                <Grid columns={2} divided stackable>
                                     <Grid.Row divided>
-                                        <Grid.Column><Header as={'h5'}>{I18n.get('Type')}</Header></Grid.Column>
-                                        <Grid.Column><Header as={'h5'}>{I18n.get('Name')}</Header></Grid.Column>
+                                        <Grid.Column width={4}><Header as={'h5'}>{I18n.get('Type')}</Header></Grid.Column>
+                                        <Grid.Column width={12}><Header as={'h5'}>{I18n.get('Name')}</Header></Grid.Column>
                                     </Grid.Row>
                                     <Grid.Row>
-                                        <Grid.Column>
+                                        <Grid.Column width={4}>
                                             <Icon name='file'/> {I18n.get('Consignment note')}
                                         </Grid.Column>
-                                        <Grid.Column>
+                                        <Grid.Column width={12}>
                                             <MyLink onClick={() => this.downloadPdf()}>{`cmr-${this.state.contract.id.substring(0, 8)}.pdf`}</MyLink>&nbsp;
                                             <Loader size='mini' active={this.state.downloadingPdf} inline/>
                                         </Grid.Column>
                                     </Grid.Row>
                                     {
-                                        attachments.map( attachment =>
+                                        attachments.map( ({event, attachment}) =>
                                             (<Grid.Row>
-                                                <Grid.Column>
+                                                <Grid.Column width={4}>
                                                     <Icon name='file'/> {I18n.get('Document')}
                                                 </Grid.Column>
-                                                <Grid.Column>
-                                                    <MyLink onClick={() => this.downloadDocument(attachment)}>{`${attachment.filename}`}</MyLink>&nbsp;
+                                                <Grid.Column width={12}>
+                                                    <MyLink onClick={() => this.downloadDocument(attachment)}>{attachment.filename}</MyLink>&nbsp;
                                                     <Loader size='mini' active={this.state.downloading === attachment} inline/>
+                                                    <Icon name={"delete"} style={{cursor: "pointer"}} onClick={() => this.deleteAttachment(event)}/>
                                                 </Grid.Column>
                                             </Grid.Row>)
                                         )
                                     }
                                     <Grid.Row>
-                                        <Grid.Column width={16} >
+                                        <Grid.Column width={16}>
                                             {this.state.uploadErrorTooBig && <Message negative>
                                                 <Message.Header>File too big</Message.Header>
                                                 <p>You can only upload files smaller than 1MB</p>
@@ -561,6 +567,33 @@ class Transport extends Component {
         this.setState({
             uploading: false
         });
+    }
+
+    async deleteAttachment(event) {
+        // TODO: implement removal of attachments
+        // await Storage.remove(event.attachments[0].location.key);
+        const {contract} = this.state;
+        if (!contract.events) {
+            contract.events = [];
+        }
+        const now = moment().toISOString();
+        contract.events.push({
+            author: {
+                username: (await Auth.currentAuthenticatedUser()).getUsername()
+            },
+            type: 'DeleteAttachment',
+            createdAt: now,
+            deletesAttachments: event.createdAt
+        });
+        this.setState({
+            contract
+        });
+        await API.graphql(graphqlOperation(mutations.updateContract, {
+            "input": {
+                id: contract.id,
+                events: contract.events
+            }
+        }));
     }
 
     extension(file) {

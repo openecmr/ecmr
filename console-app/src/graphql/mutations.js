@@ -131,6 +131,7 @@ export const createContract = /* GraphQL */ `
           mimeType
           extension
         }
+        deletesAttachments
       }
       needAcknowledge
       shipperContactId
@@ -269,6 +270,7 @@ export const updateContract = /* GraphQL */ `
           mimeType
           extension
         }
+        deletesAttachments
       }
       needAcknowledge
       shipperContactId
@@ -407,6 +409,7 @@ export const deleteContract = /* GraphQL */ `
           mimeType
           extension
         }
+        deletesAttachments
       }
       needAcknowledge
       shipperContactId
