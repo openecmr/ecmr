@@ -417,7 +417,7 @@ class Transport extends Component {
                     <Grid.Row stretched>
                         <Grid.Column>
                             <Segment>
-                                <Header as={'h4'}>{I18n.get('Documents and photos')}</Header>
+                                <Header as={'h4'}>{I18n.get('Documents')}</Header>
                                 <Grid columns={2} divided stackable>
                                     <Grid.Row divided>
                                         <Grid.Column width={4}><Header as={'h5'}>{I18n.get('Type')}</Header></Grid.Column>

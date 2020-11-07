@@ -344,20 +344,68 @@ class App extends Component {
 
 // allow these strings to be picked up by the i18n extraction
 // FIXME find some other way
-I18n.get('Sign in to your account');
+I18n.get('Loading...');
+I18n.get('Sign In');
+I18n.get('Sign In with Amazon');
+I18n.get('Sign In with Facebook');
+I18n.get('Sign In with Google');
 I18n.get('Sign in with AWS');
-I18n.get('Enter your username')
-I18n.get('Enter your password')
-I18n.get('Reset password')
-I18n.get('Sign In')
-I18n.get('No account? ')
-I18n.get('Create account')
-I18n.get('Forget your password? ')
-I18n.get('or')
-I18n.get('Incorrect username or password')
-I18n.get('Have an account? ')
-I18n.get('Sign in')
-I18n.get('Create Account')
+I18n.get('Sign Up');
+I18n.get('Sign Out');
+I18n.get('Forgot Password');
+I18n.get('Username');
+I18n.get('Password');
+I18n.get('Change Password');
+I18n.get('Change');
+I18n.get('New Password');
+I18n.get('Email');
+I18n.get('Phone Number');
+I18n.get('Confirm a Code');
+I18n.get('Confirm Sign In');
+I18n.get('Confirm Sign Up');
+I18n.get('Back to Sign In');
+I18n.get('Send');
+I18n.get('Send Code');
+I18n.get('Confirm');
+I18n.get('SMS');
+I18n.get('Confirm SMS Code');
+I18n.get('Confirm TOTP Code');
+I18n.get('Resend a Code');
+I18n.get('Submit');
+I18n.get('Skip');
+I18n.get('Verify');
+I18n.get('Verify Contact');
+I18n.get('Code');
+I18n.get('Confirmation Code');
+I18n.get('Account recovery requires verified contact information');
+I18n.get('User does not exist');
+I18n.get('User already exists');
+I18n.get('Incorrect username or password');
+I18n.get('Invalid password format');
+I18n.get('Invalid phone number format');
+I18n.get('Username/client id combination not found.');
+I18n.get('Network error');
+I18n.get('Sign in to your account');
+I18n.get('Forget your password? ');
+I18n.get('Reset password');
+I18n.get('No account? ');
+I18n.get('Create account');
+I18n.get('Create Account');
+I18n.get('Have an account? ');
+I18n.get('Sign in');
+I18n.get('Create a new account');
+I18n.get('Reset your password');
+I18n.get('Enter your username');
+I18n.get('Enter your password');
+I18n.get('Enter your phone number');
+I18n.get('Enter your email');
+I18n.get('Enter your code');
+I18n.get('Lost your code? ');
+I18n.get('Resend Code');
+I18n.get('An account with the given email already exists.');
+I18n.get('Username cannot be empty');
+
+
 const vocabularies = {
     en: {
         'Sign in to your account': 'Sign in / sign up to your Open e-CMR account',
