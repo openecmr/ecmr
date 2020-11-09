@@ -285,14 +285,16 @@ class Transport extends Component {
                     <ActionButton onPress={() => this.showConsignmentNote()} label={I18n.get("Display the consignment note")} disabled={this.state.downloadingPdf}/>
                 </View>
 
-                <Header>{I18n.get("Attachments")}</Header>
-                <View style={{paddingLeft: Sizes.PADDING_FROM_SCREEN_BORDER}}>
-                    {attachments.map((a, index) => <ActionButton onPress={() => this.downloadAttachment(a)}
-                                                        label={a.filename}
-                                                        key={index}
-                                                        disabled={this.state.downloadingAttachment === a}/>)}
+                {attachments.length > 0 && <View>
+                    <Header>{I18n.get("Attachments")}</Header>
+                    <View style={{paddingLeft: Sizes.PADDING_FROM_SCREEN_BORDER}}>
+                        {attachments.map((a, index) => <ActionButton onPress={() => this.downloadAttachment(a)}
+                                                            label={a.filename}
+                                                            key={index}
+                                                            disabled={this.state.downloadingAttachment === a}/>)}
 
-                </View>
+                    </View>
+                </View>}
 
                 <Header>{I18n.get("Activity feed")}</Header>
                 <View style={{paddingLeft: Sizes.PADDING_FROM_SCREEN_BORDER}}>
