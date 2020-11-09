@@ -1,5 +1,7 @@
 {
-    "key1": "value1",
-    "key2": "value2",
-    "key3": "value3"
+  "typeName": "Query",
+  "fieldName": "pdfexport",
+  "arguments": {
+    "id": "8a5d54f0-ba54-4f82-b72d-4a46ba981b04"
+  }
 }

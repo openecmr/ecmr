@@ -53,7 +53,7 @@ const eventText = (event) => {
             return I18n.get('assigned transport to driver {driver}.')
                 .replace('{driver}', event.assignedDriver ? event.assignedDriver.name : "unknown");
         case "AddAttachment":
-            return I18n.get('added attachment {filename}').replace('{filename}', event.attachments.length && event.attachments[0].filename);
+            return I18n.get('added attachment {filename}').replace('{filename}', event.attachments && event.attachments.length && event.attachments[0].filename);
         case "DeleteAttachment":
             return I18n.get('removed attachment');
         case "Acknowledge":
@@ -288,7 +288,7 @@ class Transport extends Component {
         const deletedAttachments = contract.events.filter(e => e.type === 'DeleteAttachment').map(e => e.deletesAttachments);
         const attachments = contract.events
             .filter(e => e.type === 'AddAttachment' && deletedAttachments.indexOf(e.createdAt) === -1)
-            .map(e => e.attachments.map(a => ({event: e, attachment: a}))).flat()
+            .map(e => (e.attachments || []).map(a => ({event: e, attachment: a}))).flat()
 
         return (
             <div>

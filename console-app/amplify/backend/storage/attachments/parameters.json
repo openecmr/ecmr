@@ -24,7 +24,7 @@
     "s3PrivatePolicy": "Private_policy_cdc21d3c",
     "AuthenticatedAllowList": "DISALLOW",
     "s3ReadPolicy": "read_policy_dce4f398",
-    "s3PermissionsGuestPublic": "DISALLOW",
+    "s3PermissionsGuestPublic": "s3:GetObject",
     "s3PermissionsGuestUploads": "DISALLOW",
     "GuestAllowList": "DISALLOW",
     "triggerFunction": "NONE"

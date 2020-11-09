@@ -12,6 +12,7 @@ Amplify Params - DO NOT EDIT */
 const chromium = require('chrome-aws-lambda');
 
 exports.handler = async (event, context) => { //eslint-disable-line
+  console.log(event);
   let browser = null;
   try {
     console.info("starting browser")
@@ -24,10 +25,16 @@ exports.handler = async (event, context) => { //eslint-disable-line
 
     console.info("loading page");
     const page = await browser.newPage();
-    await page.goto('https://app.openecmr.com/transports/' + event.arguments.id + '/pdf#' + process.env.API_KEY);
-    await page.waitForSelector('div.content');
-    await page.waitFor(1000);
-
+    let url = 'https://app.openecmr.com/transports/' + event.arguments.id + '/pdf#' + process.env.API_KEY;
+    console.info("visiting transport page: " + url);
+    await page.goto(url);
+    console.info("waiting for content");
+    try {
+      await page.waitForSelector('div.content', {timeout: 15000});
+      await page.waitFor(1000);
+    } catch(e) {
+      console.log(e)
+    }
     console.log("loading pdf");
     const pdf = await page.pdf({
       format: 'A4',
