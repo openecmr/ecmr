@@ -522,47 +522,44 @@ class Transport extends Component {
                 uploadErrorTooBig: true
             });
         } else {
-            try {
-                const extension = this.extension(file);
-                const uploadFilename = uuidv4() + "." + extension;
-                const result = await Storage.put(uploadFilename, file);
-                const attachment = {
-                    location: {
-                        bucket: 'bucket',
-                        region: 'eu-central-1',
-                        key: result.key
-                    },
-                    size: file.size,
-                    filename: file.name,
-                    mimeType: file.type,
-                    extension
-                }
-
-                const {contract} = this.state;
-                if (!contract.events) {
-                    contract.events = [];
-                }
-                const now = moment().toISOString();
-                contract.events.push({
-                    author: {
-                        username: (await Auth.currentAuthenticatedUser()).getUsername()
-                    },
-                    type: 'AddAttachment',
-                    createdAt: now,
-                    attachments: [attachment]
-                });
-                this.setState({
-                    contract
-                });
-                await API.graphql(graphqlOperation(mutations.updateContract, {
-                    "input": {
-                        id: contract.id,
-                        events: contract.events
-                    }
-                }));
-            } catch(ex) {
-                console.error(ex);
+            const extension = this.extension(file);
+            const uploadFilename = uuidv4() + "." + extension;
+            const result = await Storage.put(uploadFilename, file);
+            const attachment = {
+                location: {
+                    bucket: 'bucket',
+                    region: 'eu-central-1',
+                    key: result.key
+                },
+                size: file.size,
+                filename: file.name,
+                mimeType: file.type,
+                extension
             }
+
+            const {contract} = this.state;
+            if (!contract.events) {
+                contract.events = [];
+            }
+            const now = moment().toISOString();
+            contract.events.push({
+                author: {
+                    username: (await Auth.currentAuthenticatedUser()).getUsername()
+                },
+                type: 'AddAttachment',
+                createdAt: now,
+                attachments: [attachment]
+            });
+            this.setState({
+                contract
+            });
+
+            await API.graphql(graphqlOperation(mutations.updateContract, {
+                "input": {
+                    id: contract.id,
+                    events: contract.events
+                }
+            }));
         }
         this.setState({
             uploading: false

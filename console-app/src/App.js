@@ -50,6 +50,21 @@ if (pdfServiceKey) {
 
 Amplify.configure(config);
 
+window.onunhandledrejection = (err) => {
+    console.error(err);
+    if (err.reason.errors) {
+        ReactGA.exception({
+            description: err.reason.errors[0].message,
+            fatal: false
+        });
+    } else {
+        ReactGA.exception({
+            description: err,
+            fatal: false
+        });
+    }
+}
+
 class CompanyDialog extends Component {
     state = {
         name: ''
@@ -339,6 +354,14 @@ class App extends Component {
                 noCompany: true
             });
         }
+    }
+
+    componentDidCatch(error, errorInfo) {
+        console.error("uncaught exception ", error, " error ", errorInfo);
+        ReactGA.exception({
+            description: error,
+            fatal: false
+        });
     }
 }
 
