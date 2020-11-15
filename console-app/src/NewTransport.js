@@ -901,5 +901,6 @@ const removeEmpty = obj =>
 
 export {
     NewTransport,
-    DriverPicker
+    DriverPicker,
+    ContactPicker
 };

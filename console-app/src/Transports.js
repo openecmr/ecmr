@@ -1,10 +1,13 @@
 import {Component} from "react";
 import React from "react";
-import {Button, Dimmer, Icon, Loader, Menu, Progress, Segment, Table} from "semantic-ui-react";
+import {Header, Button, Dimmer, Form, Grid, Icon, Loader, Menu, Progress, Segment, Table} from "semantic-ui-react";
 import {Link} from "react-router-dom";
 import * as queries from "./graphql/queries";
 import {API, Auth, graphqlOperation, I18n} from 'aws-amplify';
 import moment from 'moment/min/moment-with-locales';
+import {ContactPicker, DriverPicker} from "./NewTransport";
+import ReactGA from "react-ga";
+import {trackEvent} from "./ConsoleUtils";
 
 const AddressCell = ({address}) => {
     return (
@@ -93,16 +96,42 @@ class Transports extends Component {
             previousTokens: [],
             nextToken: null,
             sort: "pickupDate",
-            sortOrder: "descending"
+            sortOrder: "descending",
+            lastChangeFrom: "",
+            lastChangeTo: "",
+            pickupFrom: "",
+            pickupTo: ""
         };
 
         this.onNext = this.onNext.bind(this);
         this.onPrev = this.onPrev.bind(this);
         this.refresh = this.refresh.bind(this);
+        this.handleFiltersInput = this.handleFiltersInput.bind(this);
+        this.applyFilters = this.applyFilters.bind(this);
+        this.clearFilters = this.clearFilters.bind(this);
+        this.toggleFilters = this.toggleFilters.bind(this);
+    }
+
+    handleFiltersInput(event) {
+        const target = event.target;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
+        const name = target.name;
+        this.setState({
+            [name]: value
+        });
+    }
+
+    toggleFilters() {
+        if (this.state.filters) {
+            this.clearFilters();
+        }
+        this.setState({filters: !this.state.filters});
     }
 
     render() {
         const cols = 10;
+        const filterLastChange = !!(this.state.lastChangeFrom || this.state.lastChangeTo);
+        const filterPickup = !!(this.state.pickupFrom || this.state.pickupTo);
         return (
 
             <Table className="App-text-with-newlines" selectable compact='very' sortable columns={cols} fixed>
@@ -114,6 +143,10 @@ class Transports extends Component {
                                     <Icon name='plus'/> {I18n.get('New transport')}
                                 </Button>
                             </Link>
+                            <Button floated={'right'} active={this.state.filters} icon
+                                    onClick={this.toggleFilters} color={"olive"} labelPosition={'left'} size={'small'}>
+                                <Icon name='filter'/> {I18n.get('Filters')}
+                            </Button>
                             <Menu pagination>
                                 <Menu.Item as='a' icon onClick={this.onPrev} disabled={!this.state.currentPageToken}>
                                     <Icon name='chevron left' />
@@ -125,6 +158,27 @@ class Transports extends Component {
                                     <Icon name='refresh' />
                                 </Menu.Item>
                             </Menu>
+                            {this.state.filters && <Segment padded compact size={"tiny"} color={"olive"}>
+                                <Form>
+                                    <Form.Group>
+                                        <Form.Input value={this.state.lastChangeFrom} disabled={filterPickup}
+                                                    size={"mini"} label={I18n.get("Last changed from")}
+                                                    onChange={this.handleFiltersInput} name="lastChangeFrom" type={'date'}/>
+                                        <Form.Input value={this.state.lastChangeTo} disabled={filterPickup}
+                                                    size={"mini"} label={I18n.get("Last changed to")}
+                                                    onChange={this.handleFiltersInput} name="lastChangeTo" type={'date'} />
+
+                                        <Form.Input value={this.state.pickupFrom} disabled={filterLastChange}
+                                                    size={"mini"} label={I18n.get("Pickup date from")}
+                                                    onChange={this.handleFiltersInput} name="pickupFrom" type={'date'} />
+                                        <Form.Input value={this.state.pickupTo} disabled={filterLastChange}
+                                                    size={"mini"} label={I18n.get("Pickup date to")}
+                                                    onChange={this.handleFiltersInput} name="pickupTo" type={'date'} />
+                                    </Form.Group>
+                                    <Button floated={"right"} primary positive onClick={this.applyFilters}>Apply</Button>
+                                    <Button floated={"right"} secondary onClick={this.clearFilters}>Clear</Button>
+                                </Form>
+                            </Segment>}
                         </Table.HeaderCell>
                     </Table.Row>
                     <Table.Row>
@@ -201,7 +255,21 @@ class Transports extends Component {
         )
     }
 
+    clearFilters() {
+        this.setState({
+            pickupTo: "",
+            pickupFrom: "",
+            lastChangeTo: "",
+            lastChangeFrom: ""
+        });
+        this.retrieveAppSync();
+    }
+
     componentDidMount() {
+        this.retrieveAppSync();
+    }
+
+    applyFilters() {
         this.retrieveAppSync();
     }
 
@@ -211,14 +279,73 @@ class Transports extends Component {
             loading: true
         });
         const user = await Auth.currentAuthenticatedUser();
-        const key = sort === 'pickupDate' ? 'contractsByOwnerArrivalDate' : 'contractsByOwnerUpdatedAt';
+
+        let key;
+        let filterParam = {};
+
+        const {lastChangeFrom, lastChangeTo, pickupFrom, pickupTo} = this.state;
+        if (lastChangeFrom || lastChangeTo) {
+            trackEvent({
+                category: "transports",
+                action: "filter",
+                label: "filter_by_last_change"
+            });
+
+            key = 'contractsByOwnerUpdatedAt';
+
+            if (lastChangeFrom && lastChangeTo) {
+                filterParam.updatedAt = {
+                    between: [lastChangeFrom, lastChangeTo]
+                };
+            } else if (lastChangeFrom) {
+                filterParam.updatedAt = {
+                    ge: lastChangeFrom
+                };
+            } else {
+                filterParam.updatedAt = {
+                    le: lastChangeTo
+                };
+            }
+            this.setState({
+                sort: 'updatedAt'
+            })
+        } else if (pickupFrom || pickupTo) {
+            key = 'contractsByOwnerArrivalDate';
+
+            trackEvent({
+                category: "transports",
+                action: "filter",
+                label: "filter_by_arrival_date"
+            })
+
+            if (pickupFrom && pickupTo) {
+                filterParam.arrivalDate = {
+                    between: [pickupFrom, pickupTo]
+                };
+            } else if (pickupFrom) {
+                filterParam.arrivalDate = {
+                    ge: pickupFrom
+                };
+            } else {
+                filterParam.arrivalDate = {
+                    le: pickupTo
+                };
+            }
+            this.setState({
+                sort: 'pickupDate'
+            })
+        } else {
+            key = sort === 'pickupDate' ? 'contractsByOwnerArrivalDate' : 'contractsByOwnerUpdatedAt';
+        }
+
         const response = await API.graphql(graphqlOperation(
             queries[key], {
-            limit: 10,
-            owner: user.getUsername(),
-            sortDirection: this.state.sortOrder === 'descending' ? "DESC" : "ASC",
-            ...token && {nextToken: token}
-        }));
+                limit: 10,
+                owner: user.getUsername(),
+                sortDirection: this.state.sortOrder === 'descending' ? "DESC" : "ASC",
+                ...token && {nextToken: token},
+                ...filterParam
+            }));
 
         const nextToken = response.data[key].nextToken;
         this.setState({

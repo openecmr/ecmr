@@ -1,3 +1,4 @@
+import ReactGA from "react-ga";
 
 const generateAssociationSecret = () => {
     const random = new Uint8Array(6);
@@ -9,6 +10,15 @@ const generateAssociationSecret = () => {
     return associationSecret;
 };
 
+const trackEvent = ({category, action, label}) => {
+    ReactGA.event({
+        category: category,
+        action: action,
+        label: label
+    });
+};
+
 export {
-    generateAssociationSecret
+    generateAssociationSecret,
+    trackEvent
 }
