@@ -197,6 +197,12 @@ Resources:
           Name: email
           Required: true
           Mutable: true
+        - Name: "custom:language"
+          Mutable: true
+          AttributeDataType: String
+        - Name: "language"
+          Mutable: true
+          AttributeDataType: String
         
       
       
@@ -233,8 +239,6 @@ Resources:
       SmsConfiguration: 
         SnsCallerArn: !GetAtt SNSRole.Arn
         ExternalId: openec83cee658_role_external_id
-    
-  
     
     
   

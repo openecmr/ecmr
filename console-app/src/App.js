@@ -1,6 +1,6 @@
 import React, {Component, useEffect, useState} from 'react';
 import './App.css';
-import {Menu, Image, Icon, Header, Modal, Form, Button} from "semantic-ui-react";
+import {Dropdown, Menu, Image, Icon, Header, Modal, Form, Button, Popup} from "semantic-ui-react";
 import Transports from "./Transports";
 import {BrowserRouter as Router, Route, Link, withRouter, Redirect, Switch} from "react-router-dom";
 import {NewTransport} from "./NewTransport";
@@ -32,6 +32,7 @@ import moment from 'moment/min/moment-with-locales';
 import SignUpWithLanguage from "./SignUpWithLanguage";
 import Contacts from "./Contacts";
 import '@aws-amplify/ui/dist/style.css';
+import Settings from "./Settings";
 
 let config;
 const pdfServiceKey = window.location.hash.substr(1);
@@ -181,28 +182,71 @@ const AppMenu = withRouter(({location, onLogout, menuVisible}) => (
             to={'/vehicles'}
             as={Link}
         />
+        <Menu.Item
+            name={I18n.get('settings')}
+            active={location.pathname.startsWith('/settings')}
+            to={'/settings'}
+            as={Link}
+        />
     </Menu>));
 
 const Main = withRouter(({location, onLogout, user, company, noCompany, onCompanyUpdated, history}) => {
     ReactGA.pageview(location.pathname);
     const pdf = location.pathname.endsWith('/pdf');
     const [menuVisible, setMenuVisible] = useState(true);
+    const [language, setLanguage] = useState();
+
+    async function changeLanguage(language) {
+        const user = await Auth.currentAuthenticatedUser();
+        await Auth.updateUserAttributes(user, {
+            "custom:language": language
+        });
+        window.location.reload();
+    }
+
+    useEffect(() => {
+        async function getLanguage() {
+            const currentUserInfo = await Auth.currentUserInfo()
+            const userLanguage = currentUserInfo.attributes['custom:language'];
+            if (userLanguage) {
+                I18n.setLanguage(userLanguage);
+                setLanguage(userLanguage);
+            }
+        }
+        getLanguage();
+    }, []);
 
     return (<div>
             {pdf && <Route exact path="/transports/:id/pdf" component={TransportPdf}/>}
             {!pdf &&
-            <div>
+            <div lang={language}>
                 <Menu fixed='top' inverted>
                     <Menu.Item as='a' header onClick={() => setMenuVisible(!menuVisible)}>
                         <Image size='mini' src='/logo.png' style={{marginRight: '1.5em'}}/>
                         Open e-CMR
                     </Menu.Item>
-                    <Menu.Item header position={"right"}>
-                        <Icon name={'user'}/>
-                        {company && company.name}
-                        {user && ` (${user.attributes['email']})`}
-                    </Menu.Item>
-                    <Menu.Item name={I18n.get('logout')} header onClick={onLogout}/>
+                    <Popup hoverable position={"bottom center"} size={"huge"} wide trigger={
+                        <Menu.Item header position={"right"}>
+                            <Icon name={'user'}/>
+                            {company && company.name}
+                            {user && ` (${user.attributes['email']})`}
+                            <Icon name={"angle down"}/>
+                        </Menu.Item>
+                    }>
+
+                        <Menu secondary vertical>
+                            <Dropdown item text={I18n.get("Language")} direction={"left"}>
+                                <Dropdown.Menu>
+                                    <Dropdown.Item onClick={() => changeLanguage("en")}>English</Dropdown.Item>
+                                    <Dropdown.Item onClick={() => changeLanguage("nl")}>Nederlands</Dropdown.Item>
+                                </Dropdown.Menu>
+                            </Dropdown>
+
+                            <Menu.Item as={'a'}  onClick={onLogout}>
+                                {I18n.get('Logout')}
+                            </Menu.Item>
+                        </Menu>
+                    </Popup>
                 </Menu>
 
                 <AppMenu onLogout={onLogout} menuVisible={menuVisible}/>
@@ -224,6 +268,8 @@ const Main = withRouter(({location, onLogout, user, company, noCompany, onCompan
                         <Route exact path="/drivers" component={Drivers}/>
                         <Route exact path="/vehicles"
                                render={(props) => <Vehicles {...props} company={company}/>}/>
+                        <Route exact path="/settings"
+                               render={(props) => <Settings {...props} key={company} company={company} onCompanyUpdated={onCompanyUpdated}/>}/>
                         <Redirect exact from="/" to="/transports" />
                     </Switch>
                 </div>

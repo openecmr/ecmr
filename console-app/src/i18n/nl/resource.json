@@ -230,5 +230,14 @@
   "Lost your code? ": "Code kwijt geraakt? ",
   "Resend Code": "Code Opnieuw Versturen",
   "An account with the given email already exists.": "Account met opgegeven email bestaat al",
-  "Username cannot be empty": "Gebruikersnaam kan niet leeg zijn"
+  "Username cannot be empty": "Gebruikersnaam kan niet leeg zijn",
+  "settings": "instellingen",
+  "Language": "Taal",
+  "Logout": "Uitloggen",
+  "Filters": "Filters",
+  "Last changed from": "Laatst gewijzigd van",
+  "Last changed to": "Laatst gewijzigd tot",
+  "Pickup date from": "Ophaaldatum van",
+  "Pickup date to": "Ophaaldatum tot",
+  "Company": "Bedrijf"
 }
