@@ -29,6 +29,9 @@ import moment from 'moment/min/moment-with-locales';
 import SelectSignatory from "./SelectSignatory";
 import AddContact from "./AddContact";
 import EcmrLoading from "./EcmrLoading";
+import AddTransportScreen from "./AddTransportScreen";
+import SelectAddress from "./SelectAddress";
+import SelectVehicle from "./SelectVehicle";
 
 
 const deviceLanguage =
@@ -85,6 +88,21 @@ const SettingsNavigator = createStackNavigator({
     LinkAccount: {screen: LinkAccount}
 });
 
+const AddTransportNavigator = createStackNavigator({
+    AddTransportScreen: {
+        screen: AddTransportScreen,
+        navigationOptions: {
+            title: I18n.get("New transport")
+        }
+    },
+    SelectAddress: {
+        screen: SelectAddress
+    },
+    SelectVehicle: {
+        screen: SelectVehicle
+    }
+});
+
 const TabNavigator = createBottomTabNavigator({
     Home: {
         screen: MainNavigator,
@@ -93,6 +111,15 @@ const TabNavigator = createBottomTabNavigator({
                 return <Icon name={"local-shipping"}/>
             },
             tabBarLabel: I18n.get("Transports")
+        }
+    },
+    AddTransport: {
+        screen: AddTransportNavigator,
+        navigationOptions: {
+            tabBarIcon: ({ focused, tintColor }) => {
+                return <Icon name={"add"}/>
+            },
+            tabBarLabel: I18n.get("New transport")
         }
     },
     Settings: {
