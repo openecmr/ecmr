@@ -32,6 +32,7 @@ import EcmrLoading from "./EcmrLoading";
 import AddTransportScreen from "./AddTransportScreen";
 import SelectAddress from "./SelectAddress";
 import SelectVehicle from "./SelectVehicle";
+import AddLoad from "./AddLoad";
 
 
 const deviceLanguage =
@@ -100,6 +101,9 @@ const AddTransportNavigator = createStackNavigator({
     },
     SelectVehicle: {
         screen: SelectVehicle
+    },
+    AddLoad: {
+        screen: AddLoad
     }
 });
 

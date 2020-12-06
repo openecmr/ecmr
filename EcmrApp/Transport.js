@@ -208,7 +208,7 @@ class Transport extends Component {
 
         const deletedAttachments = contract.events.filter(e => e.type === 'DeleteAttachment').map(e => e.deletesAttachments);
         const attachments = contract.events
-            .filter(e => e.type === 'AddAttachment' && deletedAttachments.indexOf(e.createdAt) === -1)
+            .filter(e => e.type === 'AddAttachment' && deletedAttachments.indexOf(e.createdAt) === -1 && e.attachments)
             .map(e => e.attachments).flat()
 
         return (
@@ -378,7 +378,7 @@ class Transport extends Component {
             case 'Acknowledge':
                 return I18n.get("${name} acknowledged the transport").replace("${name}", name);
             case 'AddAttachment':
-                return I18n.get('${name} added attachment ${filename}').replace('${name}', name).replace('${filename}', event.attachments.length && event.attachments[0].filename);
+                return I18n.get('${name} added attachment ${filename}').replace('${name}', name).replace('${filename}', event.attachments && event.attachments.length && event.attachments[0].filename);
             case "DeleteAttachment":
                 return I18n.get('${name} removed attachment').replace('${name}', name);
             default:
