@@ -62,9 +62,11 @@ function Field({label, value, icon, onChangeText, required, keyboardType = "nume
 }
 
 function AddLoad({navigation}) {
-    const [load, setLoad] = useState({
+    const initialLoad = {
         category: "pallets"
-    });
+    };
+    const editLoad = navigation.getParam("editLoad");
+    const [load, setLoad] = useState(editLoad ? editLoad : initialLoad);
 
     function change(field) {
         return function(value) {

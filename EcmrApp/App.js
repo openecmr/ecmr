@@ -33,6 +33,7 @@ import AddTransportScreen from "./AddTransportScreen";
 import SelectAddress from "./SelectAddress";
 import SelectVehicle from "./SelectVehicle";
 import AddLoad from "./AddLoad";
+import NewTransportSelection from "./NewTransportSelection";
 
 
 const deviceLanguage =
@@ -90,6 +91,12 @@ const SettingsNavigator = createStackNavigator({
 });
 
 const AddTransportNavigator = createStackNavigator({
+    NewTransportSelection: {
+        screen: NewTransportSelection,
+        navigationOptions: {
+            title: I18n.get("New transport")
+        }
+    },
     AddTransportScreen: {
         screen: AddTransportScreen,
         navigationOptions: {

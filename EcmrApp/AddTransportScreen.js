@@ -1,7 +1,17 @@
 import React, {Component, useState} from "react";
-import {Alert, FlatList, Image, ListView, StyleSheet, TextInput, TouchableOpacity, View} from "react-native";
+import {
+    Alert,
+    FlatList,
+    Image,
+    ListView,
+    ScrollView,
+    StyleSheet,
+    TextInput,
+    TouchableOpacity,
+    View
+} from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome5";
-import {MyText} from "./Components";
+import {LoadDetailText, MyText} from "./Components";
 import {API, Auth, graphqlOperation, I18n} from "aws-amplify";
 import {Button} from "react-native-elements";
 import * as mutations from "./graphql/mutations"
@@ -9,7 +19,7 @@ import * as EmailValidator from "email-validator";
 import moment from "moment";
 import * as queries from "./graphql/queries";
 
-function TransportItem({label, value, icon, required, onPress = () => {}}) {
+function TransportItem({label, value, icon, required, onPress = () => {}, children}) {
     return (
         <TouchableOpacity style={{flexDirection: "row", marginTop: 5, alignItems: "center",
             padding: 10, borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: 'rgb(200, 200, 200)'}}
@@ -17,6 +27,7 @@ function TransportItem({label, value, icon, required, onPress = () => {}}) {
             <Icon size={20} style={{textAlign: "center", width: 30, marginEnd: 15}} name={icon}/>
             <MyText style={{textTransform: "capitalize"}}>{label}</MyText>{required && <MyText style={{color: "red"}}>*</MyText>}
             {value && <MyText style={{textAlign: "right", fontWeight: "bold", flex: 1, marginRight: 50}}>{value}</MyText>}
+            {children}
         </TouchableOpacity>);
 }
 
@@ -67,7 +78,41 @@ function AddTransportScreen({navigation: {navigate}}) {
         });
     }
 
+    function editGood(load, index) {
+        navigate('AddLoad', {
+            editLoad: load,
+            onSave: (load) => {
+                const loads = [...document.loads]
+                loads[index] = load
+                setDocument({
+                    ...document,
+                    loads: loads
+                })
+            }
+        });
+    }
+
+    function validate() {
+        if (!document.shipper || !document.carrier || !document.truck || !document.delivery ||
+                !document.pickup || document.loads.length === 0) {
+            Alert.alert(
+                I18n.get('Required information'),
+                I18n.get('Please fill in all required fields'),
+                [
+                    {text: I18n.get('OK')}
+                ],
+                {cancelable: true}
+            );
+            return false;
+        }
+        return true;
+    }
+
     async function save() {
+        if (!validate()) {
+            return;
+        }
+
         setLoading(true);
 
         function copyAddress(address) {
@@ -156,27 +201,33 @@ function AddTransportScreen({navigation: {navigate}}) {
 
     return (
         <View style={{flex: 1}}>
-            <View style={{backgroundColor: 'white'}}>
-                <AddressItem label={I18n.get("carrier")} value={document.carrier} icon={"building"} required
-                             onPress={() => selectAddress("carrier")}/>
-                <TransportItem label={I18n.get("truck")} onPress={() => selectVehicle("truck")}
-                               value={document.truck && document.truck.licensePlateNumber} icon={"truck"} required/>
-                <TransportItem label={I18n.get("trailer")} onPress={() => selectVehicle("trailer")}
-                               value={document.trailer && document.trailer.licensePlateNumber} icon={"truck"}/>
-            </View>
-            <View style={{backgroundColor: 'white', marginTop: 5}}>
-                {document.loads.length === 0 && <TransportItem label={I18n.get("No load added")} icon={"archive"}/>}
-                {document.loads.map((l, i) => <TransportItem label={l.description} key={i} icon={"archive"}/>)}
-                <TransportItem label={I18n.get("Add load")} icon={"plus"} onPress={addLoad}/>
-            </View>
-            <View style={{backgroundColor: 'white', marginTop: 5}}>
-                <AddressItem label={I18n.get("shipper")} value={document.shipper} icon={"building"} required
-                             onPress={() => selectAddress("shipper")}/>
-                <AddressItem label={I18n.get("pickup")} value={document.pickup} icon={"sign-out-alt"} required
-                             onPress={() => selectAddress("pickup")}/>
-                <AddressItem label={I18n.get("delivery")} value={document.delivery} icon={"sign-in-alt"} required
-                             onPress={() => selectAddress("delivery")}/>
-            </View>
+            <ScrollView>
+                <View style={{backgroundColor: 'white'}}>
+                    <AddressItem label={I18n.get("carrier")} value={document.carrier} icon={"building"} required
+                                 onPress={() => selectAddress("carrier")}/>
+                    <TransportItem label={I18n.get("truck")} onPress={() => selectVehicle("truck")}
+                                   value={document.truck && document.truck.licensePlateNumber} icon={"truck"} required/>
+                    <TransportItem label={I18n.get("trailer")} onPress={() => selectVehicle("trailer")}
+                                   value={document.trailer && document.trailer.licensePlateNumber} icon={"truck"}/>
+                </View>
+                <View style={{backgroundColor: 'white', marginTop: 5}}>
+                    {document.loads.length === 0 && <TransportItem label={I18n.get("No load added")} icon={"archive"}/>}
+                    {document.loads.map((l, i) =>
+                        <TransportItem onPress={() => editGood(l, i)} key={i} icon={"archive"}>
+                            <LoadDetailText load={l}/>
+                        </TransportItem>
+                    )}
+                    <TransportItem label={I18n.get("Add load")} icon={"plus"} onPress={addLoad}/>
+                </View>
+                <View style={{backgroundColor: 'white', marginTop: 5, marginBottom: 75}}>
+                    <AddressItem label={I18n.get("shipper")} value={document.shipper} icon={"building"} required
+                                 onPress={() => selectAddress("shipper")}/>
+                    <AddressItem label={I18n.get("pickup")} value={document.pickup} icon={"sign-out-alt"} required
+                                 onPress={() => selectAddress("pickup")}/>
+                    <AddressItem label={I18n.get("delivery")} value={document.delivery} icon={"sign-in-alt"} required
+                                 onPress={() => selectAddress("delivery")}/>
+                </View>
+            </ScrollView>
             <Button containerStyle={{position: "absolute", start: 10, bottom: 10, end: 10}} title={I18n.get("Save")}
                     buttonStyle={{height: 60, backgroundColor: 'rgb(60,176,60)'}}
                     loading={loading}
