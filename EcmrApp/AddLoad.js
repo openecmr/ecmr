@@ -11,7 +11,7 @@ import {
     View
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome5";
-import {MyText, Sizes} from "./Components";
+import {MyText, requiredFieldsAlert, Sizes} from "./Components";
 import {API, Auth, graphqlOperation, I18n} from "aws-amplify";
 import {Button} from "react-native-elements";
 import * as mutations from "./graphql/mutations"
@@ -19,8 +19,21 @@ import * as EmailValidator from "email-validator";
 import RadioForm from "react-native-simple-radio-button";
 
 AddLoad.navigationOptions = ({navigation, screenProps}) => ({
-    title: I18n.get('Add load')
-});
+    title: I18n.get('Add load'),
+    ...(navigation.getParam('editLoad') && {
+        headerRight: () => (
+            <Button
+                containerStyle={{backgroundColor: 'red', marginEnd: 10}}
+                onPress={() => {
+                    const onRemove = navigation.getParam('onRemove');
+                    onRemove(navigation.getParam('editLoad'));
+                    navigation.goBack();
+                }}
+                title={I18n.get("Remove")}
+            />
+        )
+    })
+})
 
 I18n.get('pallets');
 I18n.get('packages');
@@ -77,7 +90,19 @@ function AddLoad({navigation}) {
         }
     }
 
+    function validate() {
+        if (!load.description) {
+            requiredFieldsAlert();
+            return false;
+        }
+        return true;
+    }
+
     function save() {
+        if (!validate()) {
+            return;
+        }
+
         const onSave = navigation.getParam("onSave");
         onSave(load);
         navigation.goBack();
@@ -118,7 +143,7 @@ function AddLoad({navigation}) {
 
                 <View style={styles.row}>
                     <Field label={I18n.get("description")} value={load.description} icon={"archive"}
-                           onChangeText={change("description")} keyboardType={"default"}/>
+                           onChangeText={change("description")} keyboardType={"default"} required/>
                 </View>
             </ScrollView>
 

@@ -11,7 +11,7 @@ import {
     View
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome5";
-import {LoadDetailText, MyText} from "./Components";
+import {LoadDetailText, MyText, requiredFieldsAlert} from "./Components";
 import {API, Auth, graphqlOperation, I18n} from "aws-amplify";
 import {Button} from "react-native-elements";
 import * as mutations from "./graphql/mutations"
@@ -86,7 +86,15 @@ function AddTransportScreen({navigation: {navigate}}) {
                 loads[index] = load
                 setDocument({
                     ...document,
-                    loads: loads
+                    loads
+                })
+            },
+            onRemove: (load) => {
+                const loads = [...document.loads]
+                loads.splice(index, 1);
+                setDocument({
+                    ...document,
+                    loads
                 })
             }
         });
@@ -95,14 +103,7 @@ function AddTransportScreen({navigation: {navigate}}) {
     function validate() {
         if (!document.shipper || !document.carrier || !document.truck || !document.delivery ||
                 !document.pickup || document.loads.length === 0) {
-            Alert.alert(
-                I18n.get('Required information'),
-                I18n.get('Please fill in all required fields'),
-                [
-                    {text: I18n.get('OK')}
-                ],
-                {cancelable: true}
-            );
+            requiredFieldsAlert();
             return false;
         }
         return true;

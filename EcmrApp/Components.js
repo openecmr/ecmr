@@ -1,5 +1,5 @@
 import React from "react";
-import {Modal, Text, View} from "react-native";
+import {Alert, Modal, Text, View} from "react-native";
 import Icon, {default as FIcon} from "react-native-vector-icons/FontAwesome";
 import {Button} from "react-native-elements";
 import moment from "moment/min/moment-with-locales";
@@ -83,6 +83,17 @@ const LicensePlates = ({trailer, truck, style}) =>
         </View>
     </View>);
 
+function requiredFieldsAlert() {
+    Alert.alert(
+        I18n.get('Required information'),
+        I18n.get('Please fill in all required fields'),
+        [
+            {text: I18n.get('OK')}
+        ],
+        {cancelable: true}
+    );
+}
+
 const Sizes = {
     PADDING_FROM_SCREEN_BORDER: 15,
     ICON_WIDTH: 15
@@ -96,5 +107,6 @@ export {
     ArrivalDate,
     LoadDetailText,
     LicensePlates,
-    Sizes
+    Sizes,
+    requiredFieldsAlert
 };
