@@ -26,26 +26,26 @@ const AddressItem = ({address, onSelect}) =>
 
 class SelectAddress extends Component {
     static navigationOptions = ({navigation, screenProps}) => ({
-        title: I18n.get('Select address'),
-        headerRight: () => (
-            <Button
-                containerStyle={{marginEnd: 10}}
-                onPress={() => {
-                    const site = navigation.getParam('site');
-                    const item = navigation.getParam('item');
-                    const addressId = item[site + "ContactId"];
-                    const addressName = item[site].name;
-                    const {owner, driverDriverId} = item;
-                    navigation.navigate('AddContact', {
-                        addressId,
-                        addressName,
-                        owner,
-                        driverDriverId
-                    })
-                }}
-                title={I18n.get("New")}
-            />
-        )
+        title: navigation.getParam("label") || I18n.get('Select address'),
+        // headerRight: () => (
+        //     <Button
+        //         containerStyle={{marginEnd: 10}}
+        //         onPress={() => {
+        //             const site = navigation.getParam('site');
+        //             const item = navigation.getParam('item');
+        //             const addressId = item[site + "ContactId"];
+        //             const addressName = item[site].name;
+        //             const {owner, driverDriverId} = item;
+        //             navigation.navigate('AddContact', {
+        //                 addressId,
+        //                 addressName,
+        //                 owner,
+        //                 driverDriverId
+        //             })
+        //         }}
+        //         title={I18n.get("New")}
+        //     />
+        // )
     });
 
     constructor(props) {

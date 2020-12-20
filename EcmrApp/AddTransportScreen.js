@@ -55,9 +55,9 @@ function AddTransportScreen({navigation: {navigate}}) {
         });
     }
 
-    function selectAddress(key) {
+    function selectAddress(label) {
         navigate('SelectAddress', {
-            label: I18n.get(key),
+            label,
             onSelect: (address) => {
                 setDocument({
                     ...document,
@@ -166,17 +166,11 @@ function AddTransportScreen({navigation: {navigate}}) {
                         }
                     }
                 ],
-                shipperContactId: document.shipper.id,
-                carrierContactId: document.carrier.id,
-                deliveryContactId: document.delivery.id,
-                pickupContactId: document.pickup.id,
                 driver: {
                     name: driver.name,
                     username: username,
                 },
-                driverDriverId: driver.id,
                 truck: document.truck.licensePlateNumber,
-                truckVehicleId: document.truck.id,
                 ...(document.trailer && {
                     trailer: document.trailer.licensePlateNumber,
                     trailerVehicleId: document.trailer.id
@@ -184,10 +178,19 @@ function AddTransportScreen({navigation: {navigate}}) {
                 arrivalDate: moment().format("YYYY-MM-DD"),
                 deliveryDate: moment().format("YYYY-MM-DD"),
                 createdAt: now,
+                updatedAt: now,
                 needAcknowledge: false,
                 creator: {
                     name: company.name
-                }
+                },
+
+                shipperContactId: document.shipper.id,
+                carrierContactId: document.carrier.id,
+                deliveryContactId: document.delivery.id,
+                pickupContactId: document.pickup.id,
+                driverDriverId: driver.id,
+                truckVehicleId: document.truck.id,
+                creatorCompanyId: company.id
             };
 
             console.info(request);
@@ -205,7 +208,7 @@ function AddTransportScreen({navigation: {navigate}}) {
             <ScrollView>
                 <View style={{backgroundColor: 'white'}}>
                     <AddressItem label={I18n.get("carrier")} value={document.carrier} icon={"building"} required
-                                 onPress={() => selectAddress("carrier")}/>
+                                 onPress={() => selectAddress(I18n.get("Select carrier"))}/>
                     <TransportItem label={I18n.get("truck")} onPress={() => selectVehicle("truck")}
                                    value={document.truck && document.truck.licensePlateNumber} icon={"truck"} required/>
                     <TransportItem label={I18n.get("trailer")} onPress={() => selectVehicle("trailer")}
@@ -222,11 +225,11 @@ function AddTransportScreen({navigation: {navigate}}) {
                 </View>
                 <View style={{backgroundColor: 'white', marginTop: 5, marginBottom: 75}}>
                     <AddressItem label={I18n.get("shipper")} value={document.shipper} icon={"building"} required
-                                 onPress={() => selectAddress("shipper")}/>
+                                 onPress={() => selectAddress(I18n.get("Select shipper"))}/>
                     <AddressItem label={I18n.get("pickup")} value={document.pickup} icon={"sign-out-alt"} required
-                                 onPress={() => selectAddress("pickup")}/>
+                                 onPress={() => selectAddress(I18n.get("Select pickup address"))}/>
                     <AddressItem label={I18n.get("delivery")} value={document.delivery} icon={"sign-in-alt"} required
-                                 onPress={() => selectAddress("delivery")}/>
+                                 onPress={() => selectAddress(I18n.get("Select delivery address"))}/>
                 </View>
             </ScrollView>
             <Button containerStyle={{position: "absolute", start: 10, bottom: 10, end: 10}} title={I18n.get("Save")}
