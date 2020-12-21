@@ -1,6 +1,7 @@
 import React from "react";
-import {Alert, Modal, Text, View} from "react-native";
+import {Alert, FlatList, Modal, Text, TouchableOpacity, View} from "react-native";
 import Icon, {default as FIcon} from "react-native-vector-icons/FontAwesome";
+import {default as FIcon5} from "react-native-vector-icons/FontAwesome5";
 import {Button} from "react-native-elements";
 import moment from "moment/min/moment-with-locales";
 import {I18n} from 'aws-amplify';
@@ -94,6 +95,43 @@ function requiredFieldsAlert() {
     );
 }
 
+function SelectItem({item, onSelect, renderTitle, renderSubtitle}) {
+    return (
+        <TouchableOpacity onPress={onSelect}>
+            <View style={{
+                flexDirection: "row",
+                backgroundColor: 'white',
+                padding: 10,
+                borderBottomColor: 'rgb(246, 246, 246)',
+                borderBottomWidth: 2
+            }}>
+                <FIcon5 size={30} style={{color: 'rgb(111, 111, 111)'}} name={"user-alt"}/>
+                <View style={{marginLeft: 10}}>
+                    <MyText style={{fontWeight: "bold"}}>{renderTitle(item)}</MyText>
+                    <MyText style={{fontSize: 11}}>{renderSubtitle(item)}</MyText>
+                </View>
+            </View>
+        </TouchableOpacity>
+    );
+}
+
+function SelectList({data, renderTitle, renderSubtitle, emptyLabel, onSelect}) {
+    return (
+        <View style={{flex: 1}}>
+            <FlatList renderItem={(dataItem) => <SelectItem onSelect={() => onSelect(dataItem)}
+                                                            item={dataItem} renderTitle={renderTitle}
+                                                            renderSubtitle={renderSubtitle}/>}
+                      keyExtractor={(item) => item.id}
+                      data={data}
+                      style={{marginTop: 5, marginBottom: 70}}
+                      ListEmptyComponent={<MyText style={{fontWeight: "bold", padding: 20, textAlign: "center"}}>
+                          {emptyLabel}</MyText>}
+
+            />
+        </View>
+    );
+}
+
 const Sizes = {
     PADDING_FROM_SCREEN_BORDER: 15,
     ICON_WIDTH: 15
@@ -108,5 +146,6 @@ export {
     LoadDetailText,
     LicensePlates,
     Sizes,
-    requiredFieldsAlert
+    requiredFieldsAlert,
+    SelectList
 };

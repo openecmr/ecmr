@@ -55,7 +55,7 @@ function AddTransportScreen({navigation: {navigate}}) {
         });
     }
 
-    function selectAddress(label) {
+    function selectAddress(key, label) {
         navigate('SelectAddress', {
             label,
             onSelect: (address) => {
@@ -208,7 +208,7 @@ function AddTransportScreen({navigation: {navigate}}) {
             <ScrollView>
                 <View style={{backgroundColor: 'white'}}>
                     <AddressItem label={I18n.get("carrier")} value={document.carrier} icon={"building"} required
-                                 onPress={() => selectAddress(I18n.get("Select carrier"))}/>
+                                 onPress={() => selectAddress("carrier", I18n.get("Select carrier"))}/>
                     <TransportItem label={I18n.get("truck")} onPress={() => selectVehicle("truck")}
                                    value={document.truck && document.truck.licensePlateNumber} icon={"truck"} required/>
                     <TransportItem label={I18n.get("trailer")} onPress={() => selectVehicle("trailer")}
@@ -225,11 +225,11 @@ function AddTransportScreen({navigation: {navigate}}) {
                 </View>
                 <View style={{backgroundColor: 'white', marginTop: 5, marginBottom: 75}}>
                     <AddressItem label={I18n.get("shipper")} value={document.shipper} icon={"building"} required
-                                 onPress={() => selectAddress(I18n.get("Select shipper"))}/>
+                                 onPress={() => selectAddress("shipper", I18n.get("Select shipper"))}/>
                     <AddressItem label={I18n.get("pickup")} value={document.pickup} icon={"sign-out-alt"} required
-                                 onPress={() => selectAddress(I18n.get("Select pickup address"))}/>
+                                 onPress={() => selectAddress("pickup", I18n.get("Select pickup address"))}/>
                     <AddressItem label={I18n.get("delivery")} value={document.delivery} icon={"sign-in-alt"} required
-                                 onPress={() => selectAddress(I18n.get("Select delivery address"))}/>
+                                 onPress={() => selectAddress("delivery", I18n.get("Select delivery address"))}/>
                 </View>
             </ScrollView>
             <Button containerStyle={{position: "absolute", start: 10, bottom: 10, end: 10}} title={I18n.get("Save")}

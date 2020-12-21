@@ -1,28 +1,11 @@
 import React, {Component} from "react";
 import {FlatList, Image, ListView, StyleSheet, TextInput, TouchableOpacity, View} from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome5";
-import {MyText} from "./Components";
+import {MyText, SelectList} from "./Components";
 import {API, Auth, graphqlOperation, I18n} from "aws-amplify";
 import {Button} from "react-native-elements";
 import * as customQueries from "./graphql/custom-queries"
 import * as queries from "./graphql/queries"
-
-const AddressItem = ({address, onSelect}) =>
-    <TouchableOpacity onPress={onSelect}>
-        <View style={{
-            flexDirection: "row",
-            backgroundColor: 'white',
-            padding: 10,
-            borderBottomColor: 'rgb(246, 246, 246)',
-            borderBottomWidth: 2
-        }}>
-            <Icon size={30} style={{color: 'rgb(111, 111, 111)'}} name={"user-alt"}/>
-            <View style={{marginLeft: 10}}>
-                <MyText style={{fontWeight: "bold"}}>{address.item.name}</MyText>
-                <MyText style={{fontSize: 11}}>{address.item.address}{!!address.item.city && ` · ${address.item.city}`}</MyText>
-            </View>
-        </View>
-    </TouchableOpacity>;
 
 class SelectAddress extends Component {
     static navigationOptions = ({navigation, screenProps}) => ({
@@ -64,17 +47,12 @@ class SelectAddress extends Component {
 
     render() {
         return (
-            <View style={{flex: 1}}>
-                <FlatList renderItem={(address) => <AddressItem onSelect={() => this.selectAddress(address.item)}
-                                                                address={address} />}
-                          keyExtractor={(item) => item.id}
-                          data={this.state.addresses}
-                          style={{marginTop: 5, marginBottom: 70}}
-                          ListEmptyComponent={<MyText style={{fontWeight: "bold", padding: 20, textAlign: "center"}}>
-                              {I18n.get("No addresses. Add an address or choose manual entry.")}</MyText>}
-
-                />
-            </View>
+            <SelectList data={this.state.addresses}
+                        onSelect={(dataItem) => this.selectAddress(dataItem.item)}
+                        emptyLabel={I18n.get("No addresses. Add an address or choose manual entry.")}
+                        renderTitle={(address) => address.item.name}
+                        renderSubtitle={(address=> `${address.item.address}${!!address.item.city && ` · ${address.item.city}`}`)}
+            />
         )
     }
 
@@ -103,16 +81,5 @@ class SelectAddress extends Component {
         this.navigationEventSubscription.remove();
     }
 }
-
-const styles = StyleSheet.create({
-    textInput: {
-        height: 40,
-        borderColor: 'gray',
-        borderWidth: 1
-    },
-    baseContainer: {
-        flex: 1, padding: 10
-    },
-});
 
 export default SelectAddress;
