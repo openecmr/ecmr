@@ -521,7 +521,7 @@ class NewTransport extends Component {
                             companyId={this.props.company.id}
                             truckSelected={(vehicle) => this.setState({
                                 truckVehicleId: vehicle ? vehicle.id : null,
-                                truck: vehicle ? vehicle.licensePlateNumber : null
+                                    truck: vehicle ? vehicle.licensePlateNumber : null
                             })}
                             truckId={this.state.truckVehicleId}
                         />},

@@ -1,23 +1,3 @@
-#type Task
-#  @model
-#  @auth(rules: [
-#      {allow: groups, groups: ["Managers"], queries: null, mutations: [create, update, delete]},
-#      {allow: groups, groups: ["Employees"], queries: [get, list], mutations: null}
-#    ])
-#{
-#  id: ID!
-#  title: String!
-#  description: String
-#  status: String
-#}
-#type PrivateNote
-#  @model
-#  @auth(rules: [{allow: owner}])
-#{
-#  id: ID!
-#  content: String!
-#}
-
 type S3Object @aws_api_key @aws_cognito_user_pools @aws_iam {
     bucket: String!
     region: String!
@@ -35,7 +15,7 @@ enum ContractStatus {
 type Contract @model
     @auth(rules: [
         { allow: owner },
-        { allow: owner, ownerField: "carrierUsername", operations: [read, update] },
+        { allow: owner, ownerField: "carrierUsername", operations: [read, update, create] },
         { allow: public, provider: apiKey, operations: [read]}
     ])
     @key(name: "OwnerArrival", fields: ["owner", "arrivalDate"], queryField: "contractsByOwnerArrivalDate")
@@ -111,8 +91,9 @@ enum VehicleType {
 type Vehicle
     @model
     @auth(rules: [
-        { allow: owner
-    }])
+        { allow: owner },
+        { allow: groups, groupsField: "owner", operations: [read, create] }
+    ])
     @key(name: "OwnerLicensePlateNumber", fields: ["owner", "licensePlateNumber"], queryField: "vehicleByOwner")
 {
     id: ID!
@@ -127,8 +108,9 @@ type Vehicle
 type Contact
     @model
     @auth(rules: [
-        { allow: owner
-    }])
+        { allow: owner },
+        { allow: groups, groupsField: "owner", operations: [read, create] }
+    ])
     @key(name: "OwnerName", fields: ["owner", "name"], queryField: "contactByOwner")
 {
     id: ID!
@@ -165,7 +147,8 @@ type ContactPerson @model(subscriptions: null)
 type Company
     @model
     @auth(rules: [
-        { allow: owner }
+        { allow: owner },
+        { allow: groups, groupsField: "owner", operations: [ read ] }
     ])
     @key(name: "OwnerName", fields: ["owner", "name"], queryField: "companyByOwner")
 {
@@ -201,6 +184,7 @@ type Driver
     @model
     @auth(rules: [
         { allow: owner },
+        { allow: groups, groupsField: "owner", operations: [ read ] },
         { allow: private, provider: iam, operations: [read, update] }
     ])
     @key(name: "AssociationSecret", fields: ["associationSecret"], queryField: "driverByAssociationSecret")
