@@ -11,6 +11,7 @@
     "i18n": "i18next-scanner --config i18next-scanner.config.js"
   },
   "dependencies": {
+    "@bugsnag/react-native": "^7.5.5",
     "@react-native-community/masked-view": "^0.1.10",
     "@react-native-community/netinfo": "^5.9.2",
     "@react-native-community/picker": "^1.6.1",
@@ -44,6 +45,7 @@
   "devDependencies": {
     "@babel/core": "^7.10.2",
     "@babel/runtime": "^7.10.2",
+    "@bugsnag/source-maps": "^1.0.1",
     "@react-native-community/eslint-config": "^1.1.0",
     "babel-jest": "^26.0.1",
     "i18next-scanner": "^2.11.0",

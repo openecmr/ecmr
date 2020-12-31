@@ -26,26 +26,7 @@ const VehicleItem = ({vehicle, onSelect}) =>
 
 class SelectVehicle extends Component {
     static navigationOptions = ({navigation, screenProps}) => ({
-        title: I18n.get('Select address'),
-        headerRight: () => (
-            <Button
-                containerStyle={{marginEnd: 10}}
-                onPress={() => {
-                    const site = navigation.getParam('site');
-                    const item = navigation.getParam('item');
-                    const addressId = item[site + "ContactId"];
-                    const addressName = item[site].name;
-                    const {owner, driverDriverId} = item;
-                    navigation.navigate('AddContact', {
-                        addressId,
-                        addressName,
-                        owner,
-                        driverDriverId
-                    })
-                }}
-                title={I18n.get("New")}
-            />
-        )
+        title: I18n.get('Select address')
     });
 
     constructor(props) {
@@ -88,17 +69,20 @@ class SelectVehicle extends Component {
         this.setState({
             loading: true
         });
-        const user = (await Auth.currentAuthenticatedUser()).getUsername();
-        const response = await API.graphql(graphqlOperation(queries.vehicleByOwner, {
-            limit: 50,
-            owner: user,
-            sortDirection: "ASC"
-        }));
-        console.log(response.data.vehicleByOwner.items);
-        this.setState({
-            vehicles: response.data.vehicleByOwner.items.filter(v => v.type === this.state.vehicleType),
-            loading: false
-        });
+        const companyOwner = this.props.navigation.getParam("companyOwner");
+        try {
+            const response = await API.graphql(graphqlOperation(queries.vehicleByOwner, {
+                limit: 50,
+                owner: companyOwner,
+                sortDirection: "ASC"
+            }));
+            this.setState({
+                vehicles: response.data.vehicleByOwner.items.filter(v => v.type === this.state.vehicleType),
+                loading: false
+            });
+        } catch(ex) {
+            console.warn(ex);
+        }
     }
 
     componentWillUnmount() {

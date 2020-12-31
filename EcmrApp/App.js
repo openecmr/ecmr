@@ -34,7 +34,8 @@ import SelectAddress from "./SelectAddress";
 import SelectVehicle from "./SelectVehicle";
 import AddLoad from "./AddLoad";
 import NewTransportSelection from "./NewTransportSelection";
-
+import SelectCompany from "./SelectCompany";
+import Bugsnag from '@bugsnag/react-native'
 
 const deviceLanguage =
     Platform.OS === 'ios'
@@ -59,7 +60,9 @@ const config = {
 };
 config['oauth']['domain'] = "auth.openecmr.com";
 Amplify.configure(config);
-Amplify.Logger.LOG_LEVEL = 'DEBUG';
+// Amplify.Logger.LOG_LEVEL = 'DEBUG';
+
+Bugsnag.start()
 
 const MainNavigator = createStackNavigator({
     Transports: {screen: Transports},
@@ -111,6 +114,12 @@ const AddTransportNavigator = createStackNavigator({
     },
     AddLoad: {
         screen: AddLoad
+    },
+    SelectCompany: {
+        screen: SelectCompany,
+        navigationOptions: {
+            title: I18n.get("Select submitter company")
+        }
     }
 });
 

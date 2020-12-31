@@ -49,7 +49,7 @@ class SelectAddress extends Component {
         return (
             <SelectList data={this.state.addresses}
                         onSelect={(dataItem) => this.selectAddress(dataItem.item)}
-                        emptyLabel={I18n.get("No addresses. Add an address or choose manual entry.")}
+                        emptyLabel={I18n.get("No addresses. Ask your company to add new addresses through the portal.")}
                         renderTitle={(address) => address.item.name}
                         renderSubtitle={(address=> `${address.item.address}${!!address.item.city && ` · ${address.item.city}`}`)}
             />
@@ -65,10 +65,10 @@ class SelectAddress extends Component {
         this.setState({
             loading: true
         });
-        const user = (await Auth.currentAuthenticatedUser()).getUsername();
+        const companyOwner = this.props.navigation.getParam("companyOwner");
         const response = await API.graphql(graphqlOperation(queries.contactByOwner, {
             limit: 50,
-            owner: user,
+            owner: companyOwner,
             sortDirection: "ASC"
         }));
         this.setState({

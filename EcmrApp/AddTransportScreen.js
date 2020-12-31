@@ -36,16 +36,18 @@ function AddressItem({value, ...rest}) {
         <TransportItem value={value  && value.name} {...rest} />);
 }
 
-function AddTransportScreen({navigation: {navigate}}) {
+function AddTransportScreen({navigation, navigation: {navigate}}) {
     const [document, setDocument] = useState({
         loads: []
     });
     const [loading, setLoading] = useState(false);
+    const company = navigation.getParam("company");
 
     function selectVehicle(key) {
         navigate('SelectVehicle', {
             vehicleType: key.toUpperCase(),
             label: I18n.get(key),
+            companyOwner: company.owner,
             onSelect: (vehicle) => {
                 setDocument({
                     ...document,
@@ -58,6 +60,7 @@ function AddTransportScreen({navigation: {navigate}}) {
     function selectAddress(key, label) {
         navigate('SelectAddress', {
             label,
+            companyOwner: company.owner,
             onSelect: (address) => {
                 setDocument({
                     ...document,
@@ -129,20 +132,12 @@ function AddTransportScreen({navigation: {navigate}}) {
         try {
             const username = (await Auth.currentAuthenticatedUser()).getUsername();
 
-            const driverResponse = await API.graphql(graphqlOperation(queries.driverByOwner, {owner: username}));
+            const driverResponse = await API.graphql(graphqlOperation(queries.driverByOwner, {owner: company.owner}));
             const driver = driverResponse.data.driverByOwner.items.find(d => d.carrier === username);
             if (!driver) {
                 console.warn("no driver: " + driver);
                 return;
             }
-            const companyResponse = await API.graphql(graphqlOperation(queries.companyByOwner, {owner: username}));
-            if (!companyResponse.data.companyByOwner.items.length) {
-                console.warn("no company");
-                return;
-            }
-            const company = companyResponse.data.companyByOwner.items[0];
-
-
             const now = moment().toISOString();
             const request = {
                 shipper: copyAddress(document.shipper),
@@ -150,7 +145,7 @@ function AddTransportScreen({navigation: {navigate}}) {
                 delivery: copyAddress(document.delivery),
                 pickup: copyAddress(document.pickup),
                 loads: document.loads,
-                owner: username,
+                owner: company.owner,
                 status: 'CREATED',
                 carrierUsername: username,
                 events: [
@@ -192,10 +187,12 @@ function AddTransportScreen({navigation: {navigate}}) {
                 truckVehicleId: document.truck.id,
                 creatorCompanyId: company.id
             };
-
-            console.info(request);
-
             const result = await API.graphql(graphqlOperation(mutations.createContract, {input: request}));
+            navigation.popToTop();
+            navigate('Transport', {
+                item: result.data.createContract,
+                site: 'pickup'
+            });
         } catch (ex) {
             console.warn(ex);
         } finally {
@@ -206,7 +203,11 @@ function AddTransportScreen({navigation: {navigate}}) {
     return (
         <View style={{flex: 1}}>
             <ScrollView>
-                <View style={{backgroundColor: 'white'}}>
+                <View style={{backgroundColor: 'white', marginTop: 5}}>
+                    <TransportItem label={I18n.get("Submitter")} value={company.name} icon={"building"}/>
+                </View>
+
+                <View style={{backgroundColor: 'white', marginTop: 5}}>
                     <AddressItem label={I18n.get("carrier")} value={document.carrier} icon={"building"} required
                                  onPress={() => selectAddress("carrier", I18n.get("Select carrier"))}/>
                     <TransportItem label={I18n.get("truck")} onPress={() => selectVehicle("truck")}
@@ -239,20 +240,5 @@ function AddTransportScreen({navigation: {navigate}}) {
         </View>
     )
 }
-
-const styles = StyleSheet.create({
-    textInput: {
-        height: 40,
-        borderBottomColor: 'gray',
-        borderBottomWidth: 1,
-        flex: 1,
-        marginLeft: 10
-    },
-    baseContainer: {
-        flex: 1, padding: 10
-    },
-});
-
-
 
 export default AddTransportScreen;

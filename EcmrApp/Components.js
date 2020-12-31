@@ -115,17 +115,17 @@ function SelectItem({item, onSelect, renderTitle, renderSubtitle}) {
     );
 }
 
-function SelectList({data, renderTitle, renderSubtitle, emptyLabel, onSelect}) {
+function SelectList({data, renderTitle, renderSubtitle, emptyLabel, onSelect, loading}) {
     return (
         <View style={{flex: 1}}>
             <FlatList renderItem={(dataItem) => <SelectItem onSelect={() => onSelect(dataItem)}
                                                             item={dataItem} renderTitle={renderTitle}
                                                             renderSubtitle={renderSubtitle}/>}
-                      keyExtractor={(item) => item.id}
+                      keyExtractor={(item, index) => index.toString()}
                       data={data}
                       style={{marginTop: 5, marginBottom: 70}}
                       ListEmptyComponent={<MyText style={{fontWeight: "bold", padding: 20, textAlign: "center"}}>
-                          {emptyLabel}</MyText>}
+                          {loading ? "" : emptyLabel}</MyText>}
 
             />
         </View>
