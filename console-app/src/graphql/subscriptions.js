@@ -383,6 +383,7 @@ export const onCreateContract = /* GraphQL */ `
       creatorCompanyId
       trailerVehicleId
       truckVehicleId
+      openecmrId
     }
   }
 `;
@@ -522,6 +523,7 @@ export const onUpdateContract = /* GraphQL */ `
       creatorCompanyId
       trailerVehicleId
       truckVehicleId
+      openecmrId
     }
   }
 `;
@@ -661,6 +663,7 @@ export const onDeleteContract = /* GraphQL */ `
       creatorCompanyId
       trailerVehicleId
       truckVehicleId
+      openecmrId
     }
   }
 `;

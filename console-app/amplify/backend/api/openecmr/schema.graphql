@@ -24,6 +24,11 @@ type Contract @model
     @key(name: "CarrierUpdatedAt", fields: ["carrierUsername", "updatedAt"], queryField: "contractsByCarrierUpdatedAt")
 {
     id: ID!
+    openecmrId: String @auth(rules: [
+        { allow: owner, operations: [read] },
+        { allow: owner, ownerField: "carrierUsername", operations: [read] },
+        { allow: public, provider: apiKey, operations: [read]}
+    ])
     owner: String!
     carrierUsername: String!
     status: ContractStatus
@@ -200,6 +205,7 @@ type Driver
 
 type Mutation {
     activate(activationCode: String): String @function(name: "activatefunction-${env}")
+    createContractCustom(input: CreateContractCustomInput!): Contract
 }
 
 type Query {
@@ -258,6 +264,125 @@ type Event @aws_api_key @aws_cognito_user_pools @aws_iam {
 
 type Attachment @aws_api_key @aws_cognito_user_pools @aws_iam {
     location: S3Object
+    size: Int
+    filename: String!
+    mimeType: String!
+    extension: String!
+}
+
+## create contract input params
+input CreateContractCustomInput {
+    id: ID
+    owner: String!
+    carrierUsername: String!
+    status: ContractStatus
+    creator: CreatorDetailCustomInput
+    shipper: AddressCustomInput
+    carrier: AddressCustomInput
+    delivery: AddressCustomInput
+    arrivalDate: String!
+    arrivalTime: TimeSlotCustomInput
+    deliveryDate: String
+    deliveryTime: TimeSlotCustomInput
+    pickup: AddressCustomInput
+    loads: [LoadCustomInput]!
+    driver: DriverDetailCustomInput
+    trailer: String
+    truck: String
+    references: ReferenceCustomInput
+    updatedAt: String
+    createdAt: String
+    events: [EventCustomInput]!
+    needAcknowledge: Boolean
+    shipperContactId: ID
+    carrierContactId: ID
+    pickupContactId: ID
+    deliveryContactId: ID
+    driverDriverId: ID
+    creatorCompanyId: ID
+    trailerVehicleId: ID
+    truckVehicleId: ID
+}
+
+input CreatorDetailCustomInput {
+    name: String!
+}
+
+input AddressCustomInput {
+    name: String
+    postalCode: String
+    address: String
+    city: String
+    country: String
+    phone: String
+    email: String
+}
+
+input TimeSlotCustomInput {
+    start: String!
+    end: String!
+}
+
+input LoadCustomInput {
+    category: String
+    quantity: Int
+    volume: Float
+    loadMeters: Float
+    netWeight: Float
+    description: String
+    hazardousGoodsItems: HazardousGoodsItemsCustomInput
+}
+
+input HazardousGoodsItemsCustomInput {
+    hazardLabel: String!
+}
+
+input DriverDetailCustomInput {
+    name: String
+    username: String
+}
+
+input ReferenceCustomInput {
+    carrier: String
+}
+
+input EventCustomInput {
+    author: AuthorCustomInput!
+    type: EventType!
+    site: String
+    createdAt: String!
+    latitude: Float
+    longitude: Float
+    signature: SignatureCustomInput
+    driverObservation: String
+    signatoryObservation: String
+    sendCopy: Boolean
+    assignedDriver: DriverDetailCustomInput
+    photos: [S3ObjectCustomInput!]
+    attachments: [AttachmentCustomInput!]
+    deletesAttachments: String
+}
+
+input AuthorCustomInput {
+    username: String!
+}
+
+input SignatureCustomInput {
+    method: SignatureMethod!
+    signatureImageDriver: S3ObjectCustomInput
+    signatureImageSignatory: S3ObjectCustomInput
+    signatoryName: String
+    signatoryEmail: String
+}
+
+input S3ObjectCustomInput {
+    bucket: String!
+    region: String!
+    key: String!
+}
+
+input AttachmentCustomInput {
+    location: S3ObjectCustomInput
     size: Int
     filename: String!
     mimeType: String!

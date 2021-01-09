@@ -6,6 +6,146 @@ export const activate = /* GraphQL */ `
     activate(activationCode: $activationCode)
   }
 `;
+export const createContractCustom = /* GraphQL */ `
+  mutation CreateContractCustom($input: CreateContractCustomInput!) {
+    createContractCustom(input: $input) {
+      id
+      owner
+      carrierUsername
+      status
+      creator {
+        name
+      }
+      shipper {
+        name
+        postalCode
+        address
+        city
+        country
+        phone
+        email
+      }
+      carrier {
+        name
+        postalCode
+        address
+        city
+        country
+        phone
+        email
+      }
+      delivery {
+        name
+        postalCode
+        address
+        city
+        country
+        phone
+        email
+      }
+      arrivalDate
+      arrivalTime {
+        start
+        end
+      }
+      deliveryDate
+      deliveryTime {
+        start
+        end
+      }
+      pickup {
+        name
+        postalCode
+        address
+        city
+        country
+        phone
+        email
+      }
+      loads {
+        category
+        quantity
+        volume
+        loadMeters
+        netWeight
+        description
+        hazardousGoodsItems {
+          hazardLabel
+        }
+      }
+      driver {
+        name
+        username
+      }
+      trailer
+      truck
+      references {
+        carrier
+      }
+      updatedAt
+      createdAt
+      events {
+        author {
+          username
+        }
+        type
+        site
+        createdAt
+        latitude
+        longitude
+        signature {
+          method
+          signatureImageDriver {
+            bucket
+            region
+            key
+          }
+          signatureImageSignatory {
+            bucket
+            region
+            key
+          }
+          signatoryName
+          signatoryEmail
+        }
+        driverObservation
+        signatoryObservation
+        sendCopy
+        assignedDriver {
+          name
+          username
+        }
+        photos {
+          bucket
+          region
+          key
+        }
+        attachments {
+          location {
+            bucket
+            region
+            key
+          }
+          size
+          filename
+          mimeType
+          extension
+        }
+        deletesAttachments
+      }
+      needAcknowledge
+      shipperContactId
+      carrierContactId
+      pickupContactId
+      deliveryContactId
+      driverDriverId
+      creatorCompanyId
+      trailerVehicleId
+      truckVehicleId
+      openecmrId
+    }
+  }
+`;
 export const createContract = /* GraphQL */ `
   mutation CreateContract($input: CreateContractInput!) {
     createContract(input: $input) {
@@ -142,6 +282,7 @@ export const createContract = /* GraphQL */ `
       creatorCompanyId
       trailerVehicleId
       truckVehicleId
+      openecmrId
     }
   }
 `;
@@ -281,6 +422,7 @@ export const updateContract = /* GraphQL */ `
       creatorCompanyId
       trailerVehicleId
       truckVehicleId
+      openecmrId
     }
   }
 `;
@@ -420,6 +562,7 @@ export const deleteContract = /* GraphQL */ `
       creatorCompanyId
       trailerVehicleId
       truckVehicleId
+      openecmrId
     }
   }
 `;

@@ -868,7 +868,7 @@ class NewTransport extends Component {
 
             console.log(input);
 
-            await API.graphql(graphqlOperation(mutations.createContract, {input: input}));
+            await API.graphql(graphqlOperation(mutations.createContractCustom, {input: input}));
             this.props.history.push('/transports')
         } catch (ex) {
             console.warn("error while creating transport" + JSON.stringify(ex));

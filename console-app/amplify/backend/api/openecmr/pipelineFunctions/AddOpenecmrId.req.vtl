@@ -1,0 +1,71 @@
+## [Start] Check authMode and execute owner/group checks **
+#if( $authMode == "userPools" )
+    ## No Static Group Authorization Rules **
+
+
+    ## No Dynamic Group Authorization Rules **
+
+
+    ## [Start] Owner Authorization Checks **
+    #set( $isOwnerAuthorized = false )
+    ## Authorization rule: { allow: owner, ownerField: "owner", identityClaim: "cognito:username" } **
+    #set( $allowedOwners0 = $util.defaultIfNull($ctx.args.input.owner, null) )
+    #set( $identityValue = $util.defaultIfNull($ctx.identity.claims.get("username"), $util.defaultIfNull($ctx.identity.claims.get("cognito:username"), "___xamznone____")) )
+    #if( $util.isList($allowedOwners0) )
+        #foreach( $allowedOwner in $allowedOwners0 )
+            #if( $allowedOwner == $identityValue )
+                #set( $isOwnerAuthorized = true )
+            #end
+        #end
+    #end
+    #if( $util.isString($allowedOwners0) )
+        #if( $allowedOwners0 == $identityValue )
+            #set( $isOwnerAuthorized = true )
+        #end
+    #end
+    #if( $util.isNull($allowedOwners0) && (! $ctx.args.input.containsKey("owner")) )
+        $util.qr($ctx.args.input.put("owner", $identityValue))
+        #set( $isOwnerAuthorized = true )
+    #end
+    ## Authorization rule: { allow: owner, ownerField: "carrierUsername", identityClaim: "cognito:username" } **
+    #set( $allowedOwners1 = $util.defaultIfNull($ctx.args.input.carrierUsername, null) )
+    #set( $identityValue = $util.defaultIfNull($ctx.identity.claims.get("username"), $util.defaultIfNull($ctx.identity.claims.get("cognito:username"), "___xamznone____")) )
+    #if( $util.isList($allowedOwners1) )
+        #foreach( $allowedOwner in $allowedOwners1 )
+            #if( $allowedOwner == $identityValue )
+                #set( $isOwnerAuthorized = true )
+            #end
+        #end
+    #end
+    #if( $util.isString($allowedOwners1) )
+        #if( $allowedOwners1 == $identityValue )
+            #set( $isOwnerAuthorized = true )
+        #end
+    #end
+    #if( $util.isNull($allowedOwners1) && (! $ctx.args.input.containsKey("carrierUsername")) )
+        $util.qr($ctx.args.input.put("carrierUsername", $identityValue))
+        #set( $isOwnerAuthorized = true )
+    #end
+    ## [End] Owner Authorization Checks **
+
+
+    ## [Start] Throw if unauthorized **
+    #if( !($isStaticGroupAuthorized == true || $isDynamicGroupAuthorized == true || $isOwnerAuthorized == true) )
+        $util.unauthorized()
+    #end
+    ## [End] Throw if unauthorized **
+#end
+## [End] Check authMode and execute owner/group checks **
+{
+    "version": "2018-05-29",
+    "operation": "UpdateItem",
+    "key": {
+    "id": $util.dynamodb.toDynamoDBJson("openecmrId")
+    },
+    "update": {
+        "expression": "ADD currentValue :c",
+        "expressionValues": {
+            ":c": $util.dynamodb.toDynamoDBJson(1)
+        }
+    }
+}
