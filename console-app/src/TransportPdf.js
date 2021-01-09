@@ -77,7 +77,7 @@ const ListOfLoads = ({loads}) => (
     </Table>
 );
 
-const Legal = ({id}) => (
+const Legal = ({id, openecmrId}) => (
     <div>
         <div className={"inner-row"} style={{fontWeight: "bold"}}>
             <div className={"inner-cell"}>International consignment note</div>
@@ -88,7 +88,9 @@ const Legal = ({id}) => (
 
         <div className={"inner-row"}>
             <div className={"inner-cell"}>
-                Open e-CMR id: {id}
+                Transport id: {id}
+                {openecmrId && <br/>}
+                {openecmrId && `Open e-CMR id: ${openecmrId}`}
             </div>
         </div>
 
@@ -153,7 +155,7 @@ export default class TransportPdf extends Component {
             <div className={"pdf"}>
                 <Row>
                     <Address address={contract.shipper} icon={'building'} label={'1. Shipper'}/>
-                    <Legal id={contract.id.substring(0, 8)}/>
+                    <Legal id={contract.id.substring(0, 8)} openecmrId={contract.openecmrId}/>
                 </Row>
                 <Row>
                     <Address address={contract.delivery} icon={'building'} label={'2. Consignee'}/>

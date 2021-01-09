@@ -289,6 +289,7 @@ class Transport extends Component {
         const attachments = contract.events
             .filter(e => e.type === 'AddAttachment' && deletedAttachments.indexOf(e.createdAt) === -1)
             .map(e => (e.attachments || []).map(a => ({event: e, attachment: a}))).flat()
+        const cmrId = contract.openecmrId ? contract.openecmrId : contract.id.substring(0, 8)
 
         return (
             <div>
@@ -428,7 +429,7 @@ class Transport extends Component {
                                             <Icon name='file'/> {I18n.get('Consignment note')}
                                         </Grid.Column>
                                         <Grid.Column width={12}>
-                                            <MyLink onClick={() => this.downloadPdf()}>{`cmr-${this.state.contract.id.substring(0, 8)}.pdf`}</MyLink>&nbsp;
+                                            <MyLink onClick={() => this.downloadPdf()}>{`cmr-${cmrId}.pdf`}</MyLink>&nbsp;
                                             <Loader size='mini' active={this.state.downloadingPdf} inline/>
                                         </Grid.Column>
                                     </Grid.Row>

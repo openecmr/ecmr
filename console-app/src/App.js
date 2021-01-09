@@ -207,10 +207,12 @@ const Main = withRouter(({location, onLogout, user, company, noCompany, onCompan
     useEffect(() => {
         async function getLanguage() {
             const currentUserInfo = await Auth.currentUserInfo()
-            const userLanguage = currentUserInfo.attributes['custom:language'];
-            if (userLanguage) {
-                I18n.setLanguage(userLanguage);
-                setLanguage(userLanguage);
+            if (currentUserInfo) {
+                const userLanguage = currentUserInfo.attributes['custom:language'];
+                if (userLanguage) {
+                    I18n.setLanguage(userLanguage);
+                    setLanguage(userLanguage);
+                }
             }
         }
         getLanguage();
