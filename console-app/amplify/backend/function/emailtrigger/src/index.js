@@ -37,6 +37,10 @@ exports.handler = async function(event, context) {
       if (record.eventName === 'MODIFY') {
 
         const oldImage = AWS.DynamoDB.Converter.unmarshall(record.dynamodb.OldImage);
+        if (oldImage.__typename !== "Contract") {
+          context.done("not a contract", null);
+          return;
+        }
         const newImage = AWS.DynamoDB.Converter.unmarshall(record.dynamodb.NewImage);
 
         let allowedSendingResult = await allowedSending(newImage.owner);
