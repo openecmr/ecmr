@@ -38,8 +38,7 @@ exports.handler = async function(event, context) {
 
         const oldImage = AWS.DynamoDB.Converter.unmarshall(record.dynamodb.OldImage);
         if (oldImage.__typename !== "Contract") {
-          context.done("not a contract", null);
-          return;
+          continue;
         }
         const newImage = AWS.DynamoDB.Converter.unmarshall(record.dynamodb.NewImage);
 
@@ -64,7 +63,6 @@ exports.handler = async function(event, context) {
             }
           } catch (ex) {
             console.warn("cannot send email: %o", ex)
-            return;
           }
         }
       }
