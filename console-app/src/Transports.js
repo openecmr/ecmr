@@ -95,8 +95,8 @@ class Transports extends Component {
             loading: true,
             previousTokens: [],
             nextToken: null,
-            sort: "pickupDate",
-            sortOrder: "descending",
+            sort: localStorage.getItem("transportsSort") || "updatedAt",
+            sortOrder: localStorage.getItem("transportsSortOrder") || "descending",
             lastChangeFrom: "",
             lastChangeTo: "",
             pickupFrom: "",
@@ -393,7 +393,8 @@ class Transports extends Component {
         } else {
             sortOrder = 'descending';
         }
-
+        localStorage.setItem('transportsSortOrder', sortOrder);
+        localStorage.setItem('transportsSort', newSort);
         this.setState({
             sortOrder,
             sort: newSort,
