@@ -45,7 +45,8 @@ class SignSelection extends Component {
         navigate('SelectSignatory', {
             item: this.state.contract,
             site: this.state.site,
-            photos: this.props.navigation.getParam("photos")
+            photos: this.props.navigation.getParam("photos"),
+            oldLoads: this.props.navigation.getParam("oldLoads")
         });
     }
 

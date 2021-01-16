@@ -373,6 +373,28 @@ export const onCreateContract = /* GraphQL */ `
           extension
         }
         deletesAttachments
+        oldLoads {
+          category
+          quantity
+          volume
+          loadMeters
+          netWeight
+          description
+          hazardousGoodsItems {
+            hazardLabel
+          }
+        }
+        newLoads {
+          category
+          quantity
+          volume
+          loadMeters
+          netWeight
+          description
+          hazardousGoodsItems {
+            hazardLabel
+          }
+        }
       }
       needAcknowledge
       shipperContactId
@@ -383,6 +405,7 @@ export const onCreateContract = /* GraphQL */ `
       creatorCompanyId
       trailerVehicleId
       truckVehicleId
+      openecmrId
     }
   }
 `;
@@ -512,6 +535,28 @@ export const onUpdateContract = /* GraphQL */ `
           extension
         }
         deletesAttachments
+        oldLoads {
+          category
+          quantity
+          volume
+          loadMeters
+          netWeight
+          description
+          hazardousGoodsItems {
+            hazardLabel
+          }
+        }
+        newLoads {
+          category
+          quantity
+          volume
+          loadMeters
+          netWeight
+          description
+          hazardousGoodsItems {
+            hazardLabel
+          }
+        }
       }
       needAcknowledge
       shipperContactId
@@ -522,6 +567,7 @@ export const onUpdateContract = /* GraphQL */ `
       creatorCompanyId
       trailerVehicleId
       truckVehicleId
+      openecmrId
     }
   }
 `;
@@ -651,6 +697,28 @@ export const onDeleteContract = /* GraphQL */ `
           extension
         }
         deletesAttachments
+        oldLoads {
+          category
+          quantity
+          volume
+          loadMeters
+          netWeight
+          description
+          hazardousGoodsItems {
+            hazardLabel
+          }
+        }
+        newLoads {
+          category
+          quantity
+          volume
+          loadMeters
+          netWeight
+          description
+          hazardousGoodsItems {
+            hazardLabel
+          }
+        }
       }
       needAcknowledge
       shipperContactId
@@ -661,6 +729,7 @@ export const onDeleteContract = /* GraphQL */ `
       creatorCompanyId
       trailerVehicleId
       truckVehicleId
+      openecmrId
     }
   }
 `;

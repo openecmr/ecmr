@@ -138,6 +138,12 @@ class CaptureSignature extends Component {
             input.events.push(event);
             input.status = this.state.site === 'pickup' ? 'IN_PROGRESS' : 'DONE';
 
+            const oldLoads = this.props.navigation.getParam("oldLoads");
+            if (oldLoads) {
+                input.loads = this.state.contract.loads;
+                event.oldLoads = oldLoads;
+                event.newLoads = this.state.contract.loads;
+            }
 
             const finalContract = await updateContract(input);
 

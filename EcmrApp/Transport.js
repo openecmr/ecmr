@@ -50,8 +50,14 @@ const formatDuration = time => {
     return `00:${formatInt(seconds)}`;
 };
 
-const SignatureEvent = ({signature, signatoryObservation, photos}) => (
+const SignatureEvent = ({signature, signatoryObservation, photos, oldLoads, newLoads}) => (
     <View>
+        {
+            oldLoads &&
+            <View style={{flexDirection: 'row'}}>
+                <MyText>{I18n.get("Loads description was changed")} </MyText>
+            </View>
+        }
         <S3Image style={{width: 150, height: 150}}
              resizeMode={'center'}
              level={"public"}
@@ -307,7 +313,7 @@ class Transport extends Component {
                                 (item.type === 'UnloadingComplete' || item.type === 'LoadingComplete') &&
                                 <SignatureEvent signature={item.signature}
                                                 signatoryObservation={item.signatoryObservation}
-                                                photos={item.photos || []}/>
+                                                photos={item.photos || []} oldLoads={item.oldLoads}/>
                             }
                         </View>))
                     }

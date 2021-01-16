@@ -187,10 +187,10 @@ function AddTransportScreen({navigation, navigation: {navigate}}) {
                 truckVehicleId: document.truck.id,
                 creatorCompanyId: company.id
             };
-            const result = await API.graphql(graphqlOperation(mutations.createContract, {input: request}));
+            const result = await API.graphql(graphqlOperation(mutations.createContractCustom, {input: request}));
             navigation.popToTop();
             navigate('Transport', {
-                item: result.data.createContract,
+                item: result.data.createContractCustom,
                 site: 'pickup'
             });
         } catch (ex) {

@@ -55,7 +55,7 @@ class ConfirmLoading extends Component {
                             borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: 'rgb(200, 200, 200)',
                             borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: 'rgb(200, 200, 200)'}}>
                             <TouchableOpacity style={{flex: 1, padding: 10, alignItems: 'center', borderRightWidth: StyleSheet.hairlineWidth, borderRightColor: 'rgb(200, 200, 200)'}}
-                                              onPress={() => this.editLoad()}>
+                                              onPress={() => this.editLoad(item, index)}>
                                 <Icon name="pencil" style={{flex: 1, color: 'rgb(0, 115, 209)'}} size={30} />
                                 <MyText>{I18n.get('Edit')}</MyText>
                             </TouchableOpacity>
@@ -83,22 +83,41 @@ class ConfirmLoading extends Component {
         const ready = loadConfirmed.every(b => b);
         if (ready) {
             const {navigate} = this.props.navigation;
+            const equal = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+
+            let loadsChanged = this.state.oldLoads && !equal(this.state.oldLoads, this.state.loads);
+
             navigate('AddPhotos', {
                 item: this.state.contract,
-                site: this.state.site
+                site: this.state.site,
+                ...(loadsChanged && {
+                    oldLoads: this.state.oldLoads
+                })
             });
         }
     }
 
-    editLoad() {
-        Alert.alert(
-            I18n.get('Not available'),
-            I18n.get('This option is not yet available.'),
-            [
-                {text: I18n.get('OK')}
-            ],
-            {cancelable: true}
-        );
+    editLoad(load, index) {
+        const {navigate} = this.props.navigation;
+        navigate('AddLoadConfirm', {
+            editLoad: load,
+            onSave: (load) => {
+                const contract = this.state.contract;
+
+                if (!this.state.oldLoads) {
+                    this.setState({
+                        oldLoads: [...this.state.contract.loads.map(l => ({...l}))]
+                    })
+                }
+
+                const loads = [...contract.loads.map(l => ({...l}))];
+                loads[index] = load;
+                contract.loads = loads;
+                this.setState({
+                    contract
+                });
+            }
+        });
     }
 }
 

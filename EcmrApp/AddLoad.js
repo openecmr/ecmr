@@ -20,7 +20,7 @@ import RadioForm from "react-native-simple-radio-button";
 
 AddLoad.navigationOptions = ({navigation, screenProps}) => ({
     title: I18n.get('Add load'),
-    ...(navigation.getParam('editLoad') && {
+    ...(navigation.getParam('editLoad') && navigation.getParam('onRemove') && {
         headerRight: () => (
             <Button
                 containerStyle={{backgroundColor: 'red', marginEnd: 10}}
@@ -68,7 +68,7 @@ function Field({label, value, icon, onChangeText, required, keyboardType = "nume
         <MyText>{label[0].toUpperCase()}{label.substring(1)}</MyText>{required && <MyText style={{color: "red"}}>*</MyText>}
         <TextInput
             keyboardType={keyboardType}
-            value={value}
+            value={value ? String(value) : null}
             style={styles.textInput}
             onChangeText={onChangeText}/>
     </View>;
@@ -80,6 +80,7 @@ function AddLoad({navigation}) {
     };
     const editLoad = navigation.getParam("editLoad");
     const [load, setLoad] = useState(editLoad ? editLoad : initialLoad);
+    const packagingOptions = packaging();
 
     function change(field) {
         return function(value) {
@@ -108,14 +109,18 @@ function AddLoad({navigation}) {
         navigation.goBack();
     }
 
+    function categoryIndex(load) {
+        return packagingOptions.findIndex(p => p.value === load.category);
+    }
+
     return (
         <View style={{flex: 1}}>
             <ScrollView style={{marginBottom: 50}}>
                 <View style={{backgroundColor: 'white', padding: Sizes.PADDING_FROM_SCREEN_BORDER}}>
                     <RadioForm
                         buttonColor={'black'}
-                        radio_props={packaging()}
-                        initial={0}
+                        radio_props={packagingOptions}
+                        initial={categoryIndex(load)}
 
                         onPress={change("category")}
                     />
@@ -132,13 +137,13 @@ function AddLoad({navigation}) {
                 </View>
 
                 <View style={styles.row}>
-                    <Field label={I18n.get("net weight (kg)")} value={load.weight} icon={"weight-hanging"}
+                    <Field label={I18n.get("net weight (kg)")} value={load.netWeight} icon={"weight-hanging"}
                            onChangeText={change("netWeight")}/>
                 </View>
 
                 <View style={styles.row}>
                     <Field label={I18n.get("loading meters (m)")} value={load.loadMeters} icon={"ruler"}
-                           onChangeText={change("loadingMeter")}/>
+                           onChangeText={change("loadMeters")}/>
                 </View>
 
                 <View style={styles.row}>
@@ -148,9 +153,9 @@ function AddLoad({navigation}) {
             </ScrollView>
 
             <Button containerStyle={{position: "absolute", start: 0, bottom: 0, end: 0}}
-                    title={I18n.get("Add")}
+                    title={navigation.getParam('editLoad') ? I18n.get("Save") : I18n.get("Add")}
                     buttonStyle={{height: 40, backgroundColor: 'rgb(60,176,60)'}}
-                    onPress={save}/>
+                    onPress={save} />
         </View>
     );
 }

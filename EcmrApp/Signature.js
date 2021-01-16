@@ -144,7 +144,8 @@ class Signature extends Component {
             signatoryEmail: this.state.signatoryEmail,
             signatoryObservation: this.state.signatoryObservation,
             photos: this.props.navigation.getParam("photos"),
-            sendCopy: this.state.sendCopy
+            sendCopy: this.state.sendCopy,
+            oldLoads: this.props.navigation.getParam("oldLoads")
         });
     }
 }

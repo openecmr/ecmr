@@ -86,7 +86,8 @@ class SelectSignatory extends Component {
         navigate('SignatoryInformation', {
             item: this.state.contract,
             site: this.state.site,
-            photos: this.props.navigation.getParam("photos")
+            photos: this.props.navigation.getParam("photos"),
+            oldLoads: this.props.navigation.getParam("oldLoads")
         });
     }
 
@@ -97,7 +98,8 @@ class SelectSignatory extends Component {
             site: this.state.site,
             signatoryEmail: contact.email,
             signatoryName: contact.name,
-            photos: this.props.navigation.getParam("photos")
+            photos: this.props.navigation.getParam("photos"),
+            oldLoads: this.props.navigation.getParam("oldLoads")
         });
     }
 

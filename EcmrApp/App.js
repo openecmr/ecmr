@@ -68,6 +68,7 @@ const MainNavigator = createStackNavigator({
     Transports: {screen: Transports},
     Transport: {screen: Transport},
     ConfirmLoading: {screen: ConfirmLoading},
+    AddLoadConfirm: {screen: AddLoad},
     SignSelection: {screen: SignSelection},
     Signature: {screen: Signature},
     CaptureSignature: {screen: CaptureSignature},
