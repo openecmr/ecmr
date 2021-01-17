@@ -259,7 +259,9 @@ type Event @aws_api_key @aws_cognito_user_pools @aws_iam {
     assignedDriver: DriverDetail,
     photos: [S3Object!],
     attachments: [Attachment!],
-    deletesAttachments: String
+    deletesAttachments: String,
+    oldLoads: [Load!],
+    newLoads: [Load!]
 }
 
 type Attachment @aws_api_key @aws_cognito_user_pools @aws_iam {

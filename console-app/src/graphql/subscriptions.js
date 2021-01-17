@@ -373,6 +373,28 @@ export const onCreateContract = /* GraphQL */ `
           extension
         }
         deletesAttachments
+        oldLoads {
+          category
+          quantity
+          volume
+          loadMeters
+          netWeight
+          description
+          hazardousGoodsItems {
+            hazardLabel
+          }
+        }
+        newLoads {
+          category
+          quantity
+          volume
+          loadMeters
+          netWeight
+          description
+          hazardousGoodsItems {
+            hazardLabel
+          }
+        }
       }
       needAcknowledge
       shipperContactId
@@ -513,6 +535,28 @@ export const onUpdateContract = /* GraphQL */ `
           extension
         }
         deletesAttachments
+        oldLoads {
+          category
+          quantity
+          volume
+          loadMeters
+          netWeight
+          description
+          hazardousGoodsItems {
+            hazardLabel
+          }
+        }
+        newLoads {
+          category
+          quantity
+          volume
+          loadMeters
+          netWeight
+          description
+          hazardousGoodsItems {
+            hazardLabel
+          }
+        }
       }
       needAcknowledge
       shipperContactId
@@ -653,6 +697,28 @@ export const onDeleteContract = /* GraphQL */ `
           extension
         }
         deletesAttachments
+        oldLoads {
+          category
+          quantity
+          volume
+          loadMeters
+          netWeight
+          description
+          hazardousGoodsItems {
+            hazardLabel
+          }
+        }
+        newLoads {
+          category
+          quantity
+          volume
+          loadMeters
+          netWeight
+          description
+          hazardousGoodsItems {
+            hazardLabel
+          }
+        }
       }
       needAcknowledge
       shipperContactId

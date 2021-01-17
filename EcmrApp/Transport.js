@@ -560,7 +560,9 @@ const styles = StyleSheet.create({
         padding: 15,
         paddingLeft: 10,
         borderBottomColor: 'rgb(200, 200, 200)',
-        borderBottomWidth:  StyleSheet.hairlineWidth
+        borderBottomWidth:  StyleSheet.hairlineWidth,
+        borderTopColor: 'rgb(200, 200, 200)',
+        borderTopWidth:  StyleSheet.hairlineWidth
     },
     address: {
         borderBottomWidth: StyleSheet.hairlineWidth,

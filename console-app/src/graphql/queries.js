@@ -726,6 +726,28 @@ export const contractsByOwnerArrivalDate = /* GraphQL */ `
             extension
           }
           deletesAttachments
+          oldLoads {
+            category
+            quantity
+            volume
+            loadMeters
+            netWeight
+            description
+            hazardousGoodsItems {
+              hazardLabel
+            }
+          }
+          newLoads {
+            category
+            quantity
+            volume
+            loadMeters
+            netWeight
+            description
+            hazardousGoodsItems {
+              hazardLabel
+            }
+          }
         }
         needAcknowledge
         shipperContactId
@@ -883,6 +905,28 @@ export const contractsByCarrierArrivalDate = /* GraphQL */ `
             extension
           }
           deletesAttachments
+          oldLoads {
+            category
+            quantity
+            volume
+            loadMeters
+            netWeight
+            description
+            hazardousGoodsItems {
+              hazardLabel
+            }
+          }
+          newLoads {
+            category
+            quantity
+            volume
+            loadMeters
+            netWeight
+            description
+            hazardousGoodsItems {
+              hazardLabel
+            }
+          }
         }
         needAcknowledge
         shipperContactId
@@ -1040,6 +1084,28 @@ export const contractsByOwnerUpdatedAt = /* GraphQL */ `
             extension
           }
           deletesAttachments
+          oldLoads {
+            category
+            quantity
+            volume
+            loadMeters
+            netWeight
+            description
+            hazardousGoodsItems {
+              hazardLabel
+            }
+          }
+          newLoads {
+            category
+            quantity
+            volume
+            loadMeters
+            netWeight
+            description
+            hazardousGoodsItems {
+              hazardLabel
+            }
+          }
         }
         needAcknowledge
         shipperContactId
@@ -1197,6 +1263,28 @@ export const contractsByCarrierUpdatedAt = /* GraphQL */ `
             extension
           }
           deletesAttachments
+          oldLoads {
+            category
+            quantity
+            volume
+            loadMeters
+            netWeight
+            description
+            hazardousGoodsItems {
+              hazardLabel
+            }
+          }
+          newLoads {
+            category
+            quantity
+            volume
+            loadMeters
+            netWeight
+            description
+            hazardousGoodsItems {
+              hazardLabel
+            }
+          }
         }
         needAcknowledge
         shipperContactId
@@ -1339,6 +1427,28 @@ export const getContract = /* GraphQL */ `
           extension
         }
         deletesAttachments
+        oldLoads {
+          category
+          quantity
+          volume
+          loadMeters
+          netWeight
+          description
+          hazardousGoodsItems {
+            hazardLabel
+          }
+        }
+        newLoads {
+          category
+          quantity
+          volume
+          loadMeters
+          netWeight
+          description
+          hazardousGoodsItems {
+            hazardLabel
+          }
+        }
       }
       needAcknowledge
       shipperContactId
@@ -1484,6 +1594,28 @@ export const listContracts = /* GraphQL */ `
             extension
           }
           deletesAttachments
+          oldLoads {
+            category
+            quantity
+            volume
+            loadMeters
+            netWeight
+            description
+            hazardousGoodsItems {
+              hazardLabel
+            }
+          }
+          newLoads {
+            category
+            quantity
+            volume
+            loadMeters
+            netWeight
+            description
+            hazardousGoodsItems {
+              hazardLabel
+            }
+          }
         }
         needAcknowledge
         shipperContactId

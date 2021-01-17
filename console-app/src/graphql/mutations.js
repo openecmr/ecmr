@@ -132,6 +132,28 @@ export const createContractCustom = /* GraphQL */ `
           extension
         }
         deletesAttachments
+        oldLoads {
+          category
+          quantity
+          volume
+          loadMeters
+          netWeight
+          description
+          hazardousGoodsItems {
+            hazardLabel
+          }
+        }
+        newLoads {
+          category
+          quantity
+          volume
+          loadMeters
+          netWeight
+          description
+          hazardousGoodsItems {
+            hazardLabel
+          }
+        }
       }
       needAcknowledge
       shipperContactId
@@ -272,6 +294,28 @@ export const createContract = /* GraphQL */ `
           extension
         }
         deletesAttachments
+        oldLoads {
+          category
+          quantity
+          volume
+          loadMeters
+          netWeight
+          description
+          hazardousGoodsItems {
+            hazardLabel
+          }
+        }
+        newLoads {
+          category
+          quantity
+          volume
+          loadMeters
+          netWeight
+          description
+          hazardousGoodsItems {
+            hazardLabel
+          }
+        }
       }
       needAcknowledge
       shipperContactId
@@ -412,6 +456,28 @@ export const updateContract = /* GraphQL */ `
           extension
         }
         deletesAttachments
+        oldLoads {
+          category
+          quantity
+          volume
+          loadMeters
+          netWeight
+          description
+          hazardousGoodsItems {
+            hazardLabel
+          }
+        }
+        newLoads {
+          category
+          quantity
+          volume
+          loadMeters
+          netWeight
+          description
+          hazardousGoodsItems {
+            hazardLabel
+          }
+        }
       }
       needAcknowledge
       shipperContactId
@@ -552,6 +618,28 @@ export const deleteContract = /* GraphQL */ `
           extension
         }
         deletesAttachments
+        oldLoads {
+          category
+          quantity
+          volume
+          loadMeters
+          netWeight
+          description
+          hazardousGoodsItems {
+            hazardLabel
+          }
+        }
+        newLoads {
+          category
+          quantity
+          volume
+          loadMeters
+          netWeight
+          description
+          hazardousGoodsItems {
+            hazardLabel
+          }
+        }
       }
       needAcknowledge
       shipperContactId

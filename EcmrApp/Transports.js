@@ -295,6 +295,10 @@ const styles = StyleSheet.create({
         paddingBottom: 10,
         paddingLeft: Sizes.PADDING_FROM_SCREEN_BORDER,
         paddingRight: Sizes.PADDING_FROM_SCREEN_BORDER,
+        borderTopWidth: StyleSheet.hairlineWidth,
+        borderTopColor: 'rgb(150,150,150)',
+        borderBottomWidth: StyleSheet.hairlineWidth,
+        borderBottomColor: 'rgb(150,150,150)'
     },
     transportCardHeaderId: {
         fontWeight: 'bold',
