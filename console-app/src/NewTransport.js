@@ -75,7 +75,7 @@ class ContactPicker extends Component {
             owner: user.getUsername()
         }));
         this.setState({
-            options: response.data.contactByOwner.items.map(e => ({text: [e.name, e.address, e.country].filter(Boolean).join(", "), key: e.id, value: e.id}))
+            options: response.data.contactByOwner.items.map(e => ({text: [e.name, e.address, e.city, e.country].filter(Boolean).join(", "), key: e.id, value: e.id}))
         });
     }
 

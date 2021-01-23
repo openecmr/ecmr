@@ -33,6 +33,7 @@ import SignUpWithLanguage from "./SignUpWithLanguage";
 import Contacts from "./Contacts";
 import '@aws-amplify/ui/dist/style.css';
 import Settings from "./Settings";
+import Planner from "./Planner";
 
 let config;
 const pdfServiceKey = window.location.hash.substr(1);
@@ -159,6 +160,12 @@ const AppMenu = withRouter(({location, onLogout, menuVisible}) => (
             as={Link}
         />
         <Menu.Item
+            name={I18n.get('planner')}
+            active={location.pathname.startsWith('/planner')}
+            to={'/planner'}
+            as={Link}
+        />
+        <Menu.Item
             name={I18n.get('Address book')}
             active={location.pathname.startsWith('/addressbook')}
             to={'/addressbook'}
@@ -268,6 +275,7 @@ const Main = withRouter(({location, onLogout, user, company, noCompany, onCompan
                         <Route exact path="/addressbook" component={AddressBook}/>
                         <Route exact path="/contacts" component={Contacts}/>
                         <Route exact path="/drivers" component={Drivers}/>
+                        <Route exact path="/planner" component={Planner}/>
                         <Route exact path="/vehicles"
                                render={(props) => <Vehicles {...props} company={company}/>}/>
                         <Route exact path="/settings"
