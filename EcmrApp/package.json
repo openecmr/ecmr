@@ -15,6 +15,8 @@
     "@react-native-community/masked-view": "^0.1.10",
     "@react-native-community/netinfo": "^5.9.2",
     "@react-native-community/picker": "^1.6.1",
+    "@react-native-firebase/analytics": "^10.6.4",
+    "@react-native-firebase/app": "^10.6.4",
     "amazon-cognito-identity-js": "^4.3.0",
     "aws-amplify": "^3.0.13",
     "aws-amplify-react-native": "^4.2.0",

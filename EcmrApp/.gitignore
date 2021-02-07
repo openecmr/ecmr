@@ -60,3 +60,5 @@ secrets.xml
 Pods/
 
 aws-exports.*.js
+
+google-services.json

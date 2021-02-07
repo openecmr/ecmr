@@ -36,6 +36,18 @@ import AddLoad from "./AddLoad";
 import NewTransportSelection from "./NewTransportSelection";
 import SelectCompany from "./SelectCompany";
 import Bugsnag from '@bugsnag/react-native'
+import analytics from '@react-native-firebase/analytics';
+
+function getActiveRouteName(navigationState) {
+    if (!navigationState) {
+        return null;
+    }
+    const route = navigationState.routes[navigationState.index];
+    if (route.routes) {
+        return getActiveRouteName(route);
+    }
+    return route.routeName;
+}
 
 const deviceLanguage =
     Platform.OS === 'ios'
@@ -162,7 +174,17 @@ const TabNavigator = createBottomTabNavigator({
 
 
 const App = createAppContainer(TabNavigator);
-const AppWithPersistence = () => <App/>;
+const AppWithPersistence = () => <App onNavigationStateChange={async (prevState, currentState) => {
+    const currentRouteName = getActiveRouteName(currentState);
+    const previousRouteName = getActiveRouteName(prevState);
+
+    if (previousRouteName !== currentRouteName) {
+        await analytics().logScreenView({
+            screen_name: currentRouteName,
+            screen_class: currentRouteName
+        });
+    }
+}} />;
 
 
 const MySectionHeader = Object.assign({}, AmplifyTheme.button, { backgroundColor: 'rgb(60,176,60)' });
