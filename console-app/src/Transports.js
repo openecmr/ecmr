@@ -1,6 +1,19 @@
 import {Component} from "react";
 import React from "react";
-import {Header, Button, Dimmer, Form, Grid, Icon, Loader, Menu, Progress, Segment, Table} from "semantic-ui-react";
+import {
+    Header,
+    Button,
+    Dimmer,
+    Form,
+    Grid,
+    Icon,
+    Loader,
+    Menu,
+    Progress,
+    Segment,
+    Table,
+    Label
+} from "semantic-ui-react";
 import {Link} from "react-router-dom";
 import * as queries from "./graphql/queries";
 import {API, Auth, graphqlOperation, I18n} from 'aws-amplify';
@@ -86,6 +99,12 @@ const Status = ({status, updatedAt}) => {
         <div style={{whiteSpace: "nowrap", marginTop: -30, textAlign: "center", fontWeight: "bold", fontSize: "x-small"}}>{statusMapping.label}</div>
     </Table.Cell>
 };
+
+const Driver = ({driver, needAcknowledge}) =>
+    <Table.Cell width="1" verticalAlign="top">
+        <div>{driver ? driver.name : I18n.get("Not assigned")}</div>
+        {(driver && needAcknowledge) &&  <Label color='yellow' size={'tiny'}>{I18n.get('not acknowledged yet')}</Label>}
+    </Table.Cell>
 
 class Transports extends Component {
     constructor(props) {
@@ -249,7 +268,7 @@ class Transports extends Component {
                     <DateCell date={e.deliveryDate}/>
                     <DateCell date={e.updatedAt} showTime/>
                     <AddressCell address={e.shipper}/>
-                    <TextCell text={e.driver ? e.driver.name : null}/>
+                    <Driver driver={e.driver} needAcknowledge={e.needAcknowledge}/>
                     <ConsignmentCell loads={e.loads}/>
                 </Table.Row>
             )
