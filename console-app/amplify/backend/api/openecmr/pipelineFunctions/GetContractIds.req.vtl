@@ -1,0 +1,105 @@
+## [Start] Owner Authorization Checks **
+#set( $isOwnerAuthorized = false )
+## Authorization rule: { allow: owner, ownerField: "owner", identityClaim: "cognito:username" } **
+#set( $allowedOwners0 = $util.defaultIfNull($ctx.args.owner, null) )
+#set( $identityValue = $util.defaultIfNull($ctx.identity.claims.get("username"), $util.defaultIfNull($ctx.identity.claims.get("cognito:username"), "___xamznone____")) )
+
+#if( $util.isString($allowedOwners0) )
+    #if( $allowedOwners0 == $identityValue )
+        #set( $isOwnerAuthorized = true )
+    #end
+#end
+
+## [End] Owner Authorization Checks **
+
+## [Start] Dynamic Group Authorization Checks **
+#set( $isLocalDynamicGroupAuthorized = false )
+## Authorization rule: { allow: groups, groupsField: "owner", groupClaim: "cognito:groups" } **
+#set( $allowedGroups = $util.defaultIfNull($ctx.args.owner, []) )
+#set( $userGroups = $util.defaultIfNull($ctx.identity.claims.get("cognito:groups"), []) )
+#foreach( $userGroup in $userGroups )
+    #if( $util.isList($allowedGroups) )
+        #if( $allowedGroups.contains($userGroup) )
+            #set( $isLocalDynamicGroupAuthorized = true )
+        #end
+    #end
+    #if( $util.isString($allowedGroups) )
+        #if( $allowedGroups == $userGroup )
+            #set( $isLocalDynamicGroupAuthorized = true )
+        #end
+    #end
+#end
+## [End] Dynamic Group Authorization Checks **
+
+## [Start] Throw if unauthorized **
+#if( !($isLocalDynamicGroupAuthorized == true || $isOwnerAuthorized == true) )
+   $util.unauthorized()
+#end
+## [End] Throw if unauthorized **
+
+#set( $modelQueryExpression = {
+    "expression": "#pk = :pk",
+    "expressionNames": {
+        "#pk": "ownerContactId"
+    },
+    "expressionValues": {
+        ":pk": {
+            "S": "$ctx.args.owner#CONTACT#$ctx.args.contactId"
+        }
+    }
+} )
+
+#if( !$util.isNull($ctx.args.updatedAt) && !$util.isNull($ctx.args.updatedAt.beginsWith) )
+  #set( $modelQueryExpression.expression = "$modelQueryExpression.expression AND begins_with(#sortKey, :sortKey)" )
+  $util.qr($modelQueryExpression.expressionNames.put("#sortKey", "typeDateContractId"))
+  $util.qr($modelQueryExpression.expressionValues.put(":sortKey", { "S": "ANY#$ctx.args.updatedAt.beginsWith" }))
+#end
+#if( !$util.isNull($ctx.args.updatedAt) && !$util.isNull($ctx.args.updatedAt.between) )
+  #set( $modelQueryExpression.expression = "$modelQueryExpression.expression AND #sortKey BETWEEN :sortKey0 AND :sortKey1" )
+  $util.qr($modelQueryExpression.expressionNames.put("#sortKey", "typeDateContractId"))
+  $util.qr($modelQueryExpression.expressionValues.put(":sortKey0", { "S": "ANY#$ctx.args.updatedAt.between[0]" }))
+  $util.qr($modelQueryExpression.expressionValues.put(":sortKey1", { "S": "ANY#$ctx.args.updatedAt.between[1]" }))
+#end
+#if( !$util.isNull($ctx.args.updatedAt) && !$util.isNull($ctx.args.updatedAt.eq) )
+  #set( $modelQueryExpression.expression = "$modelQueryExpression.expression AND #sortKey = :sortKey" )
+  $util.qr($modelQueryExpression.expressionNames.put("#sortKey", "typeDateContractId"))
+  $util.qr($modelQueryExpression.expressionValues.put(":sortKey", { "S": "ANY#$ctx.args.updatedAt.eq" }))
+#end
+#if( !$util.isNull($ctx.args.updatedAt) && !$util.isNull($ctx.args.updatedAt.lt) )
+  #set( $modelQueryExpression.expression = "$modelQueryExpression.expression AND #sortKey < :sortKey" )
+  $util.qr($modelQueryExpression.expressionNames.put("#sortKey", "typeDateContractId"))
+  $util.qr($modelQueryExpression.expressionValues.put(":sortKey", { "S": "ANY#$ctx.args.updatedAt.lt" }))
+#end
+#if( !$util.isNull($ctx.args.updatedAt) && !$util.isNull($ctx.args.updatedAt.le) )
+  #set( $modelQueryExpression.expression = "$modelQueryExpression.expression AND #sortKey <= :sortKey" )
+  $util.qr($modelQueryExpression.expressionNames.put("#sortKey", "typeDateContractId"))
+  $util.qr($modelQueryExpression.expressionValues.put(":sortKey", { "S": "ANY#$ctx.args.updatedAt.le" }))
+#end
+#if( !$util.isNull($ctx.args.updatedAt) && !$util.isNull($ctx.args.updatedAt.gt) )
+  #set( $modelQueryExpression.expression = "$modelQueryExpression.expression AND #sortKey > :sortKey" )
+  $util.qr($modelQueryExpression.expressionNames.put("#sortKey", "typeDateContractId"))
+  $util.qr($modelQueryExpression.expressionValues.put(":sortKey", { "S": "ANY#$ctx.args.updatedAt.gt" }))
+#end
+#if( !$util.isNull($ctx.args.updatedAt) && !$util.isNull($ctx.args.updatedAt.ge) )
+  #set( $modelQueryExpression.expression = "$modelQueryExpression.expression AND #sortKey >= :sortKey" )
+  $util.qr($modelQueryExpression.expressionNames.put("#sortKey", "typeDateContractId"))
+  $util.qr($modelQueryExpression.expressionValues.put(":sortKey", { "S": "ANY#$ctx.args.updatedAt.ge" }))
+#end
+
+#set( $limit = $util.defaultIfNull($context.args.limit, 100) )
+
+#set( $QueryRequest = {
+    "version": "2018-05-29",
+    "operation": "Query",
+    "limit": $limit,
+    "query": $modelQueryExpression
+} )
+
+#if( !$util.isNull($ctx.args.sortDirection) && $ctx.args.sortDirection == "DESC" )
+    #set( $QueryRequest.scanIndexForward = false )
+#else
+    #set( $QueryRequest.scanIndexForward = true )
+#end
+#if( $context.args.nextToken ) #set( $QueryRequest.nextToken = $context.args.nextToken ) #end
+
+$util.toJson($QueryRequest)

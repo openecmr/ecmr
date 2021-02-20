@@ -10,14 +10,15 @@ Amplify Params - DO NOT EDIT */
 const AWS = require('aws-sdk'),
     handlebars = require('handlebars'),
     fs = require('fs'),
-    path = require('path')
-
-const https = require('https');
-const urlParse = require("url").URL;
-const apiKey = process.env.API_KEY;
-const appsyncUrl = process.env.API_OPENECMR_GRAPHQLAPIENDPOINTOUTPUT;
-const apiOpenEcmrGraphqlEndpoint = new urlParse(appsyncUrl).hostname.toString();
-const nodemailer = require('nodemailer');
+    path = require('path'),
+    {addSearchRecords, deleteSearchRecords} = require("./lib"),
+    https = require('https'),
+    urlParse = require("url").URL,
+    nodemailer = require('nodemailer'),
+    apiKey = process.env.API_KEY,
+    appsyncUrl = process.env.API_OPENECMR_GRAPHQLAPIENDPOINTOUTPUT,
+    apiOpenEcmrGraphqlEndpoint = new urlParse(appsyncUrl).hostname.toString(),
+    searchTable = "Search" + "-" + process.env.API_OPENECMR_GRAPHQLAPIIDOUTPUT + "-" + process.env.ENV;
 
 const region = 'eu-central-1';
 AWS.config.update({
@@ -34,49 +35,69 @@ exports.handler = async function(event, context) {
       event = JSON.parse(event);
     }
     for (const record of event.Records) {
-      if (record.eventName === 'MODIFY') {
-
-        const oldImage = AWS.DynamoDB.Converter.unmarshall(record.dynamodb.OldImage);
-        if (oldImage.__typename !== "Contract") {
-          continue;
-        }
-        const newImage = AWS.DynamoDB.Converter.unmarshall(record.dynamodb.NewImage);
-
-        let allowedSendingResult = await allowedSending(newImage.owner);
-        if (!allowedSendingResult) {
-          console.log('owner %s not allowed to send', newImage.owner);
-          continue;
-        }
-
-        const addedEvents = calculateAddedEvents(oldImage, newImage);
-        const loadingEvents = addedEvents
-            .filter(e => e.type === 'LoadingComplete' || e.type === 'UnloadingComplete')
-            .filter(e => e.signature && e.signature.signatoryEmail && e.sendCopy);
-
-        if (loadingEvents.length > 0) {
-          try {
-            const pdf = await fetchPdf(newImage.id);
-            for (const loadingEvent of loadingEvents) {
-              const htmlEmail = generateHtmlEmail(loadingEvent, newImage);
-              await sendEmail(newImage.id, loadingEvent.signature.signatoryEmail, htmlEmail,
-                  "cn_" + newImage.id.substring(0, 8) + ".pdf", pdf);
-            }
-          } catch (ex) {
-            console.warn("cannot send email: %o", ex)
-          }
-        }
-      }
+      await processEmail(record);
+      await processSearch(record);
     }
-    context.done(null, 'Successfully processed DynamoDB record'); // SUCCESS with message
-  } catch(ex) {
+    context.done(null, 'Successfully processed DynamoDB record');
+  } catch (ex) {
     console.log(ex);
     context.fail(ex);
   }
 };
 
-const allowedSending = async (owner) => {
-  console.log("ok gonna: %s", process.env.ENV)
+const processEmail = async (record) => {
+  if (record.eventName !== 'MODIFY') {
+    return;
+  }
 
+  const oldImage = AWS.DynamoDB.Converter.unmarshall(record.dynamodb.OldImage);
+  if (oldImage.__typename !== "Contract") {
+    return;
+  }
+  const newImage = AWS.DynamoDB.Converter.unmarshall(record.dynamodb.NewImage);
+
+  let allowedSendingResult = await allowedSending(newImage.owner);
+  if (!allowedSendingResult) {
+    console.log('owner %s not allowed to send', newImage.owner);
+    return;
+  }
+
+  const addedEvents = calculateAddedEvents(oldImage, newImage);
+  const loadingEvents = addedEvents
+      .filter(e => e.type === 'LoadingComplete' || e.type === 'UnloadingComplete')
+      .filter(e => e.signature && e.signature.signatoryEmail && e.sendCopy);
+
+  if (loadingEvents.length > 0) {
+    try {
+      const pdf = await fetchPdf(newImage.id);
+      for (const loadingEvent of loadingEvents) {
+        const htmlEmail = generateHtmlEmail(loadingEvent, newImage);
+        await sendEmail(newImage.id, loadingEvent.signature.signatoryEmail, htmlEmail,
+            "cn_" + newImage.id.substring(0, 8) + ".pdf", pdf);
+      }
+    } catch (ex) {
+      console.warn("cannot send email:", ex)
+    }
+  }
+}
+
+const processSearch = async(record) => {
+  const image = AWS.DynamoDB.Converter.unmarshall(record.dynamodb.NewImage || record.dynamodb.OldImage);
+  if (image.__typename !== "Contract") {
+    return;
+  }
+
+  if (record.eventName !== 'INSERT') {
+    const deleteImage = AWS.DynamoDB.Converter.unmarshall(record.dynamodb.OldImage);
+    await deleteSearchRecords(dynamodb, deleteImage, searchTable);
+  }
+
+  if (record.eventName !== 'REMOVE') {
+    await addSearchRecords(dynamodb, image, searchTable);
+  }
+}
+
+const allowedSending = async (owner) => {
   let params = {
     TableName: "Company" + "-" + process.env.API_OPENECMR_GRAPHQLAPIIDOUTPUT + "-" + process.env.ENV,
     IndexName: "OwnerName",
@@ -90,10 +111,7 @@ const allowedSending = async (owner) => {
       }
     }
   };
-  console.log(params);
   let company = await dynamodb.query(params).promise();
-
-  console.log(company);
 
   return company.Items.length === 0 ||
       !company.Items[0].allowedSendingEmail ||
@@ -115,7 +133,7 @@ const fetchPdf = async (id) => {
 
   const data = await sendRequest(body);
   if (!data) {
-    console.log(`no results found`);
+    console.log('no results found');
     return null;
   }
 
@@ -170,7 +188,7 @@ const sendEmail = async (documentId, signatoryEmail, htmlEmail, pdfFileName, pdf
       }
     ]
   };
-  console.log(`sending email to %s`, signatoryEmail)
+  console.log('sending email to %s', signatoryEmail)
 
   return await new Promise((resolve, reject) => {
     transporter.sendMail(params, (err, info) => {

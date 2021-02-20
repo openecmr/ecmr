@@ -1,0 +1,22 @@
+#set($ids = [])
+#foreach($res in ${ctx.prev.result.items})
+    $util.qr($ids.add($util.dynamodb.toMapValuesJson({
+        "id" : $res.item
+    })))
+#end
+
+$util.qr($ctx.stash.put("nextToken", ${ctx.prev.result.nextToken}))
+
+#if ($ids.size() == 0)
+    #return({"items": []})
+#end
+
+{
+    "version" : "2018-05-29",
+    "operation" : "BatchGetItem",
+    "tables" : {
+        "Contract-${ctx.stash.apiId}-${ctx.stash.env}": {
+            "keys": $ids
+        }
+    }
+}

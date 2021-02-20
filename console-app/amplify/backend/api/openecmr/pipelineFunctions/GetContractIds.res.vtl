@@ -1,0 +1,13 @@
+#if( $ctx.error )
+    $util.error($ctx.error.message, $ctx.error.type)
+#else
+    $util.toJson($ctx.result)
+#end
+
+##query MyQuery {
+##  contractsByFilterCustom(owner: "bob57", contactId: "01b98902-af92-496f-b534-e2a664a6bb02") {
+##    items {
+##      status
+##    }
+##  }
+##}

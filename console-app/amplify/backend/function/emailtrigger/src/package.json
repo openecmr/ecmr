@@ -8,5 +8,8 @@
     "aws-sdk": "^2.706.0",
     "handlebars": "^4.7.6",
     "nodemailer": "^6.4.10"
+  },
+  "scripts": {
+    "populate": "nodejs populate-searchtable.js"
   }
 }

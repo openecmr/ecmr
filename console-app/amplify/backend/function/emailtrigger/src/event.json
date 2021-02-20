@@ -2,7 +2,7 @@
   "Records": [
     {
       "eventID": "65b433295a9e6040bce3aafc80221a98",
-      "eventName": "MODIFY",
+      "eventName": "CREATE",
       "eventVersion": "1.1",
       "eventSource": "aws:dynamodb",
       "awsRegion": "eu-central-1",

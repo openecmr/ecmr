@@ -120,7 +120,8 @@ class Transports extends Component {
             lastChangeFrom: "",
             lastChangeTo: "",
             pickupFrom: "",
-            pickupTo: ""
+            pickupTo: "",
+            filters: localStorage.getItem("filters") === "true"
         };
 
         this.onNext = this.onNext.bind(this);
@@ -130,6 +131,7 @@ class Transports extends Component {
         this.applyFilters = this.applyFilters.bind(this);
         this.clearFilters = this.clearFilters.bind(this);
         this.toggleFilters = this.toggleFilters.bind(this);
+        this.filterContactSelected = this.filterContactSelected.bind(this);
     }
 
     handleFiltersInput(event) {
@@ -145,19 +147,22 @@ class Transports extends Component {
         if (this.state.filters) {
             this.clearFilters();
         }
-        this.setState({filters: !this.state.filters});
+        let newState = !this.state.filters;
+        this.setState({filters: newState});
+        localStorage.setItem('filters', newState.toString());
     }
 
     render() {
         const cols = 10;
         const filterLastChange = !!(this.state.lastChangeFrom || this.state.lastChangeTo);
         const filterPickup = !!(this.state.pickupFrom || this.state.pickupTo);
+        const filterContact = !!(this.state.contactId);
         return (
 
             <Table className="App-text-with-newlines" selectable compact='very' sortable columns={cols} fixed>
                 <Table.Header>
                     <Table.Row>
-                        <Table.HeaderCell colSpan={cols}>
+                        <Table.HeaderCell style={{overflow: 'visible'}} colSpan={cols}>
                             <Link to={"/transports-new"}>
                                 <Button floated='right' icon labelPosition='left' primary size='small'>
                                     <Icon name='plus'/> {I18n.get('New transport')}
@@ -188,15 +193,17 @@ class Transports extends Component {
                                                     size={"mini"} label={I18n.get("Last changed to")}
                                                     onChange={this.handleFiltersInput} name="lastChangeTo" type={'date'} />
 
-                                        <Form.Input value={this.state.pickupFrom} disabled={filterLastChange}
+                                        <Form.Input value={this.state.pickupFrom} disabled={filterLastChange || filterContact}
                                                     size={"mini"} label={I18n.get("Pickup date from")}
                                                     onChange={this.handleFiltersInput} name="pickupFrom" type={'date'} />
-                                        <Form.Input value={this.state.pickupTo} disabled={filterLastChange}
+                                        <Form.Input value={this.state.pickupTo} disabled={filterLastChange || filterContact}
                                                     size={"mini"} label={I18n.get("Pickup date to")}
                                                     onChange={this.handleFiltersInput} name="pickupTo" type={'date'} />
+
+                                        <Form.Field label={I18n.get("Address")} disabled={filterPickup} pickerWidth={300} control={ContactPicker} contactId={this.state.contactId} contactSelected={this.filterContactSelected}/>
                                     </Form.Group>
-                                    <Button floated={"right"} primary positive onClick={this.applyFilters}>Apply</Button>
-                                    <Button floated={"right"} secondary onClick={this.clearFilters}>Clear</Button>
+                                    <Button floated={"right"} primary positive onClick={this.applyFilters}>{I18n.get("Apply")}</Button>
+                                    <Button floated={"right"} secondary onClick={this.clearFilters}>{I18n.get("Clear")}</Button>
                                 </Form>
                             </Segment>}
                         </Table.HeaderCell>
@@ -280,7 +287,8 @@ class Transports extends Component {
             pickupTo: "",
             pickupFrom: "",
             lastChangeTo: "",
-            lastChangeFrom: ""
+            lastChangeFrom: "",
+            contactId: null
         });
         this.retrieveAppSync();
     }
@@ -294,6 +302,21 @@ class Transports extends Component {
     }
 
     async retrieveAppSync(token) {
+        const addFilterParams = (filterParam, name, lastChangeFrom, lastChangeTo) => {
+            if (lastChangeFrom && lastChangeTo) {
+                filterParam[name] = {
+                    between: [lastChangeFrom, lastChangeTo]
+                };
+            } else if (lastChangeFrom) {
+                filterParam[name] = {
+                    ge: lastChangeFrom
+                };
+            } else if (lastChangeTo) {
+                filterParam[name] = {
+                    le: lastChangeTo
+                };
+            }
+        }
         const {sort} = this.state;
         this.setState({
             loading: true
@@ -302,58 +325,36 @@ class Transports extends Component {
 
         let key;
         let filterParam = {};
-
-        const {lastChangeFrom, lastChangeTo, pickupFrom, pickupTo} = this.state;
+        const {lastChangeFrom, lastChangeTo, pickupFrom, pickupTo, contactId} = this.state;
         if (lastChangeFrom || lastChangeTo) {
             trackEvent({
                 category: "transports",
                 action: "filter",
                 label: "filter_by_last_change"
             });
-
-            key = 'contractsByOwnerUpdatedAt';
-
-            if (lastChangeFrom && lastChangeTo) {
-                filterParam.updatedAt = {
-                    between: [lastChangeFrom, lastChangeTo]
-                };
-            } else if (lastChangeFrom) {
-                filterParam.updatedAt = {
-                    ge: lastChangeFrom
-                };
-            } else {
-                filterParam.updatedAt = {
-                    le: lastChangeTo
-                };
+            key = contactId ? 'contractsByFilterCustom' : 'contractsByOwnerUpdatedAt';
+            addFilterParams(filterParam,"updatedAt", lastChangeFrom, lastChangeTo);
+            if (contactId) {
+                filterParam.contactId = contactId;
             }
             this.setState({
                 sort: 'updatedAt'
             })
         } else if (pickupFrom || pickupTo) {
-            key = 'contractsByOwnerArrivalDate';
-
             trackEvent({
                 category: "transports",
                 action: "filter",
                 label: "filter_by_arrival_date"
             })
-
-            if (pickupFrom && pickupTo) {
-                filterParam.arrivalDate = {
-                    between: [pickupFrom, pickupTo]
-                };
-            } else if (pickupFrom) {
-                filterParam.arrivalDate = {
-                    ge: pickupFrom
-                };
-            } else {
-                filterParam.arrivalDate = {
-                    le: pickupTo
-                };
-            }
+            key = 'contractsByOwnerArrivalDate';
+            addFilterParams(filterParam,"arrivalDate", lastChangeFrom, lastChangeTo);
             this.setState({
                 sort: 'pickupDate'
             })
+        } else if (contactId) {
+            key = 'contractsByFilterCustom'
+            filterParam.contactId = contactId;
+            filterParam.owner = (await Auth.currentAuthenticatedUser()).getUsername();
         } else {
             key = sort === 'pickupDate' ? 'contractsByOwnerArrivalDate' : 'contractsByOwnerUpdatedAt';
         }
@@ -423,6 +424,12 @@ class Transports extends Component {
             currentPageToken: null
         }, () => {
             this.retrieveAppSync()
+        });
+    }
+
+    filterContactSelected(contact) {
+        this.setState({
+            contactId: contact
         });
     }
 }

@@ -24,6 +24,34 @@
 		"S3DeploymentRootKey": {
 			"Type": "String",
 			"Description": "An S3 key relative to the S3DeploymentBucket that points to the root\nof the deployment directory."
+		},
+		"DynamoDBBillingMode": {
+			"Type": "String",
+			"Description": "Configure @model types to create DynamoDB tables with PAY_PER_REQUEST or PROVISIONED billing modes.",
+			"Default": "PAY_PER_REQUEST",
+			"AllowedValues": [
+				"PAY_PER_REQUEST",
+				"PROVISIONED"
+			]
+		},
+		"DynamoDBModelTableReadIOPS": {
+			"Type": "Number",
+			"Description": "The number of read IOPS the table should support.",
+			"Default": 5
+		},
+		"DynamoDBModelTableWriteIOPS": {
+			"Type": "Number",
+			"Description": "The number of write IOPS the table should support.",
+			"Default": 5
+		},
+		"DynamoDBEnablePointInTimeRecovery": {
+			"Type": "String",
+			"Description": "Whether to enable Point in Time Recovery on the table",
+			"Default": "false",
+			"AllowedValues": [
+				"true",
+				"false"
+			]
 		}
 	},
 	"Resources": {
@@ -197,9 +225,606 @@
 			},
 			"DependsOn": ["CreateContractFunction"]
 
+		},
+		"AddEnvVariablesToStash": {
+			"Type": "AWS::AppSync::FunctionConfiguration",
+			"Properties": {
+				"ApiId": {
+					"Ref": "AppSyncApiId"
+				},
+				"DataSourceName": "NONE",
+				"Description": "Sets $ctx.stash.env to the Amplify environment and $ctx.stash.apiId to the Amplify API ID",
+				"FunctionVersion": "2018-05-29",
+				"Name": "addEnvVariablesToStash",
+				"RequestMappingTemplate": "{\n          \"version\": \"2017-02-28\",\n          \"payload\": {}\n        }",
+				"ResponseMappingTemplate": {
+					"Fn::Join": [
+						"",
+						[
+							"$util.qr($context.stash.put(\"env\", \"",
+							{ "Ref" : "env" },
+							"\"))\n$util.qr($context.stash.put(\"apiId\", \"",
+							{ "Ref": "AppSyncApiId" },
+							"\"))\n$util.toJson($ctx.prev.result)"
+						]
+					]
+				}
+			}
+		},
+		"GetContractIds": {
+			"Type": "AWS::AppSync::FunctionConfiguration",
+			"Properties": {
+				"ApiId": {
+					"Ref": "AppSyncApiId"
+				},
+				"Name": "GetContractIds",
+				"DataSourceName": {
+					"Fn::GetAtt": [
+						"SearchDataSource",
+						"Name"
+					]
+				},
+				"FunctionVersion": "2018-05-29",
+				"RequestMappingTemplateS3Location": {
+					"Fn::Sub": [
+						"s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/pipelineFunctions/${ResolverFileName}",
+						{
+							"S3DeploymentBucket": {
+								"Ref": "S3DeploymentBucket"
+							},
+							"S3DeploymentRootKey": {
+								"Ref": "S3DeploymentRootKey"
+							},
+							"ResolverFileName": {
+								"Fn::Join": [
+									".",
+									[
+										"GetContractIds",
+										"req",
+										"vtl"
+									]
+								]
+							}
+						}
+					]
+				},
+				"ResponseMappingTemplateS3Location": {
+					"Fn::Sub": [
+						"s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/pipelineFunctions/${ResolverFileName}",
+						{
+							"S3DeploymentBucket": {
+								"Ref": "S3DeploymentBucket"
+							},
+							"S3DeploymentRootKey": {
+								"Ref": "S3DeploymentRootKey"
+							},
+							"ResolverFileName": {
+								"Fn::Join": [
+									".",
+									[
+										"GetContractIds",
+										"res",
+										"vtl"
+									]
+								]
+							}
+						}
+					]
+				}
+			}
+		},
+		"GetContracts": {
+			"Type": "AWS::AppSync::FunctionConfiguration",
+			"Properties": {
+				"ApiId": {
+					"Ref": "AppSyncApiId"
+				},
+				"Name": "GetContracts",
+				"DataSourceName": {
+					"Fn::GetAtt": [
+						"SearchDataSource",
+						"Name"
+					]
+				},
+				"FunctionVersion": "2018-05-29",
+				"RequestMappingTemplateS3Location": {
+					"Fn::Sub": [
+						"s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/pipelineFunctions/${ResolverFileName}",
+						{
+							"S3DeploymentBucket": {
+								"Ref": "S3DeploymentBucket"
+							},
+							"S3DeploymentRootKey": {
+								"Ref": "S3DeploymentRootKey"
+							},
+							"ResolverFileName": {
+								"Fn::Join": [
+									".",
+									[
+										"GetContracts",
+										"req",
+										"vtl"
+									]
+								]
+							}
+						}
+					]
+				},
+				"ResponseMappingTemplateS3Location": {
+					"Fn::Sub": [
+						"s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/pipelineFunctions/${ResolverFileName}",
+						{
+							"S3DeploymentBucket": {
+								"Ref": "S3DeploymentBucket"
+							},
+							"S3DeploymentRootKey": {
+								"Ref": "S3DeploymentRootKey"
+							},
+							"ResolverFileName": {
+								"Fn::Join": [
+									".",
+									[
+										"GetContracts",
+										"res",
+										"vtl"
+									]
+								]
+							}
+						}
+					]
+				}
+			}
+		},
+		"SearchResolver": {
+			"Type": "AWS::AppSync::Resolver",
+			"Properties": {
+				"ApiId": {
+					"Ref": "AppSyncApiId"
+				},
+				"TypeName": "Query",
+				"FieldName": "contractsByFilterCustom",
+				"Kind": "PIPELINE",
+				"PipelineConfig": {
+					"Functions": [
+						{
+							"Fn::GetAtt": ["AddEnvVariablesToStash", "FunctionId"]
+						},
+						{
+							"Fn::GetAtt": ["GetContractIds", "FunctionId"]
+						},
+						{
+							"Fn::GetAtt": ["GetContracts", "FunctionId"]
+						}
+					]
+				},
+				"RequestMappingTemplateS3Location": {
+					"Fn::Sub": [
+						"s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/resolvers/${ResolverFileName}",
+						{
+							"S3DeploymentBucket": {
+								"Ref": "S3DeploymentBucket"
+							},
+							"S3DeploymentRootKey": {
+								"Ref": "S3DeploymentRootKey"
+							},
+							"ResolverFileName": {
+								"Fn::Join": [".", ["Query", "contractsByFilterCustom", "req", "vtl"]]
+							}
+						}
+					]
+				},
+				"ResponseMappingTemplateS3Location": {
+					"Fn::Sub": [
+						"s3://${S3DeploymentBucket}/${S3DeploymentRootKey}/resolvers/${ResolverFileName}",
+						{
+							"S3DeploymentBucket": {
+								"Ref": "S3DeploymentBucket"
+							},
+							"S3DeploymentRootKey": {
+								"Ref": "S3DeploymentRootKey"
+							},
+							"ResolverFileName": {
+								"Fn::Join": [".", ["Query", "contractsByFilterCustom", "res", "vtl"]]
+							}
+						}
+					]
+				}
+			},
+			"DependsOn": ["CreateContractFunction"]
+
+		},
+
+		"SearchTable": {
+			"Type": "AWS::DynamoDB::Table",
+			"Properties": {
+				"TableName": {
+					"Fn::If": [
+						"HasEnvironmentParameter",
+						{
+							"Fn::Join": [
+								"-",
+								[
+									"Search",
+									{
+										"Ref": "AppSyncApiId"
+									},
+									{
+										"Ref": "env"
+									}
+								]
+							]
+						},
+						{
+							"Fn::Join": [
+								"-",
+								[
+									"Search",
+									{
+										"Ref": "AppSyncApiId"
+									}
+								]
+							]
+						}
+					]
+				},
+				"KeySchema": [
+					{
+						"AttributeName": "ownerContactId",
+						"KeyType": "HASH"
+					},
+					{
+						"AttributeName": "typeDateContractId",
+						"KeyType": "RANGE"
+					}
+				],
+				"AttributeDefinitions": [
+					{
+						"AttributeName": "ownerContactId",
+						"AttributeType": "S"
+					},
+					{
+						"AttributeName": "typeDateContractId",
+						"AttributeType": "S"
+					}
+				],
+				"StreamSpecification": {
+					"StreamViewType": "NEW_AND_OLD_IMAGES"
+				},
+				"BillingMode": {
+					"Fn::If": [
+						"ShouldUsePayPerRequestBilling",
+						"PAY_PER_REQUEST",
+						{
+							"Ref": "AWS::NoValue"
+						}
+					]
+				},
+				"ProvisionedThroughput": {
+					"Fn::If": [
+						"ShouldUsePayPerRequestBilling",
+						{
+							"Ref": "AWS::NoValue"
+						},
+						{
+							"ReadCapacityUnits": {
+								"Ref": "DynamoDBModelTableReadIOPS"
+							},
+							"WriteCapacityUnits": {
+								"Ref": "DynamoDBModelTableWriteIOPS"
+							}
+						}
+					]
+				},
+				"PointInTimeRecoverySpecification": {
+					"Fn::If": [
+						"ShouldUsePointInTimeRecovery",
+						{
+							"PointInTimeRecoveryEnabled": true
+						},
+						{
+							"Ref": "AWS::NoValue"
+						}
+					]
+				}
+			},
+			"DeletionPolicy": "Delete"
+		},
+
+		"SearchDataSource": {
+			"Type": "AWS::AppSync::DataSource",
+			"Properties": {
+				"ApiId": {
+					"Ref": "AppSyncApiId"
+				},
+				"Name": "SearchTable",
+				"Type": "AMAZON_DYNAMODB",
+				"ServiceRoleArn": {
+					"Fn::GetAtt": [
+						"SearchIAMRole",
+						"Arn"
+					]
+				},
+				"DynamoDBConfig": {
+					"AwsRegion": {
+						"Ref": "AWS::Region"
+					},
+					"TableName": {
+						"Fn::If": [
+							"HasEnvironmentParameter",
+							{
+								"Fn::Join": [
+									"-",
+									[
+										"Search",
+										{
+											"Ref": "AppSyncApiId"
+										},
+										{
+											"Ref": "env"
+										}
+									]
+								]
+							},
+							{
+								"Fn::Join": [
+									"-",
+									[
+										"Search",
+										{
+											"Ref": "AppSyncApiId"
+										}
+									]
+								]
+							}
+						]
+					}
+				}
+			},
+			"DependsOn": [
+				"SearchIAMRole"
+			]
+		},
+
+		"SearchIAMRole": {
+			"Type": "AWS::IAM::Role",
+			"Properties": {
+				"RoleName": {
+					"Fn::If": [
+						"HasEnvironmentParameter",
+						{
+							"Fn::Join": [
+								"-",
+								[
+									"Search6839c0",
+									"role",
+									{
+										"Ref": "AppSyncApiId"
+									},
+									{
+										"Ref": "env"
+									}
+								]
+							]
+						},
+						{
+							"Fn::Join": [
+								"-",
+								[
+									"Search3c9278",
+									"role",
+									{
+										"Ref": "AppSyncApiId"
+									}
+								]
+							]
+						}
+					]
+				},
+				"AssumeRolePolicyDocument": {
+					"Version": "2012-10-17",
+					"Statement": [
+						{
+							"Effect": "Allow",
+							"Principal": {
+								"Service": "appsync.amazonaws.com"
+							},
+							"Action": "sts:AssumeRole"
+						}
+					]
+				},
+				"Policies": [
+					{
+						"PolicyName": "DynamoDBAccess",
+						"PolicyDocument": {
+							"Version": "2012-10-17",
+							"Statement": [
+								{
+									"Effect": "Allow",
+									"Action": [
+										"dynamodb:BatchGetItem",
+										"dynamodb:BatchWriteItem",
+										"dynamodb:PutItem",
+										"dynamodb:DeleteItem",
+										"dynamodb:GetItem",
+										"dynamodb:Scan",
+										"dynamodb:Query",
+										"dynamodb:UpdateItem"
+									],
+									"Resource": [
+										{
+											"Fn::Sub": [
+												"arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${tablename}",
+												{
+													"tablename": {
+														"Fn::If": [
+															"HasEnvironmentParameter",
+															{
+																"Fn::Join": [
+																	"-",
+																	[
+																		"Search",
+																		{
+																			"Ref": "AppSyncApiId"
+																		},
+																		{
+																			"Ref": "env"
+																		}
+																	]
+																]
+															},
+															{
+																"Fn::Join": [
+																	"-",
+																	[
+																		"Search",
+																		{
+																			"Ref": "AppSyncApiId"
+																		}
+																	]
+																]
+															}
+														]
+													}
+												}
+											]
+										},
+										{
+											"Fn::Sub": [
+												"arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${tablename}/*",
+												{
+													"tablename": {
+														"Fn::If": [
+															"HasEnvironmentParameter",
+															{
+																"Fn::Join": [
+																	"-",
+																	[
+																		"Search",
+																		{
+																			"Ref": "AppSyncApiId"
+																		},
+																		{
+																			"Ref": "env"
+																		}
+																	]
+																]
+															},
+															{
+																"Fn::Join": [
+																	"-",
+																	[
+																		"Search",
+																		{
+																			"Ref": "AppSyncApiId"
+																		}
+																	]
+																]
+															}
+														]
+													}
+												}
+											]
+										},
+										{
+											"Fn::Sub": [
+												"arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${tablename}",
+												{
+													"tablename": {
+														"Fn::If": [
+															"HasEnvironmentParameter",
+															{
+																"Fn::Join": [
+																	"-",
+																	[
+																		"Contract",
+																		{
+																			"Ref": "AppSyncApiId"
+																		},
+																		{
+																			"Ref": "env"
+																		}
+																	]
+																]
+															},
+															{
+																"Fn::Join": [
+																	"-",
+																	[
+																		"Contract",
+																		{
+																			"Ref": "AppSyncApiId"
+																		}
+																	]
+																]
+															}
+														]
+													}
+												}
+											]
+										},
+										{
+											"Fn::Sub": [
+												"arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${tablename}/*",
+												{
+													"tablename": {
+														"Fn::If": [
+															"HasEnvironmentParameter",
+															{
+																"Fn::Join": [
+																	"-",
+																	[
+																		"Contract",
+																		{
+																			"Ref": "AppSyncApiId"
+																		},
+																		{
+																			"Ref": "env"
+																		}
+																	]
+																]
+															},
+															{
+																"Fn::Join": [
+																	"-",
+																	[
+																		"Contract",
+																		{
+																			"Ref": "AppSyncApiId"
+																		}
+																	]
+																]
+															}
+														]
+													}
+												}
+											]
+										}
+									]
+								}
+							]
+						}
+					}
+				]
+			}
 		}
 	},
 	"Conditions": {
+		"ShouldUsePointInTimeRecovery": {
+			"Fn::Equals": [
+				{
+					"Ref": "DynamoDBEnablePointInTimeRecovery"
+				},
+				"true"
+			]
+		},
+		"ShouldUsePayPerRequestBilling": {
+			"Fn::Equals": [
+				{
+					"Ref": "DynamoDBBillingMode"
+				},
+				"PAY_PER_REQUEST"
+			]
+		},
 		"HasEnvironmentParameter": {
 			"Fn::Not": [
 				{

@@ -83,7 +83,7 @@ class ContactPicker extends Component {
         const { address } = this.props;
 
         return (
-            <div style={{marginBottom: '15px'}}>
+            <div style={{marginBottom: '15px', ...(this.props.pickerWidth && {width: this.props.pickerWidth})}}>
                 <Dropdown
                     placeholder={I18n.get('Select contact')}
                     fluid
