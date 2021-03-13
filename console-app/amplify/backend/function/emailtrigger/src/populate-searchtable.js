@@ -21,7 +21,8 @@ async function populate() {
     let lastKey;
     do {
         const results = await dynamodb.scan({
-            TableName: contractsTable
+            TableName: contractsTable,
+            ...(lastKey && {ExclusiveStartKey: lastKey})
         }).promise();
         for (const item of results.Items) {
             const contract = AWS.DynamoDB.Converter.unmarshall(item);
