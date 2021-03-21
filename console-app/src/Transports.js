@@ -121,7 +121,8 @@ class Transports extends Component {
             lastChangeTo: "",
             pickupFrom: "",
             pickupTo: "",
-            filters: localStorage.getItem("filters") === "true"
+            filters: localStorage.getItem("filters") === "true",
+            ...props,
         };
 
         this.onNext = this.onNext.bind(this);
@@ -132,6 +133,7 @@ class Transports extends Component {
         this.clearFilters = this.clearFilters.bind(this);
         this.toggleFilters = this.toggleFilters.bind(this);
         this.filterContactSelected = this.filterContactSelected.bind(this);
+        this.onFirst = this.onFirst.bind(this);
     }
 
     handleFiltersInput(event) {
@@ -173,6 +175,9 @@ class Transports extends Component {
                                 <Icon name='filter'/> {I18n.get('Filters')}
                             </Button>
                             <Menu pagination>
+                                <Menu.Item as='a' icon onClick={this.onFirst} disabled={!this.state.currentPageToken}>
+                                    <Icon name='angle double left' />
+                                </Menu.Item>
                                 <Menu.Item as='a' icon onClick={this.onPrev} disabled={!this.state.currentPageToken}>
                                     <Icon name='chevron left' />
                                 </Menu.Item>
@@ -288,17 +293,23 @@ class Transports extends Component {
             pickupFrom: "",
             lastChangeTo: "",
             lastChangeFrom: "",
-            contactId: null
+            contactId: null,
+            previousTokens: [],
+            currentPageToken: null
         });
         this.retrieveAppSync();
     }
 
     componentDidMount() {
-        this.retrieveAppSync();
+        this.retrieveAppSync(this.state.currentPageToken);
     }
 
     applyFilters() {
         this.retrieveAppSync();
+    }
+
+    componentWillUnmount() {
+        this.props.setParentState(this.state);
     }
 
     async retrieveAppSync(token) {
@@ -347,7 +358,7 @@ class Transports extends Component {
                 label: "filter_by_arrival_date"
             })
             key = 'contractsByOwnerArrivalDate';
-            addFilterParams(filterParam,"arrivalDate", lastChangeFrom, lastChangeTo);
+            addFilterParams(filterParam,"arrivalDate", pickupFrom, pickupTo);
             this.setState({
                 sort: 'pickupDate'
             })
@@ -403,6 +414,14 @@ class Transports extends Component {
             currentPageToken: previousToken
         });
         this.retrieveAppSync(previousToken);
+    }
+
+    onFirst() {
+        this.setState({
+            previousTokens: [],
+            currentPageToken: null
+        });
+        this.retrieveAppSync();
     }
 
     changeSort(newSort) {

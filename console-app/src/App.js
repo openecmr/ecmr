@@ -202,6 +202,7 @@ const Main = withRouter(({location, onLogout, user, company, noCompany, onCompan
     const pdf = location.pathname.endsWith('/pdf');
     const [menuVisible, setMenuVisible] = useState(true);
     const [language, setLanguage] = useState();
+    const [transportState, setTransportState] = useState({});
 
     async function changeLanguage(language) {
         const user = await Auth.currentAuthenticatedUser();
@@ -264,7 +265,8 @@ const Main = withRouter(({location, onLogout, user, company, noCompany, onCompan
 
                 <div style={{...style.content, ...(!menuVisible && {marginLeft: "0"})}}>
                     <Switch>
-                        <Route exact path="/transports" component={Transports}/>
+                        <Route exact path="/transports" render={(props) =>
+                            <Transports setParentState={(s) => setTransportState(s)} {...props} {...transportState} />}/>
                         <Route exact path="/transports-new/:copy_id"
                                render={(props) => <NewTransport {...props} company={company}/>}
                         />
