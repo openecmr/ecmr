@@ -34,6 +34,7 @@ import Contacts from "./Contacts";
 import '@aws-amplify/ui/dist/style.css';
 import Settings from "./Settings";
 import Planner from "./Planner";
+import Orders from "./Orders";
 
 let config;
 const pdfServiceKey = window.location.hash.substr(1);
@@ -160,6 +161,18 @@ const AppMenu = withRouter(({location, onLogout, menuVisible}) => (
             as={Link}
         />
         <Menu.Item
+            name={I18n.get('Received orders')}
+            to={'/received-orders'}
+            active={location.pathname.startsWith('/received-orders')}
+            as={Link}
+        />
+        <Menu.Item
+            name={I18n.get('Sent orders')}
+            to={'/sent-orders'}
+            active={location.pathname.startsWith('/sent-orders')}
+            as={Link}
+        />
+        <Menu.Item
             name={I18n.get('planner')}
             active={location.pathname.startsWith('/planner')}
             to={'/planner'}
@@ -273,6 +286,11 @@ const Main = withRouter(({location, onLogout, user, company, noCompany, onCompan
                         <Route exact path="/transports-new"
                                render={(props) => <NewTransport {...props} company={company}/>}
                         />
+                        <Route exact path="/orders-new"
+                               render={(props) => <NewTransport {...props} company={company} order={true} orderCarrier={{linkedAccount: "bob57"}}/>}
+                        />
+                        <Route exact path="/sent-orders" render={(props) => <Orders key={"sent"} {...props} direction={"sent"}/>}/>
+                        <Route exact path="/received-orders" render={(props) => <Orders key={"received"} {...props} direction={"received"}/>}/>
                         <Route exact path="/transports/:id" component={Transport}/>
                         <Route exact path="/addressbook" component={AddressBook}/>
                         <Route exact path="/contacts" component={Contacts}/>

@@ -497,52 +497,70 @@ class Trailer extends NewTransportForm {
     }
 }
 
+const onlyIf = (flag, options) => {
+    const result = flag && options || [];
+    console.log(result);
+    return result;
+}
+
 class NewTransport extends Component {
     constructor(props) {
         super(props);
+
+        const transport = !props.order;
+        const order = props.order;
 
         this.form = [
             {
                 section: I18n.get('Carrier'),
                 items: [
-                    {label: I18n.get('Carrier'), icon: 'truck', form: () =>
+                    {
+                        label: I18n.get('Carrier'), icon: 'truck', form: () =>
                             <Carrier
-                                contactSelected={(contactId) => this.setState({'carrierContactId' : contactId})}
+                                contactSelected={(contactId) => this.setState({'carrierContactId': contactId})}
                                 contactId={this.state.carrierContactId}
-                            />},
-                    {label: I18n.get('Driver'), icon: 'user', form: () => <Driver
+                            />
+                    },
+                    ...onlyIf(transport, [{
+                        label: I18n.get('Driver'), icon: 'user', form: () => <Driver
                             driverSelected={(driver) => this.setState({
-                                driverDriverId : driver ? driver.id : null,
+                                driverDriverId: driver ? driver.id : null,
                                 carrierUsername: (driver && driver.carrier) ? driver.carrier : "-"
                             })}
                             driverId={this.state.driverDriverId}
-                        />},
-                    {label: I18n.get('Vehicle license plate'), icon: 'truck', form: () => <Vehicle
-                            companyId={this.props.company.id}
-                            truckSelected={(vehicle) => this.setState({
-                                truckVehicleId: vehicle ? vehicle.id : null,
-                                    truck: vehicle ? vehicle.licensePlateNumber : null
-                            })}
-                            truckId={this.state.truckVehicleId}
-                        />},
-                    {label: I18n.get('Trailer license plate'), icon: 'truck', form: () => <Trailer
-                            companyId={this.props.company.id}
-                            trailerSelected={(vehicle) => this.setState({
-                                trailerVehicleId: vehicle ? vehicle.id : null,
-                                trailer: vehicle ? vehicle.licensePlateNumber : null
-                            })}
-                            trailerId={this.state.trailerVehicleId}
                         />
+                    },
+                        {
+                            label: I18n.get('Vehicle license plate'), icon: 'truck', form: () => <Vehicle
+                                companyId={this.props.company.id}
+                                truckSelected={(vehicle) => this.setState({
+                                    truckVehicleId: vehicle ? vehicle.id : null,
+                                    truck: vehicle ? vehicle.licensePlateNumber : null
+                                })}
+                                truckId={this.state.truckVehicleId}
+                            />
+                        },
+                        {
+                            label: I18n.get('Trailer license plate'), icon: 'truck', form: () => <Trailer
+                                companyId={this.props.company.id}
+                                trailerSelected={(vehicle) => this.setState({
+                                    trailerVehicleId: vehicle ? vehicle.id : null,
+                                    trailer: vehicle ? vehicle.licensePlateNumber : null
+                                })}
+                                trailerId={this.state.trailerVehicleId}
+                            />
 
-                    }
+                        }])
                 ]
             },
             {
                 section: I18n.get('Shipper'),
                 items: [
-                    {label: I18n.get('Shipper'), icon: 'building', form: () =>
+                    ...onlyIf(transport,[{label: I18n.get('Shipper'), icon: 'building', form: () =>
                             <Shipper  contactSelected={(contactId) => this.setState({'shipperContactId' : contactId})}
-                                      contactId={this.state.shipperContactId} />}
+                                      contactId={this.state.shipperContactId} />}]),
+                    ...onlyIf(order, [{label: I18n.get('Shipper'), icon: 'building', form: () => <div>{props.company.name}</div>
+                        }])
                 ]
             },
             {
@@ -743,15 +761,20 @@ class NewTransport extends Component {
         )
     }
 
-    validate() {
+    validate(order, transport) {
         let error;
-        if (!this.state.carrierContactId) {
-            error = I18n.get("Missing carrier address");
-        } else if (!this.state.truckVehicleId) {
-            error = I18n.get("Missing truck");
-        }  else if (!this.state.shipperContactId) {
-            error = I18n.get("Missing shipper address");
-        } else if (!this.state.pickup.contactId) {
+
+        if (transport) {
+            if (!this.state.carrierContactId) {
+                error = I18n.get("Missing carrier address");
+            } else if (!this.state.truckVehicleId) {
+                error = I18n.get("Missing truck");
+            } else if (!this.state.shipperContactId) {
+                error = I18n.get("Missing shipper address");
+            }
+        }
+
+        if (!this.state.pickup.contactId) {
             error = I18n.get("Missing pickup address");
         } else if (!this.state.pickup.pickupDate) {
             error = I18n.get("Missing pickup date");
@@ -769,7 +792,9 @@ class NewTransport extends Component {
     }
 
     async save() {
-        if (this.state.loading || !this.validate()) {
+        const order = this.props.order;
+        const transport = !order;
+        if (this.state.loading || !this.validate(order, transport)) {
             return;
         }
         this.setState({
@@ -799,9 +824,7 @@ class NewTransport extends Component {
             };
 
             const now = moment().toISOString();
-            const input = {
-                owner: (await Auth.currentAuthenticatedUser()).getUsername(),
-                status: 'CREATED',
+            let input = {
                 arrivalDate: this.state.pickup.pickupDate,
                 ...(this.state.pickup.pickupFromTime &&
                     this.state.pickup.pickupEndTime && {
@@ -818,14 +841,10 @@ class NewTransport extends Component {
                             end: this.state.delivery.deliveryEndTime
                         }
                     }),
-                carrierUsername: this.state.carrierUsername,
                 loads: this.state.loads.map(removeEmpty),
-                trailer: this.state.trailer,
-                truck: this.state.truck,
                 updatedAt: now,
                 createdAt: now,
 
-                shipper: await copyToAddress(this.state.shipperContactId),
                 carrier: await copyToAddress(this.state.carrierContactId),
                 delivery: await copyToAddress(this.state.delivery.contactId),
                 pickup: await copyToAddress(this.state.pickup.contactId),
@@ -840,15 +859,39 @@ class NewTransport extends Component {
                     creatorCompanyId: this.props.company.id
                 }),
                 events: [],
-                needAcknowledge: !!this.state.driverDriverId,
-                shipperContactId: this.state.shipperContactId,
-                carrierContactId: this.state.carrierContactId,
-                deliveryContactId: this.state.delivery.contactId,
-                pickupContactId: this.state.pickup.contactId,
-                driverDriverId: this.state.driverDriverId,
-                truckVehicleId: this.state.truckVehicleId,
-                trailerVehicleId: this.state.trailerVehicleId
             };
+
+            if (order) {
+                input = {
+                    ...input,
+                    shipper: {
+                        name: this.props.company.name
+                    },
+                    orderStatus: 'ORDER_SENT',
+                    orderCarrier: this.props.orderCarrier.linkedAccount,
+                    orderOwner: (await Auth.currentAuthenticatedUser()).getUsername(),
+                    orderDate: now,
+                    owner: "-"
+                }
+            } else if (transport) {
+                input = {
+                    ...input,
+                    status: 'CREATED',
+                    shipper: await copyToAddress(this.state.shipperContactId),
+                    trailer: this.state.trailer,
+                    truck: this.state.truck,
+                    carrierUsername: this.state.carrierUsername,
+                    owner: (await Auth.currentAuthenticatedUser()).getUsername(),
+                    shipperContactId: this.state.shipperContactId,
+                    carrierContactId: this.state.carrierContactId,
+                    deliveryContactId: this.state.delivery.contactId,
+                    pickupContactId: this.state.pickup.contactId,
+                    driverDriverId: this.state.driverDriverId,
+                    truckVehicleId: this.state.truckVehicleId,
+                    trailerVehicleId: this.state.trailerVehicleId,
+                    needAcknowledge: !!this.state.driverDriverId,
+                }
+            }
 
             if (this.state.driverDriverId) {
                 input.events.push({

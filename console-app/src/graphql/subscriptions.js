@@ -248,12 +248,26 @@ export const onDeleteCompany = /* GraphQL */ `
   }
 `;
 export const onCreateContract = /* GraphQL */ `
-  subscription OnCreateContract($owner: String, $carrierUsername: String) {
-    onCreateContract(owner: $owner, carrierUsername: $carrierUsername) {
+  subscription OnCreateContract(
+    $owner: String
+    $carrierUsername: String
+    $orderOwner: String
+    $orderCarrier: String
+  ) {
+    onCreateContract(
+      owner: $owner
+      carrierUsername: $carrierUsername
+      orderOwner: $orderOwner
+      orderCarrier: $orderCarrier
+    ) {
       id
       owner
       carrierUsername
       status
+      orderOwner
+      orderCarrier
+      orderStatus
+      orderDate
       creator {
         name
       }
@@ -410,12 +424,26 @@ export const onCreateContract = /* GraphQL */ `
   }
 `;
 export const onUpdateContract = /* GraphQL */ `
-  subscription OnUpdateContract($owner: String, $carrierUsername: String) {
-    onUpdateContract(owner: $owner, carrierUsername: $carrierUsername) {
+  subscription OnUpdateContract(
+    $owner: String
+    $carrierUsername: String
+    $orderOwner: String
+    $orderCarrier: String
+  ) {
+    onUpdateContract(
+      owner: $owner
+      carrierUsername: $carrierUsername
+      orderOwner: $orderOwner
+      orderCarrier: $orderCarrier
+    ) {
       id
       owner
       carrierUsername
       status
+      orderOwner
+      orderCarrier
+      orderStatus
+      orderDate
       creator {
         name
       }
@@ -572,12 +600,26 @@ export const onUpdateContract = /* GraphQL */ `
   }
 `;
 export const onDeleteContract = /* GraphQL */ `
-  subscription OnDeleteContract($owner: String, $carrierUsername: String) {
-    onDeleteContract(owner: $owner, carrierUsername: $carrierUsername) {
+  subscription OnDeleteContract(
+    $owner: String
+    $carrierUsername: String
+    $orderOwner: String
+    $orderCarrier: String
+  ) {
+    onDeleteContract(
+      owner: $owner
+      carrierUsername: $carrierUsername
+      orderOwner: $orderOwner
+      orderCarrier: $orderCarrier
+    ) {
       id
       owner
       carrierUsername
       status
+      orderOwner
+      orderCarrier
+      orderStatus
+      orderDate
       creator {
         name
       }

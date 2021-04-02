@@ -21,6 +21,7 @@ import moment from 'moment/min/moment-with-locales';
 import {ContactPicker, DriverPicker} from "./NewTransport";
 import ReactGA from "react-ga";
 import {trackEvent} from "./ConsoleUtils";
+import * as PropTypes from "prop-types";
 
 const AddressCell = ({address}) => {
     return (
@@ -106,6 +107,82 @@ const Driver = ({driver, needAcknowledge}) =>
         {(driver && needAcknowledge) &&  <Label color='yellow' size={'tiny'}>{I18n.get('not acknowledged yet')}</Label>}
     </Table.Cell>
 
+const Pagination = ({onFirst, onPrevious, onNext, onRefresh, currentPageToken, nextToken}) => {
+    return <Menu pagination>
+        <Menu.Item as='a' icon onClick={onFirst} disabled={!currentPageToken}>
+            <Icon name='angle double left'/>
+        </Menu.Item>
+        <Menu.Item as='a' icon onClick={onPrevious} disabled={!currentPageToken}>
+            <Icon name='chevron left'/>
+        </Menu.Item>
+        <Menu.Item as='a' icon onClick={onNext} disabled={!nextToken}>
+            <Icon name='chevron right'/>
+        </Menu.Item>
+        <Menu.Item as='a' icon onClick={onRefresh}>
+            <Icon name='refresh'/>
+        </Menu.Item>
+    </Menu>;
+}
+
+Pagination.propTypes = {
+    onFirst: PropTypes.func,
+    currentPageToken: PropTypes.any,
+    onPrevious: PropTypes.func,
+    onNext: PropTypes.func,
+    nextToken: PropTypes.any,
+    onRefresh: PropTypes.func
+};
+
+function Filter(props) {
+    return <Segment padded compact size={"tiny"} color={"olive"}>
+        <Form>
+            <Form.Group>
+                <Form.Input value={props.lastChangeFrom} disabled={props.filterPickup}
+                            size={"mini"} label={I18n.get("Last changed from")}
+                            onChange={props.onChange} name="lastChangeFrom"
+                            type={"date"}/>
+                <Form.Input value={props.lastChangeTo} disabled={props.filterPickup}
+                            size={"mini"} label={I18n.get("Last changed to")}
+                            onChange={props.onChange} name="lastChangeTo"
+                            type={"date"}/>
+
+                <Form.Input value={props.pickupFrom}
+                            disabled={props.filterLastChange || props.filterContact}
+                            size={"mini"} label={I18n.get("Pickup date from")}
+                            onChange={props.onChange} name="pickupFrom" type={"date"}/>
+                <Form.Input value={props.pickupTo}
+                            disabled={props.filterLastChange || props.filterContact}
+                            size={"mini"} label={I18n.get("Pickup date to")}
+                            onChange={props.onChange} name="pickupTo" type={"date"}/>
+
+                <Form.Field label={I18n.get("Address")} disabled={props.filterPickup}
+                            pickerWidth={300} control={ContactPicker}
+                            contactId={props.contactId}
+                            contactSelected={props.contactSelected}/>
+            </Form.Group>
+            <Button floated={"right"} primary positive
+                    onClick={props.onApply}>{I18n.get("Apply")}</Button>
+            <Button floated={"right"} secondary
+                    onClick={props.onClearFilters}>{I18n.get("Clear")}</Button>
+        </Form>
+    </Segment>;
+}
+
+Filter.propTypes = {
+    lastChangeFrom: PropTypes.any,
+    filterPickup: PropTypes.bool,
+    onChange: PropTypes.func,
+    lastChangeTo: PropTypes.any,
+    pickupFrom: PropTypes.any,
+    filterLastChange: PropTypes.bool,
+    filterContact: PropTypes.bool,
+    pickupTo: PropTypes.any,
+    contactId: PropTypes.any,
+    contactSelected: PropTypes.func,
+    onApply: PropTypes.func,
+    onClearFilters: PropTypes.func
+};
+
 class Transports extends Component {
     constructor(props) {
         super(props);
@@ -174,53 +251,30 @@ class Transports extends Component {
                                     onClick={this.toggleFilters} color={"olive"} labelPosition={'left'} size={'small'}>
                                 <Icon name='filter'/> {I18n.get('Filters')}
                             </Button>
-                            <Menu pagination>
-                                <Menu.Item as='a' icon onClick={this.onFirst} disabled={!this.state.currentPageToken}>
-                                    <Icon name='angle double left' />
-                                </Menu.Item>
-                                <Menu.Item as='a' icon onClick={this.onPrev} disabled={!this.state.currentPageToken}>
-                                    <Icon name='chevron left' />
-                                </Menu.Item>
-                                <Menu.Item as='a' icon onClick={this.onNext} disabled={!this.state.nextToken}>
-                                    <Icon name='chevron right' />
-                                </Menu.Item>
-                                <Menu.Item as='a' icon onClick={this.refresh}>
-                                    <Icon name='refresh' />
-                                </Menu.Item>
-                            </Menu>
-                            {this.state.filters && <Segment padded compact size={"tiny"} color={"olive"}>
-                                <Form>
-                                    <Form.Group>
-                                        <Form.Input value={this.state.lastChangeFrom} disabled={filterPickup}
-                                                    size={"mini"} label={I18n.get("Last changed from")}
-                                                    onChange={this.handleFiltersInput} name="lastChangeFrom" type={'date'}/>
-                                        <Form.Input value={this.state.lastChangeTo} disabled={filterPickup}
-                                                    size={"mini"} label={I18n.get("Last changed to")}
-                                                    onChange={this.handleFiltersInput} name="lastChangeTo" type={'date'} />
-
-                                        <Form.Input value={this.state.pickupFrom} disabled={filterLastChange || filterContact}
-                                                    size={"mini"} label={I18n.get("Pickup date from")}
-                                                    onChange={this.handleFiltersInput} name="pickupFrom" type={'date'} />
-                                        <Form.Input value={this.state.pickupTo} disabled={filterLastChange || filterContact}
-                                                    size={"mini"} label={I18n.get("Pickup date to")}
-                                                    onChange={this.handleFiltersInput} name="pickupTo" type={'date'} />
-
-                                        <Form.Field label={I18n.get("Address")} disabled={filterPickup} pickerWidth={300} control={ContactPicker} contactId={this.state.contactId} contactSelected={this.filterContactSelected}/>
-                                    </Form.Group>
-                                    <Button floated={"right"} primary positive onClick={this.applyFilters}>{I18n.get("Apply")}</Button>
-                                    <Button floated={"right"} secondary onClick={this.clearFilters}>{I18n.get("Clear")}</Button>
-                                </Form>
-                            </Segment>}
+                            <Pagination onFirst={this.onFirst} currentPageToken={this.state.currentPageToken}
+                                        onPrevious={this.onPrev} onNext={this.onNext} nextToken={this.state.nextToken}
+                                        onRefresh={this.refresh}/>
+                            {this.state.filters && <Filter lastChangeFrom={this.state.lastChangeFrom} filterPickup={filterPickup}
+                                                           onChange={this.handleFiltersInput}
+                                                           lastChangeTo={this.state.lastChangeTo}
+                                                           pickupFrom={this.state.pickupFrom}
+                                                           filterLastChange={filterLastChange}
+                                                           filterContact={filterContact} pickupTo={this.state.pickupTo}
+                                                           contactId={this.state.contactId}
+                                                           contactSelected={this.filterContactSelected}
+                                                           onApply={this.applyFilters} onClearFilters={this.clearFilters}/>}
                         </Table.HeaderCell>
                     </Table.Row>
                     <Table.Row>
                         <Table.HeaderCell>{I18n.get('Number')}</Table.HeaderCell>
                         <Table.HeaderCell>{I18n.get('Status')}</Table.HeaderCell>
                         <Table.HeaderCell>{I18n.get('Pick-up address')}</Table.HeaderCell>
-                        <Table.HeaderCell className={"sort"} onClick={() => this.changeSort('pickupDate')} sorted={this.state.sort === 'pickupDate' && this.state.sortOrder}>{I18n.get('Pick-up date')}</Table.HeaderCell>
+                        <Table.HeaderCell className={"sort"} onClick={() => this.changeSort('pickupDate')}
+                                          sorted={this.state.sort === 'pickupDate' && this.state.sortOrder}>{I18n.get('Pick-up date')}</Table.HeaderCell>
                         <Table.HeaderCell>{I18n.get('Delivery address')}</Table.HeaderCell>
                         <Table.HeaderCell>{I18n.get('Delivery date')}</Table.HeaderCell>
-                        <Table.HeaderCell className={"sort"} onClick={() => this.changeSort('updatedAt')} sorted={this.state.sort === 'updatedAt' && this.state.sortOrder}>{I18n.get('Last change')}</Table.HeaderCell>
+                        <Table.HeaderCell className={"sort"} onClick={() => this.changeSort('updatedAt')}
+                                          sorted={this.state.sort === 'updatedAt' && this.state.sortOrder}>{I18n.get('Last change')}</Table.HeaderCell>
                         <Table.HeaderCell>{I18n.get('Shipper')}</Table.HeaderCell>
                         <Table.HeaderCell>{I18n.get('Driver')}</Table.HeaderCell>
                         <Table.HeaderCell>{I18n.get('Loads')}</Table.HeaderCell>
@@ -230,23 +284,23 @@ class Transports extends Component {
 
                     {!this.state.loading && this.renderConsignmentNotes()}
                     {!this.state.loading && this.state.notes.length === 0 && !this.state.currentPageToken &&
-                        <Table.Row>
-                            <Table.Cell colSpan={'10'} textAlign={"center"} selectable={false}>
-                                <div style={{padding: '50px', paddingTop: '200px', minHeight: '560px'}}>
-                                    <p>
-                                        {I18n.get('No transports found, please create one using the button above.')}
-                                    </p>
-                                    <Icon name={"shipping fast"} size={"massive"}/>
-                                </div>
-                            </Table.Cell>
-                        </Table.Row>
+                    <Table.Row>
+                        <Table.Cell colSpan={'10'} textAlign={"center"} selectable={false}>
+                            <div style={{padding: '50px', paddingTop: '200px', minHeight: '560px'}}>
+                                <p>
+                                    {I18n.get('No transports found, please create one using the button above.')}
+                                </p>
+                                <Icon name={"shipping fast"} size={"massive"}/>
+                            </div>
+                        </Table.Cell>
+                    </Table.Row>
                     }
                     {this.state.loading &&
-                        <Table.Row>
-                            <Table.Cell colSpan={cols} textAlign={"center"} selectable={false}>
-                                <Loader active={true} inline size={"large"}/>
-                            </Table.Cell>
-                        </Table.Row>
+                    <Table.Row>
+                        <Table.Cell colSpan={cols} textAlign={"center"} selectable={false}>
+                            <Loader active={true} inline size={"large"}/>
+                        </Table.Cell>
+                    </Table.Row>
                     }
                 </Table.Body>
                 <Table.Footer>
@@ -254,10 +308,10 @@ class Transports extends Component {
                         <Table.HeaderCell colSpan={cols}>
                             <Menu floated='right' pagination>
                                 <Menu.Item as='a' icon onClick={this.onPrev} disabled={!this.state.currentPageToken}>
-                                    <Icon name='chevron left' />
+                                    <Icon name='chevron left'/>
                                 </Menu.Item>
                                 <Menu.Item as='a' icon onClick={this.onNext} disabled={!this.state.nextToken}>
-                                    <Icon name='chevron right' />
+                                    <Icon name='chevron right'/>
                                 </Menu.Item>
                             </Menu>
                         </Table.HeaderCell>
@@ -451,6 +505,9 @@ class Transports extends Component {
             contactId: contact
         });
     }
+}
+export {
+    Pagination, IdCell, AddressCell, DateCell, ConsignmentCell
 }
 
 export default Transports;

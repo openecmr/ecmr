@@ -235,6 +235,7 @@ class Transport extends Component {
         this.state = {
         };
         this.fileChange = this.fileChange.bind(this);
+        this.acceptOrder = this.acceptOrder.bind(this);
     }
 
     async componentDidMount() {
@@ -291,6 +292,8 @@ class Transport extends Component {
             .map(e => (e.attachments || []).map(a => ({event: e, attachment: a}))).flat()
         const cmrId = contract.openecmrId ? contract.openecmrId : contract.id.substring(0, 8)
 
+        const orderStatus = contract.orderStatus;
+
         return (
             <div>
                 {
@@ -300,7 +303,12 @@ class Transport extends Component {
                             <p>{I18n.get('The driver needs to enter the association code in the app, please see the drivers page.')}</p>
                         </Message>
                 }
+
                 <Button.Group floated='right'>
+                    {orderStatus === 'ORDER_SENT' && <Button onClick={() => this.acceptOrder()}>
+                        <Icon name='check circle outline'/>
+                        {I18n.get('Accept order')}
+                    </Button>}
                     <Button onClick={() => this.showAssignDriver()}>
                         <Icon name='truck'/>
                         {I18n.get('Assign driver')}
@@ -487,6 +495,22 @@ class Transport extends Component {
     copy() {
         const {history} = this.props;
         history.push('/transports-new/' + this.state.contract.id);
+    }
+
+    async acceptOrder() {
+        const {contract} = this.state;
+        contract.orderStatus = 'ORDER_ACCEPTED';
+
+        await API.graphql(graphqlOperation(mutations.updateContract, {
+            "input": {
+                id: contract.id,
+                orderStatus: 'ORDER_ACCEPTED'
+            }
+        }));
+
+        this.setState({
+            contract
+        });
     }
 
     async downloadDocument(attachment) {

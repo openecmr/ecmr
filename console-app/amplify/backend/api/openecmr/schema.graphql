@@ -12,26 +12,47 @@ enum ContractStatus {
     ARCHIVED
 }
 
+enum OrderStatus {
+    DRAFT,
+    ORDER_SENT,
+    ORDER_ACCEPTED,
+    PLANNED,
+    IN_PROGRESS,
+    DONE,
+    CANCELLED
+}
+
 type Contract @model
     @auth(rules: [
         { allow: owner },
         { allow: owner, ownerField: "carrierUsername", operations: [read, update, create] },
-        { allow: public, provider: apiKey, operations: [read]}
+        { allow: public, provider: apiKey, operations: [read]},
+        { allow: owner, ownerField: "orderOwner", operations: [read, update, create] },
+        { allow: owner, ownerField: "orderCarrier", operations: [read, update, create, delete] }
     ])
     @key(name: "OwnerArrival", fields: ["owner", "arrivalDate"], queryField: "contractsByOwnerArrivalDate")
     @key(name: "CarrierArrival", fields: ["carrierUsername", "arrivalDate"], queryField: "contractsByCarrierArrivalDate"),
     @key(name: "OwnerUpdatedAt", fields: ["owner", "updatedAt"], queryField: "contractsByOwnerUpdatedAt"),
-    @key(name: "CarrierUpdatedAt", fields: ["carrierUsername", "updatedAt"], queryField: "contractsByCarrierUpdatedAt")
+    @key(name: "CarrierUpdatedAt", fields: ["carrierUsername", "updatedAt"], queryField: "contractsByCarrierUpdatedAt"),
+    @key(name: "OrderOwner", fields: ["orderOwner", "createdAt"], queryField: "ordersByOwnerCreatedAt"),
+    @key(name: "OrderCarrier", fields: ["orderCarrier", "createdAt"], queryField: "ordersByCarrierCreatedAt")
 {
     id: ID!
     openecmrId: String @auth(rules: [
         { allow: owner, operations: [read] },
         { allow: owner, ownerField: "carrierUsername", operations: [read] },
+        { allow: owner, ownerField: "orderOwner", operations: [read] },
+        { allow: owner, ownerField: "orderCarrier", operations: [read] }
         { allow: public, provider: apiKey, operations: [read]}
     ])
     owner: String!
     carrierUsername: String!
     status: ContractStatus
+
+    orderOwner: String
+    orderCarrier: String
+    orderStatus: OrderStatus
+    orderDate: String
 
     creator: CreatorDetail
     shipper: Address
@@ -299,6 +320,12 @@ input CreateContractCustomInput {
     owner: String!
     carrierUsername: String!
     status: ContractStatus
+
+    orderOwner: String
+    orderCarrier: String
+    orderStatus: OrderStatus
+    orderDate: String
+
     creator: CreatorDetailCustomInput
     shipper: AddressCustomInput
     carrier: AddressCustomInput
