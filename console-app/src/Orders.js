@@ -65,7 +65,7 @@ class Orders extends Component {
     }
 
     render() {
-        const cols = 9;
+        const cols = 10;
         const ordersSent = this.props.direction === "sent";
 
         return <Table className="App-text-with-newlines" selectable compact='very' sortable columns={cols} fixed>
@@ -88,13 +88,11 @@ class Orders extends Component {
                     <Table.HeaderCell>{I18n.get('Status')}</Table.HeaderCell>
                     <Table.HeaderCell>{I18n.get('Shipper')}</Table.HeaderCell>
                     <Table.HeaderCell>{I18n.get('Pick-up address')}</Table.HeaderCell>
-                    <Table.HeaderCell className={"sort"} onClick={() => this.changeSort('pickupDate')}
-                                      sorted={this.state.sort === 'pickupDate' && this.state.sortOrder}>{I18n.get('Pick-up date')}</Table.HeaderCell>
+                    <Table.HeaderCell className={"sort"}>{I18n.get('Pick-up date')}</Table.HeaderCell>
                     <Table.HeaderCell>{I18n.get('Delivery address')}</Table.HeaderCell>
                     <Table.HeaderCell>{I18n.get('Delivery date')}</Table.HeaderCell>
-                    <Table.HeaderCell className={"sort"} onClick={() => this.changeSort('updatedAt')}
-                                      sorted={this.state.sort === 'updatedAt' && this.state.sortOrder}>{I18n.get('Last change')}</Table.HeaderCell>
-
+                    <Table.HeaderCell>{I18n.get('Last change')}</Table.HeaderCell>
+                    <Table.HeaderCell className={"sort"} sorted={"ascending"}>{I18n.get('Created')}</Table.HeaderCell>
                     <Table.HeaderCell>{I18n.get('Loads')}</Table.HeaderCell>
                 </Table.Row>
             </Table.Header>
@@ -106,7 +104,7 @@ class Orders extends Component {
                     <Table.Cell colSpan={'10'} textAlign={"center"} selectable={false}>
                         <div style={{padding: '50px', paddingTop: '200px', minHeight: '560px'}}>
                             <p>
-                                {I18n.get('No transports found, please create one using the button above.')}
+                                {I18n.get('No orders found, please create one using the button above.')}
                             </p>
                             <Icon name={"shipping fast"} size={"massive"}/>
                         </div>
@@ -151,6 +149,7 @@ class Orders extends Component {
                     <AddressCell address={e.delivery}/>
                     <DateCell date={e.deliveryDate}/>
                     <DateCell date={e.updatedAt} showTime/>
+                    <DateCell date={e.createdAt} showTime/>
                     <ConsignmentCell loads={e.loads}/>
                 </Table.Row>
             )
@@ -158,7 +157,7 @@ class Orders extends Component {
     }
 
     componentDidMount() {
-        this.retrieveAppSync().then(() => {});
+        this.retrieveAppSync();
     }
 
     async retrieveAppSync(token) {

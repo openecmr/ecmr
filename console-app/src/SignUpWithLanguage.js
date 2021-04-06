@@ -25,11 +25,13 @@ export default class SignUpWithLanguage extends SignUp {
             );
         }
 
+        const customerInviteId = this.props.customerInviteId;
         const signup_info = {
             username: this.inputs.username,
             password: this.inputs.password,
             attributes: {},
             clientMetadata: {
+                ...customerInviteId && {customerInviteId},
                 language: navigator.languages
                     ? navigator.languages[0]
                     : (navigator.language || navigator.userLanguage)

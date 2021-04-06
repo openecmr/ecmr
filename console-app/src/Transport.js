@@ -16,6 +16,7 @@ import * as mutations from "./graphql/mutations";
 import {S3Image} from "aws-amplify-react";
 import {DriverPicker} from "./NewTransport";
 import { v4 as uuidv4 } from 'uuid';
+import * as PropTypes from "prop-types";
 
 const MAX_FILE_SIZE = 1024 * 1024;
 const Address = ({address, label, icon}) => (
@@ -212,19 +213,40 @@ const Driver = ({contract}) =>
     <List>
         <List.Item>
             <List.Icon name={"user"}/>
-            <List.Content>{contract.driver && contract.driver.name}
+            {contract.driver && <List.Content>{contract.driver && contract.driver.name}
                 {contract.needAcknowledge && <Label color='yellow' size={'small'}>{I18n.get('not acknowledged yet')}</Label>}
-            </List.Content>
+            </List.Content>}
+            {!contract.driver && <List.Content>{I18n.get("No driver assigned")}</List.Content>}
         </List.Item>
         <List.Item>
             <List.Icon name={"truck"}/>
-            <List.Content>{contract.truck}</List.Content>
+            <List.Content>{contract.truck || I18n.get("No truck assigned")}</List.Content>
         </List.Item>
         <List.Item>
             <List.Icon name={"truck"}/>
-            <List.Content>{contract.trailer}</List.Content>
+            <List.Content>{contract.trailer || I18n.get("No trailer assigned")}</List.Content>
         </List.Item>
     </List>;
+
+function TransportStatus({contract}) {
+    return <Step.Group fluid size={"mini"}>
+        <Step content={I18n.get("Created")}
+              active={contract.status === "CREATED" || contract.status === "DRAFT"}/>
+        <Step content={I18n.get("Ongoing")} active={contract.status === "IN_PROGRESS"}/>
+        <Step content={I18n.get("Done")} active={contract.status === "DONE"}/>
+        <Step content={I18n.get("Archived")} active={contract.status === "ARCHIVED"}/>
+    </Step.Group>;
+}
+
+function OrderStatus({contract}) {
+    return <Step.Group fluid size={"mini"}>
+        <Step content={I18n.get("Sent")} active={contract.orderStatus === 'ORDER_SENT'} />
+        <Step content={I18n.get("Accepted")} active={contract.orderStatus === 'ORDER_ACCEPTED'} />
+        <Step content={I18n.get("Planned")} active={contract.orderStatus === 'PLANNED'} />
+        <Step content={I18n.get("Ongoing")} active={contract.orderStatus === 'IN_PROGRESS'}/>
+        <Step content={I18n.get("Done")} active={contract.orderStatus === 'DONE'} />
+    </Step.Group>
+}
 
 class Transport extends Component {
     fileInputRef = React.createRef()
@@ -264,6 +286,8 @@ class Transport extends Component {
 
     render() {
         const {contract} = this.state;
+        const {viewOrder} = this.props;
+        const viewTransport = !viewOrder;
 
         if (!contract) {
             return (<div>loading</div>);
@@ -297,14 +321,14 @@ class Transport extends Component {
         return (
             <div>
                 {
-                    contract.driverDriverId && contract.carrierUsername === "-" &&
-                        <Message warning>
-                            <Message.Header>{I18n.get('Transport assigned to a driver that is not yet linked')}</Message.Header>
-                            <p>{I18n.get('The driver needs to enter the association code in the app, please see the drivers page.')}</p>
-                        </Message>
+                    viewTransport && contract.driverDriverId && contract.carrierUsername === "-" &&
+                    <Message warning>
+                        <Message.Header>{I18n.get('Transport assigned to a driver that is not yet linked')}</Message.Header>
+                        <p>{I18n.get('The driver needs to enter the association code in the app, please see the drivers page.')}</p>
+                    </Message>
                 }
 
-                <Button.Group floated='right'>
+                {viewTransport && <Button.Group floated='right'>
                     {orderStatus === 'ORDER_SENT' && <Button onClick={() => this.acceptOrder()}>
                         <Icon name='check circle outline'/>
                         {I18n.get('Accept order')}
@@ -322,6 +346,7 @@ class Transport extends Component {
                         {I18n.get('Copy')}
                     </Button>
                 </Button.Group>
+                }
                 <Header as={'h1'}>
                     <Header.Content>{I18n.get('Transport {number}').replace('{number}', contract.id.substring(0, 8))}</Header.Content>
                     <Header.Subheader>
@@ -331,25 +356,26 @@ class Transport extends Component {
                     </Header.Subheader>
                 </Header>
 
-                <Step.Group fluid size={"mini"}>
-                    <Step content={I18n.get('Created')} active={contract.status === 'CREATED' || contract.status === 'DRAFT'}/>
-                    <Step content={I18n.get('Ongoing')} active={contract.status === 'IN_PROGRESS'}/>
-                    <Step content={I18n.get('Done')} active={contract.status === 'DONE'}/>
-                    <Step content={I18n.get('Archived')} active={contract.status === 'ARCHIVED'}/>
-                </Step.Group>
+                <TransportStatus contract={contract} />
+
                 <Segment>
 
                     <Grid columns={3} stackable>
                         <Grid.Row>
-                            <Grid.Column>
+                            <Grid.Column width={4}>
                                 <Address address={contract.shipper} icon={'building'} label={I18n.get('Shipper')}/>
                             </Grid.Column>
-                            <Grid.Column>
+                            <Grid.Column width={4}>
                                 <Address address={contract.carrier} icon={'truck'} label={I18n.get('Carrier')}/>
                             </Grid.Column>
-                            <Grid.Column>
+                            {contract.orderStatus && <Grid.Column width={6}>
                                 {/*Transport code*/}
-                            </Grid.Column>
+                                <Header as={'h5'}>
+                                    <Icon name={"check circle outline"}/>
+                                    <Header.Content>{I18n.get("Order status")}</Header.Content>
+                                </Header>
+                                <OrderStatus contract={contract} />
+                            </Grid.Column>}
                         </Grid.Row>
                     </Grid>
                 </Segment>
@@ -381,10 +407,10 @@ class Transport extends Component {
                                     .replace('{end}', contract.arrivalTime.end)}</div>}
 
                                 {loadingComplete &&
-                                    <div style={{paddingTop: "10px"}}>
-                                        <Header sub>{I18n.get('Actual')}</Header>
-                                        {moment(loadingComplete.createdAt).format('llll')}
-                                    </div>
+                                <div style={{paddingTop: "10px"}}>
+                                    <Header sub>{I18n.get('Actual')}</Header>
+                                    {moment(loadingComplete.createdAt).format('llll')}
+                                </div>
                                 }
                             </Grid.Column>
                             <Grid.Column>
@@ -429,28 +455,34 @@ class Transport extends Component {
                                 <Header as={'h4'}>{I18n.get('Documents')}</Header>
                                 <Grid columns={2} divided stackable>
                                     <Grid.Row divided>
-                                        <Grid.Column width={4}><Header as={'h5'}>{I18n.get('Type')}</Header></Grid.Column>
-                                        <Grid.Column width={12}><Header as={'h5'}>{I18n.get('Name')}</Header></Grid.Column>
+                                        <Grid.Column width={4}><Header
+                                            as={'h5'}>{I18n.get('Type')}</Header></Grid.Column>
+                                        <Grid.Column width={12}><Header
+                                            as={'h5'}>{I18n.get('Name')}</Header></Grid.Column>
                                     </Grid.Row>
                                     <Grid.Row>
                                         <Grid.Column width={4}>
                                             <Icon name='file'/> {I18n.get('Consignment note')}
                                         </Grid.Column>
                                         <Grid.Column width={12}>
-                                            <MyLink onClick={() => this.downloadPdf()}>{`cmr-${cmrId}.pdf`}</MyLink>&nbsp;
+                                            <MyLink
+                                                onClick={() => this.downloadPdf()}>{`cmr-${cmrId}.pdf`}</MyLink>&nbsp;
                                             <Loader size='mini' active={this.state.downloadingPdf} inline/>
                                         </Grid.Column>
                                     </Grid.Row>
                                     {
-                                        attachments.map( ({event, attachment}) =>
+                                        attachments.map(({event, attachment}) =>
                                             (<Grid.Row>
                                                 <Grid.Column width={4}>
                                                     <Icon name='file'/> {I18n.get('Document')}
                                                 </Grid.Column>
                                                 <Grid.Column width={12}>
-                                                    <MyLink onClick={() => this.downloadDocument(attachment)}>{attachment.filename}</MyLink>&nbsp;
-                                                    <Loader size='mini' active={this.state.downloading === attachment} inline/>
-                                                    <Icon name={"delete"} style={{cursor: "pointer"}} onClick={() => this.deleteAttachment(event)}/>
+                                                    <MyLink
+                                                        onClick={() => this.downloadDocument(attachment)}>{attachment.filename}</MyLink>&nbsp;
+                                                    <Loader size='mini' active={this.state.downloading === attachment}
+                                                            inline/>
+                                                    <Icon name={"delete"} style={{cursor: "pointer"}}
+                                                          onClick={() => this.deleteAttachment(event)}/>
                                                 </Grid.Column>
                                             </Grid.Row>)
                                         )
@@ -461,7 +493,8 @@ class Transport extends Component {
                                                 <Message.Header>{I18n.get("File too big")}</Message.Header>
                                                 <p>{I18n.get("You can only upload files smaller than 1MB")}</p>
                                             </Message>}
-                                            <Button primary disabled={this.state.uploading} loading={this.state.uploading}
+                                            <Button primary disabled={this.state.uploading}
+                                                    loading={this.state.uploading}
                                                     onClick={() => this.fileInputRef.current.click()}>{I18n.get("Add Document")}</Button>
                                             <input
                                                 ref={this.fileInputRef}
@@ -504,7 +537,9 @@ class Transport extends Component {
         await API.graphql(graphqlOperation(mutations.updateContract, {
             "input": {
                 id: contract.id,
-                orderStatus: 'ORDER_ACCEPTED'
+                orderStatus: 'ORDER_ACCEPTED',
+                status: 'CREATED',
+                owner: (await Auth.currentAuthenticatedUser()).getUsername()
             }
         }));
 
@@ -638,16 +673,18 @@ class Transport extends Component {
     async assignDriver(driver) {
         const {contract} = this.state;
         const now = moment().toISOString();
-        contract.driverDriverId = driver.id;
-        contract.driver = {
+
+        const update = {};
+
+        update.id = contract.id;
+        update.driverDriverId = driver.id;
+        update.driver = {
             name: driver.name,
             username: driver.carrier
         };
-        contract.carrierUsername = driver.carrier ? driver.carrier : "-";
-        if (!contract.events) {
-            contract.events = [];
-        }
-        contract.events.push({
+        update.carrierUsername = driver.carrier ? driver.carrier : "-";
+        update.events = contract.events || [];
+        update.events.push({
             author: {
                 username: (await Auth.currentAuthenticatedUser()).getUsername()
             },
@@ -658,13 +695,19 @@ class Transport extends Component {
                 username: driver.carrier
             }
         });
-        contract.updatedAt = now;
+        update.updatedAt = now;
+
+        if (contract.orderStatus) {
+            update.orderStatus = 'PLANNED';
+        }
+
         this.setState({
-            contract
+            ...contract,
+            ...update
         });
         this.hideAssignDriver();
         await API.graphql(graphqlOperation(mutations.updateContract, {
-            "input": contract
+            "input": update
         }));
     }
 

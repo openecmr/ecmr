@@ -74,3 +74,11 @@
 .rct-sidebar {
   background-color: #f9fafb !important;
 }
+
+.portal-header {
+  font-size: x-large;
+  top: 10px;
+  position: relative;
+  text-align: center;
+  z-index: 222;
+}

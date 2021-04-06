@@ -9,6 +9,7 @@ import Amplify, {API, graphqlOperation} from 'aws-amplify';
 import { Auth, Hub, I18n } from 'aws-amplify';
 import awsmobile from './aws-exports';
 import {
+    Greetings,
     ConfirmSignIn,
     ConfirmSignUp,
     Container, ForgotPassword,
@@ -152,7 +153,35 @@ class CompanyDialog extends Component {
     }
 }
 
-const AppMenu = withRouter(({location, onLogout, menuVisible}) => (
+const AppMenuCustomerPortal = withRouter(({location, menuVisible}) => (
+    <Menu vertical fixed={'left'} style={{...style.appMenu, display: menuVisible ? "block" : "none"}}>
+        <Menu.Item
+            name={I18n.get('Sent orders')}
+            to={'/portal/sent-orders'}
+            active={location.pathname.startsWith('/sent-orders')}
+            as={Link}
+        />
+        <Menu.Item
+            name={I18n.get('Address book')}
+            active={location.pathname.startsWith('/addressbook')}
+            to={'/portal/addressbook'}
+            as={Link}
+        />
+        <Menu.Item
+            name={I18n.get('Contacts')}
+            active={location.pathname.startsWith('/contacts')}
+            to={'/portal/contacts'}
+            as={Link}
+        />
+        <Menu.Item
+            name={I18n.get('settings')}
+            active={location.pathname.startsWith('/settings')}
+            to={'/portal/settings'}
+            as={Link}
+        />
+    </Menu>));
+
+const AppMenu = withRouter(({location, menuVisible}) => (
     <Menu vertical fixed={'left'} style={{...style.appMenu, display: menuVisible ? "block" : "none"}}>
         <Menu.Item
             name={I18n.get('my transports')}
@@ -210,7 +239,7 @@ const AppMenu = withRouter(({location, onLogout, menuVisible}) => (
         />
     </Menu>));
 
-const Main = withRouter(({location, onLogout, user, company, noCompany, onCompanyUpdated, history}) => {
+const Main = withRouter(({location, onLogout, user, company, noCompany, onCompanyUpdated, history, customerPortal}) => {
     ReactGA.pageview(location.pathname);
     const pdf = location.pathname.endsWith('/pdf');
     const [menuVisible, setMenuVisible] = useState(true);
@@ -236,76 +265,89 @@ const Main = withRouter(({location, onLogout, user, company, noCompany, onCompan
                 }
             }
         }
+
         getLanguage();
     }, []);
 
+    const routerPrefix = customerPortal ? "/portal" : "";
+    const portalInfo = {
+        carrierName: window.localStorage.getItem("companyName"),
+        carrierAccount: window.localStorage.getItem("companyOwner")
+    }
+
     return (<div>
-            {pdf && <Route exact path="/transports/:id/pdf" component={TransportPdf}/>}
-            {!pdf &&
-            <div lang={language}>
-                <Menu fixed='top' inverted>
-                    <Menu.Item as='a' header onClick={() => setMenuVisible(!menuVisible)}>
-                        <Image size='mini' src='/logo.png' style={{marginRight: '1.5em'}}/>
-                        Open e-CMR
+        {pdf && <Route exact path="/transports/:id/pdf" component={TransportPdf}/>}
+        {!pdf &&
+        <div lang={language}>
+            <Menu fixed='top' inverted>
+                <Menu.Item as='a' header onClick={() => setMenuVisible(!menuVisible)}>
+                    <Image size='mini' src='/logo.png' style={{marginRight: '1.5em'}}/>
+                    Open e-CMR
+                </Menu.Item>
+                <Popup hoverable position={"bottom center"} size={"huge"} wide trigger={
+                    <Menu.Item header position={"right"}>
+                        <Icon name={'user'}/>
+                        {company && company.name}
+                        {user && ` (${user.attributes['email']})`}
+                        <Icon name={"angle down"}/>
                     </Menu.Item>
-                    <Popup hoverable position={"bottom center"} size={"huge"} wide trigger={
-                        <Menu.Item header position={"right"}>
-                            <Icon name={'user'}/>
-                            {company && company.name}
-                            {user && ` (${user.attributes['email']})`}
-                            <Icon name={"angle down"}/>
+                }>
+
+                    <Menu secondary vertical>
+                        <Dropdown item text={I18n.get("Language")} direction={"left"}>
+                            <Dropdown.Menu>
+                                <Dropdown.Item onClick={() => changeLanguage("en")}>English</Dropdown.Item>
+                                <Dropdown.Item onClick={() => changeLanguage("nl")}>Nederlands</Dropdown.Item>
+                            </Dropdown.Menu>
+                        </Dropdown>
+
+                        <Menu.Item as={'a'} onClick={onLogout}>
+                            {I18n.get('Logout')}
                         </Menu.Item>
-                    }>
+                    </Menu>
+                </Popup>
+            </Menu>
 
-                        <Menu secondary vertical>
-                            <Dropdown item text={I18n.get("Language")} direction={"left"}>
-                                <Dropdown.Menu>
-                                    <Dropdown.Item onClick={() => changeLanguage("en")}>English</Dropdown.Item>
-                                    <Dropdown.Item onClick={() => changeLanguage("nl")}>Nederlands</Dropdown.Item>
-                                </Dropdown.Menu>
-                            </Dropdown>
+            {!customerPortal && <AppMenu onLogout={onLogout} menuVisible={menuVisible}/>}
+            {customerPortal && <AppMenuCustomerPortal onLogout={onLogout} menuVisible={menuVisible}/>}
 
-                            <Menu.Item as={'a'}  onClick={onLogout}>
-                                {I18n.get('Logout')}
-                            </Menu.Item>
-                        </Menu>
-                    </Popup>
-                </Menu>
+            <CompanyDialog show={noCompany} onCompanyUpdated={onCompanyUpdated}/>
 
-                <AppMenu onLogout={onLogout} menuVisible={menuVisible}/>
-
-                <CompanyDialog show={noCompany} onCompanyUpdated={onCompanyUpdated}/>
-
-                <div style={{...style.content, ...(!menuVisible && {marginLeft: "0"})}}>
-                    <Switch>
-                        <Route exact path="/transports" render={(props) =>
-                            <Transports setParentState={(s) => setTransportState(s)} {...props} {...transportState} />}/>
-                        <Route exact path="/transports-new/:copy_id"
-                               render={(props) => <NewTransport {...props} company={company}/>}
-                        />
-                        <Route exact path="/transports-new"
-                               render={(props) => <NewTransport {...props} company={company}/>}
-                        />
-                        <Route exact path="/orders-new"
-                               render={(props) => <NewTransport {...props} company={company} order={true} orderCarrier={{linkedAccount: "bob57"}}/>}
-                        />
-                        <Route exact path="/sent-orders" render={(props) => <Orders key={"sent"} {...props} direction={"sent"}/>}/>
-                        <Route exact path="/received-orders" render={(props) => <Orders key={"received"} {...props} direction={"received"}/>}/>
-                        <Route exact path="/transports/:id" component={Transport}/>
-                        <Route exact path="/addressbook" component={AddressBook}/>
-                        <Route exact path="/contacts" component={Contacts}/>
-                        <Route exact path="/drivers" component={Drivers}/>
-                        <Route exact path="/planner" component={Planner}/>
-                        <Route exact path="/vehicles"
-                               render={(props) => <Vehicles {...props} company={company}/>}/>
-                        <Route exact path="/settings"
-                               render={(props) => <Settings {...props} key={company} company={company} onCompanyUpdated={onCompanyUpdated}/>}/>
-                        <Redirect exact from="/" to="/transports" />
-                    </Switch>
-                </div>
+            <div style={{...style.content, ...(!menuVisible && {marginLeft: "0"})}}>
+                <Switch>
+                    <Route exact path="/transports" render={(props) =>
+                        <Transports setParentState={(s) => setTransportState(s)} {...props} {...transportState} />}/>
+                    <Route exact path="/transports-new/:copy_id"
+                           render={(props) => <NewTransport {...props} company={company}/>}
+                    />
+                    <Route exact path="/transports-new"
+                           render={(props) => <NewTransport {...props} company={company}/>}
+                    />
+                    <Route exact path="/orders-new"
+                           render={(props) => <NewTransport {...props} company={company} portal={portalInfo}
+                                                            order={true}/>}
+                    />
+                    <Route exact path={`${routerPrefix}/sent-orders`}
+                           render={(props) => <Orders key={"sent"} {...props} direction={"sent"}/>}/>
+                    <Route exact path="/received-orders"
+                           render={(props) => <Orders key={"received"} {...props} direction={"received"}/>}/>
+                    <Route exact path="/transports/:id" component={Transport}/>
+                    <Route exact path="/orders/:id" render={(props) => <Transport {...props} viewOrder={true}/>}/>
+                    <Route exact path={`${routerPrefix}/addressbook`} component={AddressBook}/>
+                    <Route exact path={`${routerPrefix}/contacts`} component={Contacts}/>
+                    <Route exact path="/drivers" component={Drivers}/>
+                    <Route exact path="/planner" component={Planner}/>
+                    <Route exact path="/vehicles"
+                           render={(props) => <Vehicles {...props} company={company}/>}/>
+                    <Route exact path={`${routerPrefix}/settings`}
+                           render={(props) => <Settings {...props} key={company} company={company}
+                                                        onCompanyUpdated={onCompanyUpdated}/>}/>
+                    <Redirect exact from="/" to="/transports"/>
+                </Switch>
             </div>
-            }
-        </div>);
+        </div>
+        }
+    </div>);
 });
 
 const signUpConfig = {
@@ -337,23 +379,49 @@ const signUpConfig = {
     ]
 };
 
-const MainWithAuth = pdfServiceKey ?  Main : withAuthenticator(Main, false,
-    [
-        <SignUpWithLanguage hide={false} override={'SignUp'} signUpConfig={signUpConfig} />,
-        <SignIn  />,
-        <Loading />,
-        <ConfirmSignIn />,
-        <VerifyContact />,
-        <ConfirmSignUp />,
-        <ForgotPassword />,
-        <RequireNewPassword />
-    ],
-    {
-    signUpConfig
-});
+let portal, companyName, companyOwner;
+if (window.location.pathname.startsWith("/portal")) {
+    if (document.location.search) {
+        let params = new URLSearchParams(document.location.search.substring(1));
+        companyName = params.get("companyName");
+        companyOwner = params.get("companyOwner");
 
-const MyContainer = ({children}) =>
+        if (!companyName || !companyOwner) {
+            alert("missing parameters");
+        } else {
+            portal = true;
+            window.localStorage.setItem("companyOwner", companyOwner);
+            window.localStorage.setItem("companyName", companyName);
+        }
+    }
+}
+if (window.localStorage.getItem("companyOwner")) {
+    portal = true;
+}
+
+let MainWithAuth;
+if (pdfServiceKey) {
+    MainWithAuth = Main;
+} else {
+    MainWithAuth = withAuthenticator(Main, false,
+        [
+            <SignUpWithLanguage hide={false} override={'SignUp'} signUpConfig={signUpConfig}/>,
+            <SignIn/>,
+            <Loading/>,
+            <ConfirmSignIn/>,
+            <VerifyContact/>,
+            <ConfirmSignUp/>,
+            <ForgotPassword/>,
+            <RequireNewPassword/>
+        ],
+        {
+            signUpConfig
+        })
+}
+
+const MyContainer = ({company, children}) =>
     <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
+        {portal && !company && <div className={"portal-header"}>{I18n.get("Welcome to the customer portal of {portalName}").replace("{portalName}", companyName)}</div>}
         <Image size='tiny' src='/logo.png' style={{marginTop: 20}} avatar />
         <Container>{children}</Container>
     </div>;
@@ -382,7 +450,9 @@ class App extends Component {
 
         return (
             <Router>
-                <MainWithAuth container={MyContainer}
+                <MainWithAuth
+                    customerPortal={portal}
+                    container={(props) => <MyContainer {...props} company={this.state.company}/>}
                               onLogout={() => this.logout()} user={this.state.user}
                               company={this.state.company}
                               onCompanyUpdated={this.checkCompany}

@@ -497,6 +497,12 @@ class Trailer extends NewTransportForm {
     }
 }
 
+const StaticField = ({title, value}) =>
+    <div>
+        <Header as={'h3'}>{title}</Header>
+        <div>{value}</div>
+    </div>;
+
 const onlyIf = (flag, options) => {
     const result = flag && options || [];
     console.log(result);
@@ -514,22 +520,26 @@ class NewTransport extends Component {
             {
                 section: I18n.get('Carrier'),
                 items: [
-                    {
+                    ...onlyIf(transport,[{
                         label: I18n.get('Carrier'), icon: 'truck', form: () =>
                             <Carrier
                                 contactSelected={(contactId) => this.setState({'carrierContactId': contactId})}
                                 contactId={this.state.carrierContactId}
                             />
-                    },
+                    }]),
+                    ...onlyIf(order,[{
+                        label: I18n.get('Carrier'), icon: 'truck', form: () =>
+                            <StaticField title={I18n.get('Enter carrier information')} value={this.props.portal.carrierName} />
+                    }]),
                     ...onlyIf(transport, [{
-                        label: I18n.get('Driver'), icon: 'user', form: () => <Driver
-                            driverSelected={(driver) => this.setState({
-                                driverDriverId: driver ? driver.id : null,
-                                carrierUsername: (driver && driver.carrier) ? driver.carrier : "-"
-                            })}
-                            driverId={this.state.driverDriverId}
-                        />
-                    },
+                            label: I18n.get('Driver'), icon: 'user', form: () => <Driver
+                                driverSelected={(driver) => this.setState({
+                                    driverDriverId: driver ? driver.id : null,
+                                    carrierUsername: (driver && driver.carrier) ? driver.carrier : "-"
+                                })}
+                                driverId={this.state.driverDriverId}
+                            />
+                        },
                         {
                             label: I18n.get('Vehicle license plate'), icon: 'truck', form: () => <Vehicle
                                 companyId={this.props.company.id}
@@ -550,7 +560,8 @@ class NewTransport extends Component {
                                 trailerId={this.state.trailerVehicleId}
                             />
 
-                        }])
+                        }
+                    ])
                 ]
             },
             {
@@ -559,7 +570,7 @@ class NewTransport extends Component {
                     ...onlyIf(transport,[{label: I18n.get('Shipper'), icon: 'building', form: () =>
                             <Shipper  contactSelected={(contactId) => this.setState({'shipperContactId' : contactId})}
                                       contactId={this.state.shipperContactId} />}]),
-                    ...onlyIf(order, [{label: I18n.get('Shipper'), icon: 'building', form: () => <div>{props.company.name}</div>
+                    ...onlyIf(order, [{label: I18n.get('Shipper'), icon: 'building', form: () => <StaticField title={I18n.get('Enter shipper information')} value={this.props.company.name}/>
                         }])
                 ]
             },
@@ -845,7 +856,6 @@ class NewTransport extends Component {
                 updatedAt: now,
                 createdAt: now,
 
-                carrier: await copyToAddress(this.state.carrierContactId),
                 delivery: await copyToAddress(this.state.delivery.contactId),
                 pickup: await copyToAddress(this.state.pickup.contactId),
                 ...(this.state.driverDriverId && {
@@ -867,8 +877,11 @@ class NewTransport extends Component {
                     shipper: {
                         name: this.props.company.name
                     },
+                    carrier: {
+                        name: this.props.portal.carrierName,
+                    },
                     orderStatus: 'ORDER_SENT',
-                    orderCarrier: this.props.orderCarrier.linkedAccount,
+                    orderCarrier: this.props.portal.carrierAccount,
                     orderOwner: (await Auth.currentAuthenticatedUser()).getUsername(),
                     orderDate: now,
                     owner: "-"
@@ -878,6 +891,7 @@ class NewTransport extends Component {
                     ...input,
                     status: 'CREATED',
                     shipper: await copyToAddress(this.state.shipperContactId),
+                    carrier: await copyToAddress(this.state.carrierContactId),
                     trailer: this.state.trailer,
                     truck: this.state.truck,
                     carrierUsername: this.state.carrierUsername,
@@ -912,7 +926,7 @@ class NewTransport extends Component {
             console.log(input);
 
             await API.graphql(graphqlOperation(mutations.createContractCustom, {input: input}));
-            this.props.history.push('/transports')
+            this.props.history.push(order ? '/portal/sent-order' : '/transports');
         } catch (ex) {
             console.warn("error while creating transport" + JSON.stringify(ex));
             this.setState({
