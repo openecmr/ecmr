@@ -158,24 +158,24 @@ const AppMenuCustomerPortal = withRouter(({location, menuVisible}) => (
         <Menu.Item
             name={I18n.get('Sent orders')}
             to={'/portal/sent-orders'}
-            active={location.pathname.startsWith('/sent-orders')}
+            active={location.pathname.startsWith('/portal/sent-orders') || location.pathname.startsWith('/portal/orders')}
             as={Link}
         />
         <Menu.Item
             name={I18n.get('Address book')}
-            active={location.pathname.startsWith('/addressbook')}
+            active={location.pathname.startsWith('/portal/addressbook')}
             to={'/portal/addressbook'}
             as={Link}
         />
         <Menu.Item
             name={I18n.get('Contacts')}
-            active={location.pathname.startsWith('/contacts')}
+            active={location.pathname.startsWith('/portal/contacts')}
             to={'/portal/contacts'}
             as={Link}
         />
         <Menu.Item
             name={I18n.get('settings')}
-            active={location.pathname.startsWith('/settings')}
+            active={location.pathname.startsWith('/portal/settings')}
             to={'/portal/settings'}
             as={Link}
         />
@@ -192,13 +192,7 @@ const AppMenu = withRouter(({location, menuVisible}) => (
         <Menu.Item
             name={I18n.get('Received orders')}
             to={'/received-orders'}
-            active={location.pathname.startsWith('/received-orders')}
-            as={Link}
-        />
-        <Menu.Item
-            name={I18n.get('Sent orders')}
-            to={'/sent-orders'}
-            active={location.pathname.startsWith('/sent-orders')}
+            active={location.pathname.startsWith('/received-orders') || location.pathname.startsWith('/orders')}
             as={Link}
         />
         <Menu.Item
@@ -270,10 +264,6 @@ const Main = withRouter(({location, onLogout, user, company, noCompany, onCompan
     }, []);
 
     const routerPrefix = customerPortal ? "/portal" : "";
-    const portalInfo = {
-        carrierName: window.localStorage.getItem("companyName"),
-        carrierAccount: window.localStorage.getItem("companyOwner")
-    }
 
     return (<div>
         {pdf && <Route exact path="/transports/:id/pdf" component={TransportPdf}/>}
@@ -282,7 +272,7 @@ const Main = withRouter(({location, onLogout, user, company, noCompany, onCompan
             <Menu fixed='top' inverted>
                 <Menu.Item as='a' header onClick={() => setMenuVisible(!menuVisible)}>
                     <Image size='mini' src='/logo.png' style={{marginRight: '1.5em'}}/>
-                    Open e-CMR
+                    {customerPortal ? I18n.get("{companyName} customer portal").replace("{companyName}", customerPortal.carrierName) : "Open e-CMR"}
                 </Menu.Item>
                 <Popup hoverable position={"bottom center"} size={"huge"} wide trigger={
                     <Menu.Item header position={"right"}>
@@ -324,15 +314,17 @@ const Main = withRouter(({location, onLogout, user, company, noCompany, onCompan
                            render={(props) => <NewTransport {...props} company={company}/>}
                     />
                     <Route exact path="/orders-new"
-                           render={(props) => <NewTransport {...props} company={company} portal={portalInfo}
+                           render={(props) => <NewTransport {...props} company={company} portal={customerPortal}
                                                             order={true}/>}
                     />
                     <Route exact path={`${routerPrefix}/sent-orders`}
-                           render={(props) => <Orders key={"sent"} {...props} direction={"sent"}/>}/>
+                           render={(props) => <Orders key={"sent"} {...props} direction={"sent"}
+                                                      routerPrefix={routerPrefix}/>}/>
                     <Route exact path="/received-orders"
                            render={(props) => <Orders key={"received"} {...props} direction={"received"}/>}/>
                     <Route exact path="/transports/:id" component={Transport}/>
-                    <Route exact path="/orders/:id" render={(props) => <Transport {...props} viewOrder={true}/>}/>
+                    <Route exact path={`${routerPrefix}/orders/:id`}
+                           render={(props) => <Transport {...props} viewOrder={true}/>}/>
                     <Route exact path={`${routerPrefix}/addressbook`} component={AddressBook}/>
                     <Route exact path={`${routerPrefix}/contacts`} component={Contacts}/>
                     <Route exact path="/drivers" component={Drivers}/>
@@ -341,7 +333,8 @@ const Main = withRouter(({location, onLogout, user, company, noCompany, onCompan
                            render={(props) => <Vehicles {...props} company={company}/>}/>
                     <Route exact path={`${routerPrefix}/settings`}
                            render={(props) => <Settings {...props} key={company} company={company}
-                                                        onCompanyUpdated={onCompanyUpdated}/>}/>
+                                                        onCompanyUpdated={onCompanyUpdated}
+                                                        customerPortal={customerPortal}/>}/>
                     <Redirect exact from="/" to="/transports"/>
                 </Switch>
             </div>
@@ -379,24 +372,25 @@ const signUpConfig = {
     ]
 };
 
-let portal, companyName, companyOwner;
+let portal;
 if (window.location.pathname.startsWith("/portal")) {
+    portal = true;
     if (document.location.search) {
         let params = new URLSearchParams(document.location.search.substring(1));
-        companyName = params.get("companyName");
-        companyOwner = params.get("companyOwner");
+        const carrierName = params.get("carrierName");
+        const carrierOwner = params.get("carrierOwner");
+        const companyId = params.get("companyId");
 
-        if (!companyName || !companyOwner) {
+        if (!carrierName || !carrierOwner || !companyId) {
             alert("missing parameters");
         } else {
-            portal = true;
-            window.localStorage.setItem("companyOwner", companyOwner);
-            window.localStorage.setItem("companyName", companyName);
+            window.localStorage.setItem("customerPortal", JSON.stringify({
+                carrierName,
+                carrierOwner,
+                companyId
+            }));
         }
     }
-}
-if (window.localStorage.getItem("companyOwner")) {
-    portal = true;
 }
 
 let MainWithAuth;
@@ -419,19 +413,14 @@ if (pdfServiceKey) {
         })
 }
 
-const MyContainer = ({company, children}) =>
+const MyContainer = ({company, children, customerPortal}) =>
     <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
-        {portal && !company && <div className={"portal-header"}>{I18n.get("Welcome to the customer portal of {portalName}").replace("{portalName}", companyName)}</div>}
+        {customerPortal && !company && <div className={"portal-header"}>{I18n.get("Welcome to the customer portal of {portalName}").replace("{portalName}", customerPortal.carrierName)}</div>}
         <Image size='tiny' src='/logo.png' style={{marginTop: 20}} avatar />
         <Container>{children}</Container>
     </div>;
 
 class App extends Component {
-    state = {
-        user: null,
-        company: null,
-        noCompany: false
-    };
     constructor(props) {
         super(props);
 
@@ -444,6 +433,15 @@ class App extends Component {
         ReactGA.initialize('UA-160827083-1', {
             titleCase: false
         });
+
+        const customerPortal = portal && window.localStorage.getItem("customerPortal") ? JSON.parse(window.localStorage.getItem("customerPortal")) : null;
+
+        this.state = {
+            user: null,
+            company: null,
+            noCompany: false,
+            customerPortal
+        };
     }
 
     render() {
@@ -451,8 +449,8 @@ class App extends Component {
         return (
             <Router>
                 <MainWithAuth
-                    customerPortal={portal}
-                    container={(props) => <MyContainer {...props} company={this.state.company}/>}
+                    customerPortal={this.state.customerPortal}
+                    container={(props) => <MyContainer {...props} company={this.state.company} customerPortal={this.state.customerPortal}/>}
                               onLogout={() => this.logout()} user={this.state.user}
                               company={this.state.company}
                               onCompanyUpdated={this.checkCompany}
@@ -463,6 +461,7 @@ class App extends Component {
 
     async logout() {
         await Auth.signOut()
+        window.location.reload();
     }
 
     async componentDidMount() {

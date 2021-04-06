@@ -5,6 +5,7 @@ import React, {Component} from "react";
 import {AddressCell, ConsignmentCell, DateCell, IdCell, Pagination} from "./Transports";
 import {trackEvent} from "./ConsoleUtils";
 import * as queries from "./graphql/queries";
+import SortableTable from "./SortableTable";
 
 const StatusMappings = () => ({
     DRAFT: {
@@ -13,22 +14,22 @@ const StatusMappings = () => ({
         color: 'grey'
     },
     ORDER_SENT: {
-        progress: 33,
+        progress: 20,
         label: I18n.get('order sent'),
         color: 'blue'
     },
     ORDER_ACCEPTED: {
-        progress: 33,
+        progress: 40,
         label: I18n.get('order accepted'),
-        color: 'blue'
+        color: 'green'
     },
     PLANNED: {
-        progress: 66,
+        progress: 60,
         label: I18n.get('planned'),
         color: 'orange'
     },
     IN_PROGRESS: {
-        progress: 66,
+        progress: 80,
         label: I18n.get('ongoing'),
         color: 'orange'
     },
@@ -54,19 +55,19 @@ const Status = ({status, updatedAt}) => {
     </Table.Cell>
 };
 
-class Orders extends Component {
+class Orders extends SortableTable {
 
     constructor(props) {
-        super(props);
-
+        super(props, "orders", "createdAt");
         this.state = {
+            ...this.state,
             orders: []
         }
     }
 
     render() {
         const cols = 10;
-        const ordersSent = this.props.direction === "sent";
+        const sentOrders = this.props.direction === "sent";
 
         return <Table className="App-text-with-newlines" selectable compact='very' sortable columns={cols} fixed>
             <Table.Header>
@@ -76,7 +77,7 @@ class Orders extends Component {
                                     onPrevious={this.onPrev} onNext={this.onNext} nextToken={this.state.nextToken}
                                     onRefresh={this.refresh}/>
 
-                        {ordersSent && <Link to={"/orders-new"}>
+                        {sentOrders && <Link to={"/orders-new"}>
                             <Button floated='right' icon labelPosition='left' primary size='small'>
                                 <Icon name='plus'/> {I18n.get('New order')}
                             </Button>
@@ -88,11 +89,11 @@ class Orders extends Component {
                     <Table.HeaderCell>{I18n.get('Status')}</Table.HeaderCell>
                     <Table.HeaderCell>{I18n.get('Shipper')}</Table.HeaderCell>
                     <Table.HeaderCell>{I18n.get('Pick-up address')}</Table.HeaderCell>
-                    <Table.HeaderCell className={"sort"}>{I18n.get('Pick-up date')}</Table.HeaderCell>
+                    <Table.HeaderCell>{I18n.get('Pick-up date')}</Table.HeaderCell>
                     <Table.HeaderCell>{I18n.get('Delivery address')}</Table.HeaderCell>
                     <Table.HeaderCell>{I18n.get('Delivery date')}</Table.HeaderCell>
                     <Table.HeaderCell>{I18n.get('Last change')}</Table.HeaderCell>
-                    <Table.HeaderCell className={"sort"} sorted={"ascending"}>{I18n.get('Created')}</Table.HeaderCell>
+                    <Table.HeaderCell className={"sort"} sorted={this.state.sortOrder} onClick={() => this.changeSort('createdAt')}>{I18n.get('Created')}</Table.HeaderCell>
                     <Table.HeaderCell>{I18n.get('Loads')}</Table.HeaderCell>
                 </Table.Row>
             </Table.Header>
@@ -141,7 +142,7 @@ class Orders extends Component {
             this.state.orders.map((e) =>
                 <Table.Row key={e.id}>
                     {/*<TextCell text={moment(e.updatedAt).format("ll")}/>*/}
-                    <IdCell id={e.id}/>
+                    <IdCell id={e.id} path={`${this.props.routerPrefix ? this.props.routerPrefix : ""}/orders`}/>
                     <Status status={e.orderStatus} lastUpdate={e.updatedAt}/>
                     <AddressCell address={e.shipper}/>
                     <AddressCell address={e.pickup}/>
@@ -156,16 +157,13 @@ class Orders extends Component {
         )
     }
 
-    componentDidMount() {
-        this.retrieveAppSync();
-    }
-
     async retrieveAppSync(token) {
+        this.setState({
+            loading: true
+        });
         const direction = this.props.direction;
         const queryName = direction === "received" ? "ordersByCarrierCreatedAt" : "ordersByOwnerCreatedAt"
         const ownerField = direction === "received" ? "orderCarrier" : "orderOwner";
-
-        console.log(queryName);
 
         const user = await Auth.currentAuthenticatedUser();
         const response = await API.graphql(graphqlOperation(

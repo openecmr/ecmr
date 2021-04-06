@@ -258,6 +258,27 @@ type Reference @aws_api_key @aws_cognito_user_pools @aws_iam {
     carrier: String
 }
 
+type ContractAttributes @aws_api_key @aws_cognito_user_pools @aws_iam {
+    shipper: Address
+    carrier: Address
+    delivery: Address
+    arrivalDate: String!
+    arrivalTime: TimeSlot
+    deliveryDate: String
+    deliveryTime: TimeSlot
+    pickup: Address
+    loads: [Load]!
+    trailer: String
+    truck: String
+    references: Reference
+    shipperContactId: ID
+    carrierContactId: ID
+    pickupContactId: ID
+    deliveryContactId: ID
+    trailerVehicleId: ID
+    truckVehicleId: ID
+}
+
 enum EventType {
     ArrivalOnSite,
     LoadingComplete,
@@ -268,7 +289,8 @@ enum EventType {
     AssignDriver,
     Acknowledge,
     AddAttachment,
-    DeleteAttachment
+    DeleteAttachment,
+    Edited
 }
 
 type Author @aws_api_key @aws_cognito_user_pools @aws_iam {
@@ -303,7 +325,9 @@ type Event @aws_api_key @aws_cognito_user_pools @aws_iam {
     attachments: [Attachment!],
     deletesAttachments: String,
     oldLoads: [Load!],
-    newLoads: [Load!]
+    newLoads: [Load!],
+    newAttributes: ContractAttributes
+    oldAttributes: ContractAttributes
 }
 
 type Attachment @aws_api_key @aws_cognito_user_pools @aws_iam {

@@ -22,6 +22,7 @@ import {ContactPicker, DriverPicker} from "./NewTransport";
 import ReactGA from "react-ga";
 import {trackEvent} from "./ConsoleUtils";
 import * as PropTypes from "prop-types";
+import SortableTable from "./SortableTable";
 
 const AddressCell = ({address}) => {
     return (
@@ -47,11 +48,11 @@ const TextCell = ({text}) => {
     )
 };
 
-const IdCell = ({id}) => {
+const IdCell = ({id, path}) => {
     const text = id.substring(0, 8);
     return (
         <Table.Cell width="1" verticalAlign="top">
-            <Link to={`/transports/${id}`}>{text}</Link>
+            <Link to={`${path ? path : "/transports"}/${id}`}>{text}</Link>
         </Table.Cell>
     )
 };
@@ -183,17 +184,13 @@ Filter.propTypes = {
     onClearFilters: PropTypes.func
 };
 
-class Transports extends Component {
+class Transports extends SortableTable {
     constructor(props) {
-        super(props);
+        super(props, "transportsSort", "transportsSortOrder", "updatedAt");
 
         this.state = {
+            ...this.state,
             notes: [],
-            loading: true,
-            previousTokens: [],
-            nextToken: null,
-            sort: localStorage.getItem("transportsSort") || "updatedAt",
-            sortOrder: localStorage.getItem("transportsSortOrder") || "descending",
             lastChangeFrom: "",
             lastChangeTo: "",
             pickupFrom: "",
@@ -202,15 +199,10 @@ class Transports extends Component {
             ...props,
         };
 
-        this.onNext = this.onNext.bind(this);
-        this.onPrev = this.onPrev.bind(this);
-        this.refresh = this.refresh.bind(this);
         this.handleFiltersInput = this.handleFiltersInput.bind(this);
-        this.applyFilters = this.applyFilters.bind(this);
         this.clearFilters = this.clearFilters.bind(this);
         this.toggleFilters = this.toggleFilters.bind(this);
         this.filterContactSelected = this.filterContactSelected.bind(this);
-        this.onFirst = this.onFirst.bind(this);
     }
 
     handleFiltersInput(event) {
@@ -229,6 +221,10 @@ class Transports extends Component {
         let newState = !this.state.filters;
         this.setState({filters: newState});
         localStorage.setItem('filters', newState.toString());
+    }
+
+    componentWillUnmount() {
+        this.props.setParentState(this.state);
     }
 
     render() {
@@ -354,18 +350,6 @@ class Transports extends Component {
         this.retrieveAppSync();
     }
 
-    componentDidMount() {
-        this.retrieveAppSync(this.state.currentPageToken);
-    }
-
-    applyFilters() {
-        this.retrieveAppSync();
-    }
-
-    componentWillUnmount() {
-        this.props.setParentState(this.state);
-    }
-
     async retrieveAppSync(token) {
         const addFilterParams = (filterParam, name, lastChangeFrom, lastChangeTo) => {
             if (lastChangeFrom && lastChangeTo) {
@@ -438,65 +422,6 @@ class Transports extends Component {
             nextToken: nextToken,
             notes: response.data[key].items,
             loading: false
-        });
-    }
-
-    onNext() {
-        if (this.state.currentPageToken) {
-            const previousTokens = [...this.state.previousTokens];
-            previousTokens.push(this.state.currentPageToken);
-            this.setState({
-                previousTokens
-            });
-        }
-        this.setState({
-            currentPageToken: this.state.nextToken
-        });
-
-        this.retrieveAppSync(this.state.nextToken)
-    }
-
-    refresh() {
-        this.retrieveAppSync(this.state.currentPageToken);
-    }
-
-    onPrev() {
-        const {previousTokens} = this.state;
-        const previousToken = previousTokens[previousTokens.length - 1];
-        this.setState({
-            previousTokens: previousTokens.slice(0, previousTokens.length - 1),
-            currentPageToken: previousToken
-        });
-        this.retrieveAppSync(previousToken);
-    }
-
-    onFirst() {
-        this.setState({
-            previousTokens: [],
-            currentPageToken: null
-        });
-        this.retrieveAppSync();
-    }
-
-    changeSort(newSort) {
-        const {sort} = this.state;
-
-        let sortOrder;
-        if (newSort === sort) {
-            sortOrder = this.state.sortOrder === 'ascending' ? 'descending' : 'ascending'
-        } else {
-            sortOrder = 'descending';
-        }
-        localStorage.setItem('transportsSortOrder', sortOrder);
-        localStorage.setItem('transportsSort', newSort);
-        this.setState({
-            sortOrder,
-            sort: newSort,
-            previousTokens: [],
-            nextToken: null,
-            currentPageToken: null
-        }, () => {
-            this.retrieveAppSync()
         });
     }
 

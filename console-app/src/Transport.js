@@ -7,7 +7,7 @@ import {
     Header,
     Icon,
     Step,
-    List, Label, Segment, Comment, Loader, Modal, Form, Message, Card
+    List, Label, Segment, Comment, Loader, Modal, Form, Message, Card, Confirm
 } from "semantic-ui-react";
 import {API, graphqlOperation, Storage, Auth, I18n} from 'aws-amplify';
 import moment from 'moment/min/moment-with-locales';
@@ -17,6 +17,8 @@ import {S3Image} from "aws-amplify-react";
 import {DriverPicker} from "./NewTransport";
 import { v4 as uuidv4 } from 'uuid';
 import * as PropTypes from "prop-types";
+import {act} from "react-dom/test-utils";
+import {Link} from "react-router-dom";
 
 const MAX_FILE_SIZE = 1024 * 1024;
 const Address = ({address, label, icon}) => (
@@ -166,6 +168,31 @@ const SignatureEvent = ({event: { signature, signatoryObservation, driverObserva
 
 const MyLink = ({onClick, children}) => <span onClick={onClick} style={{color: "#4183c4", cursor: "pointer"}}>{children}</span>
 
+class FormModal extends Component {
+    constructor(props) {
+        super(props);
+    }
+
+    render() {
+        return (<Modal key={"showLoad"} open={this.props.show} size='small'>
+            <Header icon={"truck"} content={I18n.get('Assign driver')}/>
+            <Modal.Content>
+                <Form id={"item"}>
+                    {this.props.children}
+                </Form>
+            </Modal.Content>
+            <Modal.Actions>
+                <Button color='red' inverted onClick={() => this.props.hide()}>
+                    <Icon name='remove'/> {I18n.get('Cancel')}
+                </Button>
+                <Button color='green' inverted onClick={this.props.save}>
+                    <Icon name='checkmark'/> {I18n.get('Assign')}
+                </Button>
+            </Modal.Actions>
+        </Modal>)
+    }
+}
+
 class AssignDriverModal extends Component {
     constructor(props) {
         super(props);
@@ -180,22 +207,9 @@ class AssignDriverModal extends Component {
     }
 
     render() {
-        return (<Modal key={"showLoad"} open={this.props.show} size='small'>
-            <Header icon={"truck"} content={I18n.get('Assign driver')}/>
-            <Modal.Content>
-                <Form id={"item"}>
+        return (<FormModal {...this.props} save={this.save}>
                     <DriverPicker driverId={this.state.driver && this.state.driver.id} driverSelected={this.onDriverSelected}/>
-                </Form>
-            </Modal.Content>
-            <Modal.Actions>
-                <Button color='red' inverted onClick={() => this.props.hide()}>
-                    <Icon name='remove'/> {I18n.get('Cancel')}
-                </Button>
-                <Button color='green' inverted onClick={this.save}>
-                    <Icon name='checkmark'/> {I18n.get('Assign')}
-                </Button>
-            </Modal.Actions>
-        </Modal>)
+            </FormModal>)
     }
 
     onDriverSelected(driver) {
@@ -248,6 +262,17 @@ function OrderStatus({contract}) {
     </Step.Group>
 }
 
+function isOrderStatusOrAfter(actual, compare) {
+    const orderStatuses = ['DRAFT',
+        'ORDER_SENT',
+        'ORDER_ACCEPTED',
+        'PLANNED',
+        'IN_PROGRESS',
+        'DONE',
+        'CANCELLED'];
+    return orderStatuses.indexOf(actual) >= orderStatuses.indexOf(compare);
+}
+
 class Transport extends Component {
     fileInputRef = React.createRef()
 
@@ -258,16 +283,20 @@ class Transport extends Component {
         };
         this.fileChange = this.fileChange.bind(this);
         this.acceptOrder = this.acceptOrder.bind(this);
+        this.delete = this.delete.bind(this);
     }
 
     async componentDidMount() {
+        const username = (await Auth.currentAuthenticatedUser()).getUsername();
+
         const response = await API.graphql(graphqlOperation(queries.getContract, {
             "id": this.props.match.params.id
         }));
         const contract = response.data.getContract;
 
         this.setState({
-            contract: contract
+            contract: contract,
+            isOrderCarrier: contract.orderCarrier === username
         });
     }
 
@@ -279,13 +308,14 @@ class Transport extends Component {
                 return map;
             }, {});
         if (contract.creator) {
-            result[contract.owner] = contract.creator.name;
+            const initialCreator = contract.orderOwner || contract.owner;
+            result[initialCreator] = contract.creator.name;
         }
         return result;
     }
 
     render() {
-        const {contract} = this.state;
+        const {contract, isOrderCarrier} = this.state;
         const {viewOrder} = this.props;
         const viewTransport = !viewOrder;
 
@@ -328,16 +358,28 @@ class Transport extends Component {
                     </Message>
                 }
 
-                {viewTransport && <Button.Group floated='right'>
-                    {orderStatus === 'ORDER_SENT' && <Button onClick={() => this.acceptOrder()}>
+                {
+                    viewOrder && isOrderCarrier && isOrderStatusOrAfter(orderStatus, 'ORDER_ACCEPTED') &&
+                    <Message warning>
+                        <Message.Header>{I18n.get('You are viewing the order of a transport')}</Message.Header>
+                        <p><Link to={`/transports/${contract.id}`}>{I18n.get('View related transported')}</Link></p>
+                    </Message>
+                }
+
+                {viewOrder && <Button.Group floated='right'>
+                    {(orderStatus === 'ORDER_SENT' && isOrderCarrier) && <Button onClick={() => this.setState({confirmAcceptOrder: true})}>
                         <Icon name='check circle outline'/>
                         {I18n.get('Accept order')}
                     </Button>}
+                </Button.Group>
+                }
+
+                {viewTransport && <Button.Group floated='right'>
                     <Button onClick={() => this.showAssignDriver()}>
                         <Icon name='truck'/>
                         {I18n.get('Assign driver')}
                     </Button>
-                    <Button onClick={() => this.delete()}>
+                    <Button onClick={() => this.setState({confirmDelete: true})}>
                         <Icon name='delete'/>
                         {I18n.get('Delete')}
                     </Button>
@@ -348,7 +390,8 @@ class Transport extends Component {
                 </Button.Group>
                 }
                 <Header as={'h1'}>
-                    <Header.Content>{I18n.get('Transport {number}').replace('{number}', contract.id.substring(0, 8))}</Header.Content>
+                    {viewOrder && <Header.Content>{I18n.get('Order {number}').replace('{number}', contract.id.substring(0, 8))}</Header.Content>}
+                    {viewTransport && <Header.Content>{I18n.get('Transport {number}').replace('{number}', contract.id.substring(0, 8))}</Header.Content>}
                     <Header.Subheader>
                         {I18n.get('Created by {creator} on {date}')
                             .replace('{creator}', contract.creator ? contract.creator.name : contract.owner)
@@ -520,6 +563,22 @@ class Transport extends Component {
                                    driverId={this.state.contract.driverDriverId}
                                    onSave={(driver) => this.assignDriver(driver)}
                 />
+                <Confirm
+                    open={this.state.confirmAcceptOrder}
+                    content={I18n.get("Accept the order and add it to your list of transports?")}
+                    cancelButton={I18n.get("Cancel")}
+                    confirmButton={I18n.get("Confirm")}
+                    onCancel={() => this.setState({confirmAcceptOrder: false})}
+                    onConfirm={this.acceptOrder}
+                />
+                <Confirm
+                    open={this.state.confirmDelete}
+                    content={I18n.get("Are you sure you want to delete this transport? It will be gone permanently.")}
+                    cancelButton={I18n.get("Cancel")}
+                    confirmButton={I18n.get("Confirm")}
+                    onCancel={() => this.setState({confirmDelete: false})}
+                    onConfirm={this.delete}
+                />
             </div>
 
         );
@@ -531,6 +590,9 @@ class Transport extends Component {
     }
 
     async acceptOrder() {
+        this.setState({
+            confirmAcceptOrder: false
+        });
         const {contract} = this.state;
         contract.orderStatus = 'ORDER_ACCEPTED';
 
@@ -702,8 +764,10 @@ class Transport extends Component {
         }
 
         this.setState({
-            ...contract,
-            ...update
+            contract: {
+                ...contract,
+                ...update
+            }
         });
         this.hideAssignDriver();
         await API.graphql(graphqlOperation(mutations.updateContract, {

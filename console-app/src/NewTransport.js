@@ -881,7 +881,7 @@ class NewTransport extends Component {
                         name: this.props.portal.carrierName,
                     },
                     orderStatus: 'ORDER_SENT',
-                    orderCarrier: this.props.portal.carrierAccount,
+                    orderCarrier: this.props.portal.carrierOwner,
                     orderOwner: (await Auth.currentAuthenticatedUser()).getUsername(),
                     orderDate: now,
                     owner: "-"
@@ -926,7 +926,7 @@ class NewTransport extends Component {
             console.log(input);
 
             await API.graphql(graphqlOperation(mutations.createContractCustom, {input: input}));
-            this.props.history.push(order ? '/portal/sent-order' : '/transports');
+            this.props.history.push(order ? '/portal/sent-orders' : '/transports');
         } catch (ex) {
             console.warn("error while creating transport" + JSON.stringify(ex));
             this.setState({
