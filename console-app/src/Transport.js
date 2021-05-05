@@ -14,7 +14,7 @@ import moment from 'moment/min/moment-with-locales';
 import * as queries from "./graphql/queries";
 import * as mutations from "./graphql/mutations";
 import {S3Image} from "aws-amplify-react";
-import {DriverPicker} from "./NewTransport";
+import {DriverPicker, VehiclePicker} from "./NewTransport";
 import { v4 as uuidv4 } from 'uuid';
 import * as PropTypes from "prop-types";
 import {act} from "react-dom/test-utils";
@@ -199,16 +199,40 @@ class AssignDriverModal extends Component {
 
         this.onDriverSelected = this.onDriverSelected.bind(this);
         this.save = this.save.bind(this);
+        this.onTrailerSelected = this.onTrailerSelected.bind(this);
+        this.onTruckSelected = this.onTruckSelected.bind(this);
         this.state = {
             driver: {
                 id: props.driverId
+            },
+            truck: {
+                id: props.truckVehicleId
+            },
+            trailer: {
+                id: props.trailerVehicleId
             }
         };
     }
 
     render() {
         return (<FormModal {...this.props} save={this.save}>
-                    <DriverPicker driverId={this.state.driver && this.state.driver.id} driverSelected={this.onDriverSelected}/>
+
+            <Form.Field label={I18n.get('Driver')}
+                        control={DriverPicker}
+                        driverId={this.state.driver && this.state.driver.id}
+                        driverSelected={this.onDriverSelected}/>
+            <Form.Field label={I18n.get('Truck')}
+                        control={VehiclePicker}
+                        type={"TRUCK"}
+                        vehicleId={this.state.truck && this.state.truck.id}
+                        vehicleSelected={this.onTruckSelected}
+                        companyId={this.props.companyId}/>
+            <Form.Field label={I18n.get('Trailer')}
+                        control={VehiclePicker}
+                        type={"TRAILER"}
+                        vehicleId={this.state.trailer && this.state.trailer.id}
+                        vehicleSelected={this.onTrailerSelected}
+                        companyId={this.props.companyId}/>
             </FormModal>)
     }
 
@@ -218,8 +242,21 @@ class AssignDriverModal extends Component {
         });
     }
 
+    onTruckSelected(truck) {
+        this.setState({
+            truck
+        });
+    }
+
+    onTrailerSelected(trailer) {
+        console.log(trailer);
+        this.setState({
+            trailer
+        });
+    }
+
     save() {
-        this.props.onSave(this.state.driver);
+        this.props.onSave(this.state.driver, this.state.truck, this.state.trailer);
     }
 }
 
@@ -273,6 +310,17 @@ function isOrderStatusOrAfter(actual, compare) {
     return orderStatuses.indexOf(actual) >= orderStatuses.indexOf(compare);
 }
 
+function isContractStatusOrAfter(actual, compare) {
+    const contractStatuses = ['DRAFT',
+        'CREATED',
+        'IN_PROGRESS',
+        'DONE',
+        'ARCHIVED'];
+    return contractStatuses.indexOf(actual) >= contractStatuses.indexOf(compare);
+}
+
+
+
 class Transport extends Component {
     fileInputRef = React.createRef()
 
@@ -284,6 +332,7 @@ class Transport extends Component {
         this.fileChange = this.fileChange.bind(this);
         this.acceptOrder = this.acceptOrder.bind(this);
         this.delete = this.delete.bind(this);
+        this.assignDriverVehicles = this.assignDriverVehicles.bind(this);
     }
 
     async componentDidMount() {
@@ -377,15 +426,19 @@ class Transport extends Component {
                 {viewTransport && <Button.Group floated='right'>
                     <Button onClick={() => this.showAssignDriver()}>
                         <Icon name='truck'/>
-                        {I18n.get('Assign driver')}
+                        {I18n.get('Assign driver / vehicles')}
+                    </Button>
+                    {!isContractStatusOrAfter(contract.status, 'DONE') && <Button onClick={() => this.edit()}>
+                        <Icon name='edit'/>
+                        {I18n.get('Edit')}
+                    </Button>}
+                    <Button onClick={() => this.copy()}>
+                        <Icon name='copy'/>
+                        {I18n.get('Copy')}
                     </Button>
                     <Button onClick={() => this.setState({confirmDelete: true})}>
                         <Icon name='delete'/>
                         {I18n.get('Delete')}
-                    </Button>
-                    <Button onClick={() => this.copy()}>
-                        <Icon name='copy'/>
-                        {I18n.get('Copy')}
                     </Button>
                 </Button.Group>
                 }
@@ -560,8 +613,11 @@ class Transport extends Component {
                 </Grid>
                 <AssignDriverModal show={this.state.assignDriver}
                                    hide={() => this.hideAssignDriver()}
+                                   companyId={this.props.company && this.props.company.companyId}
                                    driverId={this.state.contract.driverDriverId}
-                                   onSave={(driver) => this.assignDriver(driver)}
+                                   truckVehicleId={this.state.contract.truckVehicleId}
+                                   trailerVehicleId={this.state.contract.trailerVehicleId}
+                                   onSave={this.assignDriverVehicles}
                 />
                 <Confirm
                     open={this.state.confirmAcceptOrder}
@@ -587,6 +643,11 @@ class Transport extends Component {
     copy() {
         const {history} = this.props;
         history.push('/transports-new/' + this.state.contract.id);
+    }
+
+    edit() {
+        const {history} = this.props;
+        history.push('/transports/edit/' + this.state.contract.id);
     }
 
     async acceptOrder() {
@@ -732,47 +793,91 @@ class Transport extends Component {
         });
     }
 
-    async assignDriver(driver) {
+    async assignDriverVehicles(driver, truck, trailer) {
+        console.log(driver);
+
         const {contract} = this.state;
         const now = moment().toISOString();
+        const username = (await Auth.currentAuthenticatedUser()).getUsername()
 
         const update = {};
+        const events = contract.events ? [...contract.events] : [];
 
-        update.id = contract.id;
-        update.driverDriverId = driver.id;
-        update.driver = {
-            name: driver.name,
-            username: driver.carrier
-        };
-        update.carrierUsername = driver.carrier ? driver.carrier : "-";
-        update.events = contract.events || [];
-        update.events.push({
-            author: {
-                username: (await Auth.currentAuthenticatedUser()).getUsername()
-            },
-            type: 'AssignDriver',
-            createdAt: now,
-            assignedDriver: {
-                name: driver.name,
-                username: driver.carrier
+        let changed = false;
+        if (contract.truckVehicleId !== (truck ? truck.id : null)) {
+            changed = true;
+            if (truck) {
+                update.truckVehicleId = truck.id;
+                update.truck = truck.licensePlateNumber;
+            } else {
+                update.truckVehicleId = null;
+                update.truck = null;
             }
-        });
-        update.updatedAt = now;
-
-        if (contract.orderStatus) {
-            update.orderStatus = 'PLANNED';
         }
 
-        this.setState({
-            contract: {
+        if (contract.trailerVehicleId !== (trailer ? trailer.id : null)) {
+            changed = true;
+            if (trailer) {
+                update.trailerVehicleId = trailer.id;
+                update.trailer = trailer.licensePlateNumber;
+            } else {
+                update.trailerVehicleId = null;
+                update.trailer = null;
+            }
+        }
+
+        if (contract.driverDriverId !== (driver ? driver.id : null)) {
+            changed = true;
+            if (driver) {
+                update.driverDriverId = driver.id;
+                update.driver = {
+                    name: driver.name,
+                    username: driver.carrier
+                };
+                update.carrierUsername = driver.carrier ? driver.carrier : "-";
+                events.push({
+                    author: {
+                        username: username
+                    },
+                    type: 'AssignDriver',
+                    createdAt: now,
+                    assignedDriver: update.driver
+                });
+                if (contract.orderStatus && !isOrderStatusOrAfter(contract.orderStatus, 'PLANNED')) {
+                    update.orderStatus = 'PLANNED';
+                }
+            } else {
+                update.driverDriverId = null;
+                update.driver = null;
+                update.carrierUsername = "-";
+                events.push({
+                    author: {
+                        username: username
+                    },
+                    type: 'AssignDriver',
+                    createdAt: now
+                });
+            }
+        }
+
+        this.hideAssignDriver();
+
+        if (changed) {
+            update.id = contract.id;
+            update.events = events;
+
+            const newContract = {
                 ...contract,
                 ...update
-            }
-        });
-        this.hideAssignDriver();
-        await API.graphql(graphqlOperation(mutations.updateContract, {
-            "input": update
-        }));
+            };
+            newContract.updatedAt = now;
+            this.setState({
+                contract: newContract
+            });
+            await API.graphql(graphqlOperation(mutations.updateContract, {
+                "input": update
+            }));
+        }
     }
 
     async delete() {

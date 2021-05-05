@@ -135,13 +135,17 @@ class DriverPicker extends Component {
             limit: 50,
             owner: user.getUsername()
         }));
+        const drivers = response.data.driverByOwner.items.reduce((map, obj) => {
+            map[obj.id] = obj;
+            return map;
+        }, {});
         this.setState({
             options: response.data.driverByOwner.items.map(e => ({text: `${e.name}`, key: e.id, value: e.id})),
-            drivers: response.data.driverByOwner.items.reduce((map, obj) => {
-                map[obj.id] = obj;
-                return map;
-            }, {})
+            drivers: drivers
         });
+        if (this.props.driverId) {
+            this.props.driverSelected(drivers[this.props.driverId]);
+        }
     }
 
     render() {
@@ -183,13 +187,17 @@ class VehiclePicker extends Component {
                 }
             }
         }));
+        const vehicles = response.data.vehicleByOwner.items.reduce((map, obj) => {
+            map[obj.id] = obj;
+            return map;
+        }, {});
         this.setState({
             options: response.data.vehicleByOwner.items.map(e => ({text: `${e.licensePlateNumber}, ${e.description}`, key: e.id, value: e.id})),
-            vehicles: response.data.vehicleByOwner.items.reduce((map, obj) => {
-                map[obj.id] = obj;
-                return map;
-            }, {})
+            vehicles: vehicles
         });
+        if (this.props.vehicleId) {
+            this.props.vehicleSelected(vehicles[this.props.vehicleId]);
+        }
     }
 
     render() {
@@ -628,6 +636,12 @@ class NewTransport extends Component {
         if (copyId) {
             this.copyFromExisting(copyId);
         }
+
+        const editId = this.props.match.params.edit_id;
+        if (editId) {
+            this.state.editId = editId;
+            this.copyFromExisting(editId);
+        }
     }
 
     copyDateToDelivery(newState) {
@@ -674,7 +688,9 @@ class NewTransport extends Component {
                     pickupEndTime: contract.arrivalTime.end
                 })
             },
-            loads: contract.loads
+            loads: contract.loads,
+
+            originalContract: contract
         });
     }
 
@@ -734,12 +750,19 @@ class NewTransport extends Component {
         });
 
         let activeForm = this.state.form ? this.state.form() : null;
+        const editId = this.state.editId;
+        const edit = !!editId;
 
         return (
                 <Grid columns={2} container stackable style={{ padding: '1em 0em' }}>
                     <Grid.Row>
                         <Grid.Column>
-                            <Header as={'h2'}>{I18n.get('New A -&gt; B Transport').replace('&gt;', '>')}</Header>
+                            {edit && <Button icon labelPosition='left' onClick={() => this.props.history.push(`/transports/${editId}`)}>
+                                <Icon name='arrow left' />
+                                Back
+                            </Button>}
+                            {!edit && <Header as={'h2'}>{I18n.get('New A -&gt; B Transport').replace('&gt;', '>')}</Header>}
+                            {edit && <Header as={'h2'}>{I18n.get('Edit A -&gt; B Transport').replace('&gt;', '>')}</Header>}
                         </Grid.Column>
                     </Grid.Row>
                     <Grid.Row>
@@ -812,127 +835,160 @@ class NewTransport extends Component {
             loading: true
         });
         try {
-            const copyToAddress = async (contactId) => {
-                const address = (await API.graphql(graphqlOperation(queries.getContact, {
-                    id: contactId
-                }))).data.getContact;
-                return {
-                    name: address.name,
-                    postalCode: address.postalCode,
-                    address: address.address,
-                    city: address.city,
-                    country: address.country
-                };
-            };
-
-            const copyToDriverDetail = async (driverId) => {
-                const driver = (await API.graphql(graphqlOperation(queries.getDriver, {
-                    id: driverId
-                }))).data.getDriver;
-                return {
-                    name: driver.name
-                };
-            };
-
+            const editId = this.state.editId;
+            const edit = !!editId;
             const now = moment().toISOString();
-            let input = {
-                arrivalDate: this.state.pickup.pickupDate,
-                ...(this.state.pickup.pickupFromTime &&
-                    this.state.pickup.pickupEndTime && {
-                        arrivalTime: {
-                            start: this.state.pickup.pickupFromTime,
-                            end: this.state.pickup.pickupEndTime
-                        }
-                    }),
-                deliveryDate: this.state.delivery.deliveryDate,
-                ...(this.state.delivery.deliveryFromTime &&
-                    this.state.delivery.deliveryEndTime && {
-                        deliveryTime: {
-                            start: this.state.delivery.deliveryFromTime,
-                            end: this.state.delivery.deliveryEndTime
-                        }
-                    }),
-                loads: this.state.loads.map(removeEmpty),
+
+            if (order) {
+                await this.saveOrder(now, edit, editId);
+            } else {
+                await this.saveTransport(now, edit, editId);
+            }
+        } catch (ex) {
+            console.warn("error while creating transport", ex);
+            this.setState({
+                error: I18n.get("Cannot create transport because validation failed. Please ensure all fields are filled in."),
+                loading: false
+            })
+        }
+    }
+
+    async inputData(now, edit, editId) {
+        const timeSlot = (from, end) => {
+            return from && end ? {
+                start: this.state.delivery.deliveryFromTime,
+                end: this.state.delivery.deliveryEndTime
+            } : null;
+        }
+
+        let input = {
+            arrivalDate: this.state.pickup.pickupDate,
+            arrivalTime: timeSlot(this.state.pickup.pickupFromTime, this.state.pickup.pickupEndTime),
+            deliveryDate: this.state.delivery.deliveryDate,
+            deliveryTime: timeSlot(this.state.delivery.deliveryFromTime, this.state.delivery.deliveryEndTime),
+            loads: this.state.loads.map(removeEmptyAttributes),
+            delivery: await copyToAddress(this.state.delivery.contactId),
+            pickup: await copyToAddress(this.state.pickup.contactId)
+        };
+        if (edit) {
+            input = {
+                ...input,
+                id: editId,
+                events: this.state.originalContract.events
+            }
+        } else {
+            input = {
+                ...input,
+                events: [],
                 updatedAt: now,
                 createdAt: now,
-
-                delivery: await copyToAddress(this.state.delivery.contactId),
-                pickup: await copyToAddress(this.state.pickup.contactId),
-                ...(this.state.driverDriverId && {
-                        driver: await copyToDriverDetail(this.state.driverDriverId)
-                    }
-                ),
                 ...(this.props.company && {
                     creator: {
                         name: this.props.company.name
                     },
                     creatorCompanyId: this.props.company.id
-                }),
-                events: [],
-            };
+                })
+            }
+        }
+        return input;
+    }
 
-            if (order) {
-                input = {
-                    ...input,
-                    shipper: {
-                        name: this.props.company.name
-                    },
-                    carrier: {
-                        name: this.props.portal.carrierName,
-                    },
-                    orderStatus: 'ORDER_SENT',
-                    orderCarrier: this.props.portal.carrierOwner,
-                    orderOwner: (await Auth.currentAuthenticatedUser()).getUsername(),
-                    orderDate: now,
-                    owner: "-"
-                }
-            } else if (transport) {
-                input = {
-                    ...input,
-                    status: 'CREATED',
-                    shipper: await copyToAddress(this.state.shipperContactId),
-                    carrier: await copyToAddress(this.state.carrierContactId),
-                    trailer: this.state.trailer,
-                    truck: this.state.truck,
-                    carrierUsername: this.state.carrierUsername,
-                    owner: (await Auth.currentAuthenticatedUser()).getUsername(),
-                    shipperContactId: this.state.shipperContactId,
-                    carrierContactId: this.state.carrierContactId,
-                    deliveryContactId: this.state.delivery.contactId,
-                    pickupContactId: this.state.pickup.contactId,
-                    driverDriverId: this.state.driverDriverId,
-                    truckVehicleId: this.state.truckVehicleId,
-                    trailerVehicleId: this.state.trailerVehicleId,
-                    needAcknowledge: !!this.state.driverDriverId,
-                }
+    async saveTransport(now, edit, editId) {
+        let input = await this.inputData(now, edit, editId);
+
+        input = {
+            ...input,
+            shipper: await copyToAddress(this.state.shipperContactId),
+            carrier: await copyToAddress(this.state.carrierContactId),
+            trailer: this.state.trailer,
+            truck: this.state.truck,
+            carrierUsername: this.state.carrierUsername,
+            owner: (await Auth.currentAuthenticatedUser()).getUsername(),
+            shipperContactId: this.state.shipperContactId,
+            carrierContactId: this.state.carrierContactId,
+            deliveryContactId: this.state.delivery.contactId,
+            pickupContactId: this.state.pickup.contactId,
+            driverDriverId: this.state.driverDriverId,
+            truckVehicleId: this.state.truckVehicleId,
+            trailerVehicleId: this.state.trailerVehicleId,
+        }
+
+        if (!edit) {
+            input = {
+                ...input,
+                status: 'CREATED',
+                needAcknowledge: !!this.state.driverDriverId,
+                orderOwner: "-",
+                orderCarrier: "-"
+            }
+        }
+
+        if (edit && this.state.driverDriverId !== this.state.originalContract.driverDriverId || !edit && this.state.driverDriverId) {
+            if (this.state.driverDriverId) {
+                input.driver = await copyToDriverDetail(this.state.driverDriverId)
+            } else {
+                input.driver = null;
             }
 
-            if (this.state.driverDriverId) {
-                input.events.push({
-                    author: {
-                        username: (await Auth.currentAuthenticatedUser()).getUsername()
-                    },
-                    type: 'AssignDriver',
-                    createdAt: now,
+            input.events.push({
+                author: {
+                    username: (await Auth.currentAuthenticatedUser()).getUsername()
+                },
+                type: 'AssignDriver',
+                createdAt: now,
+                ...(this.state.driverDriverId && {
                     assignedDriver: {
                         name: input.driver.name,
                         username: input.carrierUsername
                     }
-                });
-            } else {
-                input.carrierUsername = "-";
+                })
+            });
+        }
+
+        if (!this.state.driverDriverId) {
+            input.carrierUsername = "-";
+        }
+
+        if (edit) {
+            await API.graphql(graphqlOperation(mutations.updateContract, {input: input}));
+            this.props.history.push('/transports/' + editId);
+        } else {
+            let result = await API.graphql(graphqlOperation(mutations.createContractCustom, {input: input}));
+            this.props.history.push(`/transports/${result.id}`);
+        }
+    }
+
+    async saveOrder(now, edit, editId) {
+        let input = await this.inputData(now, edit, editId);
+
+        input = {
+            ...input,
+            shipper: {
+                name: this.props.company.name
+            },
+            carrier: {
+                name: this.props.portal.carrierName,
+            },
+            orderCarrier: this.props.portal.carrierOwner,
+            orderOwner: (await Auth.currentAuthenticatedUser()).getUsername(),
+            orderDate: now
+        }
+
+        if (!edit) {
+            input = {
+                ...input,
+                orderStatus: 'ORDER_SENT',
+                carrierUsername: "-",
+                owner: "-"
             }
+        }
 
-            console.log(input);
-
+        if (edit) {
+            await API.graphql(graphqlOperation(mutations.updateContract, {input: input}));
+            this.props.history.push('/portal/sent-orders' + editId);
+        } else {
             await API.graphql(graphqlOperation(mutations.createContractCustom, {input: input}));
-            this.props.history.push(order ? '/portal/sent-orders' : '/transports');
-        } catch (ex) {
-            console.warn("error while creating transport" + JSON.stringify(ex));
-            this.setState({
-                error: I18n.get("Cannot create transport because validation failed. Please ensure all fields are filled in."),
-                loading: false
-            })
+            this.props.history.push('/portal/sent-orders');
         }
     }
 
@@ -948,7 +1004,29 @@ class NewTransport extends Component {
     }
 }
 
-const removeEmpty = obj =>
+const copyToAddress = async (contactId) => {
+    const address = (await API.graphql(graphqlOperation(queries.getContact, {
+        id: contactId
+    }))).data.getContact;
+    return {
+        name: address.name,
+        postalCode: address.postalCode,
+        address: address.address,
+        city: address.city,
+        country: address.country
+    };
+};
+
+const copyToDriverDetail = async (driverId) => {
+    const driver = (await API.graphql(graphqlOperation(queries.getDriver, {
+        id: driverId
+    }))).data.getDriver;
+    return {
+        name: driver.name
+    };
+};
+
+const removeEmptyAttributes = obj =>
     Object.keys(obj)
         .filter(k => obj[k])
         .reduce(
@@ -959,5 +1037,6 @@ const removeEmpty = obj =>
 export {
     NewTransport,
     DriverPicker,
-    ContactPicker
+    ContactPicker,
+    VehiclePicker
 };

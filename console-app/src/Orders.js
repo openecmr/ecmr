@@ -38,16 +38,15 @@ const StatusMappings = () => ({
         label: I18n.get('done'),
         color: 'green'
     },
-    ARCHIVED: {
+    CANCELLED: {
         progress: 100,
-        label: I18n.get('archived'),
+        label: I18n.get('cancelled'),
         color: 'grey'
     }
 });
 
 const Status = ({status, updatedAt}) => {
-    console.log("status", status);
-    const statusMapping = StatusMappings()[status];
+    const statusMapping = StatusMappings()[status] || StatusMappings()["DRAFT"];
     return <Table.Cell width={1}>
         <Progress percent={statusMapping.progress} size={'tiny'} color={statusMapping.color}>
         </Progress>

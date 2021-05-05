@@ -322,7 +322,12 @@ const Main = withRouter(({location, onLogout, user, company, noCompany, onCompan
                                                       routerPrefix={routerPrefix}/>}/>
                     <Route exact path="/received-orders"
                            render={(props) => <Orders key={"received"} {...props} direction={"received"}/>}/>
-                    <Route exact path="/transports/:id" component={Transport}/>
+                    <Route exact path="/transports/:id" component={(props) => <Transport {...props} company={company}/>}/>
+
+                    <Route exact path="/transports/edit/:edit_id"
+                           render={(props) => <NewTransport {...props} company={company}/>}
+                    />
+
                     <Route exact path={`${routerPrefix}/orders/:id`}
                            render={(props) => <Transport {...props} viewOrder={true}/>}/>
                     <Route exact path={`${routerPrefix}/addressbook`} component={AddressBook}/>
