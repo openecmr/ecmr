@@ -82,19 +82,12 @@ class ContactPicker extends Component {
     render() {
         const { address } = this.props;
 
+        const unknownContact = address?.name && !this.state.options.some(p => p.key === this.props.contactId);
+
         return (
             <div style={{marginBottom: '15px', ...(this.props.pickerWidth && {width: this.props.pickerWidth})}}>
-                <Dropdown
-                    placeholder={I18n.get('Select contact')}
-                    fluid
-                    search
-                    clearable
-                    selection
-                    value={this.props.contactId}
-                    onChange={(e, data) => {this.props.contactSelected(data.value)}}
-                    options={this.state.options}
-                />
-                {address && (
+
+                {unknownContact && (
                     <List>
                         <List.Item>
                             <List.Content><strong>{address.name}</strong></List.Content>
@@ -105,17 +98,22 @@ class ContactPicker extends Component {
                         <List.Item>
                             <List.Content>{address.postalCode} {address.city}{address.country && `, ${address.country}`}</List.Content>
                         </List.Item>
+                        <List.Item>
+                            <List.Content><em>This contact is currently not in the address book. You can only replace the complete contact by selecting one from the address book.</em></List.Content>
+                        </List.Item>
                     </List>)}
+                <Dropdown
+                    placeholder={I18n.get('Select contact')}
+                    fluid
+                    search
+                    clearable
+                    selection
+                    value={this.props.contactId}
+                    onChange={(e, data) => {this.props.contactSelected(data.value)}}
+                    options={this.state.options}
+                />
             </div>
         )
-    }
-
-    close() {
-        this.setState({addingItem: false});
-    }
-
-    addItem() {
-        this.setState({addingItem: true});
     }
 }
 
@@ -227,7 +225,7 @@ class Carrier extends Component {
         return (<div>
             <Header as={'h3'}>{I18n.get('Enter carrier information')}</Header>
             <ContactPicker contactSelected={(contactId) => {this.props.contactSelected(contactId)}}
-                           contactId={this.props.contactId} />
+                           contactId={this.props.contactId} address={this.props.address} />
 
         </div>);
     }
@@ -244,6 +242,7 @@ class Shipper extends NewTransportForm {
         return (<div>
             <Header as={'h3'}>{I18n.get('Enter shipper information')}</Header>
             <ContactPicker contactSelected={(contactId) => {this.props.contactSelected(contactId)}}
+                           address={this.props.address}
                            contactId={this.props.contactId} />
 
         </div>);
@@ -263,7 +262,7 @@ class Delivery extends NewTransportForm {
         return (
             <Fragment>
                 <ContactPicker contactSelected={(contactId) => {this.props.contactSelected(contactId)}}
-                               contactId={this.props.contactId} />
+                               contactId={this.props.contactId} address={this.props.address}/>
 
                 <Form.Field key={"pickup"}>
                     <label>{I18n.get('Planned delivery date')}</label>
@@ -341,7 +340,7 @@ class Pickup extends NewTransportForm {
         return (
             <Fragment>
                 <ContactPicker contactSelected={(contactId) => {this.props.contactSelected(contactId)}}
-                               contactId={this.props.contactId} />
+                               contactId={this.props.contactId} address={this.props.address}/>
 
                 <Form.Field key={"pickup"}>
                     <label>{I18n.get('Planned pickup date')}</label>
@@ -532,7 +531,7 @@ class NewTransport extends Component {
                         label: I18n.get('Carrier'), icon: 'truck', form: () =>
                             <Carrier
                                 contactSelected={(contactId) => this.setState({'carrierContactId': contactId})}
-                                contactId={this.state.carrierContactId}
+                                contactId={this.state.carrierContactId} address={this.state.carrier}
                             />
                     }]),
                     ...onlyIf(order,[{
@@ -577,7 +576,7 @@ class NewTransport extends Component {
                 items: [
                     ...onlyIf(transport,[{label: I18n.get('Shipper'), icon: 'building', form: () =>
                             <Shipper  contactSelected={(contactId) => this.setState({'shipperContactId' : contactId})}
-                                      contactId={this.state.shipperContactId} />}]),
+                                      contactId={this.state.shipperContactId}  address={this.state.shipper}/>}]),
                     ...onlyIf(order, [{label: I18n.get('Shipper'), icon: 'building', form: () => <StaticField title={I18n.get('Enter shipper information')} value={this.props.company.name}/>
                         }])
                 ]
@@ -592,6 +591,7 @@ class NewTransport extends Component {
                                     contactId
                                 }
                             })}
+                                    address={this.state.pickup}
                                     onChange={this.createOnUpdateFor('pickup', this.copyDateToDelivery)}
                                     onLoadAdded={(index, load) => this.onLoadAdded(index, load)}
                                     onLoadRemoved={(index) => this.onLoadRemoved(index)}
@@ -610,6 +610,7 @@ class NewTransport extends Component {
                                           contactId
                                           }
                                       })}
+                                      address={this.state.delivery}
                                       contactId={this.state.delivery.contactId}
                                       value={this.state.delivery} />}
                 ]
@@ -678,7 +679,8 @@ class NewTransport extends Component {
                 ...(contract.deliveryTime && {
                     deliveryFromTime: contract.deliveryTime.start,
                     deliveryEndTime: contract.deliveryTime.end
-                })
+                }),
+                ...contract.delivery
             },
             pickup: {
                 contactId: contract.pickupContactId,
@@ -686,10 +688,12 @@ class NewTransport extends Component {
                 ...(contract.arrivalTime && {
                     pickupFromTime: contract.arrivalTime.start,
                     pickupEndTime: contract.arrivalTime.end
-                })
+                }),
+                ...contract.pickup
             },
             loads: contract.loads,
-
+            carrier: contract.carrier,
+            shipper: contract.shipper,
             originalContract: contract
         });
     }
@@ -773,7 +777,7 @@ class NewTransport extends Component {
                                 <Divider />
                                 {this.state.error && <Message
                                     error
-                                    header='Error'
+                                    header={I18n.get('Error')}
                                     list={[
                                         this.state.error
                                     ]}
@@ -799,20 +803,20 @@ class NewTransport extends Component {
         let error;
 
         if (transport) {
-            if (!this.state.carrierContactId) {
+            if (!this.state.carrierContactId && !this.state.originalContract?.carrier?.name) {
                 error = I18n.get("Missing carrier address");
             } else if (!this.state.truckVehicleId) {
                 error = I18n.get("Missing truck");
-            } else if (!this.state.shipperContactId) {
+            } else if (!this.state.shipperContactId && !this.state.originalContract?.shipper?.name) {
                 error = I18n.get("Missing shipper address");
             }
         }
 
-        if (!this.state.pickup.contactId) {
+        if (!this.state.pickup.contactId && !this.state.originalContract?.pickup?.name) {
             error = I18n.get("Missing pickup address");
         } else if (!this.state.pickup.pickupDate) {
             error = I18n.get("Missing pickup date");
-        } else if (!this.state.delivery.contactId) {
+        } else if (!this.state.delivery.contactId && !this.state.originalContract?.delivery?.name) {
             error = I18n.get("Missing delivery address");
         }  else if (!this.state.delivery.deliveryDate) {
             error = I18n.get("Missing delivery date");
@@ -856,8 +860,8 @@ class NewTransport extends Component {
     async inputData(now, edit, editId) {
         const timeSlot = (from, end) => {
             return from && end ? {
-                start: this.state.delivery.deliveryFromTime,
-                end: this.state.delivery.deliveryEndTime
+                start: from,
+                end: end
             } : null;
         }
 
@@ -867,8 +871,8 @@ class NewTransport extends Component {
             deliveryDate: this.state.delivery.deliveryDate,
             deliveryTime: timeSlot(this.state.delivery.deliveryFromTime, this.state.delivery.deliveryEndTime),
             loads: this.state.loads.map(removeEmptyAttributes),
-            delivery: await copyToAddress(this.state.delivery.contactId),
-            pickup: await copyToAddress(this.state.pickup.contactId)
+            delivery: await copyContactToAddress(this.state.delivery.contactId, this.state.delivery),
+            pickup: await copyContactToAddress(this.state.pickup.contactId, this.state.pickup)
         };
         if (edit) {
             input = {
@@ -898,8 +902,8 @@ class NewTransport extends Component {
 
         input = {
             ...input,
-            shipper: await copyToAddress(this.state.shipperContactId),
-            carrier: await copyToAddress(this.state.carrierContactId),
+            shipper: await copyContactToAddress(this.state.shipperContactId, this.state.shipper),
+            carrier: await copyContactToAddress(this.state.carrierContactId, this.state.carrier),
             trailer: this.state.trailer,
             truck: this.state.truck,
             carrierUsername: this.state.carrierUsername,
@@ -954,7 +958,7 @@ class NewTransport extends Component {
             this.props.history.push('/transports/' + editId);
         } else {
             let result = await API.graphql(graphqlOperation(mutations.createContractCustom, {input: input}));
-            this.props.history.push(`/transports/${result.id}`);
+            this.props.history.push(`/transports/${result.data.createContractCustom.id}`);
         }
     }
 
@@ -1004,17 +1008,26 @@ class NewTransport extends Component {
     }
 }
 
-const copyToAddress = async (contactId) => {
-    const address = (await API.graphql(graphqlOperation(queries.getContact, {
-        id: contactId
-    }))).data.getContact;
-    return {
-        name: address.name,
-        postalCode: address.postalCode,
-        address: address.address,
-        city: address.city,
-        country: address.country
-    };
+const copyContactToAddress = async (contactId, nonAddressBookContact) => {
+    if (contactId) {
+        const address = (await API.graphql(graphqlOperation(queries.getContact, {
+            id: contactId
+        }))).data.getContact;
+        return {
+            name: address.name,
+            postalCode: address.postalCode,
+            address: address.address,
+            city: address.city,
+            country: address.country
+        };
+    } else if (nonAddressBookContact?.name) {
+        const {name, postalCode, address, city, country} = nonAddressBookContact;
+        return {
+            name, postalCode, address, city, country
+        };
+    } else {
+        throw new Error("Either contactId or nonAddressBookContact needs to given");
+    }
 };
 
 const copyToDriverDetail = async (driverId) => {
