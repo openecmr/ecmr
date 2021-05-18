@@ -62,7 +62,8 @@ class ContactPicker extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            options: []
+            options: [],
+            loading: true
         };
 
         this.loadContacts();
@@ -75,11 +76,13 @@ class ContactPicker extends Component {
             owner: user.getUsername()
         }));
         this.setState({
+            loading: false,
             options: response.data.contactByOwner.items.map(e => ({text: [e.name, e.address, e.city, e.country].filter(Boolean).join(", "), key: e.id, value: e.id}))
         });
     }
 
     render() {
+        const { loading } = this.state;
         const { address } = this.props;
 
         const unknownContact = address?.name && !this.state.options.some(p => p.key === this.props.contactId);
@@ -87,7 +90,7 @@ class ContactPicker extends Component {
         return (
             <div style={{marginBottom: '15px', ...(this.props.pickerWidth && {width: this.props.pickerWidth})}}>
 
-                {unknownContact && (
+                {!loading && unknownContact && (
                     <List>
                         <List.Item>
                             <List.Content><strong>{address.name}</strong></List.Content>
@@ -99,13 +102,14 @@ class ContactPicker extends Component {
                             <List.Content>{address.postalCode} {address.city}{address.country && `, ${address.country}`}</List.Content>
                         </List.Item>
                         <List.Item>
-                            <List.Content><em>This contact is currently not in the address book. You can only replace the complete contact by selecting one from the address book.</em></List.Content>
+                            <List.Content><Icon name={"info circle"} color={"blue"}/> <em>This contact is currently not in the address book. You can only replace the complete contact by selecting one from the address book.</em></List.Content>
                         </List.Item>
                     </List>)}
                 <Dropdown
                     placeholder={I18n.get('Select contact')}
                     fluid
                     search
+                    loading={this.state.loading}
                     clearable
                     selection
                     value={this.props.contactId}
