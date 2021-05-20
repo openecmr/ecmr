@@ -387,6 +387,8 @@ class Transport extends Component {
                 return I18n.get('${name} added attachment ${filename}').replace('${name}', name).replace('${filename}', event.attachments && event.attachments.length && event.attachments[0].filename);
             case "DeleteAttachment":
                 return I18n.get('${name} removed attachment').replace('${name}', name);
+            case "Edited":
+                return I18n.get('${name} edited the transported').replace('${name}', name);
             default:
                 return I18n.get("${name} completed ${type}").replace("${name}", name).replace("${type}", event.type);
         }
@@ -476,14 +478,15 @@ class Transport extends Component {
         this.setState({
             loading: true
         });
-        const item = createUpdateContractInput(this.props.navigation.getParam('item'));
+        const contract = this.props.navigation.getParam('item');
+        const update = createUpdateContractInput(contract);
         const now = moment().format();
         const user = await Auth.currentAuthenticatedUser();
 
-        if (!item.events) {
-            item.events = [];
+        if (!update.events) {
+            update.events = [];
         }
-        item.events.push({
+        update.events.push({
             type: 'ArrivalOnSite',
             site: this.state.site,
             createdAt: now,
@@ -491,10 +494,12 @@ class Transport extends Component {
                 username: user.username
             }
         });
-        item.status = 'IN_PROGRESS';
-
+        update.status = 'IN_PROGRESS';
+        if (contract.orderStatus) {
+            update.orderStatus = 'IN_PROGRESS';
+        }
         try {
-            const result = await updateContract(item);
+            const result = await updateContract(update);
             this.props.navigation.setParams({
                 item: result
             });

@@ -13,6 +13,10 @@ export const createContractCustom = /* GraphQL */ `
       owner
       carrierUsername
       status
+      orderOwner
+      orderCarrier
+      orderStatus
+      orderDate
       creator {
         name
       }
@@ -175,6 +179,10 @@ export const createContract = /* GraphQL */ `
       owner
       carrierUsername
       status
+      orderOwner
+      orderCarrier
+      orderStatus
+      orderDate
       creator {
         name
       }
@@ -337,6 +345,10 @@ export const updateContract = /* GraphQL */ `
       owner
       carrierUsername
       status
+      orderOwner
+      orderCarrier
+      orderStatus
+      orderDate
       creator {
         name
       }
@@ -499,6 +511,10 @@ export const deleteContract = /* GraphQL */ `
       owner
       carrierUsername
       status
+      orderOwner
+      orderCarrier
+      orderStatus
+      orderDate
       creator {
         name
       }

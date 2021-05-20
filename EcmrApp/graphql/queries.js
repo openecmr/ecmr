@@ -6,6 +6,189 @@ export const pdfexport = /* GraphQL */ `
     pdfexport(id: $id)
   }
 `;
+export const contractsByFilterCustom = /* GraphQL */ `
+  query ContractsByFilterCustom(
+    $owner: String!
+    $contactId: ID!
+    $updatedAt: CustomModelStringKeyConditionInput
+    $sortDirection: CustomModelSortDirection
+    $limit: Int
+    $nextToken: String
+  ) {
+    contractsByFilterCustom(
+      owner: $owner
+      contactId: $contactId
+      updatedAt: $updatedAt
+      sortDirection: $sortDirection
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        owner
+        carrierUsername
+        status
+        orderOwner
+        orderCarrier
+        orderStatus
+        orderDate
+        creator {
+          name
+        }
+        shipper {
+          name
+          postalCode
+          address
+          city
+          country
+          phone
+          email
+        }
+        carrier {
+          name
+          postalCode
+          address
+          city
+          country
+          phone
+          email
+        }
+        delivery {
+          name
+          postalCode
+          address
+          city
+          country
+          phone
+          email
+        }
+        arrivalDate
+        arrivalTime {
+          start
+          end
+        }
+        deliveryDate
+        deliveryTime {
+          start
+          end
+        }
+        pickup {
+          name
+          postalCode
+          address
+          city
+          country
+          phone
+          email
+        }
+        loads {
+          category
+          quantity
+          volume
+          loadMeters
+          netWeight
+          description
+          hazardousGoodsItems {
+            hazardLabel
+          }
+        }
+        driver {
+          name
+          username
+        }
+        trailer
+        truck
+        references {
+          carrier
+        }
+        updatedAt
+        createdAt
+        events {
+          author {
+            username
+          }
+          type
+          site
+          createdAt
+          latitude
+          longitude
+          signature {
+            method
+            signatureImageDriver {
+              bucket
+              region
+              key
+            }
+            signatureImageSignatory {
+              bucket
+              region
+              key
+            }
+            signatoryName
+            signatoryEmail
+          }
+          driverObservation
+          signatoryObservation
+          sendCopy
+          assignedDriver {
+            name
+            username
+          }
+          photos {
+            bucket
+            region
+            key
+          }
+          attachments {
+            location {
+              bucket
+              region
+              key
+            }
+            size
+            filename
+            mimeType
+            extension
+          }
+          deletesAttachments
+          oldLoads {
+            category
+            quantity
+            volume
+            loadMeters
+            netWeight
+            description
+            hazardousGoodsItems {
+              hazardLabel
+            }
+          }
+          newLoads {
+            category
+            quantity
+            volume
+            loadMeters
+            netWeight
+            description
+            hazardousGoodsItems {
+              hazardLabel
+            }
+          }
+        }
+        needAcknowledge
+        shipperContactId
+        carrierContactId
+        pickupContactId
+        deliveryContactId
+        driverDriverId
+        creatorCompanyId
+        trailerVehicleId
+        truckVehicleId
+        openecmrId
+      }
+      nextToken
+    }
+  }
+`;
 export const getVehicle = /* GraphQL */ `
   query GetVehicle($id: ID!) {
     getVehicle(id: $id) {
@@ -607,6 +790,10 @@ export const contractsByOwnerArrivalDate = /* GraphQL */ `
         owner
         carrierUsername
         status
+        orderOwner
+        orderCarrier
+        orderStatus
+        orderDate
         creator {
           name
         }
@@ -786,6 +973,10 @@ export const contractsByCarrierArrivalDate = /* GraphQL */ `
         owner
         carrierUsername
         status
+        orderOwner
+        orderCarrier
+        orderStatus
+        orderDate
         creator {
           name
         }
@@ -965,6 +1156,10 @@ export const contractsByOwnerUpdatedAt = /* GraphQL */ `
         owner
         carrierUsername
         status
+        orderOwner
+        orderCarrier
+        orderStatus
+        orderDate
         creator {
           name
         }
@@ -1144,6 +1339,376 @@ export const contractsByCarrierUpdatedAt = /* GraphQL */ `
         owner
         carrierUsername
         status
+        orderOwner
+        orderCarrier
+        orderStatus
+        orderDate
+        creator {
+          name
+        }
+        shipper {
+          name
+          postalCode
+          address
+          city
+          country
+          phone
+          email
+        }
+        carrier {
+          name
+          postalCode
+          address
+          city
+          country
+          phone
+          email
+        }
+        delivery {
+          name
+          postalCode
+          address
+          city
+          country
+          phone
+          email
+        }
+        arrivalDate
+        arrivalTime {
+          start
+          end
+        }
+        deliveryDate
+        deliveryTime {
+          start
+          end
+        }
+        pickup {
+          name
+          postalCode
+          address
+          city
+          country
+          phone
+          email
+        }
+        loads {
+          category
+          quantity
+          volume
+          loadMeters
+          netWeight
+          description
+          hazardousGoodsItems {
+            hazardLabel
+          }
+        }
+        driver {
+          name
+          username
+        }
+        trailer
+        truck
+        references {
+          carrier
+        }
+        updatedAt
+        createdAt
+        events {
+          author {
+            username
+          }
+          type
+          site
+          createdAt
+          latitude
+          longitude
+          signature {
+            method
+            signatureImageDriver {
+              bucket
+              region
+              key
+            }
+            signatureImageSignatory {
+              bucket
+              region
+              key
+            }
+            signatoryName
+            signatoryEmail
+          }
+          driverObservation
+          signatoryObservation
+          sendCopy
+          assignedDriver {
+            name
+            username
+          }
+          photos {
+            bucket
+            region
+            key
+          }
+          attachments {
+            location {
+              bucket
+              region
+              key
+            }
+            size
+            filename
+            mimeType
+            extension
+          }
+          deletesAttachments
+          oldLoads {
+            category
+            quantity
+            volume
+            loadMeters
+            netWeight
+            description
+            hazardousGoodsItems {
+              hazardLabel
+            }
+          }
+          newLoads {
+            category
+            quantity
+            volume
+            loadMeters
+            netWeight
+            description
+            hazardousGoodsItems {
+              hazardLabel
+            }
+          }
+        }
+        needAcknowledge
+        shipperContactId
+        carrierContactId
+        pickupContactId
+        deliveryContactId
+        driverDriverId
+        creatorCompanyId
+        trailerVehicleId
+        truckVehicleId
+        openecmrId
+      }
+      nextToken
+    }
+  }
+`;
+export const ordersByOwnerCreatedAt = /* GraphQL */ `
+  query OrdersByOwnerCreatedAt(
+    $orderOwner: String
+    $createdAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelContractFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    ordersByOwnerCreatedAt(
+      orderOwner: $orderOwner
+      createdAt: $createdAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        owner
+        carrierUsername
+        status
+        orderOwner
+        orderCarrier
+        orderStatus
+        orderDate
+        creator {
+          name
+        }
+        shipper {
+          name
+          postalCode
+          address
+          city
+          country
+          phone
+          email
+        }
+        carrier {
+          name
+          postalCode
+          address
+          city
+          country
+          phone
+          email
+        }
+        delivery {
+          name
+          postalCode
+          address
+          city
+          country
+          phone
+          email
+        }
+        arrivalDate
+        arrivalTime {
+          start
+          end
+        }
+        deliveryDate
+        deliveryTime {
+          start
+          end
+        }
+        pickup {
+          name
+          postalCode
+          address
+          city
+          country
+          phone
+          email
+        }
+        loads {
+          category
+          quantity
+          volume
+          loadMeters
+          netWeight
+          description
+          hazardousGoodsItems {
+            hazardLabel
+          }
+        }
+        driver {
+          name
+          username
+        }
+        trailer
+        truck
+        references {
+          carrier
+        }
+        updatedAt
+        createdAt
+        events {
+          author {
+            username
+          }
+          type
+          site
+          createdAt
+          latitude
+          longitude
+          signature {
+            method
+            signatureImageDriver {
+              bucket
+              region
+              key
+            }
+            signatureImageSignatory {
+              bucket
+              region
+              key
+            }
+            signatoryName
+            signatoryEmail
+          }
+          driverObservation
+          signatoryObservation
+          sendCopy
+          assignedDriver {
+            name
+            username
+          }
+          photos {
+            bucket
+            region
+            key
+          }
+          attachments {
+            location {
+              bucket
+              region
+              key
+            }
+            size
+            filename
+            mimeType
+            extension
+          }
+          deletesAttachments
+          oldLoads {
+            category
+            quantity
+            volume
+            loadMeters
+            netWeight
+            description
+            hazardousGoodsItems {
+              hazardLabel
+            }
+          }
+          newLoads {
+            category
+            quantity
+            volume
+            loadMeters
+            netWeight
+            description
+            hazardousGoodsItems {
+              hazardLabel
+            }
+          }
+        }
+        needAcknowledge
+        shipperContactId
+        carrierContactId
+        pickupContactId
+        deliveryContactId
+        driverDriverId
+        creatorCompanyId
+        trailerVehicleId
+        truckVehicleId
+        openecmrId
+      }
+      nextToken
+    }
+  }
+`;
+export const ordersByCarrierCreatedAt = /* GraphQL */ `
+  query OrdersByCarrierCreatedAt(
+    $orderCarrier: String
+    $createdAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelContractFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    ordersByCarrierCreatedAt(
+      orderCarrier: $orderCarrier
+      createdAt: $createdAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        owner
+        carrierUsername
+        status
+        orderOwner
+        orderCarrier
+        orderStatus
+        orderDate
         creator {
           name
         }
@@ -1308,6 +1873,10 @@ export const getContract = /* GraphQL */ `
       owner
       carrierUsername
       status
+      orderOwner
+      orderCarrier
+      orderStatus
+      orderDate
       creator {
         name
       }
@@ -1475,6 +2044,10 @@ export const listContracts = /* GraphQL */ `
         owner
         carrierUsername
         status
+        orderOwner
+        orderCarrier
+        orderStatus
+        orderDate
         creator {
           name
         }

@@ -134,18 +134,20 @@ class CaptureSignature extends Component {
                 sendCopy: sendCopy,
                 photos
             };
-            const input = createUpdateContractInput(this.state.contract);
-            input.events.push(event);
-            input.status = this.state.site === 'pickup' ? 'IN_PROGRESS' : 'DONE';
-
+            const update = createUpdateContractInput(this.state.contract);
+            update.events.push(event);
+            update.status = this.state.site === 'pickup' ? 'IN_PROGRESS' : 'DONE';
+            if (this.state.contract.orderStatus) {
+                update.orderStatus = this.state.site === 'pickup' ? 'IN_PROGRESS' : 'DONE';
+            }
             const oldLoads = this.props.navigation.getParam("oldLoads");
             if (oldLoads) {
-                input.loads = this.state.contract.loads;
+                update.loads = this.state.contract.loads;
                 event.oldLoads = oldLoads;
                 event.newLoads = this.state.contract.loads;
             }
 
-            const finalContract = await updateContract(input);
+            const finalContract = await updateContract(update);
 
             this.setState({
                 handoverPhone: true,
