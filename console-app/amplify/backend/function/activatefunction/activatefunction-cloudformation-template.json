@@ -12,6 +12,12 @@
     "apiopenecmrGraphQLAPIEndpointOutput": {
       "Type": "String",
       "Default": "apiopenecmrGraphQLAPIEndpointOutput"
+    },
+    "deploymentBucketName": {
+      "Type": "String"
+    },
+    "s3Key": {
+      "Type": "String"
     }
   },
   "Conditions": {
@@ -73,11 +79,15 @@
             "Arn"
           ]
         },
-        "Runtime": "nodejs10.x",
+        "Runtime": "nodejs12.x",
         "Timeout": "25",
         "Code": {
-          "S3Bucket": "amplify-openecmr-develop-212345-deployment",
-          "S3Key": "amplify-builds/activatefunction-2f4b4a2f683953344b48-build.zip"
+          "S3Bucket": {
+            "Ref": "deploymentBucketName"
+          },
+          "S3Key": {
+            "Ref": "s3Key"
+          }
         }
       }
     },

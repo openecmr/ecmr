@@ -958,6 +958,13 @@ class NewTransport extends Component {
         }
 
         if (edit) {
+            input.events.push({
+                author: {
+                    username: (await Auth.currentAuthenticatedUser()).getUsername()
+                },
+                type: 'Edited',
+                createdAt: now
+            });
             await API.graphql(graphqlOperation(mutations.updateContract, {input: input}));
             this.props.history.push('/transports/' + editId);
         } else {

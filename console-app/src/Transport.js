@@ -61,6 +61,8 @@ const eventText = (event) => {
             return I18n.get('removed attachment');
         case "Acknowledge":
             return I18n.get('acknowledged the transport');
+        case "Edited":
+            return I18n.get('edited the transport');
         default:
             return I18n.get('completed {eventType}').replace('{eventType}', event.type);
     }
@@ -399,6 +401,10 @@ class Transport extends Component {
 
         return (
             <div>
+                <Button.Group floated={'right'} style={{"marginLeft": 5}}>
+                    <Button size={"mini"} onClick={() => this.componentDidMount()} icon={"refresh"}/>
+                </Button.Group>
+
                 {
                     viewTransport && contract.driverDriverId && contract.carrierUsername === "-" &&
                     <Message warning>
@@ -442,6 +448,7 @@ class Transport extends Component {
                     </Button>
                 </Button.Group>
                 }
+
                 <Header as={'h1'}>
                     {viewOrder && <Header.Content>{I18n.get('Order {number}').replace('{number}', contract.id.substring(0, 8))}</Header.Content>}
                     {viewTransport && <Header.Content>{I18n.get('Transport {number}').replace('{number}', contract.id.substring(0, 8))}</Header.Content>}
@@ -464,7 +471,7 @@ class Transport extends Component {
                             <Grid.Column width={4}>
                                 <Address address={contract.carrier} icon={'truck'} label={I18n.get('Carrier')}/>
                             </Grid.Column>
-                            {contract.orderStatus && <Grid.Column width={6}>
+                            {contract.orderStatus && <Grid.Column width={8}>
                                 {/*Transport code*/}
                                 <Header as={'h5'}>
                                     <Icon name={"check circle outline"}/>
