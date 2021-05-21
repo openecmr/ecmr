@@ -638,9 +638,8 @@ class Transport extends Component {
                     open={this.state.confirmDelete}
                     content={I18n.get("Are you sure you want to delete this transport? It will be gone permanently.")}
                     cancelButton={I18n.get("Cancel")}
-                    confirmButton={I18n.get("Confirm")}
+                    confirmButton={() => <Button color='red' content={I18n.get("Confirm")} onClick={this.delete}/>}
                     onCancel={() => this.setState({confirmDelete: false})}
-                    onConfirm={this.delete}
                 />
             </div>
 

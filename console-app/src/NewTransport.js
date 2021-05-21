@@ -102,7 +102,7 @@ class ContactPicker extends Component {
                             <List.Content>{address.postalCode} {address.city}{address.country && `, ${address.country}`}</List.Content>
                         </List.Item>
                         <List.Item>
-                            <List.Content><Icon name={"info circle"} color={"blue"}/> <em>This contact is currently not in the address book. You can only replace the complete contact by selecting one from the address book.</em></List.Content>
+                            <List.Content><Icon name={"info circle"} color={"blue"}/> <em style={{color: "grey"}}>{I18n.get("This contact is currently not in the address book. You can only replace the complete contact by selecting one from the address book.")}</em></List.Content>
                         </List.Item>
                     </List>)}
                 <Dropdown
