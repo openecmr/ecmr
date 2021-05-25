@@ -200,5 +200,6 @@
   "You are not connected to any company. If you want to create a company please login to the Open e-CMR portal: https://app.openecmr.com/": "Je bent niet verbonden aan een bedrijf. Als je zelf een bedrijf wilt aanmaken log dan in op de Open e-CMR portal: https://app.openecmr.com/",
   "No vehicles.": "Geen voertuigen.",
   "No addresses. Ask your company to add new addresses through the portal.": "Geen adressen. Vraag aan je bedrijf om nieuw adressen toe te voegen via de portal.",
-  "Loads description was changed": "Lading aangepast"
+  "Loads description was changed": "Lading aangepast",
+  "${name} edited the transported": "${name} heeft het transport gewijzigd"
 }

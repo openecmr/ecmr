@@ -16,6 +16,7 @@ import * as mutations from './graphql/mutations'
 import * as queries from "./graphql/queries";
 import moment from "moment";
 import Message from "semantic-ui-react/dist/commonjs/collections/Message/Message";
+import {trackEvent} from "./ConsoleUtils";
 
 class NewTransportForm extends Component {
     constructor(props) {
@@ -1002,6 +1003,12 @@ class NewTransport extends Component {
             await API.graphql(graphqlOperation(mutations.updateContract, {input: input}));
             this.props.history.push('/portal/sent-orders' + editId);
         } else {
+            trackEvent({
+                category: "customer_portal",
+                action: "order",
+                label: "created"
+            });
+
             await API.graphql(graphqlOperation(mutations.createContractCustom, {input: input}));
             this.props.history.push('/portal/sent-orders');
         }
