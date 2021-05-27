@@ -189,12 +189,12 @@ const AppMenu = withRouter(({location, menuVisible}) => (
             active={location.pathname.startsWith('/transports')}
             as={Link}
         />
-        <Menu.Item
-            name={I18n.get('Received orders')}
-            to={'/received-orders'}
-            active={location.pathname.startsWith('/received-orders') || location.pathname.startsWith('/orders')}
-            as={Link}
-        />
+        {/*<Menu.Item*/}
+        {/*    name={I18n.get('Received orders')}*/}
+        {/*    to={'/received-orders'}*/}
+        {/*    active={location.pathname.startsWith('/received-orders') || location.pathname.startsWith('/orders')}*/}
+        {/*    as={Link}*/}
+        {/*/>*/}
         <Menu.Item
             name={I18n.get('planner')}
             active={location.pathname.startsWith('/planner')}
