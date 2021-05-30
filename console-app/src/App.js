@@ -181,7 +181,7 @@ const AppMenuCustomerPortal = withRouter(({location, menuVisible}) => (
         />
     </Menu>));
 
-const AppMenu = withRouter(({location, menuVisible}) => (
+const AppMenu = withRouter(({location, menuVisible, company}) => (
     <Menu vertical fixed={'left'} style={{...style.appMenu, display: menuVisible ? "block" : "none"}}>
         <Menu.Item
             name={I18n.get('my transports')}
@@ -189,12 +189,6 @@ const AppMenu = withRouter(({location, menuVisible}) => (
             active={location.pathname.startsWith('/transports')}
             as={Link}
         />
-        {/*<Menu.Item*/}
-        {/*    name={I18n.get('Received orders')}*/}
-        {/*    to={'/received-orders'}*/}
-        {/*    active={location.pathname.startsWith('/received-orders') || location.pathname.startsWith('/orders')}*/}
-        {/*    as={Link}*/}
-        {/*/>*/}
         <Menu.Item
             name={I18n.get('planner')}
             active={location.pathname.startsWith('/planner')}
@@ -223,6 +217,12 @@ const AppMenu = withRouter(({location, menuVisible}) => (
             name={I18n.get('vehicles')}
             active={location.pathname.startsWith('/vehicles')}
             to={'/vehicles'}
+            as={Link}
+        />
+        <Menu.Item
+            name={I18n.get('Received orders')}
+            to={'/received-orders'}
+            active={location.pathname.startsWith('/received-orders') || location.pathname.startsWith('/orders')}
             as={Link}
         />
         <Menu.Item

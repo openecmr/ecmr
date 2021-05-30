@@ -1,4 +1,4 @@
-import {Button, Icon, Loader, Menu, Progress, Table} from "semantic-ui-react";
+import {Button, Icon, Loader, Menu, Popup, Progress, Table} from "semantic-ui-react";
 import {Link} from "react-router-dom";
 import {API, Auth, graphqlOperation, I18n} from "aws-amplify";
 import React, {Component} from "react";
@@ -67,6 +67,7 @@ class Orders extends SortableTable {
     render() {
         const cols = 10;
         const sentOrders = this.props.direction === "sent";
+        const receivedOrders = this.props.direction === "received";
 
         return <Table className="App-text-with-newlines" selectable compact='very' sortable columns={cols} fixed>
             <Table.Header>
@@ -81,6 +82,9 @@ class Orders extends SortableTable {
                                 <Icon name='plus'/> {I18n.get('New order')}
                             </Button>
                         </Link>}
+                        {receivedOrders &&
+                        <Popup content={I18n.get("You can find information on enabling the customer portal under Settings")}
+                               trigger={<Icon style={{float: "right", cursor: "pointer"}} name={"help circle"} color={'blue'}/>}/>}
                     </Table.HeaderCell>
                 </Table.Row>
                 <Table.Row>

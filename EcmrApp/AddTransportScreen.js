@@ -148,6 +148,8 @@ function AddTransportScreen({navigation, navigation: {navigate}}) {
                 owner: company.owner,
                 status: 'CREATED',
                 carrierUsername: username,
+                orderOwner: '-',
+                orderCarrier: '-',
                 events: [
                     {
                         author: {
