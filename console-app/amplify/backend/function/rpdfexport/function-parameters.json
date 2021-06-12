@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "api": {
+      "openecmr": [
+        "read"
+      ]
+    }
+  },
+  "lambdaLayers": []
+}
