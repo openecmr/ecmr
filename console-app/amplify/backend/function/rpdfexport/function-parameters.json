@@ -1,7 +1,10 @@
 {
   "permissions": {
-    "api": {
-      "openecmr": [
+    "storage": {
+      "attachments": [
+        "read"
+      ],
+      "Contract:@model(appsync)": [
         "read"
       ]
     }

@@ -121,12 +121,17 @@
       "service": "Lambda",
       "dependsOn": [
         {
+          "category": "storage",
+          "resourceName": "attachments",
+          "attributes": [
+            "BucketName"
+          ]
+        },
+        {
           "category": "api",
           "resourceName": "openecmr",
           "attributes": [
-            "GraphQLAPIIdOutput",
-            "GraphQLAPIEndpointOutput",
-            "GraphQLAPIKeyOutput"
+            "GraphQLAPIIdOutput"
           ]
         }
       ]

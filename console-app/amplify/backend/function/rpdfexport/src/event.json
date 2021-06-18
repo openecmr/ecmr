@@ -1,5 +1,7 @@
 {
-  "key1": "value1",
-  "key2": "value2",
-  "key3": "value3"
+  "typeName": "Query",
+  "fieldName": "rpdfexport",
+  "arguments": {
+    "id": "0f16b0ce-b4bc-461c-82c1-b6216f4dd3e1"
+  }
 }

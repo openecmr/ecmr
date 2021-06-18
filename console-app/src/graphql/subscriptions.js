@@ -409,6 +409,146 @@ export const onCreateContract = /* GraphQL */ `
             hazardLabel
           }
         }
+        newAttributes {
+          shipper {
+            name
+            postalCode
+            address
+            city
+            country
+            phone
+            email
+          }
+          carrier {
+            name
+            postalCode
+            address
+            city
+            country
+            phone
+            email
+          }
+          delivery {
+            name
+            postalCode
+            address
+            city
+            country
+            phone
+            email
+          }
+          arrivalDate
+          arrivalTime {
+            start
+            end
+          }
+          deliveryDate
+          deliveryTime {
+            start
+            end
+          }
+          pickup {
+            name
+            postalCode
+            address
+            city
+            country
+            phone
+            email
+          }
+          loads {
+            category
+            quantity
+            volume
+            loadMeters
+            netWeight
+            description
+            hazardousGoodsItems {
+              hazardLabel
+            }
+          }
+          trailer
+          truck
+          references {
+            carrier
+          }
+          shipperContactId
+          carrierContactId
+          pickupContactId
+          deliveryContactId
+          trailerVehicleId
+          truckVehicleId
+        }
+        oldAttributes {
+          shipper {
+            name
+            postalCode
+            address
+            city
+            country
+            phone
+            email
+          }
+          carrier {
+            name
+            postalCode
+            address
+            city
+            country
+            phone
+            email
+          }
+          delivery {
+            name
+            postalCode
+            address
+            city
+            country
+            phone
+            email
+          }
+          arrivalDate
+          arrivalTime {
+            start
+            end
+          }
+          deliveryDate
+          deliveryTime {
+            start
+            end
+          }
+          pickup {
+            name
+            postalCode
+            address
+            city
+            country
+            phone
+            email
+          }
+          loads {
+            category
+            quantity
+            volume
+            loadMeters
+            netWeight
+            description
+            hazardousGoodsItems {
+              hazardLabel
+            }
+          }
+          trailer
+          truck
+          references {
+            carrier
+          }
+          shipperContactId
+          carrierContactId
+          pickupContactId
+          deliveryContactId
+          trailerVehicleId
+          truckVehicleId
+        }
       }
       needAcknowledge
       shipperContactId
@@ -585,6 +725,146 @@ export const onUpdateContract = /* GraphQL */ `
             hazardLabel
           }
         }
+        newAttributes {
+          shipper {
+            name
+            postalCode
+            address
+            city
+            country
+            phone
+            email
+          }
+          carrier {
+            name
+            postalCode
+            address
+            city
+            country
+            phone
+            email
+          }
+          delivery {
+            name
+            postalCode
+            address
+            city
+            country
+            phone
+            email
+          }
+          arrivalDate
+          arrivalTime {
+            start
+            end
+          }
+          deliveryDate
+          deliveryTime {
+            start
+            end
+          }
+          pickup {
+            name
+            postalCode
+            address
+            city
+            country
+            phone
+            email
+          }
+          loads {
+            category
+            quantity
+            volume
+            loadMeters
+            netWeight
+            description
+            hazardousGoodsItems {
+              hazardLabel
+            }
+          }
+          trailer
+          truck
+          references {
+            carrier
+          }
+          shipperContactId
+          carrierContactId
+          pickupContactId
+          deliveryContactId
+          trailerVehicleId
+          truckVehicleId
+        }
+        oldAttributes {
+          shipper {
+            name
+            postalCode
+            address
+            city
+            country
+            phone
+            email
+          }
+          carrier {
+            name
+            postalCode
+            address
+            city
+            country
+            phone
+            email
+          }
+          delivery {
+            name
+            postalCode
+            address
+            city
+            country
+            phone
+            email
+          }
+          arrivalDate
+          arrivalTime {
+            start
+            end
+          }
+          deliveryDate
+          deliveryTime {
+            start
+            end
+          }
+          pickup {
+            name
+            postalCode
+            address
+            city
+            country
+            phone
+            email
+          }
+          loads {
+            category
+            quantity
+            volume
+            loadMeters
+            netWeight
+            description
+            hazardousGoodsItems {
+              hazardLabel
+            }
+          }
+          trailer
+          truck
+          references {
+            carrier
+          }
+          shipperContactId
+          carrierContactId
+          pickupContactId
+          deliveryContactId
+          trailerVehicleId
+          truckVehicleId
+        }
       }
       needAcknowledge
       shipperContactId
@@ -760,6 +1040,146 @@ export const onDeleteContract = /* GraphQL */ `
           hazardousGoodsItems {
             hazardLabel
           }
+        }
+        newAttributes {
+          shipper {
+            name
+            postalCode
+            address
+            city
+            country
+            phone
+            email
+          }
+          carrier {
+            name
+            postalCode
+            address
+            city
+            country
+            phone
+            email
+          }
+          delivery {
+            name
+            postalCode
+            address
+            city
+            country
+            phone
+            email
+          }
+          arrivalDate
+          arrivalTime {
+            start
+            end
+          }
+          deliveryDate
+          deliveryTime {
+            start
+            end
+          }
+          pickup {
+            name
+            postalCode
+            address
+            city
+            country
+            phone
+            email
+          }
+          loads {
+            category
+            quantity
+            volume
+            loadMeters
+            netWeight
+            description
+            hazardousGoodsItems {
+              hazardLabel
+            }
+          }
+          trailer
+          truck
+          references {
+            carrier
+          }
+          shipperContactId
+          carrierContactId
+          pickupContactId
+          deliveryContactId
+          trailerVehicleId
+          truckVehicleId
+        }
+        oldAttributes {
+          shipper {
+            name
+            postalCode
+            address
+            city
+            country
+            phone
+            email
+          }
+          carrier {
+            name
+            postalCode
+            address
+            city
+            country
+            phone
+            email
+          }
+          delivery {
+            name
+            postalCode
+            address
+            city
+            country
+            phone
+            email
+          }
+          arrivalDate
+          arrivalTime {
+            start
+            end
+          }
+          deliveryDate
+          deliveryTime {
+            start
+            end
+          }
+          pickup {
+            name
+            postalCode
+            address
+            city
+            country
+            phone
+            email
+          }
+          loads {
+            category
+            quantity
+            volume
+            loadMeters
+            netWeight
+            description
+            hazardousGoodsItems {
+              hazardLabel
+            }
+          }
+          trailer
+          truck
+          references {
+            carrier
+          }
+          shipperContactId
+          carrierContactId
+          pickupContactId
+          deliveryContactId
+          trailerVehicleId
+          truckVehicleId
         }
       }
       needAcknowledge

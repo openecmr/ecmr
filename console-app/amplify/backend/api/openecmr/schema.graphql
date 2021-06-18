@@ -251,6 +251,7 @@ input CustomModelStringKeyConditionInput {
 
 type Query {
     pdfexport(id: String): String @aws_iam @aws_cognito_user_pools @function(name : "pdfexport-${env}")
+    rpdfexport(id: String): String @aws_iam @aws_cognito_user_pools @function(name : "rpdfexport-${env}")
     contractsByFilterCustom(owner: String!, contactId: ID!, updatedAt: CustomModelStringKeyConditionInput, sortDirection: CustomModelSortDirection, limit: Int, nextToken: String): CustomModelContractConnection @aws_cognito_user_pools
 }
 

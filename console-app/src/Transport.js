@@ -904,14 +904,14 @@ class Transport extends Component {
         this.setState({
             downloadingPdf: true
         });
-        const response = await API.graphql(graphqlOperation(queries.pdfexport, {
+        const response = await API.graphql(graphqlOperation(queries.rpdfexport, {
             "id": this.props.match.params.id
         }));
         this.setState({
             downloadingPdf: false
         });
 
-        const linkSource = `data:application/pdf;base64,${response.data.pdfexport}`;
+        const linkSource = `data:application/pdf;base64,${response.data.rpdfexport}`;
         const downloadLink = document.createElement("a");
         const fileName = `cmr-${this.state.contract.id.substring(0, 8)}.pdf`;
 

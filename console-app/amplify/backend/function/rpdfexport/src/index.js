@@ -1,21 +1,11 @@
 /* Amplify Params - DO NOT EDIT
-	API_OPENECMR_GRAPHQLAPIENDPOINTOUTPUT
+	API_OPENECMR_CONTRACTTABLE_ARN
+	API_OPENECMR_CONTRACTTABLE_NAME
 	API_OPENECMR_GRAPHQLAPIIDOUTPUT
-	API_OPENECMR_GRAPHQLAPIKEYOUTPUT
 	ENV
 	REGION
+	STORAGE_ATTACHMENTS_BUCKETNAME
 Amplify Params - DO NOT EDIT */
 
-exports.handler = async (event) => {
-    // TODO implement
-    const response = {
-        statusCode: 200,
-    //  Uncomment below to enable CORS requests
-    //  headers: {
-    //      "Access-Control-Allow-Origin": "*",
-    //      "Access-Control-Allow-Headers": "*"
-    //  }, 
-        body: JSON.stringify('Hello from Lambda!'),
-    };
-    return response;
-};
+const handler = require("./build/main.js");
+exports.handler = handler.default;
