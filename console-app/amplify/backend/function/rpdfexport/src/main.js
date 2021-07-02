@@ -52,6 +52,7 @@ export default async (event, context) => {
         imageLocations
     }), outputFile);
 
+
     const outputFileString = fs.readFileSync(outputFile).toString('base64');
     Object.entries(imageLocations).forEach(([key, value]) => fs.unlinkSync(value));
     fs.unlinkSync(outputFile);
