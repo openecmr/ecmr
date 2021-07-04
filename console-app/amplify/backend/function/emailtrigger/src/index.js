@@ -120,8 +120,8 @@ const allowedSending = async (owner) => {
 
 const fetchPdf = async (id) => {
   const pdfexport = /* GraphQL */ `
-    query Pdfexport($id: String) {
-      pdfexport(id: $id)
+    query Rpdfexport($id: String) {
+      rpdfexport(id: $id)
     }
   `;
   const body = JSON.stringify({
@@ -137,7 +137,7 @@ const fetchPdf = async (id) => {
     return null;
   }
 
-  return data.data.pdfexport;
+  return data.data.rpdfexport;
 }
 
 const generateHtmlEmail = (loadingEvent, document) => {

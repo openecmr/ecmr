@@ -6,6 +6,11 @@ export const pdfexport = /* GraphQL */ `
     pdfexport(id: $id)
   }
 `;
+export const rpdfexport = /* GraphQL */ `
+  query Rpdfexport($id: String) {
+    rpdfexport(id: $id)
+  }
+`;
 export const contractsByFilterCustom = /* GraphQL */ `
   query ContractsByFilterCustom(
     $owner: String!
@@ -172,6 +177,140 @@ export const contractsByFilterCustom = /* GraphQL */ `
             hazardousGoodsItems {
               hazardLabel
             }
+          }
+          newAttributes {
+            shipper {
+              name
+              postalCode
+              address
+              city
+              country
+              phone
+              email
+            }
+            carrier {
+              name
+              postalCode
+              address
+              city
+              country
+              phone
+              email
+            }
+            delivery {
+              name
+              postalCode
+              address
+              city
+              country
+              phone
+              email
+            }
+            arrivalDate
+            arrivalTime {
+              start
+              end
+            }
+            deliveryDate
+            deliveryTime {
+              start
+              end
+            }
+            pickup {
+              name
+              postalCode
+              address
+              city
+              country
+              phone
+              email
+            }
+            loads {
+              category
+              quantity
+              volume
+              loadMeters
+              netWeight
+              description
+            }
+            trailer
+            truck
+            references {
+              carrier
+            }
+            shipperContactId
+            carrierContactId
+            pickupContactId
+            deliveryContactId
+            trailerVehicleId
+            truckVehicleId
+          }
+          oldAttributes {
+            shipper {
+              name
+              postalCode
+              address
+              city
+              country
+              phone
+              email
+            }
+            carrier {
+              name
+              postalCode
+              address
+              city
+              country
+              phone
+              email
+            }
+            delivery {
+              name
+              postalCode
+              address
+              city
+              country
+              phone
+              email
+            }
+            arrivalDate
+            arrivalTime {
+              start
+              end
+            }
+            deliveryDate
+            deliveryTime {
+              start
+              end
+            }
+            pickup {
+              name
+              postalCode
+              address
+              city
+              country
+              phone
+              email
+            }
+            loads {
+              category
+              quantity
+              volume
+              loadMeters
+              netWeight
+              description
+            }
+            trailer
+            truck
+            references {
+              carrier
+            }
+            shipperContactId
+            carrierContactId
+            pickupContactId
+            deliveryContactId
+            trailerVehicleId
+            truckVehicleId
           }
         }
         needAcknowledge
@@ -935,6 +1074,140 @@ export const contractsByOwnerArrivalDate = /* GraphQL */ `
               hazardLabel
             }
           }
+          newAttributes {
+            shipper {
+              name
+              postalCode
+              address
+              city
+              country
+              phone
+              email
+            }
+            carrier {
+              name
+              postalCode
+              address
+              city
+              country
+              phone
+              email
+            }
+            delivery {
+              name
+              postalCode
+              address
+              city
+              country
+              phone
+              email
+            }
+            arrivalDate
+            arrivalTime {
+              start
+              end
+            }
+            deliveryDate
+            deliveryTime {
+              start
+              end
+            }
+            pickup {
+              name
+              postalCode
+              address
+              city
+              country
+              phone
+              email
+            }
+            loads {
+              category
+              quantity
+              volume
+              loadMeters
+              netWeight
+              description
+            }
+            trailer
+            truck
+            references {
+              carrier
+            }
+            shipperContactId
+            carrierContactId
+            pickupContactId
+            deliveryContactId
+            trailerVehicleId
+            truckVehicleId
+          }
+          oldAttributes {
+            shipper {
+              name
+              postalCode
+              address
+              city
+              country
+              phone
+              email
+            }
+            carrier {
+              name
+              postalCode
+              address
+              city
+              country
+              phone
+              email
+            }
+            delivery {
+              name
+              postalCode
+              address
+              city
+              country
+              phone
+              email
+            }
+            arrivalDate
+            arrivalTime {
+              start
+              end
+            }
+            deliveryDate
+            deliveryTime {
+              start
+              end
+            }
+            pickup {
+              name
+              postalCode
+              address
+              city
+              country
+              phone
+              email
+            }
+            loads {
+              category
+              quantity
+              volume
+              loadMeters
+              netWeight
+              description
+            }
+            trailer
+            truck
+            references {
+              carrier
+            }
+            shipperContactId
+            carrierContactId
+            pickupContactId
+            deliveryContactId
+            trailerVehicleId
+            truckVehicleId
+          }
         }
         needAcknowledge
         shipperContactId
@@ -1117,6 +1390,140 @@ export const contractsByCarrierArrivalDate = /* GraphQL */ `
             hazardousGoodsItems {
               hazardLabel
             }
+          }
+          newAttributes {
+            shipper {
+              name
+              postalCode
+              address
+              city
+              country
+              phone
+              email
+            }
+            carrier {
+              name
+              postalCode
+              address
+              city
+              country
+              phone
+              email
+            }
+            delivery {
+              name
+              postalCode
+              address
+              city
+              country
+              phone
+              email
+            }
+            arrivalDate
+            arrivalTime {
+              start
+              end
+            }
+            deliveryDate
+            deliveryTime {
+              start
+              end
+            }
+            pickup {
+              name
+              postalCode
+              address
+              city
+              country
+              phone
+              email
+            }
+            loads {
+              category
+              quantity
+              volume
+              loadMeters
+              netWeight
+              description
+            }
+            trailer
+            truck
+            references {
+              carrier
+            }
+            shipperContactId
+            carrierContactId
+            pickupContactId
+            deliveryContactId
+            trailerVehicleId
+            truckVehicleId
+          }
+          oldAttributes {
+            shipper {
+              name
+              postalCode
+              address
+              city
+              country
+              phone
+              email
+            }
+            carrier {
+              name
+              postalCode
+              address
+              city
+              country
+              phone
+              email
+            }
+            delivery {
+              name
+              postalCode
+              address
+              city
+              country
+              phone
+              email
+            }
+            arrivalDate
+            arrivalTime {
+              start
+              end
+            }
+            deliveryDate
+            deliveryTime {
+              start
+              end
+            }
+            pickup {
+              name
+              postalCode
+              address
+              city
+              country
+              phone
+              email
+            }
+            loads {
+              category
+              quantity
+              volume
+              loadMeters
+              netWeight
+              description
+            }
+            trailer
+            truck
+            references {
+              carrier
+            }
+            shipperContactId
+            carrierContactId
+            pickupContactId
+            deliveryContactId
+            trailerVehicleId
+            truckVehicleId
           }
         }
         needAcknowledge
@@ -1301,6 +1708,140 @@ export const contractsByOwnerUpdatedAt = /* GraphQL */ `
               hazardLabel
             }
           }
+          newAttributes {
+            shipper {
+              name
+              postalCode
+              address
+              city
+              country
+              phone
+              email
+            }
+            carrier {
+              name
+              postalCode
+              address
+              city
+              country
+              phone
+              email
+            }
+            delivery {
+              name
+              postalCode
+              address
+              city
+              country
+              phone
+              email
+            }
+            arrivalDate
+            arrivalTime {
+              start
+              end
+            }
+            deliveryDate
+            deliveryTime {
+              start
+              end
+            }
+            pickup {
+              name
+              postalCode
+              address
+              city
+              country
+              phone
+              email
+            }
+            loads {
+              category
+              quantity
+              volume
+              loadMeters
+              netWeight
+              description
+            }
+            trailer
+            truck
+            references {
+              carrier
+            }
+            shipperContactId
+            carrierContactId
+            pickupContactId
+            deliveryContactId
+            trailerVehicleId
+            truckVehicleId
+          }
+          oldAttributes {
+            shipper {
+              name
+              postalCode
+              address
+              city
+              country
+              phone
+              email
+            }
+            carrier {
+              name
+              postalCode
+              address
+              city
+              country
+              phone
+              email
+            }
+            delivery {
+              name
+              postalCode
+              address
+              city
+              country
+              phone
+              email
+            }
+            arrivalDate
+            arrivalTime {
+              start
+              end
+            }
+            deliveryDate
+            deliveryTime {
+              start
+              end
+            }
+            pickup {
+              name
+              postalCode
+              address
+              city
+              country
+              phone
+              email
+            }
+            loads {
+              category
+              quantity
+              volume
+              loadMeters
+              netWeight
+              description
+            }
+            trailer
+            truck
+            references {
+              carrier
+            }
+            shipperContactId
+            carrierContactId
+            pickupContactId
+            deliveryContactId
+            trailerVehicleId
+            truckVehicleId
+          }
         }
         needAcknowledge
         shipperContactId
@@ -1483,6 +2024,140 @@ export const contractsByCarrierUpdatedAt = /* GraphQL */ `
             hazardousGoodsItems {
               hazardLabel
             }
+          }
+          newAttributes {
+            shipper {
+              name
+              postalCode
+              address
+              city
+              country
+              phone
+              email
+            }
+            carrier {
+              name
+              postalCode
+              address
+              city
+              country
+              phone
+              email
+            }
+            delivery {
+              name
+              postalCode
+              address
+              city
+              country
+              phone
+              email
+            }
+            arrivalDate
+            arrivalTime {
+              start
+              end
+            }
+            deliveryDate
+            deliveryTime {
+              start
+              end
+            }
+            pickup {
+              name
+              postalCode
+              address
+              city
+              country
+              phone
+              email
+            }
+            loads {
+              category
+              quantity
+              volume
+              loadMeters
+              netWeight
+              description
+            }
+            trailer
+            truck
+            references {
+              carrier
+            }
+            shipperContactId
+            carrierContactId
+            pickupContactId
+            deliveryContactId
+            trailerVehicleId
+            truckVehicleId
+          }
+          oldAttributes {
+            shipper {
+              name
+              postalCode
+              address
+              city
+              country
+              phone
+              email
+            }
+            carrier {
+              name
+              postalCode
+              address
+              city
+              country
+              phone
+              email
+            }
+            delivery {
+              name
+              postalCode
+              address
+              city
+              country
+              phone
+              email
+            }
+            arrivalDate
+            arrivalTime {
+              start
+              end
+            }
+            deliveryDate
+            deliveryTime {
+              start
+              end
+            }
+            pickup {
+              name
+              postalCode
+              address
+              city
+              country
+              phone
+              email
+            }
+            loads {
+              category
+              quantity
+              volume
+              loadMeters
+              netWeight
+              description
+            }
+            trailer
+            truck
+            references {
+              carrier
+            }
+            shipperContactId
+            carrierContactId
+            pickupContactId
+            deliveryContactId
+            trailerVehicleId
+            truckVehicleId
           }
         }
         needAcknowledge
@@ -1667,6 +2342,140 @@ export const ordersByOwnerCreatedAt = /* GraphQL */ `
               hazardLabel
             }
           }
+          newAttributes {
+            shipper {
+              name
+              postalCode
+              address
+              city
+              country
+              phone
+              email
+            }
+            carrier {
+              name
+              postalCode
+              address
+              city
+              country
+              phone
+              email
+            }
+            delivery {
+              name
+              postalCode
+              address
+              city
+              country
+              phone
+              email
+            }
+            arrivalDate
+            arrivalTime {
+              start
+              end
+            }
+            deliveryDate
+            deliveryTime {
+              start
+              end
+            }
+            pickup {
+              name
+              postalCode
+              address
+              city
+              country
+              phone
+              email
+            }
+            loads {
+              category
+              quantity
+              volume
+              loadMeters
+              netWeight
+              description
+            }
+            trailer
+            truck
+            references {
+              carrier
+            }
+            shipperContactId
+            carrierContactId
+            pickupContactId
+            deliveryContactId
+            trailerVehicleId
+            truckVehicleId
+          }
+          oldAttributes {
+            shipper {
+              name
+              postalCode
+              address
+              city
+              country
+              phone
+              email
+            }
+            carrier {
+              name
+              postalCode
+              address
+              city
+              country
+              phone
+              email
+            }
+            delivery {
+              name
+              postalCode
+              address
+              city
+              country
+              phone
+              email
+            }
+            arrivalDate
+            arrivalTime {
+              start
+              end
+            }
+            deliveryDate
+            deliveryTime {
+              start
+              end
+            }
+            pickup {
+              name
+              postalCode
+              address
+              city
+              country
+              phone
+              email
+            }
+            loads {
+              category
+              quantity
+              volume
+              loadMeters
+              netWeight
+              description
+            }
+            trailer
+            truck
+            references {
+              carrier
+            }
+            shipperContactId
+            carrierContactId
+            pickupContactId
+            deliveryContactId
+            trailerVehicleId
+            truckVehicleId
+          }
         }
         needAcknowledge
         shipperContactId
@@ -1850,6 +2659,140 @@ export const ordersByCarrierCreatedAt = /* GraphQL */ `
               hazardLabel
             }
           }
+          newAttributes {
+            shipper {
+              name
+              postalCode
+              address
+              city
+              country
+              phone
+              email
+            }
+            carrier {
+              name
+              postalCode
+              address
+              city
+              country
+              phone
+              email
+            }
+            delivery {
+              name
+              postalCode
+              address
+              city
+              country
+              phone
+              email
+            }
+            arrivalDate
+            arrivalTime {
+              start
+              end
+            }
+            deliveryDate
+            deliveryTime {
+              start
+              end
+            }
+            pickup {
+              name
+              postalCode
+              address
+              city
+              country
+              phone
+              email
+            }
+            loads {
+              category
+              quantity
+              volume
+              loadMeters
+              netWeight
+              description
+            }
+            trailer
+            truck
+            references {
+              carrier
+            }
+            shipperContactId
+            carrierContactId
+            pickupContactId
+            deliveryContactId
+            trailerVehicleId
+            truckVehicleId
+          }
+          oldAttributes {
+            shipper {
+              name
+              postalCode
+              address
+              city
+              country
+              phone
+              email
+            }
+            carrier {
+              name
+              postalCode
+              address
+              city
+              country
+              phone
+              email
+            }
+            delivery {
+              name
+              postalCode
+              address
+              city
+              country
+              phone
+              email
+            }
+            arrivalDate
+            arrivalTime {
+              start
+              end
+            }
+            deliveryDate
+            deliveryTime {
+              start
+              end
+            }
+            pickup {
+              name
+              postalCode
+              address
+              city
+              country
+              phone
+              email
+            }
+            loads {
+              category
+              quantity
+              volume
+              loadMeters
+              netWeight
+              description
+            }
+            trailer
+            truck
+            references {
+              carrier
+            }
+            shipperContactId
+            carrierContactId
+            pickupContactId
+            deliveryContactId
+            trailerVehicleId
+            truckVehicleId
+          }
         }
         needAcknowledge
         shipperContactId
@@ -2017,6 +2960,146 @@ export const getContract = /* GraphQL */ `
           hazardousGoodsItems {
             hazardLabel
           }
+        }
+        newAttributes {
+          shipper {
+            name
+            postalCode
+            address
+            city
+            country
+            phone
+            email
+          }
+          carrier {
+            name
+            postalCode
+            address
+            city
+            country
+            phone
+            email
+          }
+          delivery {
+            name
+            postalCode
+            address
+            city
+            country
+            phone
+            email
+          }
+          arrivalDate
+          arrivalTime {
+            start
+            end
+          }
+          deliveryDate
+          deliveryTime {
+            start
+            end
+          }
+          pickup {
+            name
+            postalCode
+            address
+            city
+            country
+            phone
+            email
+          }
+          loads {
+            category
+            quantity
+            volume
+            loadMeters
+            netWeight
+            description
+            hazardousGoodsItems {
+              hazardLabel
+            }
+          }
+          trailer
+          truck
+          references {
+            carrier
+          }
+          shipperContactId
+          carrierContactId
+          pickupContactId
+          deliveryContactId
+          trailerVehicleId
+          truckVehicleId
+        }
+        oldAttributes {
+          shipper {
+            name
+            postalCode
+            address
+            city
+            country
+            phone
+            email
+          }
+          carrier {
+            name
+            postalCode
+            address
+            city
+            country
+            phone
+            email
+          }
+          delivery {
+            name
+            postalCode
+            address
+            city
+            country
+            phone
+            email
+          }
+          arrivalDate
+          arrivalTime {
+            start
+            end
+          }
+          deliveryDate
+          deliveryTime {
+            start
+            end
+          }
+          pickup {
+            name
+            postalCode
+            address
+            city
+            country
+            phone
+            email
+          }
+          loads {
+            category
+            quantity
+            volume
+            loadMeters
+            netWeight
+            description
+            hazardousGoodsItems {
+              hazardLabel
+            }
+          }
+          trailer
+          truck
+          references {
+            carrier
+          }
+          shipperContactId
+          carrierContactId
+          pickupContactId
+          deliveryContactId
+          trailerVehicleId
+          truckVehicleId
         }
       }
       needAcknowledge
@@ -2189,6 +3272,140 @@ export const listContracts = /* GraphQL */ `
               hazardLabel
             }
           }
+          newAttributes {
+            shipper {
+              name
+              postalCode
+              address
+              city
+              country
+              phone
+              email
+            }
+            carrier {
+              name
+              postalCode
+              address
+              city
+              country
+              phone
+              email
+            }
+            delivery {
+              name
+              postalCode
+              address
+              city
+              country
+              phone
+              email
+            }
+            arrivalDate
+            arrivalTime {
+              start
+              end
+            }
+            deliveryDate
+            deliveryTime {
+              start
+              end
+            }
+            pickup {
+              name
+              postalCode
+              address
+              city
+              country
+              phone
+              email
+            }
+            loads {
+              category
+              quantity
+              volume
+              loadMeters
+              netWeight
+              description
+            }
+            trailer
+            truck
+            references {
+              carrier
+            }
+            shipperContactId
+            carrierContactId
+            pickupContactId
+            deliveryContactId
+            trailerVehicleId
+            truckVehicleId
+          }
+          oldAttributes {
+            shipper {
+              name
+              postalCode
+              address
+              city
+              country
+              phone
+              email
+            }
+            carrier {
+              name
+              postalCode
+              address
+              city
+              country
+              phone
+              email
+            }
+            delivery {
+              name
+              postalCode
+              address
+              city
+              country
+              phone
+              email
+            }
+            arrivalDate
+            arrivalTime {
+              start
+              end
+            }
+            deliveryDate
+            deliveryTime {
+              start
+              end
+            }
+            pickup {
+              name
+              postalCode
+              address
+              city
+              country
+              phone
+              email
+            }
+            loads {
+              category
+              quantity
+              volume
+              loadMeters
+              netWeight
+              description
+            }
+            trailer
+            truck
+            references {
+              carrier
+            }
+            shipperContactId
+            carrierContactId
+            pickupContactId
+            deliveryContactId
+            trailerVehicleId
+            truckVehicleId
+          }
         }
         needAcknowledge
         shipperContactId
@@ -2202,6 +3419,19 @@ export const listContracts = /* GraphQL */ `
         openecmrId
       }
       nextToken
+    }
+  }
+`;
+export const getDriver = /* GraphQL */ `
+  query GetDriver($id: ID!) {
+    getDriver(id: $id) {
+      id
+      owner
+      name
+      carrier
+      associationSecret
+      createdAt
+      updatedAt
     }
   }
 `;
@@ -2222,19 +3452,6 @@ export const listDrivers = /* GraphQL */ `
         updatedAt
       }
       nextToken
-    }
-  }
-`;
-export const getDriver = /* GraphQL */ `
-  query GetDriver($id: ID!) {
-    getDriver(id: $id) {
-      id
-      owner
-      name
-      carrier
-      associationSecret
-      createdAt
-      updatedAt
     }
   }
 `;
