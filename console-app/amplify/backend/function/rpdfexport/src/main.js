@@ -11,7 +11,7 @@ const dynamodb = new AWS.DynamoDB.DocumentClient({apiVersion: '2012-08-10'});
 import fs from 'fs'
 
 function randomFileName() {
-    return '/tmp/' + crypto.randomBytes(16).toString('base64').replace(/\//, '_');
+    return '/tmp/' + crypto.randomBytes(16).toString('base64').replace(/\//g, '_');
 }
 
 export default async (event, context) => {
