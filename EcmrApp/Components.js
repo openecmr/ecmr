@@ -1,5 +1,5 @@
 import React from "react";
-import {Alert, FlatList, Modal, Text, TouchableOpacity, View} from "react-native";
+import {Alert, FlatList, Modal, StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
 import Icon, {default as FIcon} from "react-native-vector-icons/FontAwesome";
 import {default as FIcon5} from "react-native-vector-icons/FontAwesome5";
 import {Button} from "react-native-elements";
@@ -132,10 +132,46 @@ function SelectList({data, renderTitle, renderSubtitle, emptyLabel, onSelect, lo
     );
 }
 
+function InputRow({value, onChangeText, label, placeholder, icon, keyboardType, autoCapitalize, autoCompleteType, autoCorrect, required}) {
+    return <View style={{
+        flexDirection: "row",
+        marginTop: 5,
+        alignItems: "center",
+        padding: 10,
+        borderBottomWidth: StyleSheet.hairlineWidth,
+        borderBottomColor: "rgb(200, 200, 200)"
+    }}>
+        <FIcon5 size={20} style={{textAlign: "center", width: 30, marginEnd: 15}} name={icon}/>
+        <MyText>{label}</MyText>{required && <MyText style={{color: "red"}}>*</MyText>}
+        <TextInput
+            keyboardType={keyboardType || "default"}
+            autoCapitalize={autoCapitalize || "none"}
+            autoCompleteType={autoCompleteType || "email"}
+            autoCorrect={autoCorrect || false}
+            value={value}
+            style={styles.textInput}
+            placeholder={placeholder}
+            onChangeText={onChangeText}/>
+    </View>;
+}
+
 const Sizes = {
     PADDING_FROM_SCREEN_BORDER: 15,
     ICON_WIDTH: 15
 }
+
+const styles = StyleSheet.create({
+    textInput: {
+        height: 40,
+        borderBottomColor: 'gray',
+        borderBottomWidth: 1,
+        flex: 1,
+        marginLeft: 10
+    },
+    baseContainer: {
+        flex: 1, padding: 10
+    },
+});
 
 export {
     MyText,
@@ -147,5 +183,6 @@ export {
     LicensePlates,
     Sizes,
     requiredFieldsAlert,
-    SelectList
+    SelectList,
+    InputRow
 };

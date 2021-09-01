@@ -1,34 +1,23 @@
 import React, {Component} from "react";
-import {FlatList, Image, ListView, StyleSheet, TextInput, TouchableOpacity, View} from "react-native";
-import Icon from "react-native-vector-icons/FontAwesome5";
-import {MyText, SelectList} from "./Components";
-import {API, Auth, graphqlOperation, I18n} from "aws-amplify";
+import {SelectList} from "./Components";
+import {API, graphqlOperation, I18n} from "aws-amplify";
 import {Button} from "react-native-elements";
-import * as customQueries from "./graphql/custom-queries"
 import * as queries from "./graphql/queries"
 
 class SelectAddress extends Component {
     static navigationOptions = ({navigation, screenProps}) => ({
         title: navigation.getParam("label") || I18n.get('Select address'),
-        // headerRight: () => (
-        //     <Button
-        //         containerStyle={{marginEnd: 10}}
-        //         onPress={() => {
-        //             const site = navigation.getParam('site');
-        //             const item = navigation.getParam('item');
-        //             const addressId = item[site + "ContactId"];
-        //             const addressName = item[site].name;
-        //             const {owner, driverDriverId} = item;
-        //             navigation.navigate('AddContact', {
-        //                 addressId,
-        //                 addressName,
-        //                 owner,
-        //                 driverDriverId
-        //             })
-        //         }}
-        //         title={I18n.get("New")}
-        //     />
-        // )
+        headerRight: () => (
+            <Button
+                containerStyle={{marginEnd: 10}}
+                onPress={() => {
+                    navigation.navigate('AddAddress', {
+                        companyOwner: navigation.getParam("companyOwner")
+                    })
+                }}
+                title={I18n.get("New")}
+            />
+        )
     });
 
     constructor(props) {

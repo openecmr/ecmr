@@ -7,53 +7,46 @@ import {Button} from "react-native-elements";
 import * as mutations from "./graphql/mutations"
 import * as EmailValidator from "email-validator";
 
-class AddContact extends Component {
+class AddAddress extends Component {
     static navigationOptions = ({navigation, screenProps}) => ({
-        title: I18n.get('Add contact')
+        title: I18n.get('Add address')
     });
 
     constructor(props) {
         super(props);
         this.state = {
-            addressName: props.navigation.getParam("addressName"),
-            addressId: props.navigation.getParam("addressId"),
-            owner: props.navigation.getParam("owner"),
-            driverId: props.navigation.getParam("driverDriverId")
+            ownerCompany: props.navigation.getParam("ownerCompany")
         };
     }
 
     render() {
         return (
             <View style={{flex: 1}}>
-                <View style={{
-                    flexDirection: "row",
-                    paddingStart: 10,
-                    paddingEnd: 10,
-                    paddingTop: 15,
-                    paddingBottom: 15,
-                    alignItems: "center",
-                    backgroundColor: 'rgb(229, 229, 229)'
-                }}>
-                    <Icon name={"warehouse"} size={20} style={{width: 30, marginEnd: 15}}/>
-                    <MyText style={{marginEnd: 30}}>{I18n.get("Address")}</MyText>
-                    <MyText style={{textAlign: "right", flex: 1, fontWeight: "bold"}}>{this.state.addressName}</MyText>
-                </View>
                 <View style={{backgroundColor: 'white',}}>
-                    <InputRow value={this.state.name} placeholder={I18n.get("e.g. John Smith...")}
+                    <InputRow value={this.state.name} placeholder={I18n.get("e.g. Some Company...")}
                               onChangeText={(name) => this.setState({name})}
                               label={I18n.get("Name")}
-                              icon={"user-alt"}
+                              icon={"warehouse"}
                               autoCapitalize={"words"}
                               required={true}
                     />
-                    <InputRow value={this.state.email} placeholder={I18n.get("e.g. john@smith.com...")}
-                              onChangeText={(email) => this.setState({email})}
-                              label={I18n.get("Email")}
+                    <InputRow value={this.state.address} placeholder={I18n.get("e.g. Oxfordstreet 22...")}
+                              onChangeText={(address) => this.setState({address})}
+                              label={I18n.get("Address")}
                               icon={"envelope"}
-                              keyboardType={"email-address"}
-                              autoCapitalize={"none"}
-                              autoCompleteType={"email"}
-                              autoCorrect={false}
+                              autoCapitalize={"words"}
+                    />
+                    <InputRow value={this.state.city} placeholder={I18n.get("e.g. London...")}
+                              onChangeText={(city) => this.setState({city})}
+                              label={I18n.get("City")}
+                              icon={"city"}
+                              autoCapitalize={"words"}
+                    />
+                    <InputRow value={this.state.country} placeholder={I18n.get("e.g. United Kingdom...")}
+                              onChangeText={(country) => this.setState({country})}
+                              label={I18n.get("Country")}
+                              icon={"flag"}
+                              autoCapitalize={"words"}
                     />
                     <InputRow value={this.state.phone} placeholder={I18n.get("e.g. +3112345678")}
                               onChangeText={(phone) => this.setState({phone})}
@@ -64,17 +57,26 @@ class AddContact extends Component {
                               autoCompleteType={"tel"}
                               autoCorrect={false}
                     />
+                    <InputRow value={this.state.email} placeholder={I18n.get("e.g. john@smith.com...")}
+                              onChangeText={(email) => this.setState({email})}
+                              label={I18n.get("Email")}
+                              icon={"envelope"}
+                              keyboardType={"email-address"}
+                              autoCapitalize={"none"}
+                              autoCompleteType={"email"}
+                              autoCorrect={false}
+                    />
                 </View>
                 <Button containerStyle={{position: "absolute", start: 10, bottom: 10, end: 10}}
-                        title={I18n.get("Add contact")}
+                        title={I18n.get("Add address")}
                         buttonStyle={{height: 60, backgroundColor: 'rgb(60,176,60)'}}
                         loading={this.state.loading}
-                        onPress={() => this.addContact()}/>
+                        onPress={() => this.addAddress()}/>
             </View>
         )
     }
 
-    async addContact() {
+    async addAddress() {
         if (!this.validate()) {
             return;
         }
@@ -82,26 +84,28 @@ class AddContact extends Component {
         this.setState({
             loading: true
         });
-        const {name, email, phone, addressId, owner, driverId} = this.state;
+        const {name, email, phone, postalCode, address, city, country, owner, driverId} = this.state;
         try {
-            await API.graphql(graphqlOperation(mutations.createContactPerson, {
+            await API.graphql(graphqlOperation(mutations.createContact, {
                 input: {
-                    name,
-                    email,
-                    phone,
                     owner,
-                    contactId: addressId,
-                    addedByDriverDriverId: driverId
+                    name,
+                    postalCode,
+                    address,
+                    city,
+                    country,
+                    phone,
+                    email
                 }
             }));
             this.finish(name);
         } catch (ex) {
-            if (ex.data && ex.data.createContactPerson) {
+            if (ex.data && ex.data.createContact) {
                 this.finish(name);
             } else {
                 Alert.alert(
-                    I18n.get('Error while adding contact'),
-                    I18n.get('You do not have permission to the address book. Please use manual entry.'),
+                    I18n.get('Error while adding address'),
+                    I18n.get('You do not have permission to the address book.'),
                     [
                         {text: I18n.get('OK')}
                     ],
@@ -124,7 +128,7 @@ class AddContact extends Component {
         if (!this.state.name) {
             Alert.alert(
                 I18n.get('Required information'),
-                I18n.get('Please enter the name of the contact'),
+                I18n.get('Please enter the name of the address'),
                 [
                     {text: I18n.get('OK')}
                 ],
@@ -144,17 +148,6 @@ class AddContact extends Component {
         }
         return result;
     }
-
-    selectContact(contact) {
-        const {navigate} = this.props.navigation;
-        navigate('Signature', {
-            item: this.state.contract,
-            site: this.state.site,
-            signatoryEmail: contact.email,
-            signatoryName: contact.name,
-            photos: this.props.navigation.getParam("photos")
-        });
-    }
 }
 
-export default AddContact;
+export default AddAddress;
