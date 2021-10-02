@@ -95,7 +95,7 @@ function requiredFieldsAlert() {
     );
 }
 
-function SelectItem({item, onSelect, renderTitle, renderSubtitle}) {
+function SelectItem({item, onSelect, onEdit, renderTitle, renderSubtitle}) {
     return (
         <TouchableOpacity onPress={onSelect}>
             <View style={{
@@ -105,7 +105,9 @@ function SelectItem({item, onSelect, renderTitle, renderSubtitle}) {
                 borderBottomColor: 'rgb(246, 246, 246)',
                 borderBottomWidth: 2
             }}>
-                <FIcon5 size={30} style={{color: 'rgb(111, 111, 111)'}} name={"user-alt"}/>
+                <TouchableOpacity onPress={onEdit || onSelect}>
+                    <FIcon5 size={30} style={{color: 'rgb(111, 111, 111)'}} name={"user-alt"}/>
+                </TouchableOpacity>
                 <View style={{marginLeft: 10}}>
                     <MyText style={{fontWeight: "bold"}}>{renderTitle(item)}</MyText>
                     <MyText style={{fontSize: 11}}>{renderSubtitle(item)}</MyText>
@@ -115,15 +117,15 @@ function SelectItem({item, onSelect, renderTitle, renderSubtitle}) {
     );
 }
 
-function SelectList({data, renderTitle, renderSubtitle, emptyLabel, onSelect, loading}) {
+function SelectList({data, renderTitle, renderSubtitle, emptyLabel, onSelect, onEdit, loading, style}) {
     return (
         <View style={{flex: 1}}>
             <FlatList renderItem={(dataItem) => <SelectItem onSelect={() => onSelect(dataItem)}
-                                                            item={dataItem} renderTitle={renderTitle}
+                                                            item={dataItem} renderTitle={renderTitle} onEdit={onEdit && (() => onEdit(dataItem))}
                                                             renderSubtitle={renderSubtitle}/>}
                       keyExtractor={(item, index) => index.toString()}
                       data={data}
-                      style={{marginTop: 5, marginBottom: 70}}
+                      style={style}
                       ListEmptyComponent={<MyText style={{fontWeight: "bold", padding: 20, textAlign: "center"}}>
                           {loading ? "" : emptyLabel}</MyText>}
 

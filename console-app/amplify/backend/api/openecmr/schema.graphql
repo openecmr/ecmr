@@ -135,12 +135,14 @@ type Contact
     @model
     @auth(rules: [
         { allow: owner },
-        { allow: groups, groupsField: "owner", operations: [read, create] }
+        { allow: groups, groupsField: "owner", operations: [read, create] },
+        { allow: owner, ownerField: "createdBy" },
     ])
     @key(name: "OwnerName", fields: ["owner", "name"], queryField: "contactByOwner")
 {
     id: ID!
     owner: String
+    createdBy: String
     name: String!
     postalCode: String
     address: String

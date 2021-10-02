@@ -1277,6 +1277,7 @@ export const createContact = /* GraphQL */ `
     createContact(input: $input) {
       id
       owner
+      createdBy
       name
       postalCode
       address
@@ -1295,6 +1296,7 @@ export const createContact = /* GraphQL */ `
           address {
             id
             owner
+            createdBy
             name
             postalCode
             address
@@ -1333,6 +1335,7 @@ export const updateContact = /* GraphQL */ `
     updateContact(input: $input) {
       id
       owner
+      createdBy
       name
       postalCode
       address
@@ -1351,6 +1354,7 @@ export const updateContact = /* GraphQL */ `
           address {
             id
             owner
+            createdBy
             name
             postalCode
             address
@@ -1389,6 +1393,7 @@ export const deleteContact = /* GraphQL */ `
     deleteContact(input: $input) {
       id
       owner
+      createdBy
       name
       postalCode
       address
@@ -1407,6 +1412,7 @@ export const deleteContact = /* GraphQL */ `
           address {
             id
             owner
+            createdBy
             name
             postalCode
             address
@@ -1452,6 +1458,7 @@ export const createContactPerson = /* GraphQL */ `
       address {
         id
         owner
+        createdBy
         name
         postalCode
         address
@@ -1470,6 +1477,7 @@ export const createContactPerson = /* GraphQL */ `
             address {
               id
               owner
+              createdBy
               name
               postalCode
               address
@@ -1525,6 +1533,7 @@ export const updateContactPerson = /* GraphQL */ `
       address {
         id
         owner
+        createdBy
         name
         postalCode
         address
@@ -1543,6 +1552,7 @@ export const updateContactPerson = /* GraphQL */ `
             address {
               id
               owner
+              createdBy
               name
               postalCode
               address
@@ -1598,6 +1608,7 @@ export const deleteContactPerson = /* GraphQL */ `
       address {
         id
         owner
+        createdBy
         name
         postalCode
         address
@@ -1616,6 +1627,7 @@ export const deleteContactPerson = /* GraphQL */ `
             address {
               id
               owner
+              createdBy
               name
               postalCode
               address

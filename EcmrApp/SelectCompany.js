@@ -40,6 +40,7 @@ function SelectCompany({navigation: {navigate}}) {
                     loading={loading}
                     renderTitle={(item) => item.item.name}
                     data={companies}
+                    style={{marginTop: 5, marginBottom: 70}}
                     onSelect={onSelect}
         />
     )

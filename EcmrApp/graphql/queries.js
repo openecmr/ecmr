@@ -368,6 +368,7 @@ export const getContact = /* GraphQL */ `
     getContact(id: $id) {
       id
       owner
+      createdBy
       name
       postalCode
       address
@@ -386,6 +387,7 @@ export const getContact = /* GraphQL */ `
           address {
             id
             owner
+            createdBy
             name
             postalCode
             address
@@ -429,6 +431,7 @@ export const listContacts = /* GraphQL */ `
       items {
         id
         owner
+        createdBy
         name
         postalCode
         address
@@ -447,6 +450,7 @@ export const listContacts = /* GraphQL */ `
             address {
               id
               owner
+              createdBy
               name
               postalCode
               address
@@ -491,6 +495,7 @@ export const getContactPerson = /* GraphQL */ `
       address {
         id
         owner
+        createdBy
         name
         postalCode
         address
@@ -509,6 +514,7 @@ export const getContactPerson = /* GraphQL */ `
             address {
               id
               owner
+              createdBy
               name
               postalCode
               address
@@ -569,6 +575,7 @@ export const listContactPersons = /* GraphQL */ `
         address {
           id
           owner
+          createdBy
           name
           postalCode
           address
@@ -692,6 +699,7 @@ export const contactByOwner = /* GraphQL */ `
       items {
         id
         owner
+        createdBy
         name
         postalCode
         address
@@ -710,6 +718,7 @@ export const contactByOwner = /* GraphQL */ `
             address {
               id
               owner
+              createdBy
               name
               postalCode
               address
@@ -769,6 +778,7 @@ export const contactPersonByContact = /* GraphQL */ `
         address {
           id
           owner
+          createdBy
           name
           postalCode
           address
@@ -837,6 +847,7 @@ export const contactPersonByOwner = /* GraphQL */ `
         address {
           id
           owner
+          createdBy
           name
           postalCode
           address

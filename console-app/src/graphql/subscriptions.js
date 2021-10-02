@@ -44,10 +44,11 @@ export const onDeleteVehicle = /* GraphQL */ `
   }
 `;
 export const onCreateContact = /* GraphQL */ `
-  subscription OnCreateContact($owner: String!) {
-    onCreateContact(owner: $owner) {
+  subscription OnCreateContact($owner: String!, $createdBy: String!) {
+    onCreateContact(owner: $owner, createdBy: $createdBy) {
       id
       owner
+      createdBy
       name
       postalCode
       address
@@ -66,6 +67,7 @@ export const onCreateContact = /* GraphQL */ `
           address {
             id
             owner
+            createdBy
             name
             postalCode
             address
@@ -100,10 +102,11 @@ export const onCreateContact = /* GraphQL */ `
   }
 `;
 export const onUpdateContact = /* GraphQL */ `
-  subscription OnUpdateContact($owner: String!) {
-    onUpdateContact(owner: $owner) {
+  subscription OnUpdateContact($owner: String!, $createdBy: String!) {
+    onUpdateContact(owner: $owner, createdBy: $createdBy) {
       id
       owner
+      createdBy
       name
       postalCode
       address
@@ -122,6 +125,7 @@ export const onUpdateContact = /* GraphQL */ `
           address {
             id
             owner
+            createdBy
             name
             postalCode
             address
@@ -156,10 +160,11 @@ export const onUpdateContact = /* GraphQL */ `
   }
 `;
 export const onDeleteContact = /* GraphQL */ `
-  subscription OnDeleteContact($owner: String!) {
-    onDeleteContact(owner: $owner) {
+  subscription OnDeleteContact($owner: String!, $createdBy: String!) {
+    onDeleteContact(owner: $owner, createdBy: $createdBy) {
       id
       owner
+      createdBy
       name
       postalCode
       address
@@ -178,6 +183,7 @@ export const onDeleteContact = /* GraphQL */ `
           address {
             id
             owner
+            createdBy
             name
             postalCode
             address

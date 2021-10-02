@@ -34,13 +34,20 @@ class SelectAddress extends Component {
         );
     }
 
+    renderAddress(address) {
+        const items = [address.address, address.postalCode, address.city, address.country];
+        return items.filter(p => !!p).join(' · ');
+    }
+
     render() {
         return (
             <SelectList data={this.state.addresses}
+                        loading={this.state.loading}
                         onSelect={(dataItem) => this.selectAddress(dataItem.item)}
-                        emptyLabel={I18n.get("No addresses. Ask your company to add new addresses through the portal.")}
+                        onEdit={(dataItem) => this.editAddress(dataItem.item)}
+                        emptyLabel={I18n.get('No addresses. Ask your company to add new addresses through the portal.')}
                         renderTitle={(address) => address.item.name}
-                        renderSubtitle={(address=> `${address.item.address}${!!address.item.city && ` · ${address.item.city}`}`)}
+                        renderSubtitle={(address => this.renderAddress(address.item))}
             />
         )
     }
@@ -48,6 +55,14 @@ class SelectAddress extends Component {
     selectAddress(address) {
         this.state.onSelect(address);
         this.props.navigation.goBack();
+    }
+
+    editAddress(address) {
+        const {navigation} = this.props;
+        navigation.navigate('AddAddress', {
+            companyOwner: navigation.getParam('companyOwner'),
+            editAddress: address
+        });
     }
 
     async componentDidMount() {
