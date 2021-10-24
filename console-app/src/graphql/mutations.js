@@ -1235,6 +1235,7 @@ export const createVehicle = /* GraphQL */ `
     createVehicle(input: $input) {
       id
       owner
+      createdBy
       companyId
       type
       licensePlateNumber
@@ -1249,6 +1250,7 @@ export const updateVehicle = /* GraphQL */ `
     updateVehicle(input: $input) {
       id
       owner
+      createdBy
       companyId
       type
       licensePlateNumber
@@ -1263,6 +1265,7 @@ export const deleteVehicle = /* GraphQL */ `
     deleteVehicle(input: $input) {
       id
       owner
+      createdBy
       companyId
       type
       licensePlateNumber

@@ -97,7 +97,7 @@ function requiredFieldsAlert() {
 
 function SelectItem({item, onSelect, onEdit, renderTitle, renderSubtitle}) {
     return (
-        <TouchableOpacity onPress={onSelect}>
+        <TouchableOpacity onPress={onSelect} onLongPress={onEdit}>
             <View style={{
                 flexDirection: "row",
                 backgroundColor: 'white',
@@ -105,9 +105,8 @@ function SelectItem({item, onSelect, onEdit, renderTitle, renderSubtitle}) {
                 borderBottomColor: 'rgb(246, 246, 246)',
                 borderBottomWidth: 2
             }}>
-                <TouchableOpacity onPress={onEdit || onSelect}>
-                    <FIcon5 size={30} style={{color: 'rgb(111, 111, 111)'}} name={"user-alt"}/>
-                </TouchableOpacity>
+                <FIcon5 size={30} style={{color: 'rgb(111, 111, 111)'}} name={"user-alt"}/>
+
                 <View style={{marginLeft: 10}}>
                     <MyText style={{fontWeight: "bold"}}>{renderTitle(item)}</MyText>
                     <MyText style={{fontSize: 11}}>{renderSubtitle(item)}</MyText>

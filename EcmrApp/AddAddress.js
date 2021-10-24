@@ -4,7 +4,7 @@ import {
     ScrollView,
     View
 } from "react-native";
-import {InputRow} from "./Components";
+import {InputRow, MyText} from "./Components";
 import {API, Auth, graphqlOperation, I18n} from "aws-amplify";
 import {Button} from "react-native-elements";
 import * as mutations from "./graphql/mutations"
@@ -26,10 +26,17 @@ class AddAddress extends Component {
         };
     }
 
+    async componentDidMount() {
+        const username = (await Auth.currentAuthenticatedUser()).getUsername();
+        this.setState({
+            editPermission: username === this.state.createdBy || username === this.state.owner
+        });
+    }
+
     render() {
         return (
             <View style={{flex: 1}}>
-                <ScrollView style={{marginBottom: 50}}>
+                <ScrollView style={{...(this.state.permission && {marginBottom: 50})}}>
                     <View style={{backgroundColor: 'white',}}>
                         <InputRow value={this.state.name} placeholder={I18n.get("e.g. Some Company...")}
                                   onChangeText={(name) => this.setState({name})}
@@ -80,13 +87,14 @@ class AddAddress extends Component {
                                   autoCompleteType={"email"}
                                   autoCorrect={false}
                         />
+                        {!this.state.editPermission && <MyText style={{padding: 10}}>{I18n.get('You cannot edit this address because it was created by somebody else. Please ask your company to modify it.')}</MyText>}
                     </View>
                 </ScrollView>
-                <Button containerStyle={{position: "absolute", start: 0, bottom: 0, end: 0}}
+                {this.state.editPermission && <Button containerStyle={{position: "absolute", start: 0, bottom: 0, end: 0}}
                         title={this.state.editing ? I18n.get("Edit address") : I18n.get("Add address")}
                         buttonStyle={{height: 40, backgroundColor: 'rgb(60,176,60)'}}
                         loading={this.state.loading}
-                        onPress={() => this.addAddress()}/>
+                        onPress={() => this.addAddress()}/>}
             </View>
         )
     }
@@ -119,19 +127,16 @@ class AddAddress extends Component {
             }));
             this.finish(name);
         } catch (ex) {
-            if (ex.data && ex.data.createContact) {
-                this.finish(name);
-            } else {
-                console.info(ex);
-                Alert.alert(
-                    I18n.get('Error while adding address'),
-                    I18n.get('You do not have permission to the address book.'),
-                    [
-                        {text: I18n.get('OK')}
-                    ],
-                    {cancelable: true}
-                );
-            }
+            console.warn(ex);
+
+            Alert.alert(
+                I18n.get('Error while adding address'),
+                I18n.get('You do not have permission to the address book.'),
+                [
+                    {text: I18n.get('OK')}
+                ],
+                {cancelable: true}
+            );
         }
         this.setState({
             loading: false

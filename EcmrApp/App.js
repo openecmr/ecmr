@@ -38,6 +38,7 @@ import SelectCompany from "./SelectCompany";
 import Bugsnag from '@bugsnag/react-native'
 import analytics from '@react-native-firebase/analytics';
 import AddAddress from "./AddAddress";
+import AddVehicle from "./AddVehicle";
 
 function getActiveRouteName(navigationState) {
     if (!navigationState) {
@@ -125,6 +126,9 @@ const AddTransportNavigator = createStackNavigator({
     },
     AddAddress: {
         screen: AddAddress
+    },
+    AddVehicle: {
+        screen: AddVehicle
     },
     SelectVehicle: {
         screen: SelectVehicle

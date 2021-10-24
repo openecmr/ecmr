@@ -1,32 +1,27 @@
 import React, {Component} from "react";
 import {FlatList, Image, ListView, StyleSheet, TextInput, TouchableOpacity, View} from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome5";
-import {MyText} from "./Components";
+import {MyText, SelectList} from "./Components";
 import {API, Auth, graphqlOperation, I18n} from "aws-amplify";
 import {Button} from "react-native-elements";
 import * as customQueries from "./graphql/custom-queries"
 import * as queries from "./graphql/queries"
 
-const VehicleItem = ({vehicle, onSelect}) =>
-    <TouchableOpacity onPress={onSelect}>
-        <View style={{
-            flexDirection: "row",
-            backgroundColor: 'white',
-            padding: 10,
-            borderBottomColor: 'rgb(246, 246, 246)',
-            borderBottomWidth: 2
-        }}>
-            <Icon size={30} style={{color: 'rgb(111, 111, 111)'}} name={"user-alt"}/>
-            <View style={{marginLeft: 10}}>
-                <MyText style={{fontWeight: "bold"}}>{vehicle.item.licensePlateNumber}</MyText>
-                <MyText style={{fontSize: 11}}>{vehicle.item.type} · {vehicle.item.description}</MyText>
-            </View>
-        </View>
-    </TouchableOpacity>;
-
 class SelectVehicle extends Component {
     static navigationOptions = ({navigation, screenProps}) => ({
-        title: I18n.get('Select address')
+        title: I18n.get('Select vehicle'),
+        headerRight: () => (
+            <Button
+                containerStyle={{marginEnd: 10}}
+                onPress={() => {
+                    navigation.navigate('AddVehicle', {
+                        companyOwner: navigation.getParam("companyOwner"),
+                        vehicleType: navigation.getParam("vehicleType"),
+                    })
+                }}
+                title={I18n.get("New")}
+            />
+        )
     });
 
     constructor(props) {
@@ -47,22 +42,29 @@ class SelectVehicle extends Component {
     render() {
         return (
             <View style={{flex: 1}}>
-                <FlatList renderItem={(address) => <VehicleItem onSelect={() => this.selectVehicle(address.item)}
-                                                                vehicle={address} />}
-                          keyExtractor={(item) => item.id}
-                          data={this.state.vehicles}
-                          style={{marginTop: 5, marginBottom: 70}}
-                          ListEmptyComponent={<MyText style={{fontWeight: "bold", padding: 20, textAlign: "center"}}>
-                              {I18n.get("No vehicles.")}</MyText>}
-
+                <SelectList data={this.state.vehicles}
+                            loading={this.state.loading}
+                            onSelect={(dataItem) => this.selectVehicle(dataItem.item)}
+                            onEdit={(dataItem) => this.editVehicle(dataItem.item)}
+                            emptyLabel={I18n.get('No vehicles.')}
+                            renderTitle={(vehicle) => vehicle.item.licensePlateNumber}
+                            renderSubtitle={(vehicle => `${vehicle.item.type} · ${vehicle.item.description}`)}
                 />
             </View>
         )
     }
 
-    selectVehicle(address) {
-        this.state.onSelect(address);
+    selectVehicle(vehicle) {
+        this.state.onSelect(vehicle);
         this.props.navigation.goBack();
+    }
+
+    editVehicle(vehicle) {
+        const {navigation} = this.props;
+        navigation.navigate('AddVehicle', {
+            companyOwner: navigation.getParam('companyOwner'),
+            editVehicle: vehicle
+        });
     }
 
     async componentDidMount() {

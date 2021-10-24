@@ -333,6 +333,7 @@ export const getVehicle = /* GraphQL */ `
     getVehicle(id: $id) {
       id
       owner
+      createdBy
       companyId
       type
       licensePlateNumber
@@ -352,6 +353,7 @@ export const listVehicles = /* GraphQL */ `
       items {
         id
         owner
+        createdBy
         companyId
         type
         licensePlateNumber
@@ -668,6 +670,7 @@ export const vehicleByOwner = /* GraphQL */ `
       items {
         id
         owner
+        createdBy
         companyId
         type
         licensePlateNumber

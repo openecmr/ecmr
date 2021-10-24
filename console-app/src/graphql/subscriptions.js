@@ -2,10 +2,11 @@
 // this is an auto generated file. This will be overwritten
 
 export const onCreateVehicle = /* GraphQL */ `
-  subscription OnCreateVehicle($owner: String!) {
-    onCreateVehicle(owner: $owner) {
+  subscription OnCreateVehicle($owner: String!, $createdBy: String!) {
+    onCreateVehicle(owner: $owner, createdBy: $createdBy) {
       id
       owner
+      createdBy
       companyId
       type
       licensePlateNumber
@@ -16,10 +17,11 @@ export const onCreateVehicle = /* GraphQL */ `
   }
 `;
 export const onUpdateVehicle = /* GraphQL */ `
-  subscription OnUpdateVehicle($owner: String!) {
-    onUpdateVehicle(owner: $owner) {
+  subscription OnUpdateVehicle($owner: String!, $createdBy: String!) {
+    onUpdateVehicle(owner: $owner, createdBy: $createdBy) {
       id
       owner
+      createdBy
       companyId
       type
       licensePlateNumber
@@ -30,10 +32,11 @@ export const onUpdateVehicle = /* GraphQL */ `
   }
 `;
 export const onDeleteVehicle = /* GraphQL */ `
-  subscription OnDeleteVehicle($owner: String!) {
-    onDeleteVehicle(owner: $owner) {
+  subscription OnDeleteVehicle($owner: String!, $createdBy: String!) {
+    onDeleteVehicle(owner: $owner, createdBy: $createdBy) {
       id
       owner
+      createdBy
       companyId
       type
       licensePlateNumber

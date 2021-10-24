@@ -118,12 +118,14 @@ type Vehicle
     @model
     @auth(rules: [
         { allow: owner },
-        { allow: groups, groupsField: "owner", operations: [read, create] }
+        { allow: groups, groupsField: "owner", operations: [read, create] },
+        { allow: owner, ownerField: "createdBy" }
     ])
     @key(name: "OwnerLicensePlateNumber", fields: ["owner", "licensePlateNumber"], queryField: "vehicleByOwner")
 {
     id: ID!
     owner: String
+    createdBy: String
     companyId: ID!
     type: VehicleType!
     licensePlateNumber: String!
