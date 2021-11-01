@@ -1,17 +1,29 @@
 import React, {Component} from "react";
-import {SectionList, StyleSheet, Text, TouchableOpacity, View, Dimensions, Linking} from "react-native";
+import {
+    SectionList,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
+    Dimensions,
+    Linking,
+    Modal,
+    TextInput, Alert
+} from "react-native";
 import * as queries from "./graphql/queries";
+import * as mutations from "./graphql/mutations";
 import {API, graphqlOperation, Auth, I18n} from 'aws-amplify';
-import {Address, ArrivalDate, LicensePlates, MyText, Packages, Sizes} from './Components';
+import {Address, ArrivalDate, InputRow, LicensePlates, MyText, Packages, Sizes} from './Components';
 import {TabBar, TabView} from "react-native-tab-view";
 import ContractModel from "./ContractModel";
 import {Button, Icon} from "react-native-elements";
+import {default as FIcon5} from "react-native-vector-icons/FontAwesome5";
 
 const NoContracts = () =>
     <View style={{justifyContent: 'center', alignItems: 'center', flex: 1,  padding: 5, paddingTop: 40}}>
         <MyText style={{"fontWeight": "bold", textAlign: 'center'}}>{I18n.get("All done, no pending transports assigned to you.")}</MyText>
-        <MyText style={{"marginTop": 10, "marginBottom": 15, textAlign: 'center'}}>{I18n.get("Create new transports on the Open e-CMR portal")}</MyText>
-        <Button title={I18n.get("Visit the Open e-CMR portal")} onPress={() => {Linking.openURL("https://app.openecmr.com/?utm_source=app")}}/>
+        <MyText style={{"marginTop": 10, "marginBottom": 15, textAlign: 'center'}}>{I18n.get("New transports can be created through the app or the portal")}</MyText>
+
     </View>;
 
 const ForwardIcon = () =>
@@ -122,6 +134,12 @@ class ContractsList extends Component {
 const tabIndicatorColor = 'rgb(0,115,209)';
 const tabBackgroundColor = 'rgb(245,245,245)';
 
+let checkedCompany = false;
+
+function resetCompanyCheck() {
+    checkedCompany = false;
+}
+
 class Transports extends Component {
     static navigationOptions = ({ navigation, screenProps }) => ({
         title: 'Open e-CMR'
@@ -142,7 +160,9 @@ class Transports extends Component {
             ongoingContracts: [],
             doneContracts: [],
             refreshing: false,
-            firstLoad: true
+            firstLoad: true,
+            companyOnBoarding: false,
+            companyOnBoardingStep: "select"
         };
 
         this.navigationEventSubscription = this.props.navigation.addListener(
@@ -151,6 +171,11 @@ class Transports extends Component {
                 this.onRefresh();
             }
         );
+
+        this.selectCreateOwnCompany = this.selectCreateOwnCompany.bind(this);
+        this.onCompanyNameChange = this.onCompanyNameChange.bind(this);
+        this.createOwnCompany = this.createOwnCompany.bind(this);
+        this.selectAccessCode = this.selectAccessCode.bind(this);
     }
 
     render() {
@@ -174,27 +199,148 @@ class Transports extends Component {
         };
 
         return (
-            <TabView
-                navigationState={this.state.navigationState}
-                renderScene={renderScene}
-                onIndexChange={index => this.setState({
-                    navigationState: { ...this.state.navigationState, index }
-                })}
-                initialLayout={{
-                    width: Dimensions.get('window').width
-                }}
-                renderTabBar={props =>
-                    <TabBar
-                        {...props}
-                        indicatorStyle={{ backgroundColor: tabIndicatorColor }}
-                        style={{ backgroundColor: tabBackgroundColor }}
-                        activeColor={tabIndicatorColor}
-                        inactiveColor={tabIndicatorColor}
-                    />
-                }
-            />
+            <View style={{width: "100%", height: "100%"}}>
+                <TabView
+                    navigationState={this.state.navigationState}
+                    renderScene={renderScene}
+                    onIndexChange={index => this.setState({
+                        navigationState: { ...this.state.navigationState, index }
+                    })}
+                    initialLayout={{
+                        width: Dimensions.get('window').width
+                    }}
+                    renderTabBar={props =>
+                        <TabBar
+                            {...props}
+                            indicatorStyle={{ backgroundColor: tabIndicatorColor }}
+                            style={{ backgroundColor: tabBackgroundColor }}
+                            activeColor={tabIndicatorColor}
+                            inactiveColor={tabIndicatorColor}
+                        />
+                    }
+                />
+                <Modal visible={this.state.companyOnBoarding}>
+                    {this.state.companyOnBoardingStep === "select" && <View style={{backgroundColor: 'rgb(0, 115, 209)', height: '100%', padding: 10, justifyContent: "flex-start", alignContent: "center"}}>
+                        <MyText style={{fontWeight: "bold", color: "white", fontSize: 16, textAlign: "center", paddingTop: 50}}>{I18n.get("Welcome to Open eCMR, let's get you ready!")}</MyText>
+                        <View style={{flexDirection: "column", alignItems: "center", width: "100%"}}>
+                            <TouchableOpacity onPress={this.selectAccessCode} style={{marginTop: 50, width: 200, height: 120, flexDirection: "column", justifyContent: "center", elevation: 10, padding: 15, borderRadius: 2, backgroundColor: "rgb(0, 115, 209)"}}>
+                                <FIcon5 name={"desktop"} size={20} style={{textAlign: "center", color: "white"}}/>
+                                <MyText style={{marginTop: 5, fontWeight: "bold", textAlign: "center", color: "white"}}>{I18n.get("I have a link code and want to join a company")}</MyText>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity onPress={this.selectCreateOwnCompany} style={{marginTop: 50, width: 200, height: 120, flexDirection: "column", justifyContent: "center", elevation: 10, padding: 15, borderRadius: 2, backgroundColor: "rgb(0, 115, 209)"}}>
+                                <FIcon5 name={"archive"} size={20} style={{textAlign: "center", color: "white"}}/>
+                                <MyText style={{marginTop: 5, fontWeight: "bold", textAlign: "center", color: "white"}}>{I18n.get("I want to create my own company")}</MyText>
+                            </TouchableOpacity>
+                        </View>
+                    </View>}
+                    {this.state.companyOnBoardingStep === "createOwnCompany" && <View style={{backgroundColor: 'rgb(0, 115, 209)', height: '100%', padding: 10, justifyContent: "flex-start", alignContent: "center"}}>
+                        <MyText style={{fontWeight: "bold", color: "white", fontSize: 16, textAlign: "center", paddingTop: 50}}>{I18n.get("Please enter the name of your new company")}</MyText>
+                        <View style={{flexDirection: "column", alignItems: "center", width: "100%", marginTop: 25, paddingLeft: 25, paddingRight: 25}}>
+                                <TextInput
+                                    keyboardType={"default"}
+                                    autoCapitalize={"words"}
+                                    autoCorrect={false}
+                                    autoFocus={true}
+                                    value={this.state.companyName}
+                                    style={{width: "100%", margin: 0, padding:5, fontSize: 16, color: 'white', borderColor: "white", borderStyle: "dotted", backgroundColor: 'grey',  borderBottomWidth: StyleSheet.hairlineWidth }}
+                                    onChangeText={this.onCompanyNameChange}/>
+                            <Button containerStyle={{marginTop: 25, width: "80%" }}
+                                    title={I18n.get("Continue")}
+                                    buttonStyle={{height: 60, backgroundColor: 'rgb(60,176,60)'}}
+                                    loading={this.state.loading}
+                                    onPress={this.createOwnCompany}/>
+                        </View>
+                    </View>}
+                </Modal>
+            </View>
         );
     }
+
+    onCompanyNameChange(companyName) {
+        this.setState({
+            companyName
+        });
+    }
+
+    selectAccessCode() {
+        this.setState({
+            companyOnBoarding: false
+        });
+        const {navigate} = this.props.navigation;
+        navigate('LinkAccount');
+    }
+
+    selectCreateOwnCompany() {
+        this.setState({
+            companyOnBoardingStep: "createOwnCompany"
+        });
+    }
+
+    async createOwnCompany() {
+        const companyName = this.state.companyName;
+        if (!companyName) {
+            Alert.alert(
+                I18n.get('Required information'),
+                I18n.get('Please enter the name of the company'),
+                [
+                    {text: I18n.get('OK')}
+                ],
+                {cancelable: true}
+            );
+            return;
+        }
+        this.setState({
+            loading: true
+        });
+        const currentUser = await Auth.currentAuthenticatedUser();
+        const username = currentUser.getUsername();
+        const companyResult = await API.graphql(graphqlOperation(mutations.createCompany, {
+            input: {
+                owner: username,
+                name: companyName
+            }
+        }));
+        const companyId = companyResult.data.createCompany.id;
+        await API.graphql(graphqlOperation(mutations.createContact, {
+            input: {
+                owner: username,
+                name: companyName
+            }
+        }));
+        await API.graphql(graphqlOperation(mutations.createDriver, {
+            input: {
+                owner: username,
+                name: companyName + " driver",
+                carrier: username
+            }
+        }));
+        await API.graphql(graphqlOperation(mutations.createVehicle, {
+            input: {
+                companyId: companyId,
+                owner: username,
+                licensePlateNumber: "ab-12-34",
+                type: "TRUCK",
+                description: companyName + " truck"
+            }
+        }));
+        await API.graphql(graphqlOperation(mutations.createVehicle, {
+            input: {
+                companyId: companyId,
+                owner: username,
+                licensePlateNumber: "ab-12-35",
+                type: "TRAILER",
+                description: companyName + " trailer"
+            }
+        }));
+        const currentSession = await Auth.currentSession();
+        currentUser.refreshSession(currentSession.refreshToken, (err, session) => {
+        });
+        this.setState({
+            companyOnBoarding: false
+        });
+    }
+
 
     open(item, site) {
         const {navigate} = this.props.navigation;
@@ -205,6 +351,10 @@ class Transports extends Component {
     }
 
     async onRefresh() {
+        if (!checkedCompany && !this.state.companyOnBoarding) {
+            await this.checkCompany();
+        }
+
         this.setState({
             refreshing: true
         });
@@ -212,6 +362,26 @@ class Transports extends Component {
         this.setState({
             refreshing: false,
             firstLoad: false
+        });
+    }
+
+    async checkCompany() {
+        checkedCompany = true;
+        const user = await Auth.currentAuthenticatedUser();
+        if (user.signInUserSession.accessToken.payload["cognito:groups"] && user.signInUserSession.accessToken.payload["cognito:groups"].filter(x => x.endsWith('_Google')).length > 0) {
+            return;
+        }
+        const companyResponse = await API.graphql(graphqlOperation(queries.companyByOwner, {
+            limit: 50,
+            owner: (await Auth.currentAuthenticatedUser()).getUsername(),
+            sortDirection: "DESC"
+        }));
+        if (companyResponse.data.companyByOwner.items.length !== 0) {
+            return;
+        }
+        this.setState({
+            companyOnBoarding: true,
+            companyOnBoardingStep: "select"
         });
     }
 
@@ -255,6 +425,8 @@ class Transports extends Component {
 }
 
 export default Transports;
+
+export {resetCompanyCheck};
 
 const styles = StyleSheet.create({
     container: {

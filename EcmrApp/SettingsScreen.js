@@ -1,8 +1,10 @@
 import {Component} from "react";
 import React from "react";
 import {MyText} from "./Components";
-import {Button, View, Modal, TouchableHighlight} from "react-native";
+import {Button, View, Modal, TouchableHighlight, Linking} from "react-native";
 import {Auth, I18n} from 'aws-amplify';
+import {resetCompanyCheck} from "./Transports";
+
 
 class SettingsScreen extends Component {
     constructor(props) {
@@ -34,6 +36,9 @@ class SettingsScreen extends Component {
                     <Button title={I18n.get("Link to company")} color={"rgb(60,176,60)"} onPress={() => this.linkToCompany()}/>
                 </View>
                 <View style={{marginTop: 25}}>
+                    <Button title={I18n.get("Visit the Open e-CMR portal")} color={"rgb(60,176,60)"} onPress={() => {Linking.openURL("https://app.openecmr.com/?utm_source=app")}} containerStyle={{marginTop: 25}} />
+                </View>
+                <View style={{marginTop: 25}}>
                     <Button title={I18n.get("Logout")} color={"rgb(60,176,60)"} onPress={() => this.logout()} containerStyle={{marginTop: 25}} />
                 </View>
             </View>);
@@ -49,6 +54,8 @@ class SettingsScreen extends Component {
         const {navigate} = this.props.navigation;
         await Auth.signOut();
         this.props.onStateChange('signIn',{});
+
+        resetCompanyCheck();
     }
 
     linkToCompany() {
