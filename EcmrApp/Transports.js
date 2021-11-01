@@ -368,7 +368,8 @@ class Transports extends Component {
     async checkCompany() {
         checkedCompany = true;
         const user = await Auth.currentAuthenticatedUser();
-        if (user.signInUserSession.accessToken.payload["cognito:groups"] && user.signInUserSession.accessToken.payload["cognito:groups"].filter(x => x.endsWith('_Google')).length > 0) {
+        const groups = user.signInUserSession.accessToken.payload["cognito:groups"];
+        if (groups && groups.filter(x => !x.endsWith('_Google')).length > 0) {
             return;
         }
         const companyResponse = await API.graphql(graphqlOperation(queries.companyByOwner, {

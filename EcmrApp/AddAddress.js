@@ -29,7 +29,7 @@ class AddAddress extends Component {
     async componentDidMount() {
         const username = (await Auth.currentAuthenticatedUser()).getUsername();
         this.setState({
-            editPermission: username === this.state.createdBy || username === this.state.owner
+            editPermission: !this.state.editing || username === this.state.createdBy || username === this.state.owner
         });
     }
 
