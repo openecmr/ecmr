@@ -5,33 +5,34 @@ import {Button} from "react-native-elements";
 import * as queries from "./graphql/queries"
 
 class SelectAddress extends Component {
-    static navigationOptions = ({navigation, screenProps}) => ({
-        title: navigation.getParam("label") || I18n.get('Select address'),
-        headerRight: () => (
-            <Button
-                containerStyle={{marginEnd: 10}}
-                onPress={() => {
-                    navigation.navigate('AddAddress', {
-                        companyOwner: navigation.getParam("companyOwner")
-                    })
-                }}
-                title={I18n.get("New")}
-            />
-        )
-    });
-
     constructor(props) {
         super(props);
+        const {navigation, route} = props;
         this.state = {
-            onSelect: props.navigation.getParam("onSelect"),
+            onSelect: props.route.params.onSelect,
             addresses: []
         };
+
         this.navigationEventSubscription = this.props.navigation.addListener(
-            'willFocus',
+            'focus',
             payload => {
                 this.componentDidMount();
             }
         );
+        navigation.setOptions({
+            title: route.params.label || I18n.get('Select address'),
+            headerRight: () => (
+                <Button
+                    containerStyle={{marginEnd: 10}}
+                    onPress={() => {
+                        navigation.navigate('AddAddress', {
+                            companyOwner: route.params.companyOwner
+                        })
+                    }}
+                    title={I18n.get("New")}
+                />
+            )
+        });
     }
 
     renderAddress(address) {
@@ -58,9 +59,9 @@ class SelectAddress extends Component {
     }
 
     editAddress(address) {
-        const {navigation} = this.props;
+        const {navigation, route} = this.props;
         navigation.navigate('AddAddress', {
-            companyOwner: navigation.getParam('companyOwner'),
+            companyOwner: route.params.companyOwner,
             editAddress: address
         });
     }
@@ -69,7 +70,7 @@ class SelectAddress extends Component {
         this.setState({
             loading: true
         });
-        const companyOwner = this.props.navigation.getParam("companyOwner");
+        const companyOwner = this.props.route.params.companyOwner;
         const response = await API.graphql(graphqlOperation(queries.contactByOwner, {
             limit: 50,
             owner: companyOwner,
@@ -82,7 +83,7 @@ class SelectAddress extends Component {
     }
 
     componentWillUnmount() {
-        this.navigationEventSubscription.remove();
+        this.navigationEventSubscription();
     }
 }
 

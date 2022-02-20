@@ -111,23 +111,17 @@ const ActionButton = ({ onPress, disabled, label }) => (
 );
 
 class Transport extends Component {
-    static navigationOptions = ({ navigation }) => {
-        const site = navigation.getParam('site');
-        const item = navigation.getParam('item');
-        const activityName = site === 'pickup' ? I18n.get("pickup") : I18n.get("delivery");
-        return {
-            title: activityName + ': ' + item[site].name
-        }
-    };
-
     constructor(props) {
         super(props);
 
-        const { navigation } = this.props;
+        const { navigation, route } = this.props;
 
-        const item = this.props.navigation.getParam('item');
-
-        const site = navigation.getParam('site');
+        const site = route.params.site;
+        const item = route.params.item;
+        const activityName = site === 'pickup' ? I18n.get("pickup") : I18n.get("delivery");
+        navigation.setOptions({
+            title: activityName + ': ' + item[site].name
+        });
         this.state = {
             'site': site,
             downloadingPdf: false,
@@ -425,7 +419,7 @@ class Transport extends Component {
         this.setState({
             loading: true
         });
-        const item = createUpdateContractInput(this.props.navigation.getParam('item'));
+        const item = createUpdateContractInput(this.props.route.params.item);
         const now = moment().format();
         const user = await Auth.currentAuthenticatedUser();
 
@@ -478,7 +472,7 @@ class Transport extends Component {
         this.setState({
             loading: true
         });
-        const contract = this.props.navigation.getParam('item');
+        const contract = this.props.route.params.item;
         const update = createUpdateContractInput(contract);
         const now = moment().format();
         const user = await Auth.currentAuthenticatedUser();
@@ -527,14 +521,14 @@ class Transport extends Component {
     }
 
     componentWillUnmount() {
-        this.navigationEventSubscription.remove();
+        this.navigationEventSubscription();
 
         clearInterval(this.state.timer);
     }
 
     componentDidMount() {
         this.navigationEventSubscription = this.props.navigation.addListener(
-            'willFocus',
+            'focus',
             () => {
                 this.refresh();
             }

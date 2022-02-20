@@ -12,16 +12,11 @@ const SigningOption = ({onPress, iconName, title}) =>
     </TouchableOpacity>;
 
 class SignSelection extends Component {
-
-    static navigationOptions = ({navigation, screenProps}) => ({
-        title: I18n.get('Select signing method')
-    });
-
     constructor(props) {
         super(props);
         this.state = {
-            contract: props.navigation.getParam("item"),
-            site: props.navigation.getParam("site")
+            contract: props.route.params.item,
+            site: props.route.params.site
         };
     }
 
@@ -45,8 +40,8 @@ class SignSelection extends Component {
         navigate('SelectSignatory', {
             item: this.state.contract,
             site: this.state.site,
-            photos: this.props.navigation.getParam("photos"),
-            oldLoads: this.props.navigation.getParam("oldLoads")
+            photos: this.props.route.params.photos,
+            oldLoads: this.props.route.params.oldLoads
         });
     }
 

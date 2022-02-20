@@ -6,16 +6,12 @@ import {Address, LoadDetailText, MyText, Sizes} from "./Components";
 import {I18n} from "aws-amplify";
 
 class ConfirmLoading extends Component {
-    static navigationOptions = ({navigation, screenProps}) => ({
-        title: I18n.get('Check loads')
-    });
-
     constructor(props) {
         super(props);
-        const item = props.navigation.getParam("item");
+        const item = props.route.params.item;
         this.state = {
             contract: item,
-            site: props.navigation.getParam("site"),
+            site: props.route.params.site,
             loadConfirmed: Array(item.loads.length).fill(false)
         };
     }

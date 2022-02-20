@@ -6,17 +6,13 @@ import {Button, CheckBox} from "react-native-elements";
 import {I18n} from "aws-amplify";
 
 class Signature extends Component {
-    static navigationOptions = ({navigation, screenProps}) => ({
-        title: I18n.get('Check information')
-    });
-
     constructor(props) {
         super(props);
         this.state = {
-            contract: props.navigation.getParam("item"),
-            site: props.navigation.getParam("site"),
-            signatoryName: props.navigation.getParam("signatoryName"),
-            signatoryEmail: props.navigation.getParam("signatoryEmail"),
+            contract: props.route.params.item,
+            site: props.route.params.site,
+            signatoryName: props.route.params.signatoryName,
+            signatoryEmail: props.route.params.signatoryEmail,
             addingRemark: false,
             handoverPhone: true,
             sendCopy: false
@@ -143,9 +139,9 @@ class Signature extends Component {
             signatoryName: this.state.signatoryName,
             signatoryEmail: this.state.signatoryEmail,
             signatoryObservation: this.state.signatoryObservation,
-            photos: this.props.navigation.getParam("photos"),
+            photos: this.props.route.params.photos,
             sendCopy: this.state.sendCopy,
-            oldLoads: this.props.navigation.getParam("oldLoads")
+            oldLoads: this.props.route.params.oldLoads
         });
     }
 }

@@ -7,17 +7,13 @@ import {I18n} from "aws-amplify";
 import * as EmailValidator from 'email-validator';
 
 export default class SignatoryInformation extends Component {
-    static navigationOptions = ({ navigation, screenProps }) => ({
-        title: I18n.get('Signatory information')
-    });
-
     constructor(props) {
         super(props);
         this.state = {
             signatoryName: '',
             signatoryEmail: '',
-            contract: props.navigation.getParam("item"),
-            site: props.navigation.getParam("site")
+            contract: props.route.params.item,
+            site: props.route.params.site
         };
     }
 
@@ -85,8 +81,8 @@ export default class SignatoryInformation extends Component {
             site: this.state.site,
             signatoryEmail: this.state.signatoryEmail,
             signatoryName: this.state.signatoryName,
-            photos: this.props.navigation.getParam("photos"),
-            oldLoads: this.props.navigation.getParam("oldLoads")
+            photos: this.props.route.params.photos,
+            oldLoads: this.props.route.params.oldLoads
         });
     }
 }

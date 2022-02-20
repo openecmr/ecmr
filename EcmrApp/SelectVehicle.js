@@ -8,31 +8,31 @@ import * as customQueries from "./graphql/custom-queries"
 import * as queries from "./graphql/queries"
 
 class SelectVehicle extends Component {
-    static navigationOptions = ({navigation, screenProps}) => ({
-        title: I18n.get('Select vehicle'),
-        headerRight: () => (
-            <Button
-                containerStyle={{marginEnd: 10}}
-                onPress={() => {
-                    navigation.navigate('AddVehicle', {
-                        companyOwner: navigation.getParam("companyOwner"),
-                        vehicleType: navigation.getParam("vehicleType"),
-                    })
-                }}
-                title={I18n.get("New")}
-            />
-        )
-    });
-
     constructor(props) {
         super(props);
         this.state = {
-            onSelect: props.navigation.getParam("onSelect"),
-            vehicleType: props.navigation.getParam("vehicleType"),
+            onSelect: props.route.params.onSelect,
+            vehicleType: props.route.params.vehicleType,
             vehicles: []
         };
+        const {navigation, route} = props;
+        navigation.setOptions({
+            title: I18n.get('Select vehicle'),
+            headerRight: () => (
+                <Button
+                    containerStyle={{marginEnd: 10}}
+                    onPress={() => {
+                        navigation.navigate('AddVehicle', {
+                            companyOwner: route.params.companyOwner,
+                            vehicleType: route.params.vehicleType,
+                        })
+                    }}
+                    title={I18n.get("New")}
+                />
+            )
+        });
         this.navigationEventSubscription = this.props.navigation.addListener(
-            'willFocus',
+            'focus',
             payload => {
                 this.componentDidMount();
             }
@@ -60,9 +60,9 @@ class SelectVehicle extends Component {
     }
 
     editVehicle(vehicle) {
-        const {navigation} = this.props;
+        const {navigation, route} = this.props;
         navigation.navigate('AddVehicle', {
-            companyOwner: navigation.getParam('companyOwner'),
+            companyOwner: route.params.companyOwner,
             editVehicle: vehicle
         });
     }
@@ -71,7 +71,7 @@ class SelectVehicle extends Component {
         this.setState({
             loading: true
         });
-        const companyOwner = this.props.navigation.getParam("companyOwner");
+        const companyOwner = this.props.route.params.companyOwner;
         try {
             const response = await API.graphql(graphqlOperation(queries.vehicleByOwner, {
                 limit: 50,
@@ -88,7 +88,7 @@ class SelectVehicle extends Component {
     }
 
     componentWillUnmount() {
-        this.navigationEventSubscription.remove();
+        this.navigationEventSubscription();
     }
 }
 

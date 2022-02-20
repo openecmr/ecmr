@@ -1,9 +1,9 @@
-import React from 'react';
+import { createStackNavigator } from '@react-navigation/stack';
+import React, {useRef} from 'react';
 import Amplify, {I18n} from 'aws-amplify';
 import awsmobile from './aws-exports';
+import { LogBox } from 'react-native';
 import {Authenticator, ConfirmSignUp, SignUp, withAuthenticator} from 'aws-amplify-react-native';
-import { createAppContainer} from 'react-navigation';
-import { createStackNavigator } from 'react-navigation-stack'
 import Transports from "./Transports";
 import Transport from "./Transport";
 import ConfirmLoading from "./ConfirmLoading";
@@ -13,7 +13,6 @@ import CaptureSignature from "./CaptureSignature";
 import SettingsScreen from "./SettingsScreen";
 import LinkAccount from "./LinkAccount";
 import SignatoryInformation from "./SignatoryInformation";
-import {createBottomTabNavigator} from "react-navigation-tabs";
 import AmplifyTheme from "aws-amplify-react-native/dist/AmplifyTheme";
 import EcmrSignIn from "./EcmrSignIn";
 import Loading from "aws-amplify-react-native/dist/Auth/Loading";
@@ -39,6 +38,8 @@ import Bugsnag from '@bugsnag/react-native'
 import analytics from '@react-native-firebase/analytics';
 import AddAddress from "./AddAddress";
 import AddVehicle from "./AddVehicle";
+import {NavigationContainer, useNavigationContainerRef} from "@react-navigation/native";
+import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 
 function getActiveRouteName(navigationState) {
     if (!navigationState) {
@@ -48,7 +49,7 @@ function getActiveRouteName(navigationState) {
     if (route.routes) {
         return getActiveRouteName(route);
     }
-    return route.routeName;
+    return route.name;
 }
 
 const deviceLanguage =
@@ -78,126 +79,116 @@ Amplify.configure(config);
 
 Bugsnag.start()
 
-const MainNavigator = createStackNavigator({
-    Transports: {screen: Transports},
-    Transport: {screen: Transport},
-    ConfirmLoading: {screen: ConfirmLoading},
-    AddLoadConfirm: {screen: AddLoad},
-    SignSelection: {screen: SignSelection},
-    Signature: {screen: Signature},
-    CaptureSignature: {screen: CaptureSignature},
-    SignatoryInformation: {screen: SignatoryInformation},
-    AddPhotos: {screen: AddPhotos},
-    SelectSignatory: {screen: SelectSignatory},
-    AddContact: {screen: AddContact}
-}, {
-    defaultNavigationOptions: {
-        cardStyle: {
-            backgroundColor: 'rgb(245,245,245)'
-        }
-    }
-});
+LogBox.ignoreLogs([
+    'Non-serializable values were found in the navigation state',
+]);
 
-const SettingsNavigator = createStackNavigator({
-    SettingsScreen: {
-        screen: withAuthenticator(SettingsScreen),
-        navigationOptions: {
-            title: "Open e-CMR"
-        }
-    },
-    LinkAccount: {screen: LinkAccount}
-});
+const Stack = createStackNavigator();
 
-const AddTransportNavigator = createStackNavigator({
-    NewTransportSelection: {
-        screen: NewTransportSelection,
-        navigationOptions: {
-            title: I18n.get("New transport")
-        }
-    },
-    AddTransportScreen: {
-        screen: AddTransportScreen,
-        navigationOptions: {
-            title: I18n.get("New transport")
-        }
-    },
-    SelectAddress: {
-        screen: SelectAddress
-    },
-    AddAddress: {
-        screen: AddAddress
-    },
-    AddVehicle: {
-        screen: AddVehicle
-    },
-    SelectVehicle: {
-        screen: SelectVehicle
-    },
-    AddLoad: {
-        screen: AddLoad
-    },
-    SelectCompany: {
-        screen: SelectCompany,
-        navigationOptions: {
-            title: I18n.get("Select submitter company")
-        }
+const MainNavigator = () => <Stack.Navigator screenOptions={{
+    cardStyle: {
+        backgroundColor: 'rgb(245,245,245)'
     }
-});
+}}>
+    <Stack.Screen name={"Transports"} component={Transports} options={{
+        title: 'Open e-CMR'
+    }}/>
+    <Stack.Screen name={"Transport"} component={Transport}/>
+    <Stack.Screen name={"ConfirmLoading"} component={ConfirmLoading} options={{title: I18n.get('Check loads')}}/>
+    <Stack.Screen name={"AddLoadConfirm"} component={AddLoad}/>
+    <Stack.Screen name={"SignSelection"} component={SignSelection} options={{title: I18n.get('Select signing method')}}/>
+    <Stack.Screen name={"Signature"} component={Signature} options={{title: I18n.get('Check information')}}/>
+    <Stack.Screen name={"CaptureSignature"} component={CaptureSignature} options={{title: I18n.get('Draw signature')}}/>
+    <Stack.Screen name={"SignatoryInformation"} component={SignatoryInformation} options={{title: I18n.get('Signatory information')}}/>
+    <Stack.Screen name={"AddPhotos"} component={AddPhotos} options={{title: I18n.get('Add photos?')}}/>
+    <Stack.Screen name={"SelectSignatory"} component={SelectSignatory}/>
+    <Stack.Screen name={"AddContact"} component={AddContact}/>
+</Stack.Navigator>
 
-const TabNavigator = createBottomTabNavigator({
-    Home: {
-        screen: MainNavigator,
-        navigationOptions: {
-            tabBarIcon: ({ focused, tintColor }) => {
-                return <Icon name={"local-shipping"}/>
-            },
-            tabBarLabel: I18n.get("Transports")
-        }
-    },
-    AddTransport: {
-        screen: AddTransportNavigator,
-        navigationOptions: {
-            tabBarIcon: ({ focused, tintColor }) => {
-                return <Icon name={"add"}/>
-            },
-            tabBarLabel: I18n.get("New transport")
-        }
-    },
-    Settings: {
-        screen: SettingsNavigator,
-        navigationOptions: {
-            tabBarIcon: ({ focused, tintColor }) => {
-                return <Icon name="settings"/>
-            },
-            tabBarLabel: I18n.get("Settings")
-        }
-    }
-}, {
+const SettingsNavigator = () => <Stack.Navigator>
+    <Stack.Screen name={"SettingsScreen"} component={withAuthenticator(SettingsScreen)} options={{title: "Open e-CMR"}}/>
+    <Stack.Screen name={"LinkAccount"} component={LinkAccount}/>
+</Stack.Navigator>
+
+const AddTransportNavigator = () => <Stack.Navigator>
+    <Stack.Screen name={"NewTransportSelection"} component={NewTransportSelection}
+                  options={{title: I18n.get("New transport")}}/>
+    <Stack.Screen name={"AddTransportScreen"} component={AddTransportScreen}
+                  options={{title: I18n.get("New transport")}}/>
+    <Stack.Screen name={"SelectAddress"} component={SelectAddress}/>
+    <Stack.Screen name={"AddAddress"} component={AddAddress}/>
+    <Stack.Screen name={"AddVehicle"} component={AddVehicle}/>
+    <Stack.Screen name={"Transport"} component={Transport}/>
+    <Stack.Screen name={"SelectVehicle"} component={SelectVehicle}/>
+    <Stack.Screen name={"AddLoad"} component={AddLoad}/>
+    <Stack.Screen name={"SelectCompany"} component={SelectCompany}
+                  options={{title: I18n.get("Select submitter company")}} />
+</Stack.Navigator>
+
+
+const Tab = createBottomTabNavigator();
+
+const TabNavigator = () => <Tab.Navigator screenOptions={{
     tabBarOptions: {
         style: {
             elevation: 15
         }
-    }
-});
+    },
+    headerShown: false
+}}>
+    <Tab.Screen name="Home" component={MainNavigator} options={{
+        tabBarIcon: ({ focused, tintColor }) => {
+            return <Icon name={"local-shipping"}/>
+        },
+        tabBarLabel: I18n.get("Transports")
+    }} />
+    <Tab.Screen name="AddTransport" component={AddTransportNavigator} options={{
+        tabBarIcon: ({ focused, tintColor }) => {
+            return <Icon name={"add"}/>
+        },
+        tabBarLabel: I18n.get("New transport")
+    }} />
+    <Tab.Screen name="Settings" component={SettingsNavigator} options={{
+        tabBarIcon: ({ focused, tintColor }) => {
+            return <Icon name="settings"/>
+        },
+        tabBarLabel: I18n.get("Settings")
+    }} />
+</Tab.Navigator>
 
 
-const App = createAppContainer(TabNavigator);
-const AppWithPersistence = () => <App onNavigationStateChange={async (prevState, currentState) => {
-    const currentRouteName = getActiveRouteName(currentState);
-    const previousRouteName = getActiveRouteName(prevState);
+const App = (props) => {
+    const navigationRef = useNavigationContainerRef();
+    const routeNameRef = useRef();
 
-    if (previousRouteName !== currentRouteName) {
-        await analytics().logScreenView({
-            screen_name: currentRouteName,
-            screen_class: currentRouteName
-        });
-    }
-}} />;
+    return <NavigationContainer
+        {...props}
+        ref={navigationRef}
+        onReady={() => {
+            routeNameRef.current = navigationRef.getCurrentRoute().name;
+        }}
+        onStateChange={async () => {
+            const previousRouteName = routeNameRef.current;
+            const currentRouteName = navigationRef.getCurrentRoute().name;
 
+            if (previousRouteName !== currentRouteName) {
+                console.warn(' gonna log', currentRouteName);
+                await analytics().logScreenView({
+                    screen_name: currentRouteName,
+                    screen_class: currentRouteName
+                });
+            }
+            routeNameRef.current = currentRouteName;
+        }}>
+        <TabNavigator/>
+    </NavigationContainer>;
+}
+
+
+const AppWithPersistence = () => <App />
 
 const MySectionHeader = Object.assign({}, AmplifyTheme.button, { backgroundColor: 'rgb(60,176,60)' });
 const MyTheme = Object.assign({}, AmplifyTheme, {button: MySectionHeader});
-
 
 export default withAuthenticator(AppWithPersistence, false, [
     <EcmrSignIn override={'SignIn'}/>,

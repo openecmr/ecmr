@@ -12,16 +12,16 @@ import * as EmailValidator from "email-validator";
 
 class AddVehicle extends Component {
     static navigationOptions = ({navigation, screenProps}) => ({
-        title: navigation.getParam('editVehicle') ? I18n.get('Edit vehicle') : I18n.get('Add vehicle')
+        title: route.params.editVehicle ? I18n.get('Edit vehicle') : I18n.get('Add vehicle')
     });
 
     constructor(props) {
         super(props);
 
-        const editVehicle = props.navigation.getParam("editVehicle");
+        const editVehicle = props.route.params.editVehicle;
         this.state = {
-            companyOwner: props.navigation.getParam("companyOwner"),
-            vehicleType: props.navigation.getParam("vehicleType"),
+            companyOwner: props.route.params.companyOwner,
+            vehicleType: props.route.params.vehicleType,
             editing: !!editVehicle,
             ...editVehicle
         };

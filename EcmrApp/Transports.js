@@ -141,10 +141,6 @@ function resetCompanyCheck() {
 }
 
 class Transports extends Component {
-    static navigationOptions = ({ navigation, screenProps }) => ({
-        title: 'Open e-CMR'
-    });
-
     constructor(props) {
         super(props);
 
@@ -166,7 +162,7 @@ class Transports extends Component {
         };
 
         this.navigationEventSubscription = this.props.navigation.addListener(
-            'willFocus',
+            'focus',
             payload => {
                 this.onRefresh();
             }
@@ -387,7 +383,7 @@ class Transports extends Component {
     }
 
     componentWillUnmount() {
-        this.navigationEventSubscription.remove();
+        this.navigationEventSubscription();
     }
 
     async loadData() {

@@ -18,23 +18,6 @@ import * as mutations from "./graphql/mutations"
 import * as EmailValidator from "email-validator";
 import RadioForm from "react-native-simple-radio-button";
 
-AddLoad.navigationOptions = ({navigation, screenProps}) => ({
-    title: I18n.get('Add load'),
-    ...(navigation.getParam('editLoad') && navigation.getParam('onRemove') && {
-        headerRight: () => (
-            <Button
-                containerStyle={{backgroundColor: 'red', marginEnd: 10}}
-                onPress={() => {
-                    const onRemove = navigation.getParam('onRemove');
-                    onRemove(navigation.getParam('editLoad'));
-                    navigation.goBack();
-                }}
-                title={I18n.get("Remove")}
-            />
-        )
-    })
-})
-
 I18n.get('pallets');
 I18n.get('packages');
 I18n.get('roll containers');
@@ -74,13 +57,30 @@ function Field({label, value, icon, onChangeText, required, keyboardType = "nume
     </View>;
 }
 
-function AddLoad({navigation}) {
+function AddLoad({navigation, route}) {
     const initialLoad = {
         category: "pallets"
     };
-    const editLoad = navigation.getParam("editLoad");
+    const editLoad = route.params.editLoad;
     const [load, setLoad] = useState(editLoad ? editLoad : initialLoad);
     const packagingOptions = packaging();
+
+    navigation.setOptions({
+        title: editLoad ? I18n.get('Edit load') : I18n.get('Add load'),
+        ...(route.params.editLoad && route.params.onRemove && {
+            headerRight: () => (
+                <Button
+                    containerStyle={{backgroundColor: 'red', marginEnd: 10}}
+                    onPress={() => {
+                        const onRemove = route.params.onRemove;
+                        onRemove(route.params.editLoad);
+                        navigation.goBack();
+                    }}
+                    title={I18n.get("Remove")}
+                />
+            )
+        })
+    });
 
     function change(field) {
         return function(value) {
@@ -104,7 +104,7 @@ function AddLoad({navigation}) {
             return;
         }
 
-        const onSave = navigation.getParam("onSave");
+        const onSave = route.params.onSave;
         onSave(load);
         navigation.goBack();
     }
@@ -153,7 +153,7 @@ function AddLoad({navigation}) {
             </ScrollView>
 
             <Button containerStyle={{position: "absolute", start: 0, bottom: 0, end: 0}}
-                    title={navigation.getParam('editLoad') ? I18n.get("Save") : I18n.get("Add")}
+                    title={route.params.editLoad ? I18n.get("Save") : I18n.get("Add")}
                     buttonStyle={{height: 40, backgroundColor: 'rgb(60,176,60)'}}
                     onPress={save} />
         </View>

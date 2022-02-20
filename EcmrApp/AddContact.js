@@ -14,11 +14,12 @@ class AddContact extends Component {
 
     constructor(props) {
         super(props);
+        const {route} = props;
         this.state = {
-            addressName: props.navigation.getParam("addressName"),
-            addressId: props.navigation.getParam("addressId"),
-            owner: props.navigation.getParam("owner"),
-            driverId: props.navigation.getParam("driverDriverId")
+            addressName: route.params.addressName,
+            addressId: route.params.addressId,
+            owner: route.params.owner,
+            driverId: route.params.driverDriverId
         };
     }
 
@@ -152,7 +153,7 @@ class AddContact extends Component {
             site: this.state.site,
             signatoryEmail: contact.email,
             signatoryName: contact.name,
-            photos: this.props.navigation.getParam("photos")
+            photos: this.props.route.params.photos
         });
     }
 }

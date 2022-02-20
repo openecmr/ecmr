@@ -23,15 +23,11 @@ import {createUpdateContractInput, updateContract} from "./DataUtil";
 
 
 class CaptureSignature extends Component {
-    static navigationOptions = ({navigation, screenProps}) => ({
-        title: I18n.get('Draw signature')
-    });
-
     constructor(props) {
         super(props);
         this.state = {
-            contract: props.navigation.getParam("item"),
-            site: props.navigation.getParam("site"),
+            contract: props.route.params.item,
+            site: props.route.params.site,
             saving: false,
             handoverPhone: false
         };
@@ -98,7 +94,8 @@ class CaptureSignature extends Component {
             const now = moment().format();
             const user = await Auth.currentAuthenticatedUser();
 
-            const photos = await Promise.all(this.props.navigation.getParam("photos").map(async (photo) => {
+            const params = this.props.route.params;
+            const photos = await Promise.all(params.photos.map(async (photo) => {
                 const fetchResponse = await fetch(photo.uri);
                 const photoBuffer = await fetchResponse.blob();
                 const key = 'photo-' + (await UUIDGenerator.getRandomUUID()) + ".jpg";
@@ -109,10 +106,10 @@ class CaptureSignature extends Component {
                 }
             }));
 
-            const signatoryObservation = this.props.navigation.getParam("signatoryObservation");
-            const signatoryName = this.props.navigation.getParam("signatoryName");
-            const signatoryEmail = this.props.navigation.getParam("signatoryEmail");
-            const sendCopy = this.props.navigation.getParam("sendCopy");
+            const signatoryObservation = params.signatoryObservation;
+            const signatoryName = params.signatoryName;
+            const signatoryEmail = params.signatoryEmail;
+            const sendCopy = params.sendCopy;
             const event = {
                 type: this.state.site === 'pickup' ? 'LoadingComplete' : 'UnloadingComplete',
                 site: this.state.site,
@@ -140,7 +137,7 @@ class CaptureSignature extends Component {
             if (this.state.contract.orderStatus) {
                 update.orderStatus = this.state.site === 'pickup' ? 'IN_PROGRESS' : 'DONE';
             }
-            const oldLoads = this.props.navigation.getParam("oldLoads");
+            const oldLoads = params.oldLoads;
             if (oldLoads) {
                 update.loads = this.state.contract.loads;
                 event.oldLoads = oldLoads;

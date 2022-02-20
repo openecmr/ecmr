@@ -1,12 +1,7 @@
-import React, {Component, useState} from "react";
+import React, {useState} from "react";
 import {
-    Alert,
-    FlatList,
-    Image,
-    ListView,
     ScrollView,
     StyleSheet,
-    TextInput,
     TouchableOpacity,
     View
 } from "react-native";
@@ -15,7 +10,6 @@ import {LoadDetailText, MyText, requiredFieldsAlert} from "./Components";
 import {API, Auth, graphqlOperation, I18n} from "aws-amplify";
 import {Button} from "react-native-elements";
 import * as mutations from "./graphql/mutations"
-import * as EmailValidator from "email-validator";
 import moment from "moment";
 import * as queries from "./graphql/queries";
 
@@ -36,12 +30,12 @@ function AddressItem({value, ...rest}) {
         <TransportItem value={value  && value.name} {...rest} />);
 }
 
-function AddTransportScreen({navigation, navigation: {navigate}}) {
+function AddTransportScreen({route, navigation, navigation: {navigate}}) {
     const [document, setDocument] = useState({
         loads: []
     });
     const [loading, setLoading] = useState(false);
-    const company = navigation.getParam("company");
+    const company = route.params.company;
 
     function selectVehicle(key) {
         navigate('SelectVehicle', {

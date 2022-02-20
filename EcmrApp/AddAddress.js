@@ -11,16 +11,18 @@ import * as mutations from "./graphql/mutations"
 import * as EmailValidator from "email-validator";
 
 class AddAddress extends Component {
-    static navigationOptions = ({navigation, screenProps}) => ({
-        title: navigation.getParam('editAddress') ? I18n.get('Edit address') : I18n.get('Add address')
-    });
-
     constructor(props) {
         super(props);
+        
+        const {navigation, route} = props;
 
-        const editAddress = props.navigation.getParam("editAddress");
+        navigation.setOptions({
+            title: route.params.editAddress ? I18n.get('Edit address') : I18n.get('Add address')
+        });
+
+        const editAddress = route.params.editAddress;
         this.state = {
-            companyOwner: props.navigation.getParam("companyOwner"),
+            companyOwner: route.params.companyOwner,
             editing: !!editAddress,
             ...editAddress
         };

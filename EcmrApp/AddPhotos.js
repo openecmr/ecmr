@@ -8,15 +8,11 @@ import ImageResizer from 'react-native-image-resizer';
 import {I18n} from "aws-amplify";
 
 class AddPhotos extends Component {
-    static navigationOptions = ({navigation, screenProps}) => ({
-        title: I18n.get('Add photos?')
-    });
-
     constructor(props) {
         super(props);
         this.state = {
-            contract: props.navigation.getParam("item"),
-            site: props.navigation.getParam("site"),
+            contract: props.route.params.item,
+            site: props.route.params.site,
             photos: [
                 {}, {}, {}
             ]
@@ -104,7 +100,7 @@ class AddPhotos extends Component {
             item: this.state.contract,
             site: this.state.site,
             photos: this.state.photos.filter(photo => photo.uri),
-            oldLoads: this.props.navigation.getParam("oldLoads")
+            oldLoads: this.props.route.params.oldLoads
         });
     }
 }

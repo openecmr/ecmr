@@ -24,37 +24,37 @@ const ContactItem = ({contact, addressName, onSelect}) =>
     </TouchableOpacity>;
 
 class SelectSignatory extends Component {
-    static navigationOptions = ({navigation, screenProps}) => ({
-        title: I18n.get('Select signatory'),
-        headerRight: () => (
-            <Button
-                containerStyle={{marginEnd: 10}}
-                onPress={() => {
-                    const site = navigation.getParam('site');
-                    const item = navigation.getParam('item');
-                    const addressId = item[site + "ContactId"];
-                    const addressName = item[site].name;
-                    const {owner, driverDriverId} = item;
-                    navigation.navigate('AddContact', {
-                        addressId,
-                        addressName,
-                        owner,
-                        driverDriverId
-                    })
-                }}
-                title={I18n.get("New")}
-            />
-        )
-    });
-
     constructor(props) {
         super(props);
         this.state = {
-            contract: props.navigation.getParam("item"),
-            site: props.navigation.getParam("site")
+            contract: props.route.params.item,
+            site: props.route.params.site
         };
+        const {navigation, route} = props;
+        navigation.setOptions({
+            title: I18n.get('Select signatory'),
+            headerRight: () => (
+                <Button
+                    containerStyle={{marginEnd: 10}}
+                    onPress={() => {
+                        const site = route.params.site;
+                        const item = route.params.item;
+                        const addressId = item[site + "ContactId"];
+                        const addressName = item[site].name;
+                        const {owner, driverDriverId} = item;
+                        navigation.navigate('AddContact', {
+                            addressId,
+                            addressName,
+                            owner,
+                            driverDriverId
+                        })
+                    }}
+                    title={I18n.get("New")}
+                />
+            )
+        });
         this.navigationEventSubscription = this.props.navigation.addListener(
-            'willFocus',
+            'focus',
             payload => {
                 this.componentDidMount();
             }
@@ -86,8 +86,8 @@ class SelectSignatory extends Component {
         navigate('SignatoryInformation', {
             item: this.state.contract,
             site: this.state.site,
-            photos: this.props.navigation.getParam("photos"),
-            oldLoads: this.props.navigation.getParam("oldLoads")
+            photos: this.props.route.params.photos,
+            oldLoads: this.props.route.params.oldLoads
         });
     }
 
@@ -98,8 +98,8 @@ class SelectSignatory extends Component {
             site: this.state.site,
             signatoryEmail: contact.email,
             signatoryName: contact.name,
-            photos: this.props.navigation.getParam("photos"),
-            oldLoads: this.props.navigation.getParam("oldLoads")
+            photos: this.props.route.params.photos,
+            oldLoads: this.props.route.params.oldLoads
         });
     }
 
@@ -123,7 +123,7 @@ class SelectSignatory extends Component {
     }
 
     componentWillUnmount() {
-        this.navigationEventSubscription.remove();
+        this.navigationEventSubscription();
     }
 }
 
