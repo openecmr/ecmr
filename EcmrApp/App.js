@@ -1,4 +1,4 @@
-import { createStackNavigator } from '@react-navigation/stack';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React, {useRef} from 'react';
 import Amplify, {I18n} from 'aws-amplify';
 import awsmobile from './aws-exports';
@@ -15,7 +15,6 @@ import LinkAccount from "./LinkAccount";
 import SignatoryInformation from "./SignatoryInformation";
 import AmplifyTheme from "aws-amplify-react-native/dist/AmplifyTheme";
 import EcmrSignIn from "./EcmrSignIn";
-import Loading from "aws-amplify-react-native/dist/Auth/Loading";
 import ConfirmSignIn from "aws-amplify-react-native/dist/Auth/ConfirmSignIn";
 import VerifyContact from "aws-amplify-react-native/dist/Auth/VerifyContact";
 import ForgotPassword from "aws-amplify-react-native/dist/Auth/ForgotPassword";
@@ -75,7 +74,7 @@ const config = {
 };
 config['oauth']['domain'] = "auth.openecmr.com";
 Amplify.configure(config);
-// Amplify.Logger.LOG_LEVEL = 'DEBUG';
+Amplify.Logger.LOG_LEVEL = 'DEBUG';
 
 Bugsnag.start()
 
@@ -83,16 +82,14 @@ LogBox.ignoreLogs([
     'Non-serializable values were found in the navigation state',
 ]);
 
-const Stack = createStackNavigator();
+const Stack = createNativeStackNavigator();
 
 const MainNavigator = () => <Stack.Navigator screenOptions={{
     cardStyle: {
         backgroundColor: 'rgb(245,245,245)'
     }
 }}>
-    <Stack.Screen name={"Transports"} component={Transports} options={{
-        title: 'Open e-CMR'
-    }}/>
+    <Stack.Screen name={"Main"} component={TabNavigator} options={{title: 'Open e-CMR'}} />
     <Stack.Screen name={"Transport"} component={Transport}/>
     <Stack.Screen name={"ConfirmLoading"} component={ConfirmLoading} options={{title: I18n.get('Check loads')}}/>
     <Stack.Screen name={"AddLoadConfirm"} component={AddLoad}/>
@@ -103,26 +100,18 @@ const MainNavigator = () => <Stack.Navigator screenOptions={{
     <Stack.Screen name={"AddPhotos"} component={AddPhotos} options={{title: I18n.get('Add photos?')}}/>
     <Stack.Screen name={"SelectSignatory"} component={SelectSignatory}/>
     <Stack.Screen name={"AddContact"} component={AddContact}/>
-</Stack.Navigator>
 
-const SettingsNavigator = () => <Stack.Navigator>
-    <Stack.Screen name={"SettingsScreen"} component={withAuthenticator(SettingsScreen)} options={{title: "Open e-CMR"}}/>
-    <Stack.Screen name={"LinkAccount"} component={LinkAccount}/>
-</Stack.Navigator>
-
-const AddTransportNavigator = () => <Stack.Navigator>
-    <Stack.Screen name={"NewTransportSelection"} component={NewTransportSelection}
-                  options={{title: I18n.get("New transport")}}/>
     <Stack.Screen name={"AddTransportScreen"} component={AddTransportScreen}
                   options={{title: I18n.get("New transport")}}/>
     <Stack.Screen name={"SelectAddress"} component={SelectAddress}/>
     <Stack.Screen name={"AddAddress"} component={AddAddress}/>
     <Stack.Screen name={"AddVehicle"} component={AddVehicle}/>
-    <Stack.Screen name={"Transport"} component={Transport}/>
     <Stack.Screen name={"SelectVehicle"} component={SelectVehicle}/>
     <Stack.Screen name={"AddLoad"} component={AddLoad}/>
     <Stack.Screen name={"SelectCompany"} component={SelectCompany}
                   options={{title: I18n.get("Select submitter company")}} />
+
+    <Stack.Screen name={"LinkAccount"} component={LinkAccount}/>
 </Stack.Navigator>
 
 
@@ -136,20 +125,20 @@ const TabNavigator = () => <Tab.Navigator screenOptions={{
     },
     headerShown: false
 }}>
-    <Tab.Screen name="Home" component={MainNavigator} options={{
-        tabBarIcon: ({ focused, tintColor }) => {
+    <Tab.Screen name="Home" component={Transports} options={{
+        tabBarIcon: () => {
             return <Icon name={"local-shipping"}/>
         },
         tabBarLabel: I18n.get("Transports")
     }} />
-    <Tab.Screen name="AddTransport" component={AddTransportNavigator} options={{
-        tabBarIcon: ({ focused, tintColor }) => {
+    <Tab.Screen name="AddTransport" component={NewTransportSelection} options={{
+        tabBarIcon: () => {
             return <Icon name={"add"}/>
         },
         tabBarLabel: I18n.get("New transport")
     }} />
-    <Tab.Screen name="Settings" component={SettingsNavigator} options={{
-        tabBarIcon: ({ focused, tintColor }) => {
+    <Tab.Screen name="Settings" component={withAuthenticator(SettingsScreen)} options={{
+        tabBarIcon: () => {
             return <Icon name="settings"/>
         },
         tabBarLabel: I18n.get("Settings")
@@ -172,7 +161,6 @@ const App = (props) => {
             const currentRouteName = navigationRef.getCurrentRoute().name;
 
             if (previousRouteName !== currentRouteName) {
-                console.warn(' gonna log', currentRouteName);
                 await analytics().logScreenView({
                     screen_name: currentRouteName,
                     screen_class: currentRouteName
@@ -180,7 +168,7 @@ const App = (props) => {
             }
             routeNameRef.current = currentRouteName;
         }}>
-        <TabNavigator/>
+        <MainNavigator/>
     </NavigationContainer>;
 }
 
