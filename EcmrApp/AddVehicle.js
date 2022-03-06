@@ -11,10 +11,6 @@ import * as mutations from "./graphql/mutations"
 import * as EmailValidator from "email-validator";
 
 class AddVehicle extends Component {
-    static navigationOptions = ({navigation, screenProps}) => ({
-        title: route.params.editVehicle ? I18n.get('Edit vehicle') : I18n.get('Add vehicle')
-    });
-
     constructor(props) {
         super(props);
 
@@ -25,6 +21,10 @@ class AddVehicle extends Component {
             editing: !!editVehicle,
             ...editVehicle
         };
+
+        props.navigation.setOptions({
+            title: props.route.params.editVehicle ? I18n.get('Edit vehicle') : I18n.get('Add vehicle')
+        });
     }
 
     render() {

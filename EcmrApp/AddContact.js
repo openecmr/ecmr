@@ -8,10 +8,6 @@ import * as mutations from "./graphql/mutations"
 import * as EmailValidator from "email-validator";
 
 class AddContact extends Component {
-    static navigationOptions = ({navigation, screenProps}) => ({
-        title: I18n.get('Add contact')
-    });
-
     constructor(props) {
         super(props);
         const {route} = props;

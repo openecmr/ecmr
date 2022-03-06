@@ -4,7 +4,7 @@ apply plugin: "com.github.triplet.play"
 apply from: "../../node_modules/@bugsnag/react-native/bugsnag-react-native.gradle"
 
 import com.android.build.OutputFile
-
+import com.github.triplet.gradle.androidpublisher.ResolutionStrategy
 /**
  * The react.gradle file registers a task for each build variant (e.g. bundleDebugJsAndAssets
  * and bundleReleaseJsAndAssets).
@@ -227,7 +227,7 @@ dependencies {
 
 play {
     serviceAccountCredentials = file("/home/sihaya/Documents/openecmr-master-1578086330965-2ba228980e58.json")
-    resolutionStrategy = "auto"
+    resolutionStrategy = ResolutionStrategy.AUTO
 }
 
 // Run this once to be able to run the application with BUCK

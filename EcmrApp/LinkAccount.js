@@ -8,10 +8,6 @@ import {Button, Divider} from "react-native-elements";
 import {Auth} from "@aws-amplify/auth";
 
 export default class SettingsScreen extends Component {
-    static navigationOptions = ({ navigation, screenProps }) => ({
-        title: I18n.get('Link account')
-    });
-
     constructor(props) {
         super(props);
 

@@ -40,17 +40,6 @@ import AddVehicle from "./AddVehicle";
 import {NavigationContainer, useNavigationContainerRef} from "@react-navigation/native";
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 
-function getActiveRouteName(navigationState) {
-    if (!navigationState) {
-        return null;
-    }
-    const route = navigationState.routes[navigationState.index];
-    if (route.routes) {
-        return getActiveRouteName(route);
-    }
-    return route.name;
-}
-
 const deviceLanguage =
     Platform.OS === 'ios'
         ? NativeModules.SettingsManager.settings.AppleLocale ||
@@ -87,9 +76,10 @@ const Stack = createNativeStackNavigator();
 const MainNavigator = () => <Stack.Navigator screenOptions={{
     cardStyle: {
         backgroundColor: 'rgb(245,245,245)'
-    }
+    },
+    animation: 'slide_from_right'
 }}>
-    <Stack.Screen name={"Main"} component={TabNavigator} options={{title: 'Open e-CMR'}} />
+    <Stack.Screen name={"Main"} component={TabNavigator} options={{headerShown: false}} />
     <Stack.Screen name={"Transport"} component={Transport}/>
     <Stack.Screen name={"ConfirmLoading"} component={ConfirmLoading} options={{title: I18n.get('Check loads')}}/>
     <Stack.Screen name={"AddLoadConfirm"} component={AddLoad}/>
@@ -99,7 +89,7 @@ const MainNavigator = () => <Stack.Navigator screenOptions={{
     <Stack.Screen name={"SignatoryInformation"} component={SignatoryInformation} options={{title: I18n.get('Signatory information')}}/>
     <Stack.Screen name={"AddPhotos"} component={AddPhotos} options={{title: I18n.get('Add photos?')}}/>
     <Stack.Screen name={"SelectSignatory"} component={SelectSignatory}/>
-    <Stack.Screen name={"AddContact"} component={AddContact}/>
+    <Stack.Screen name={"AddContact"} component={AddContact} options={{title: I18n.get('Add contact')}}/>
 
     <Stack.Screen name={"AddTransportScreen"} component={AddTransportScreen}
                   options={{title: I18n.get("New transport")}}/>
@@ -111,7 +101,7 @@ const MainNavigator = () => <Stack.Navigator screenOptions={{
     <Stack.Screen name={"SelectCompany"} component={SelectCompany}
                   options={{title: I18n.get("Select submitter company")}} />
 
-    <Stack.Screen name={"LinkAccount"} component={LinkAccount}/>
+    <Stack.Screen name={"LinkAccount"} component={LinkAccount} options={{title: I18n.get('Link account')}}/>
 </Stack.Navigator>
 
 
