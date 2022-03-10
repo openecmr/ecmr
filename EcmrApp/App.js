@@ -1,4 +1,4 @@
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createStackNavigator } from '@react-navigation/stack';
 import React, {useRef} from 'react';
 import Amplify, {I18n} from 'aws-amplify';
 import awsmobile from './aws-exports';
@@ -71,13 +71,12 @@ LogBox.ignoreLogs([
     'Non-serializable values were found in the navigation state',
 ]);
 
-const Stack = createNativeStackNavigator();
+const Stack = createStackNavigator();
 
 const MainNavigator = () => <Stack.Navigator screenOptions={{
     cardStyle: {
         backgroundColor: 'rgb(245,245,245)'
-    },
-    animation: 'slide_from_right'
+    }
 }}>
     <Stack.Screen name={"Main"} component={TabNavigator} options={{headerShown: false}} />
     <Stack.Screen name={"Transport"} component={Transport}/>
