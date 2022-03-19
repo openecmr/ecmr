@@ -7,7 +7,7 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import {LoadDetailText, MyText, requiredFieldsAlert} from "./Components";
-import {API, Auth, graphqlOperation, I18n} from "aws-amplify";
+import {API, Auth, graphqlOperation, Hub, I18n} from "aws-amplify";
 import {Button} from "react-native-elements";
 import * as mutations from "./graphql/mutations"
 import moment from "moment";
@@ -184,9 +184,18 @@ function AddTransportScreen({route, navigation, navigation: {navigate}}) {
                 creatorCompanyId: company.id
             };
             const result = await API.graphql(graphqlOperation(mutations.createContractCustom, {input: request}));
+            const contract = result.data.createContractCustom;
+            Hub.dispatch(
+                'Contracts',
+                {
+                    event: 'create',
+                    data: {
+                        contract
+                    }
+                });
             navigation.popToTop();
             navigate('Transport', {
-                item: result.data.createContractCustom,
+                item: contract,
                 site: 'pickup'
             });
         } catch (ex) {

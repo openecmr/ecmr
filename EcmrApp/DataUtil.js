@@ -1,4 +1,4 @@
-import {API, graphqlOperation} from "aws-amplify";
+import {API, graphqlOperation, Hub} from "aws-amplify";
 import * as mutations from "./graphql/mutations";
 import moment from "moment";
 
@@ -12,7 +12,16 @@ function createUpdateContractInput(contract) {
 
 async function updateContract(item) {
     const result = await API.graphql(graphqlOperation(mutations.updateContract, {input: item}));
-    return result.data.updateContract;
+    const contract = result.data.updateContract;
+    Hub.dispatch(
+        'Contracts',
+        {
+            event: 'update',
+            data: {
+                contract
+            }
+        });
+    return contract;
 }
 
 export {

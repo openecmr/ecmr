@@ -1,19 +1,20 @@
 import React, {Component} from "react";
 import {
+    ActivityIndicator,
+    Alert,
+    Dimensions,
+    Modal,
     SectionList,
     StyleSheet,
     Text,
+    TextInput,
     TouchableOpacity,
-    View,
-    Dimensions,
-    Linking,
-    Modal,
-    TextInput, Alert
+    View
 } from "react-native";
 import * as queries from "./graphql/queries";
 import * as mutations from "./graphql/mutations";
-import {API, graphqlOperation, Auth, I18n} from 'aws-amplify';
-import {Address, ArrivalDate, InputRow, LicensePlates, MyText, Packages, Sizes} from './Components';
+import {API, Auth, graphqlOperation, Hub, I18n} from 'aws-amplify';
+import {Address, ArrivalDate, LicensePlates, MyText, Packages, Sizes} from './Components';
 import {TabBar, TabView} from "react-native-tab-view";
 import ContractModel from "./ContractModel";
 import {Button, Icon} from "react-native-elements";
@@ -44,6 +45,7 @@ class ContractsList extends Component {
                     onRefresh={this.props.onRefresh}
                     refreshing={this.props.refreshing}
                     sections={this.props.contracts}
+                    onEndReached={this.props.onEndReached}
                     renderItem={({item}) => {
                         const contract = new ContractModel(item);
                         const isDone = site => this.props.showFirstAction && contract.siteDone(site);
@@ -85,6 +87,7 @@ class ContractsList extends Component {
                     renderSectionHeader={({section}) => <Text
                         style={styles.sectionHeader}>{section.title ? section.title : I18n.get("unknown date")}</Text>}
                     keyExtractor={(item, index) => item.id}
+                    ListFooterComponent={() => <View style={{paddingTop: 5, paddingBottom: 5}}><ActivityIndicator size="small" color="rgb(0, 115, 209)" animating={!this.props.loadedAllItems}/></View>}
                 />
             </View>
         );
@@ -140,6 +143,114 @@ function resetCompanyCheck() {
     checkedCompany = false;
 }
 
+function CompanyOnBoarding({companyOnBoardingStep, loading, onChangeText, onPress, onPress1, onCreateOwnCompanyPress, value, visible}) {
+    return <Modal visible={visible}>
+        {companyOnBoardingStep === "select" && <View style={{
+            backgroundColor: "rgb(0, 115, 209)",
+            height: "100%",
+            padding: 10,
+            justifyContent: "flex-start",
+            alignContent: "center"
+        }}>
+            <MyText style={{
+                fontWeight: "bold",
+                color: "white",
+                fontSize: 16,
+                textAlign: "center",
+                paddingTop: 50
+            }}>{I18n.get("Welcome to Open eCMR, let's get you ready!")}</MyText>
+            <View style={{flexDirection: "column", alignItems: "center", width: "100%"}}>
+                <TouchableOpacity onPress={onPress} style={{
+                    marginTop: 50,
+                    width: 200,
+                    height: 120,
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    elevation: 10,
+                    padding: 15,
+                    borderRadius: 2,
+                    backgroundColor: "rgb(0, 115, 209)"
+                }}>
+                    <FIcon5 name={"desktop"} size={20} style={{textAlign: "center", color: "white"}}/>
+                    <MyText style={{
+                        marginTop: 5,
+                        fontWeight: "bold",
+                        textAlign: "center",
+                        color: "white"
+                    }}>{I18n.get("I have a link code and want to join a company")}</MyText>
+                </TouchableOpacity>
+
+                <TouchableOpacity onPress={onPress1} style={{
+                    marginTop: 50,
+                    width: 200,
+                    height: 120,
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    elevation: 10,
+                    padding: 15,
+                    borderRadius: 2,
+                    backgroundColor: "rgb(0, 115, 209)"
+                }}>
+                    <FIcon5 name={"archive"} size={20} style={{textAlign: "center", color: "white"}}/>
+                    <MyText style={{
+                        marginTop: 5,
+                        fontWeight: "bold",
+                        textAlign: "center",
+                        color: "white"
+                    }}>{I18n.get("I want to create my own company")}</MyText>
+                </TouchableOpacity>
+            </View>
+        </View>}
+        {companyOnBoardingStep === "createOwnCompany" && <View style={{
+            backgroundColor: "rgb(0, 115, 209)",
+            height: "100%",
+            padding: 10,
+            justifyContent: "flex-start",
+            alignContent: "center"
+        }}>
+            <MyText style={{
+                fontWeight: "bold",
+                color: "white",
+                fontSize: 16,
+                textAlign: "center",
+                paddingTop: 50
+            }}>{I18n.get("Please enter the name of your new company")}</MyText>
+            <View style={{
+                flexDirection: "column",
+                alignItems: "center",
+                width: "100%",
+                marginTop: 25,
+                paddingLeft: 25,
+                paddingRight: 25
+            }}>
+                <TextInput
+                    keyboardType={"default"}
+                    autoCapitalize={"words"}
+                    autoCorrect={false}
+                    autoFocus={true}
+                    value={value}
+                    style={{
+                        width: "100%",
+                        margin: 0,
+                        padding: 5,
+                        fontSize: 16,
+                        color: "white",
+                        borderColor: "white",
+                        borderStyle: "dotted",
+                        backgroundColor: "grey",
+                        borderBottomWidth: StyleSheet.hairlineWidth
+                    }}
+                    onChangeText={onChangeText}/>
+                <Button containerStyle={{marginTop: 25, width: "80%"}}
+                        title={I18n.get("Continue")}
+                        buttonStyle={{height: 60, backgroundColor: "rgb(60,176,60)"}}
+                        loading={loading}
+                        onPress={onCreateOwnCompanyPress}/>
+            </View>
+        </View>}
+    </Modal>;
+}
+
 class Transports extends Component {
     constructor(props) {
         super(props);
@@ -152,26 +263,76 @@ class Transports extends Component {
                     { key: 'done', title: I18n.get('Done') }
                 ]
             },
-
             ongoingContracts: [],
+            ongoingContractsResult: {},
             doneContracts: [],
+            doneContractsResult: {},
             refreshing: false,
             firstLoad: true,
             companyOnBoarding: false,
             companyOnBoardingStep: "select"
         };
 
-        this.navigationEventSubscription = this.props.navigation.addListener(
-            'focus',
-            payload => {
-                this.onRefresh();
+        Hub.listen('Contracts', ({payload}) => {
+            const { event, data: { contract } } = payload;
+
+            const updateMap = (contract, map) => {
+                const arrivalDate = contract.arrivalDate;
+                if (map[arrivalDate]) {
+                    map[arrivalDate].data.push(contract);
+                } else {
+                    map[arrivalDate] = {
+                        title: arrivalDate,
+                        id: arrivalDate,
+                        data: [contract]
+                    };
+                }
             }
-        );
+
+            if (event === 'update') {
+                for (const item of Object.values(this.state.ongoingContractsResult)) {
+                    const idx = item.data.findIndex(c => c.id === contract.id);
+                    if (idx !== -1) {
+                        if (contract.status === 'DONE') {
+                            item.data.splice(idx, 1);
+                        } else {
+                            item.data[idx] = contract;
+                        }
+                        break;
+                    }
+                }
+                if (contract.status === 'DONE') {
+                    updateMap(contract, this.state.doneContractsResult);
+                }
+                this.setState({
+                    ongoingContracts: Array.from(Object.values(this.state.ongoingContractsResult)),
+                    doneContracts: Array.from(Object.values(this.state.doneContractsResult))
+                });
+            } else if (event === 'create') {
+                updateMap(contract, this.state.ongoingContractsResult);
+                this.setState({
+                    ongoingContracts: Array.from(Object.values(this.state.ongoingContractsResult))
+                });
+            }
+        });
 
         this.selectCreateOwnCompany = this.selectCreateOwnCompany.bind(this);
         this.onCompanyNameChange = this.onCompanyNameChange.bind(this);
         this.createOwnCompany = this.createOwnCompany.bind(this);
         this.selectAccessCode = this.selectAccessCode.bind(this);
+
+        this.navigationEventSubscription = this.props.navigation.addListener(
+            'focus',
+            () => {
+                this.refreshIfNeeded();
+            }
+        );
+    }
+
+    async componentDidMount() {
+        if (!checkedCompany && !this.state.companyOnBoarding) {
+            await this.checkCompany();
+        }
     }
 
     render() {
@@ -180,15 +341,20 @@ class Transports extends Component {
                 case 'open':
                     return <ContractsList open={(item, site) => this.open(item, site)}
                                           contracts={this.state.ongoingContracts}
+                                          onEndReached={() => this.loadNextOngoingData()}
                                           onRefresh={() => this.onRefresh()}
                                           showFirstAction={true}
                                           showEmpty={!this.state.firstLoad}
-                                          refreshing={this.state.refreshing} />;
+                                          refreshing={this.state.refreshing}
+                                          loadedAllItems={!this.state.ongoingContractsNextToken}
+                    />;
                 case 'done':
                     return <ContractsList open={(item, site) => this.open(item, site)}
                                           contracts={this.state.doneContracts}
+                                          onEndReached={() => this.loadNextDoneData()}
                                           onRefresh={() => this.onRefresh()}
-                                          refreshing={this.state.refreshing} />;
+                                          refreshing={this.state.refreshing}
+                                          loadedAllItems={!this.state.doneContractsNextToken} />;
                 default:
                     return null;
             }
@@ -200,7 +366,7 @@ class Transports extends Component {
                     navigationState={this.state.navigationState}
                     renderScene={renderScene}
                     onIndexChange={index => this.setState({
-                        navigationState: { ...this.state.navigationState, index }
+                        navigationState: {...this.state.navigationState, index}
                     })}
                     initialLayout={{
                         width: Dimensions.get('window').width
@@ -208,47 +374,18 @@ class Transports extends Component {
                     renderTabBar={props =>
                         <TabBar
                             {...props}
-                            indicatorStyle={{ backgroundColor: tabIndicatorColor }}
-                            style={{ backgroundColor: tabBackgroundColor }}
+                            indicatorStyle={{backgroundColor: tabIndicatorColor}}
+                            style={{backgroundColor: tabBackgroundColor}}
                             activeColor={tabIndicatorColor}
                             inactiveColor={tabIndicatorColor}
                         />
                     }
                 />
-                <Modal visible={this.state.companyOnBoarding}>
-                    {this.state.companyOnBoardingStep === "select" && <View style={{backgroundColor: 'rgb(0, 115, 209)', height: '100%', padding: 10, justifyContent: "flex-start", alignContent: "center"}}>
-                        <MyText style={{fontWeight: "bold", color: "white", fontSize: 16, textAlign: "center", paddingTop: 50}}>{I18n.get("Welcome to Open eCMR, let's get you ready!")}</MyText>
-                        <View style={{flexDirection: "column", alignItems: "center", width: "100%"}}>
-                            <TouchableOpacity onPress={this.selectAccessCode} style={{marginTop: 50, width: 200, height: 120, flexDirection: "column", justifyContent: "center", elevation: 10, padding: 15, borderRadius: 2, backgroundColor: "rgb(0, 115, 209)"}}>
-                                <FIcon5 name={"desktop"} size={20} style={{textAlign: "center", color: "white"}}/>
-                                <MyText style={{marginTop: 5, fontWeight: "bold", textAlign: "center", color: "white"}}>{I18n.get("I have a link code and want to join a company")}</MyText>
-                            </TouchableOpacity>
-
-                            <TouchableOpacity onPress={this.selectCreateOwnCompany} style={{marginTop: 50, width: 200, height: 120, flexDirection: "column", justifyContent: "center", elevation: 10, padding: 15, borderRadius: 2, backgroundColor: "rgb(0, 115, 209)"}}>
-                                <FIcon5 name={"archive"} size={20} style={{textAlign: "center", color: "white"}}/>
-                                <MyText style={{marginTop: 5, fontWeight: "bold", textAlign: "center", color: "white"}}>{I18n.get("I want to create my own company")}</MyText>
-                            </TouchableOpacity>
-                        </View>
-                    </View>}
-                    {this.state.companyOnBoardingStep === "createOwnCompany" && <View style={{backgroundColor: 'rgb(0, 115, 209)', height: '100%', padding: 10, justifyContent: "flex-start", alignContent: "center"}}>
-                        <MyText style={{fontWeight: "bold", color: "white", fontSize: 16, textAlign: "center", paddingTop: 50}}>{I18n.get("Please enter the name of your new company")}</MyText>
-                        <View style={{flexDirection: "column", alignItems: "center", width: "100%", marginTop: 25, paddingLeft: 25, paddingRight: 25}}>
-                                <TextInput
-                                    keyboardType={"default"}
-                                    autoCapitalize={"words"}
-                                    autoCorrect={false}
-                                    autoFocus={true}
-                                    value={this.state.companyName}
-                                    style={{width: "100%", margin: 0, padding:5, fontSize: 16, color: 'white', borderColor: "white", borderStyle: "dotted", backgroundColor: 'grey',  borderBottomWidth: StyleSheet.hairlineWidth }}
-                                    onChangeText={this.onCompanyNameChange}/>
-                            <Button containerStyle={{marginTop: 25, width: "80%" }}
-                                    title={I18n.get("Continue")}
-                                    buttonStyle={{height: 60, backgroundColor: 'rgb(60,176,60)'}}
-                                    loading={this.state.loading}
-                                    onPress={this.createOwnCompany}/>
-                        </View>
-                    </View>}
-                </Modal>
+                <CompanyOnBoarding visible={this.state.companyOnBoarding}
+                                   companyOnBoardingStep={this.state.companyOnBoardingStep}
+                                   onPress={this.selectAccessCode} onPress1={this.selectCreateOwnCompany}
+                                   value={this.state.companyName} onChangeText={this.onCompanyNameChange}
+                                   loading={this.state.loading} onCreateOwnCompanyPress={this.createOwnCompany}/>
             </View>
         );
     }
@@ -337,7 +474,6 @@ class Transports extends Component {
         });
     }
 
-
     open(item, site) {
         const {navigate} = this.props.navigation;
         navigate('Transport', {
@@ -346,18 +482,24 @@ class Transports extends Component {
         });
     }
 
-    async onRefresh() {
-        if (!checkedCompany && !this.state.companyOnBoarding) {
-            await this.checkCompany();
+    async refreshIfNeeded() {
+        const {lastRefresh} = this.state;
+        if (lastRefresh && new Date().getTime() - lastRefresh.getTime() < 300 * 1000) {
+            return;
         }
+        await this.onRefresh();
+    }
 
+    async onRefresh() {
         this.setState({
             refreshing: true
         });
-        await this.loadData();
+        await this.loadOngoingContractsData(true);
+        await this.loadDoneContractsData(true);
         this.setState({
             refreshing: false,
-            firstLoad: false
+            firstLoad: false,
+            lastRefresh: new Date(),
         });
     }
 
@@ -382,28 +524,75 @@ class Transports extends Component {
         });
     }
 
-    componentWillUnmount() {
-        this.navigationEventSubscription();
-    }
-
-    async loadData() {
-        const response = await API.graphql(graphqlOperation(queries.contractsByCarrierArrivalDate, {
-            limit: 50,
-            carrierUsername: (await Auth.currentAuthenticatedUser()).getUsername(),
-            sortDirection: "DESC"
-        }));
+    async loadOngoingContractsData(refresh) {
+        let response, nextToken = refresh ? null : this.state.ongoingContractsNextToken;
+        do {
+            response = await API.graphql(graphqlOperation(queries.contractsByCarrierArrivalDate, {
+                limit: 25,
+                carrierUsername: (await Auth.currentAuthenticatedUser()).getUsername(),
+                filter: {
+                    status: {
+                        ne: "DONE"
+                    }
+                },
+                nextToken: nextToken,
+                sortDirection: "DESC"
+            }));
+            nextToken = response.data.contractsByCarrierArrivalDate.nextToken;
+        } while (response.data.contractsByCarrierArrivalDate.items.length === 0 && nextToken)
         const contracts = response.data.contractsByCarrierArrivalDate.items;
-        const ongoingContracts = this.groupByDate(contracts.filter(c => c.status !== 'DONE'));
-        const doneContracts = this.groupByDate(contracts.filter(c => c.status === 'DONE'));
+        const ongoingContracts = this.groupByDate(refresh ? {} : this.state.ongoingContractsResult, contracts);
+        // const doneContracts = this.groupByDate(contracts.filter(c => c.status === 'DONE'));
 
         this.setState({
-            ongoingContracts: ongoingContracts,
-            doneContracts: doneContracts
+            ongoingContractsResult: ongoingContracts,
+            ongoingContracts: Array.from(Object.values(ongoingContracts)),
+            ongoingContractsNextToken: nextToken
+            // doneContracts: doneContracts
         });
     }
 
-    groupByDate(contracts) {
-        const groupedContracts = contracts.reduce((acc, contract) => {
+    async loadDoneContractsData(refresh) {
+        let response, nextToken = refresh ? null : this.state.doneContractsNextToken;
+        do {
+            response = await API.graphql(graphqlOperation(queries.contractsByCarrierArrivalDate, {
+                limit: 15,
+                carrierUsername: (await Auth.currentAuthenticatedUser()).getUsername(),
+                filter: {
+                    status: {
+                        eq: "DONE"
+                    }
+                },
+                nextToken: nextToken,
+                sortDirection: "DESC"
+            }));
+            nextToken = response.data.contractsByCarrierArrivalDate.nextToken;
+        } while (response.data.contractsByCarrierArrivalDate.items.length === 0 && nextToken)
+        const contracts = response.data.contractsByCarrierArrivalDate.items;
+        const doneContracts = this.groupByDate(refresh ? {} : this.state.doneContractsResult, contracts);
+        // const doneContracts = this.groupByDate(contracts.filter(c => c.status === 'DONE'));
+
+        this.setState({
+            doneContractsResult: doneContracts,
+            doneContracts: Array.from(Object.values(doneContracts)),
+            doneContractsNextToken: nextToken
+        });
+    }
+
+    async loadNextOngoingData() {
+        if (this.state.ongoingContractsNextToken) {
+            await this.loadOngoingContractsData();
+        }
+    }
+
+    async loadNextDoneData() {
+        if (this.state.doneContractsNextToken) {
+            await this.loadDoneContractsData();
+        }
+    }
+
+    groupByDate(current, contracts) {
+        return contracts.reduce((acc, contract) => {
             const arrivalDate = contract.arrivalDate;
             if (acc[arrivalDate]) {
                 acc[arrivalDate].data.push(contract);
@@ -415,9 +604,7 @@ class Transports extends Component {
                 };
             }
             return acc;
-        }, {});
-        const sortedContracts = Array.from(Object.values(groupedContracts));
-        return sortedContracts;
+        }, current);
     }
 }
 

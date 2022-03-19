@@ -13,7 +13,7 @@ import React from "react";
 import Icon from "react-native-vector-icons/FontAwesome";
 import {Address, HandOverModal, MyText} from "./Components";
 import {Button, CheckBox} from "react-native-elements";
-import {Auth, Storage, graphqlOperation, API, I18n} from 'aws-amplify';
+import {Auth, Storage, graphqlOperation, API, I18n, Hub} from 'aws-amplify';
 import SignatureCapture from 'react-native-signature-capture';
 import UUIDGenerator from "react-native-uuid-generator";
 import {Buffer} from "buffer";
@@ -37,10 +37,7 @@ class CaptureSignature extends Component {
         return (
             <View style={{padding: 5, flex: 1}}>
                 <HandOverModal
-                    onPress={() => this.props.navigation.navigate('Transport', {
-                        item: this.state.finalContract,
-                        site: this.state.site
-                    })}
+                    onPress={() => this.finish()}
                     visible={this.state.handoverPhone}
                     text={I18n.get("Please return the phone to the driver")}/>
                 <View style={{borderWidth: 1, borderColor: '#000033', padding: 0, margin: 5, flex: 1}}>
@@ -73,6 +70,13 @@ class CaptureSignature extends Component {
                 </View>
             </View>
         );
+    }
+
+    finish() {
+        return this.props.navigation.navigate('Transport', {
+            item: this.state.finalContract,
+            site: this.state.site
+        });
     }
 
     save() {
