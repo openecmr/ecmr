@@ -251,6 +251,11 @@ function CompanyOnBoarding({companyOnBoardingStep, loading, onChangeText, onPres
     </Modal>;
 }
 
+function mapToList(result) {
+    const list = Array.from(Object.values(result));
+    return list.sort((a, b) => b.id.localeCompare(a.id));
+}
+
 class Transports extends Component {
     constructor(props) {
         super(props);
@@ -276,7 +281,7 @@ class Transports extends Component {
         Hub.listen('Contracts', ({payload}) => {
             const { event, data: { contract } } = payload;
 
-            const updateMap = (contract, map) => {
+            const addMap = (contract, map) => {
                 const arrivalDate = contract.arrivalDate;
                 if (map[arrivalDate]) {
                     map[arrivalDate].data.push(contract);
@@ -289,29 +294,36 @@ class Transports extends Component {
                 }
             }
 
-            if (event === 'update') {
-                for (const item of Object.values(this.state.ongoingContractsResult)) {
+            const updateMap = (contract, map) => {
+                for (const item of Object.values(map)) {
                     const idx = item.data.findIndex(c => c.id === contract.id);
                     if (idx !== -1) {
                         if (contract.status === 'DONE') {
                             item.data.splice(idx, 1);
+                            if (item.data.length === 0) {
+                                delete map[item.id];
+                            }
                         } else {
                             item.data[idx] = contract;
                         }
                         break;
                     }
                 }
+            }
+
+            if (event === 'update') {
+                updateMap(contract, this.state.ongoingContractsResult);
                 if (contract.status === 'DONE') {
-                    updateMap(contract, this.state.doneContractsResult);
+                    addMap(contract, this.state.doneContractsResult);
                 }
                 this.setState({
-                    ongoingContracts: Array.from(Object.values(this.state.ongoingContractsResult)),
-                    doneContracts: Array.from(Object.values(this.state.doneContractsResult))
+                    ongoingContracts: mapToList(this.state.ongoingContractsResult),
+                    doneContracts: mapToList(this.state.doneContractsResult)
                 });
             } else if (event === 'create') {
-                updateMap(contract, this.state.ongoingContractsResult);
+                addMap(contract, this.state.ongoingContractsResult);
                 this.setState({
-                    ongoingContracts: Array.from(Object.values(this.state.ongoingContractsResult))
+                    ongoingContracts: mapToList(this.state.ongoingContractsResult)
                 });
             }
         });
@@ -546,7 +558,7 @@ class Transports extends Component {
 
         this.setState({
             ongoingContractsResult: ongoingContracts,
-            ongoingContracts: Array.from(Object.values(ongoingContracts)),
+            ongoingContracts: mapToList(ongoingContracts),
             ongoingContractsNextToken: nextToken
             // doneContracts: doneContracts
         });
@@ -574,7 +586,7 @@ class Transports extends Component {
 
         this.setState({
             doneContractsResult: doneContracts,
-            doneContracts: Array.from(Object.values(doneContracts)),
+            doneContracts: mapToList(doneContracts),
             doneContractsNextToken: nextToken
         });
     }
