@@ -33,7 +33,6 @@ import SelectVehicle from "./SelectVehicle";
 import AddLoad from "./AddLoad";
 import NewTransportSelection from "./NewTransportSelection";
 import SelectCompany from "./SelectCompany";
-import Bugsnag from '@bugsnag/react-native'
 import analytics from '@react-native-firebase/analytics';
 import AddAddress from "./AddAddress";
 import AddVehicle from "./AddVehicle";
@@ -64,8 +63,6 @@ const config = {
 config['oauth']['domain'] = "auth.openecmr.com";
 Amplify.configure(config);
 Amplify.Logger.LOG_LEVEL = 'DEBUG';
-
-Bugsnag.start()
 
 LogBox.ignoreLogs([
     'Non-serializable values were found in the navigation state',

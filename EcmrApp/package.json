@@ -9,7 +9,7 @@
     "test": "jest",
     "lint": "eslint .",
     "i18n": "i18next-scanner --config i18next-scanner.config.js",
-    "publish": "cd android && ./gradlew publishReleaseBundle"
+    "publish": "cd android && ./gradlew publishReleaseBundle uploadBugsnagReleaseSourceMaps"
   },
   "dependencies": {
     "@bugsnag/react-native": "^7.16.1",
