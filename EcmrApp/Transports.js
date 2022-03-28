@@ -537,6 +537,12 @@ class Transports extends Component {
     }
 
     async loadOngoingContractsData(refresh) {
+        if (this.state.ongoingContractsFetching) {
+            return;
+        }
+        this.setState({
+            ongoingContractsFetching: true
+        });
         let response, nextToken = refresh ? null : this.state.ongoingContractsNextToken;
         do {
             response = await API.graphql(graphqlOperation(queries.contractsByCarrierArrivalDate, {
@@ -554,17 +560,22 @@ class Transports extends Component {
         } while (response.data.contractsByCarrierArrivalDate.items.length === 0 && nextToken)
         const contracts = response.data.contractsByCarrierArrivalDate.items;
         const ongoingContracts = this.groupByDate(refresh ? {} : this.state.ongoingContractsResult, contracts);
-        // const doneContracts = this.groupByDate(contracts.filter(c => c.status === 'DONE'));
 
         this.setState({
             ongoingContractsResult: ongoingContracts,
             ongoingContracts: mapToList(ongoingContracts),
-            ongoingContractsNextToken: nextToken
-            // doneContracts: doneContracts
+            ongoingContractsNextToken: nextToken,
+            ongoingContractsFetching: false
         });
     }
 
     async loadDoneContractsData(refresh) {
+        if (this.state.doneContractsFetching) {
+            return;
+        }
+        this.setState({
+            doneContractsFetching: true
+        });
         let response, nextToken = refresh ? null : this.state.doneContractsNextToken;
         do {
             response = await API.graphql(graphqlOperation(queries.contractsByCarrierArrivalDate, {
@@ -582,12 +593,12 @@ class Transports extends Component {
         } while (response.data.contractsByCarrierArrivalDate.items.length === 0 && nextToken)
         const contracts = response.data.contractsByCarrierArrivalDate.items;
         const doneContracts = this.groupByDate(refresh ? {} : this.state.doneContractsResult, contracts);
-        // const doneContracts = this.groupByDate(contracts.filter(c => c.status === 'DONE'));
 
         this.setState({
             doneContractsResult: doneContracts,
             doneContracts: mapToList(doneContracts),
-            doneContractsNextToken: nextToken
+            doneContractsNextToken: nextToken,
+            doneContractsFetching: false
         });
     }
 
