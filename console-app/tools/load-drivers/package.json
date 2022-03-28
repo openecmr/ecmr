@@ -9,7 +9,7 @@
     "load-contracts": "node load-contracts.js"
   },
   "dependencies": {
-    "aws-sdk": "^2.679.0",
+    "aws-sdk": "^2.814.0",
     "faker": "^4.1.0",
     "uuid": "^8.0.0"
   }
