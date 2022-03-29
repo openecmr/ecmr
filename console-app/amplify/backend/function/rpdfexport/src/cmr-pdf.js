@@ -121,8 +121,10 @@ const Signature = ({event, label, imageLocations}) => (
         <PdfHeader icon={'building'} label={label}/>
         {event &&
         <React.Fragment>
-            <Image source={imageLocations[event.signature.signatureImageSignatory.key]}
-                   style={{width: '100px', height: '100px'}}/>
+            {imageLocations[event.signature.signatureImageSignatory.key] &&
+                <Image source={imageLocations[event.signature.signatureImageSignatory.key]}
+                    style={{width: '100px', height: '100px'}}/>}
+            {!imageLocations[event.signature.signatureImageSignatory.key] && <Text>Signature not available</Text>}
             {/*<S3Image*/}
             {/*    theme={{photoImg: {width: '100px', height: '100px'}}}*/}
             {/*    resizeMode={'center'}*/}

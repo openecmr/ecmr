@@ -45,7 +45,7 @@
     "i18n": "i18next-scanner --config i18next-scanner.config.js 'src/**/*.{js,jsx}'",
     "e2etest": "npx cypress install && npx cypress run --reporter mochawesome --reporter-options 'reportDir=cypress/report/mochawesome-report,overwrite=false,html=false,json=true,timestamp=mmddyyyy_HHMMss' && npx mochawesome-merge cypress/report/mochawesome-report/mochawesome*.json > cypress/report/mochawesome.json",
     "citests": "start-server-and-test start http://localhost:3000 e2etest",
-    "amplify:rpdfexport": "cd amplify/backend/function/rpdfexport/src && npm run build"
+    "amplify:rpdfexport": "cd amplify/backend/function/rpdfexport/src && npm ci && npm run build"
   },
   "browserslist": {
     "production": [

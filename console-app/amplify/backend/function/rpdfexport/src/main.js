@@ -35,13 +35,19 @@ export default async (event, context) => {
             .map(key => s3.getObject({
                 Key: 'public/' + key,
                 Bucket: process.env.STORAGE_ATTACHMENTS_BUCKETNAME
-            }).promise().then(success => {
-                const filename = randomFileName() + key.replace(/.*(\.\w+)$/, function(m, g1) {return g1});
-                fs.writeFileSync(filename, success.Body);
+            }).promise()
+                .then(success => {
+                    const filename = randomFileName() + key.replace(/.*(\.\w+)$/, function (m, g1) {
+                        return g1
+                    });
+                    fs.writeFileSync(filename, success.Body);
 
-                return [key, filename];
-            }));
-        imageLocations = Object.fromEntries(await Promise.all(values));
+                    return [key, filename];
+                }));
+        imageLocations = Object.fromEntries(
+            (await Promise.allSettled(values))
+                .filter(x => x.status === 'fulfilled')
+                .map(x => x.value));
     } else {
         imageLocations = {}
     }
