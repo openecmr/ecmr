@@ -14,6 +14,10 @@
       android:theme="@style/AppTheme">
       <meta-data android:name="com.bugsnag.android.API_KEY"
                  android:value="4e310eec0432c0a727f67f652c12bfb5"/>
+      <meta-data android:name="com.bugsnag.android.REDACTED_KEYS"
+                 android:value="password,id_token,access_token"/>
+      <meta-data android:name="com.bugsnag.android.ENABLED_RELEASE_STAGES"
+                 android:value="production,development"/>
       <activity
         android:name=".MainActivity"
         android:label="@string/app_name"

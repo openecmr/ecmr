@@ -14,6 +14,9 @@ function SelectCompany({navigation: {navigate}}) {
         (async function () {
             const user = (await Auth.currentAuthenticatedUser());
             const groups = user.signInUserSession.accessToken.payload["cognito:groups"];
+            if (!groups) {
+                return;
+            }
 
             const companies = await Promise.all(
                 groups
