@@ -233,5 +233,12 @@
   "I want to create my own company": "Ik wil mijn eigen bedrijf aanmaken",
   "Please enter the name of your new company": "Voer de naam van je bedrijf in",
   "Continue": "Doorgaan",
-  "Please enter the name of the company": "Voer de naam van je bedrijf in"
+  "Please enter the name of the company": "Voer de naam van je bedrijf in",
+  "Edit load": "Laadregel aanpassen",
+  "Add a description...": "Beschrijving toevoegen...",
+  "Add document or photo": "Document of foto toevoegen",
+  "Actions": "Acties",
+  "Add a photo": "Foto toevoegen",
+  "You cannot add more attachments to this transport. The maximum number of attachments has been reached.": "U kunt geen documenten meer toevoegen aan dit transport. Het maximum aantal bijlagen is bereikt.",
+  "${name} added attachment ${filename}\n\nDescription: ${description}": "${name} heeft bijlage ${filename} toegevoegd.\n\nBeschrijving: ${description}"
 }

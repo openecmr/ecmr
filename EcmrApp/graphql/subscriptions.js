@@ -2,7 +2,7 @@
 // this is an auto generated file. This will be overwritten
 
 export const onCreateVehicle = /* GraphQL */ `
-  subscription OnCreateVehicle($owner: String!, $createdBy: String!) {
+  subscription OnCreateVehicle($owner: String, $createdBy: String) {
     onCreateVehicle(owner: $owner, createdBy: $createdBy) {
       id
       owner
@@ -17,7 +17,7 @@ export const onCreateVehicle = /* GraphQL */ `
   }
 `;
 export const onUpdateVehicle = /* GraphQL */ `
-  subscription OnUpdateVehicle($owner: String!, $createdBy: String!) {
+  subscription OnUpdateVehicle($owner: String, $createdBy: String) {
     onUpdateVehicle(owner: $owner, createdBy: $createdBy) {
       id
       owner
@@ -32,7 +32,7 @@ export const onUpdateVehicle = /* GraphQL */ `
   }
 `;
 export const onDeleteVehicle = /* GraphQL */ `
-  subscription OnDeleteVehicle($owner: String!, $createdBy: String!) {
+  subscription OnDeleteVehicle($owner: String, $createdBy: String) {
     onDeleteVehicle(owner: $owner, createdBy: $createdBy) {
       id
       owner
@@ -47,7 +47,7 @@ export const onDeleteVehicle = /* GraphQL */ `
   }
 `;
 export const onCreateContact = /* GraphQL */ `
-  subscription OnCreateContact($owner: String!, $createdBy: String!) {
+  subscription OnCreateContact($owner: String, $createdBy: String) {
     onCreateContact(owner: $owner, createdBy: $createdBy) {
       id
       owner
@@ -105,7 +105,7 @@ export const onCreateContact = /* GraphQL */ `
   }
 `;
 export const onUpdateContact = /* GraphQL */ `
-  subscription OnUpdateContact($owner: String!, $createdBy: String!) {
+  subscription OnUpdateContact($owner: String, $createdBy: String) {
     onUpdateContact(owner: $owner, createdBy: $createdBy) {
       id
       owner
@@ -163,7 +163,7 @@ export const onUpdateContact = /* GraphQL */ `
   }
 `;
 export const onDeleteContact = /* GraphQL */ `
-  subscription OnDeleteContact($owner: String!, $createdBy: String!) {
+  subscription OnDeleteContact($owner: String, $createdBy: String) {
     onDeleteContact(owner: $owner, createdBy: $createdBy) {
       id
       owner
@@ -395,6 +395,8 @@ export const onCreateContract = /* GraphQL */ `
           mimeType
           extension
         }
+        attachmentType
+        attachmentDescription
         deletesAttachments
         oldLoads {
           category
@@ -711,6 +713,8 @@ export const onUpdateContract = /* GraphQL */ `
           mimeType
           extension
         }
+        attachmentType
+        attachmentDescription
         deletesAttachments
         oldLoads {
           category
@@ -1027,6 +1031,8 @@ export const onDeleteContract = /* GraphQL */ `
           mimeType
           extension
         }
+        attachmentType
+        attachmentDescription
         deletesAttachments
         oldLoads {
           category

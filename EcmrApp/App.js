@@ -38,6 +38,7 @@ import AddAddress from "./AddAddress";
 import AddVehicle from "./AddVehicle";
 import {NavigationContainer, useNavigationContainerRef} from "@react-navigation/native";
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
+import AddDocumentOrPhoto from "./AddDocumentOrPhoto";
 
 const deviceLanguage =
     Platform.OS === 'ios'
@@ -84,6 +85,7 @@ const MainNavigator = () => <Stack.Navigator screenOptions={{
     <Stack.Screen name={"CaptureSignature"} component={CaptureSignature} options={{title: I18n.get('Draw signature')}}/>
     <Stack.Screen name={"SignatoryInformation"} component={SignatoryInformation} options={{title: I18n.get('Signatory information')}}/>
     <Stack.Screen name={"AddPhotos"} component={AddPhotos} options={{title: I18n.get('Add photos?')}}/>
+    <Stack.Screen name={"AddDocumentOrPhoto"} component={AddDocumentOrPhoto} options={{title: I18n.get('Add document or photo')}}/>
     <Stack.Screen name={"SelectSignatory"} component={SelectSignatory}/>
     <Stack.Screen name={"AddContact"} component={AddContact} options={{title: I18n.get('Add contact')}}/>
 

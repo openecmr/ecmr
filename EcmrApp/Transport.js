@@ -1,19 +1,10 @@
-import {Component} from "react";
-import React from "react";
-import {
-    Alert,
-    StyleSheet,
-    Text,
-    View,
-    ScrollView,
-    TouchableOpacity,
-    ActivityIndicator} from "react-native";
+import React, {Component} from "react";
+import {ActivityIndicator, Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import {Address, ArrivalDate, LicensePlates, LoadDetailText, MyText, Sizes} from "./Components";
-import {API, graphqlOperation, I18n, Storage} from 'aws-amplify';
+import {API, Auth, graphqlOperation, I18n, Storage} from 'aws-amplify';
 import * as queries from "./graphql/queries";
 import moment from "moment/min/moment-with-locales";
-import { Auth } from 'aws-amplify';
 import {S3Image} from "aws-amplify-react-native";
 import ContractModel from "./ContractModel";
 import {createUpdateContractInput, updateContract} from "./DataUtil";
@@ -95,10 +86,10 @@ const LoadDetail = ({load}) => (
     </View>
 );
 
-const ActionButton = ({ onPress, disabled, label }) => (
+const ActionButton = ({ onPress, disabled, label, icon }) => (
     <TouchableOpacity style={{padding: 15}} onPress={onPress} disabled={disabled}>
         <View style={{flexDirection: "row"}}>
-            <Icon name={"file"} style={{
+            <Icon name={icon} style={{
                 color: "rgb(0, 115, 209)",
                 marginRight: 5,
                 textAlignVertical: "center",
@@ -206,10 +197,7 @@ class Transport extends Component {
 
         const ongoingEvent = !!(lastRelevantEvent && firstAction);
 
-        const deletedAttachments = contract.events.filter(e => e.type === 'DeleteAttachment').map(e => e.deletesAttachments);
-        const attachments = contract.events
-            .filter(e => e.type === 'AddAttachment' && deletedAttachments.indexOf(e.createdAt) === -1 && e.attachments)
-            .map(e => e.attachments).flat()
+        const attachments = this.attachments(contract);
 
         return (
             <ScrollView style={styles.transport}>
@@ -280,9 +268,12 @@ class Transport extends Component {
                                    style={{paddingTop: 10, ...styles.address}}/>
                 </View>
 
-                <Header>{I18n.get("Consignment note")}</Header>
+                <Header>{I18n.get("Actions")}</Header>
                 <View style={{paddingLeft: Sizes.PADDING_FROM_SCREEN_BORDER}}>
-                    <ActionButton onPress={() => this.showConsignmentNote()} label={I18n.get("Display the consignment note")} disabled={this.state.downloadingPdf}/>
+                    <View style={{borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: 'rgb(200, 200, 200)'}}>
+                        <ActionButton onPress={() => this.showConsignmentNote()} label={I18n.get("Display the consignment note")} disabled={this.state.downloadingPdf} icon={"file"}/>
+                    </View>
+                    <ActionButton onPress={() => this.addDocumentOrPhoto()} label={I18n.get("Add a photo")} disabled={false} icon={"camera"}/>
                 </View>
 
                 {attachments.length > 0 && <View>
@@ -291,6 +282,7 @@ class Transport extends Component {
                         {attachments.map((a, index) => <ActionButton onPress={() => this.downloadAttachment(a)}
                                                             label={a.filename}
                                                             key={index}
+                                                            icon={this.determineIcon(a)}
                                                             disabled={this.state.downloadingAttachment === a}/>)}
 
                     </View>
@@ -316,8 +308,43 @@ class Transport extends Component {
         );
     }
 
+    determineIcon(attachment) {
+        const icons = {
+            "image/jpeg": "file-image"
+        }
+        return icons[attachment.mimeType] || "file"
+    }
+
+    attachments(contract) {
+        const deletedAttachments = contract.events.filter(e => e.type === 'DeleteAttachment').map(e => e.deletesAttachments);
+        return contract.events
+            .filter(e => e.type === 'AddAttachment' && deletedAttachments.indexOf(e.createdAt) === -1 && e.attachments)
+            .map(e => e.attachments).flat();
+    }
+
     isPending(contract) {
         return contract.status === 'CREATED' || contract.status === 'IN_PROGRESS';
+    }
+
+    addDocumentOrPhoto() {
+        const {navigate} = this.props.navigation;
+
+        const attachments = this.attachments(this.state.item);
+        if (attachments.length > 10) {
+            Alert.alert(
+                I18n.get('Error'),
+                I18n.get('You cannot add more attachments to this transport. The maximum number of attachments has been reached.'),
+                [
+                    {text: I18n.get('OK'), onPress: () => this.acknowledge()}
+                ],
+                {cancelable: true}
+            );
+        } else {
+            navigate('AddDocumentOrPhoto', {
+                item: this.state.item,
+                site: this.state.site
+            });
+        }
     }
 
     async downloadAttachment(attachment) {
@@ -378,7 +405,14 @@ class Transport extends Component {
             case 'Acknowledge':
                 return I18n.get("${name} acknowledged the transport").replace("${name}", name);
             case 'AddAttachment':
-                return I18n.get('${name} added attachment ${filename}').replace('${name}', name).replace('${filename}', event.attachments && event.attachments.length && event.attachments[0].filename);
+                return event.attachmentDescription ?
+                    I18n.get('${name} added attachment ${filename}\n\nDescription: ${description}')
+                        .replace('${name}', name)
+                        .replace('${filename}', event.attachments && event.attachments.length && event.attachments[0].filename)
+                        .replace('${description}', event.attachmentDescription) :
+                    I18n.get('${name} added attachment ${filename}')
+                        .replace('${name}', name)
+                        .replace('${filename}', event.attachments && event.attachments.length && event.attachments[0].filename);
             case "DeleteAttachment":
                 return I18n.get('${name} removed attachment').replace('${name}', name);
             case "Edited":

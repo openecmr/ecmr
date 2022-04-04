@@ -30,7 +30,7 @@
     "eslint": "^8.8.0",
     "moment": "^2.29.1",
     "react": "17.0.2",
-    "react-native": "0.67.2",
+    "react-native": "^0.67.4",
     "react-native-elements": "^3.4.2",
     "react-native-gesture-handler": "^2.2.0",
     "react-native-image-picker": "2.3.4",

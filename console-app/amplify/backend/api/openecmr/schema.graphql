@@ -307,11 +307,15 @@ enum SignatureMethod {
 }
 
 type Signature @aws_api_key @aws_cognito_user_pools @aws_iam {
-    method: SignatureMethod!,
-    signatureImageDriver: S3Object,
-    signatureImageSignatory: S3Object,
+    method: SignatureMethod!
+    signatureImageDriver: S3Object
+    signatureImageSignatory: S3Object
     signatoryName: String
     signatoryEmail: String
+}
+
+enum AttachmentType {
+    OTHER, CMR_DOCUMENT, LOAD_PHOTO, DELIVERY_NOTE, WEIGHT_NOTE, WASTE_MANIFEST, HOLDER_SWAP_NOTE
 }
 
 type Event @aws_api_key @aws_cognito_user_pools @aws_iam {
@@ -323,14 +327,17 @@ type Event @aws_api_key @aws_cognito_user_pools @aws_iam {
     longitude: Float
     signature: Signature
     driverObservation: String
-    signatoryObservation: String,
+    signatoryObservation: String
     sendCopy: Boolean,
-    assignedDriver: DriverDetail,
+    assignedDriver: DriverDetail
+    # photos added during loading/unloading
     photos: [S3Object!],
     attachments: [Attachment!],
-    deletesAttachments: String,
-    oldLoads: [Load!],
-    newLoads: [Load!],
+    attachmentType: AttachmentType
+    attachmentDescription: String
+    deletesAttachments: String
+    oldLoads: [Load!]
+    newLoads: [Load!]
     newAttributes: ContractAttributes
     oldAttributes: ContractAttributes
 }

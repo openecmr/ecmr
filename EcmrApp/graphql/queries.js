@@ -155,6 +155,8 @@ export const contractsByFilterCustom = /* GraphQL */ `
             mimeType
             extension
           }
+          attachmentType
+          attachmentDescription
           deletesAttachments
           oldLoads {
             category
@@ -1065,6 +1067,8 @@ export const contractsByOwnerArrivalDate = /* GraphQL */ `
             mimeType
             extension
           }
+          attachmentType
+          attachmentDescription
           deletesAttachments
           oldLoads {
             category
@@ -1382,6 +1386,8 @@ export const contractsByCarrierArrivalDate = /* GraphQL */ `
             mimeType
             extension
           }
+          attachmentType
+          attachmentDescription
           deletesAttachments
           oldLoads {
             category
@@ -1699,6 +1705,8 @@ export const contractsByOwnerUpdatedAt = /* GraphQL */ `
             mimeType
             extension
           }
+          attachmentType
+          attachmentDescription
           deletesAttachments
           oldLoads {
             category
@@ -2016,6 +2024,8 @@ export const contractsByCarrierUpdatedAt = /* GraphQL */ `
             mimeType
             extension
           }
+          attachmentType
+          attachmentDescription
           deletesAttachments
           oldLoads {
             category
@@ -2333,6 +2343,8 @@ export const ordersByOwnerCreatedAt = /* GraphQL */ `
             mimeType
             extension
           }
+          attachmentType
+          attachmentDescription
           deletesAttachments
           oldLoads {
             category
@@ -2650,6 +2662,8 @@ export const ordersByCarrierCreatedAt = /* GraphQL */ `
             mimeType
             extension
           }
+          attachmentType
+          attachmentDescription
           deletesAttachments
           oldLoads {
             category
@@ -2952,6 +2966,8 @@ export const getContract = /* GraphQL */ `
           mimeType
           extension
         }
+        attachmentType
+        attachmentDescription
         deletesAttachments
         oldLoads {
           category
@@ -3263,6 +3279,8 @@ export const listContracts = /* GraphQL */ `
             mimeType
             extension
           }
+          attachmentType
+          attachmentDescription
           deletesAttachments
           oldLoads {
             category

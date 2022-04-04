@@ -135,6 +135,8 @@ export const createContractCustom = /* GraphQL */ `
           mimeType
           extension
         }
+        attachmentType
+        attachmentDescription
         deletesAttachments
         oldLoads {
           category
@@ -441,6 +443,8 @@ export const createContract = /* GraphQL */ `
           mimeType
           extension
         }
+        attachmentType
+        attachmentDescription
         deletesAttachments
         oldLoads {
           category
@@ -747,6 +751,8 @@ export const updateContract = /* GraphQL */ `
           mimeType
           extension
         }
+        attachmentType
+        attachmentDescription
         deletesAttachments
         oldLoads {
           category
@@ -1053,6 +1059,8 @@ export const deleteContract = /* GraphQL */ `
           mimeType
           extension
         }
+        attachmentType
+        attachmentDescription
         deletesAttachments
         oldLoads {
           category

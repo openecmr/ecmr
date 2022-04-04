@@ -1,25 +1,19 @@
 import {Component} from "react";
 import {
     ActivityIndicator,
-    FlatList,
-    SectionList,
-    StyleSheet,
     Text,
     TouchableHighlight,
-    TouchableOpacity,
     View
 } from "react-native";
 import React from "react";
-import Icon from "react-native-vector-icons/FontAwesome";
-import {Address, HandOverModal, MyText} from "./Components";
-import {Button, CheckBox} from "react-native-elements";
-import {Auth, Storage, graphqlOperation, API, I18n, Hub} from 'aws-amplify';
+import {HandOverModal} from "./Components";
+import {Button} from "react-native-elements";
+import {Auth, Storage, I18n} from 'aws-amplify';
 import SignatureCapture from 'react-native-signature-capture';
 import UUIDGenerator from "react-native-uuid-generator";
 import {Buffer} from "buffer";
 import moment from "moment/min/moment-with-locales";
-import * as mutations from "./graphql/mutations";
-import {createUpdateContractInput, updateContract} from "./DataUtil";
+import {createUpdateContractInput, updateContract, uploadPhotos} from "./DataUtil";
 
 
 class CaptureSignature extends Component {
@@ -99,16 +93,7 @@ class CaptureSignature extends Component {
             const user = await Auth.currentAuthenticatedUser();
 
             const params = this.props.route.params;
-            const photos = await Promise.all(params.photos.map(async (photo) => {
-                const fetchResponse = await fetch(photo.uri);
-                const photoBuffer = await fetchResponse.blob();
-                const key = 'photo-' + (await UUIDGenerator.getRandomUUID()) + ".jpg";
-                return {
-                    bucket: 'bucket',
-                    region: 'eu-central-1',
-                    key: (await Storage.put(key, photoBuffer)).key
-                }
-            }));
+            const photos = await uploadPhotos(params.photos);
 
             const signatoryObservation = params.signatoryObservation;
             const signatoryName = params.signatoryName;

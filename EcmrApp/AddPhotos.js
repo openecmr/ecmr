@@ -1,11 +1,12 @@
 import React, {Component} from "react";
-import {Image, StyleSheet, TouchableOpacity, View} from "react-native";
+import {Image, Modal, StyleSheet, TextInput, TouchableOpacity, View} from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
-import {MyText} from "./Components";
+import {InputRow, MyText} from "./Components";
 import {Button} from "react-native-elements";
 import ImagePicker from 'react-native-image-picker';
 import ImageResizer from 'react-native-image-resizer';
 import {I18n} from "aws-amplify";
+import moment from "moment/min/moment-with-locales";
 
 class AddPhotos extends Component {
     constructor(props) {
@@ -18,14 +19,31 @@ class AddPhotos extends Component {
             ]
         };
 
-        this.signature = this.signature.bind(this);
+        this.finish = this.finish.bind(this);
         this.addPhoto = this.addPhoto.bind(this);
+    }
+
+    buttonTitle() {
+        return I18n.get("Continue with signature");
+    }
+
+    attachmentMode() {
+        return false;
     }
 
     render() {
         return (
             <View style={styles.baseContainer}>
                 <MyText style={styles.header}>{I18n.get('E.g. photos of the load, delivery documents, etc.')}</MyText>
+
+                {this.attachmentMode() && <View style={{backgroundColor: 'rgb(237,237,237)', marginTop: 10, padding: 10, borderRadius: 5}}>
+                    <TextInput
+                        autoCapitalize={"sentences"}
+                        value={this.state.attachmentDescription}
+                        style={{textAlign: 'center', fontWeight: 'bold', padding: 0}}
+                        placeholder={I18n.get("Add a description...")}
+                        onChangeText={attachmentDescription => this.setState({attachmentDescription})}/>
+                </View>}
 
                 <View style={styles.photoFrameContainer}>
                     {
@@ -43,8 +61,10 @@ class AddPhotos extends Component {
                 <View style={styles.alignBottom}>
                     <Button buttonStyle={{height: 60}}
                             containerStyle={{flex: 1, padding: 0}}
-                            title={I18n.get("Continue with signature")}
-                            onPress={this.signature}/>
+                            title={this.buttonTitle()}
+                            loading={this.state.loading}
+                            disabled={this.state.loading}
+                            onPress={this.finish}/>
                 </View>
             </View>
         )
@@ -84,17 +104,19 @@ class AddPhotos extends Component {
     }
 
     addPhotoState(response, idx) {
-        const source = {uri: response.uri};
+        const source = {
+            uri: response.uri
+        };
         const photos = this.state.photos;
         photos[idx].imageSource = source;
         photos[idx].uri = response.uri;
+        photos[idx].timestamp = moment().format();
         this.setState({
             photos
         });
-
     }
 
-    signature() {
+    finish() {
         const {navigate} = this.props.navigation;
         navigate('SignSelection', {
             item: this.state.contract,
@@ -141,6 +163,21 @@ const styles = StyleSheet.create({
         marginTop: 5,
         position: 'absolute',
         bottom: 0, left: 10
+    },
+    modalView: {
+        margin: 20,
+        backgroundColor: "white",
+        borderRadius: 20,
+        padding: 35,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
     }
 });
 
