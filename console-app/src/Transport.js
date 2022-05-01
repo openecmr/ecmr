@@ -560,18 +560,21 @@ class Transport extends Component {
                                     <Grid.Row divided>
                                         <Grid.Column width={4}><Header
                                             as={'h5'}>{I18n.get('Type')}</Header></Grid.Column>
-                                        <Grid.Column width={12}><Header
+                                        <Grid.Column width={6}><Header
                                             as={'h5'}>{I18n.get('Name')}</Header></Grid.Column>
+                                        <Grid.Column width={6}><Header
+                                            as={'h5'}>{I18n.get('Description')}</Header></Grid.Column>
                                     </Grid.Row>
                                     <Grid.Row>
                                         <Grid.Column width={4}>
                                             <Icon name='file'/> {I18n.get('Consignment note')}
                                         </Grid.Column>
-                                        <Grid.Column width={12}>
+                                        <Grid.Column width={6}>
                                             <MyLink
                                                 onClick={() => this.downloadPdf()}>{`cmr-${cmrId}.pdf`}</MyLink>&nbsp;
                                             <Loader size='mini' active={this.state.downloadingPdf} inline/>
                                         </Grid.Column>
+                                        <Grid.Column width={6}/>
                                     </Grid.Row>
                                     {
                                         attachments.map(({event, attachment}) =>
@@ -579,7 +582,7 @@ class Transport extends Component {
                                                 <Grid.Column width={4}>
                                                     <Icon name='file'/> {I18n.get('Document')}
                                                 </Grid.Column>
-                                                <Grid.Column width={12}>
+                                                <Grid.Column width={6} style={{overflow: 'hidden'}}>
                                                     <MyLink
                                                         onClick={() => this.downloadDocument(attachment)}>{attachment.filename}</MyLink>&nbsp;
                                                     <Loader size='mini' active={this.state.downloading === attachment}
@@ -587,6 +590,7 @@ class Transport extends Component {
                                                     <Icon name={"delete"} style={{cursor: "pointer"}}
                                                           onClick={() => this.deleteAttachment(event)}/>
                                                 </Grid.Column>
+                                                <Grid.Column width={6}>{event.attachmentDescription}</Grid.Column>
                                             </Grid.Row>)
                                         )
                                     }
