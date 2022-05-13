@@ -168,7 +168,7 @@ const SignatureEvent = ({event: { signature, signatoryObservation, driverObserva
         }
     </div>;
 
-const MyLink = ({onClick, children}) => <span onClick={onClick} style={{color: "#4183c4", cursor: "pointer"}}>{children}</span>
+const MyLink = ({onClick, children}) => <div title={children} onClick={onClick} style={{flex: 1, color: "#4183c4", cursor: "pointer", overflow: "hidden", textOverflow: "ellipsis"}}>{children}</div>
 
 class FormModal extends Component {
     constructor(props) {
@@ -551,6 +551,7 @@ class Transport extends Component {
                         </Grid.Row>
                     </Grid>
                 </Segment>
+                <ViewPhoto open={!!this.state.attachmentPhoto} photo={this.state.attachmentPhoto} close={() => this.setAttachmentPhoto(null)}/>
                 <Grid columns={2} stackable>
                     <Grid.Row stretched>
                         <Grid.Column>
@@ -582,10 +583,10 @@ class Transport extends Component {
                                                 <Grid.Column width={4}>
                                                     <Icon name='file'/> {I18n.get('Document')}
                                                 </Grid.Column>
-                                                <Grid.Column width={6} style={{overflow: 'hidden'}}>
+                                                <Grid.Column width={6} style={{flexDirection: "row", display: "flex"}}>
                                                     <MyLink
-                                                        onClick={() => this.downloadDocument(attachment)}>{attachment.filename}</MyLink>&nbsp;
-                                                    <Loader size='mini' active={this.state.downloading === attachment}
+                                                        onClick={() => this.openOrDownloadDocument(attachment)}>{attachment.filename}</MyLink>&nbsp;
+                                                    <Loader style={{flex: 1}} size='mini' active={this.state.downloading === attachment}
                                                             inline/>
                                                     <Icon name={"delete"} style={{cursor: "pointer"}}
                                                           onClick={() => this.deleteAttachment(event)}/>
@@ -681,26 +682,36 @@ class Transport extends Component {
         });
     }
 
-    async downloadDocument(attachment) {
+    setAttachmentPhoto(photo) {
         this.setState({
-            downloading: attachment
-        });
-        let s3file = await Storage.get(attachment.location.key, {download: true});
-        const url = URL.createObjectURL(s3file.Body);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = attachment.filename;
-        const clickHandler = () => {
-            setTimeout(() => {
-                URL.revokeObjectURL(url);
-                a.removeEventListener('click', clickHandler);
-            }, 150);
-        };
-        a.addEventListener('click', clickHandler, false);
-        a.click();
-        this.setState({
-            downloading: null
-        });
+            attachmentPhoto: photo
+        })
+    }
+
+    async openOrDownloadDocument(attachment) {
+        if (attachment.mimeType && attachment.mimeType.startsWith('image/')) {
+            this.setAttachmentPhoto(attachment.location);
+        } else {
+            this.setState({
+                downloading: attachment
+            });
+            let s3file = await Storage.get(attachment.location.key, {download: true});
+            const url = URL.createObjectURL(s3file.Body);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = attachment.filename;
+            const clickHandler = () => {
+                setTimeout(() => {
+                    URL.revokeObjectURL(url);
+                    a.removeEventListener('click', clickHandler);
+                }, 150);
+            };
+            a.addEventListener('click', clickHandler, false);
+            a.click();
+            this.setState({
+                downloading: null
+            });
+        }
     }
 
     async fileChange(e) {

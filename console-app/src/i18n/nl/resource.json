@@ -282,5 +282,6 @@
   "Are you sure you want to delete this transport? It will be gone permanently.": "Weet u zeker dat u dit transport wilt verwijderen. Deze bewerking kan niet ongedaan gemaakt worden.",
   "This contact is currently not in the address book. You can only replace the complete contact by selecting one from the address book.": "Dit adres staat niet in het adresboek. Je kunt het adres alleen in zijn geheel vervangen door een adres te kiezen uit het adresboek.",
   "You can find information on enabling the customer portal under Settings": "Meer informatie over het opzetten van het klantenportaal is te vinden onder Instellingen",
-  "preview": "preview"
+  "preview": "preview",
+  "transports": "Transporten"
 }

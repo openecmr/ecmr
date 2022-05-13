@@ -184,7 +184,7 @@ const AppMenuCustomerPortal = withRouter(({location, menuVisible}) => (
 const AppMenu = withRouter(({location, menuVisible, company}) => (
     <Menu vertical fixed={'left'} style={{...style.appMenu, display: menuVisible ? "block" : "none"}}>
         <Menu.Item
-            name={I18n.get('my transports')}
+            name={I18n.get('transports')}
             to={'/transports'}
             active={location.pathname.startsWith('/transports')}
             as={Link}
