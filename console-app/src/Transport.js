@@ -168,7 +168,7 @@ const SignatureEvent = ({event: { signature, signatoryObservation, driverObserva
         }
     </div>;
 
-const MyLink = ({onClick, children}) => <div title={children} onClick={onClick} style={{flex: 1, color: "#4183c4", cursor: "pointer", overflow: "hidden", textOverflow: "ellipsis"}}>{children}</div>
+const MyLink = ({onClick, children}) => <div title={children} onClick={onClick} style={{verticalAlign: "top", display: "inline-block", color: "#4183c4", cursor: "pointer", overflow: "hidden", textOverflow: "ellipsis", maxWidth: "100%"}}>{children}</div>
 
 class FormModal extends Component {
     constructor(props) {
@@ -583,10 +583,10 @@ class Transport extends Component {
                                                 <Grid.Column width={4}>
                                                     <Icon name='file'/> {I18n.get('Document')}
                                                 </Grid.Column>
-                                                <Grid.Column width={6} style={{flexDirection: "row", display: "flex"}}>
+                                                <Grid.Column width={6}>
                                                     <MyLink
                                                         onClick={() => this.openOrDownloadDocument(attachment)}>{attachment.filename}</MyLink>&nbsp;
-                                                    <Loader style={{flex: 1}} size='mini' active={this.state.downloading === attachment}
+                                                    <Loader size='mini' active={this.state.downloading === attachment}
                                                             inline/>
                                                     <Icon name={"delete"} style={{cursor: "pointer"}}
                                                           onClick={() => this.deleteAttachment(event)}/>
