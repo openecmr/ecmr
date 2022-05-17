@@ -26,7 +26,7 @@
     "express": "^4.17.1",
     "express-async-handler": "^1.1.4",
     "express-validator": "^6.10.0",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "react": "^17.0.2",
     "ts-node-dev": "1.0.0-pre.44"
   }
