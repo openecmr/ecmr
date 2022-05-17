@@ -41,6 +41,22 @@ const formatDuration = time => {
     return `00:${formatInt(seconds)}`;
 };
 
+async function openS3Location(location, mimeType) {
+    const result = await Storage.get(location.key);
+    const res = await RNFetchBlob
+        .config({
+            fileCache: true,
+        })
+        .fetch('GET', result);
+
+
+    if (Platform.OS === 'android') {
+        await RNFetchBlob.android.actionViewIntent(res.data, mimeType);
+    } else if (Platform.OS === 'ios') {
+        await RNFetchBlob.ios.openDocument(res.data);
+    }
+}
+
 const SignatureEvent = ({signature, signatoryObservation, photos, oldLoads, newLoads}) => (
     <View>
         {
@@ -49,10 +65,12 @@ const SignatureEvent = ({signature, signatoryObservation, photos, oldLoads, newL
                 <MyText>{I18n.get("Loads description was changed")} </MyText>
             </View>
         }
-        <S3Image style={{width: 150, height: 150}}
+        <TouchableOpacity onPress={() => openS3Location(signature.signatureImageSignatory, "image/png")}>
+            <S3Image style={{width: 150, height: 150}}
              resizeMode={'center'}
              level={"public"}
              imgKey={signature.signatureImageSignatory.key} />
+        </TouchableOpacity>
         {
             signature.signatoryName &&
             <View style={{flexDirection: 'row'}}>
@@ -351,19 +369,7 @@ class Transport extends Component {
         this.setState({
             downloadingAttachment: attachment
         })
-        const result = await Storage.get(attachment.location.key);
-        const res = await RNFetchBlob
-            .config({
-                fileCache : true,
-            })
-            .fetch('GET', result);
-
-
-        if (Platform.OS === 'android') {
-            await RNFetchBlob.android.actionViewIntent(res.data, attachment.mimeType);
-        } else if (Platform.OS === 'ios') {
-            await RNFetchBlob.ios.openDocument(res.data);
-        }
+        await openS3Location(attachment.location, attachment.mimeType);
         this.setState({
             downloadingAttachment: null
         })
@@ -676,7 +682,9 @@ export default Transport;
 function Photos(photos) {
     return <View style={styles.photoFrameContainer}>
         {[0, 1, 2].map((photo, idx) => <View style={[styles.photoFrame, idx === 2 && styles.photoFrameLast, idx > photos.length - 1 && styles.photoFrameHidden]} key={idx}>
-            {photos[photo] && <S3Image style={styles.photo} level={"public"} imgKey={photos[photo].key} />}
+            {photos[photo] && <TouchableOpacity onPress={() => openS3Location(photos[photo], "image/jpeg")} style={styles.photo}>
+                <S3Image style={styles.photo} level={"public"} imgKey={photos[photo].key} />
+            </TouchableOpacity>}
         </View>)}
     </View>;
 }
