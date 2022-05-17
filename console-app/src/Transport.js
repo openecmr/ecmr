@@ -395,7 +395,7 @@ class Transport extends Component {
         const attachments = contract.events
             .filter(e => e.type === 'AddAttachment' && deletedAttachments.indexOf(e.createdAt) === -1)
             .map(e => (e.attachments || []).map(a => ({event: e, attachment: a}))).flat()
-        const cmrId = contract.openecmrId ? contract.openecmrId : contract.id.substring(0, 8)
+        const cmrId = this.getCmrId(contract)
 
         const orderStatus = contract.orderStatus;
 
@@ -651,6 +651,10 @@ class Transport extends Component {
         );
     }
 
+    getCmrId(contract) {
+        return contract.openecmrId ? contract.openecmrId : contract.id.substring(0, 8);
+    }
+
     copy() {
         const {history} = this.props;
         history.push('/transports-new/' + this.state.contract.id);
@@ -696,22 +700,27 @@ class Transport extends Component {
                 downloading: attachment
             });
             let s3file = await Storage.get(attachment.location.key, {download: true});
-            const url = URL.createObjectURL(s3file.Body);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = attachment.filename;
-            const clickHandler = () => {
-                setTimeout(() => {
-                    URL.revokeObjectURL(url);
-                    a.removeEventListener('click', clickHandler);
-                }, 150);
-            };
-            a.addEventListener('click', clickHandler, false);
-            a.click();
+            this.openBlob(s3file.Body, attachment.filename);
             this.setState({
                 downloading: null
             });
         }
+    }
+
+    openBlob(blob, filename) {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        a.target = "_blank";
+        const clickHandler = () => {
+            setTimeout(() => {
+                URL.revokeObjectURL(url);
+                a.removeEventListener('click', clickHandler);
+            }, 150);
+        };
+        a.addEventListener('click', clickHandler, false);
+        a.click();
     }
 
     async fileChange(e) {
@@ -927,13 +936,10 @@ class Transport extends Component {
         });
 
         const linkSource = `data:application/pdf;base64,${response.data.rpdfexport}`;
-        const downloadLink = document.createElement("a");
-        const fileName = `cmr-${this.state.contract.id.substring(0, 8)}.pdf`;
+        const fileName = `cmr-${this.getCmrId(this.state.contract)}.pdf`;
 
-        downloadLink.href = linkSource;
-        downloadLink.download = fileName;
-        document.body.appendChild(downloadLink);
-        downloadLink.click();
+        const blob = await fetch(linkSource).then(res => res.blob());
+        this.openBlob(blob, fileName);
     }
 }
 
