@@ -19,6 +19,7 @@ import { v4 as uuidv4 } from 'uuid';
 import * as PropTypes from "prop-types";
 import {act} from "react-dom/test-utils";
 import {Link} from "react-router-dom";
+import {doUpdateContract} from "./ConsoleUtils";
 
 const MAX_FILE_SIZE = 1024 * 1024;
 const Address = ({address, label, icon}) => (
@@ -672,14 +673,12 @@ class Transport extends Component {
         const {contract} = this.state;
         contract.orderStatus = 'ORDER_ACCEPTED';
 
-        await API.graphql(graphqlOperation(mutations.updateContract, {
-            "input": {
-                id: contract.id,
-                orderStatus: 'ORDER_ACCEPTED',
-                status: 'CREATED',
-                owner: (await Auth.currentAuthenticatedUser()).getUsername()
-            }
-        }));
+        await doUpdateContract({
+            id: contract.id,
+            orderStatus: 'ORDER_ACCEPTED',
+            status: 'CREATED',
+            owner: (await Auth.currentAuthenticatedUser()).getUsername()
+        });
 
         this.setState({
             contract
@@ -763,16 +762,13 @@ class Transport extends Component {
                 createdAt: now,
                 attachments: [attachment]
             });
+            await doUpdateContract({
+                id: contract.id,
+                events: contract.events
+            });
             this.setState({
                 contract
             });
-
-            await API.graphql(graphqlOperation(mutations.updateContract, {
-                "input": {
-                    id: contract.id,
-                    events: contract.events
-                }
-            }));
         }
         this.setState({
             uploading: false
@@ -795,15 +791,13 @@ class Transport extends Component {
             createdAt: now,
             deletesAttachments: event.createdAt
         });
+        await doUpdateContract({
+            id: contract.id,
+            events: contract.events
+        });
         this.setState({
             contract
         });
-        await API.graphql(graphqlOperation(mutations.updateContract, {
-            "input": {
-                id: contract.id,
-                events: contract.events
-            }
-        }));
     }
 
     extension(file) {
@@ -904,9 +898,7 @@ class Transport extends Component {
             this.setState({
                 contract: newContract
             });
-            await API.graphql(graphqlOperation(mutations.updateContract, {
-                "input": update
-            }));
+            await doUpdateContract(update);
         }
     }
 

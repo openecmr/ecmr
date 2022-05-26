@@ -2,6 +2,7 @@ import {API, graphqlOperation, Hub, Storage} from "aws-amplify";
 import * as mutations from "./graphql/mutations";
 import moment from "moment";
 import UUIDGenerator from "react-native-uuid-generator";
+import * as queries from "./graphql/queries";
 
 function createUpdateContractInput(contract) {
     return {
@@ -11,18 +12,30 @@ function createUpdateContractInput(contract) {
     };
 }
 
-async function updateContract(item) {
-    const result = await API.graphql(graphqlOperation(mutations.updateContract, {input: item}));
-    const contract = result.data.updateContract;
+async function updateContract(contract) {
+    if (contract.events) {
+        const response = await API.graphql(graphqlOperation(queries.getContract, {
+            "id": contract.id
+        }));
+        const currentContract = response.data.getContract;
+        const currentEvents = currentContract.events || [];
+        contract.events = [
+            ...currentEvents,
+            ...contract.events.filter(e => currentEvents.findIndex(ce => e.createdAt === ce.createdAt) === -1)
+        ];
+    }
+
+    const result = await API.graphql(graphqlOperation(mutations.updateContract, {input: contract}));
+    const updatedContract = result.data.updateContract;
     Hub.dispatch(
         'Contracts',
         {
             event: 'update',
             data: {
-                contract
+                contract: updatedContract
             }
         });
-    return contract;
+    return updatedContract;
 }
 
 async function uploadPhotos(photos) {
