@@ -82,7 +82,8 @@ export default class SignatoryInformation extends Component {
             signatoryEmail: this.state.signatoryEmail,
             signatoryName: this.state.signatoryName,
             photos: this.props.route.params.photos,
-            oldLoads: this.props.route.params.oldLoads
+            oldLoads: this.props.route.params.oldLoads,
+            position: this.props.route.params.position
         });
     }
 }

@@ -97,6 +97,7 @@ async function locationPermissions() {
 }
 
 const geoUtil = {
+    locationPermissions,
     async getCurrentPosition() {
         const hasLocationPermission = await locationPermissions();
         if (hasLocationPermission) {

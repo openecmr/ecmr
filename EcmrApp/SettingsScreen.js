@@ -1,9 +1,11 @@
 import {Component} from "react";
 import React from "react";
 import {MyText} from "./Components";
-import {Button, View, Modal, TouchableHighlight, Linking} from "react-native";
+import {Button, View, Modal, TouchableHighlight, Linking, Switch} from "react-native";
 import {Auth, I18n} from 'aws-amplify';
 import {resetCompanyCheck} from "./Transports";
+import DefaultPreference from "react-native-default-preference";
+import {geoUtil} from "./DataUtil";
 
 
 class SettingsScreen extends Component {
@@ -16,10 +18,11 @@ class SettingsScreen extends Component {
                 attributes: {}
             }
         }
+        this.toggleAllowLocation = this.toggleAllowLocation.bind(this);
     }
 
     render() {
-        const {user} = this.state;
+        const {user, allowLocation} = this.state;
 
         return (
             <View style={{padding: 10}}>
@@ -35,10 +38,14 @@ class SettingsScreen extends Component {
                 <View>
                     <Button title={I18n.get("Link to company")} color={"rgb(60,176,60)"} onPress={() => this.linkToCompany()}/>
                 </View>
+                <View style={{flexDirection: "row", marginTop: 25}}>
+                    <MyText style={{flex: 1}}>Allow Open eCMR to add your current location to events</MyText><Switch value={allowLocation} onChange={this.toggleAllowLocation}/>
+                </View>
                 <View style={{marginTop: 25}}>
                     <Button title={I18n.get("Visit the Open e-CMR portal")} color={"rgb(60,176,60)"} onPress={() => {Linking.openURL("https://app.openecmr.com/?utm_source=app")}} containerStyle={{marginTop: 25}} />
                 </View>
-                <View style={{marginTop: 25}}>
+                <MyText style={{marginBottom: 10, marginTop: 25}}>{I18n.get('Session')}</MyText>
+                <View>
                     <Button title={I18n.get("Logout")} color={"rgb(60,176,60)"} onPress={() => this.logout()} containerStyle={{marginTop: 25}} />
                 </View>
             </View>);
@@ -46,7 +53,8 @@ class SettingsScreen extends Component {
 
     async componentDidMount() {
         this.setState({
-            user: await Auth.currentAuthenticatedUser()
+            user: await Auth.currentAuthenticatedUser(),
+            allowLocation: (await DefaultPreference.get('allowLocation')) === 'true'
         })
     }
 
@@ -56,6 +64,19 @@ class SettingsScreen extends Component {
         this.props.onStateChange('signIn',{});
 
         resetCompanyCheck();
+    }
+
+    async toggleAllowLocation() {
+        const newValue = !this.state.allowLocation;
+        if (newValue) {
+            await DefaultPreference.set('allowLocation', 'true');
+            await geoUtil.locationPermissions();
+        } else {
+            await DefaultPreference.set('allowLocation', 'false');
+        }
+        this.setState({
+           allowLocation: newValue
+        });
     }
 
     linkToCompany() {
