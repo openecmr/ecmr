@@ -300,6 +300,18 @@ export const createContractCustom = /* GraphQL */ `
           trailerVehicleId
           truckVehicleId
         }
+        geoposition {
+          latitude
+          longitude
+          accuracy
+          altitude
+          heading
+          speed
+          altitudeAccuracy
+          timestamp
+          mocked
+          provider
+        }
       }
       needAcknowledge
       shipperContactId
@@ -607,6 +619,18 @@ export const createContract = /* GraphQL */ `
           deliveryContactId
           trailerVehicleId
           truckVehicleId
+        }
+        geoposition {
+          latitude
+          longitude
+          accuracy
+          altitude
+          heading
+          speed
+          altitudeAccuracy
+          timestamp
+          mocked
+          provider
         }
       }
       needAcknowledge
@@ -916,6 +940,18 @@ export const updateContract = /* GraphQL */ `
           trailerVehicleId
           truckVehicleId
         }
+        geoposition {
+          latitude
+          longitude
+          accuracy
+          altitude
+          heading
+          speed
+          altitudeAccuracy
+          timestamp
+          mocked
+          provider
+        }
       }
       needAcknowledge
       shipperContactId
@@ -1223,6 +1259,18 @@ export const deleteContract = /* GraphQL */ `
           deliveryContactId
           trailerVehicleId
           truckVehicleId
+        }
+        geoposition {
+          latitude
+          longitude
+          accuracy
+          altitude
+          heading
+          speed
+          altitudeAccuracy
+          timestamp
+          mocked
+          provider
         }
       }
       needAcknowledge

@@ -314,6 +314,18 @@ export const contractsByFilterCustom = /* GraphQL */ `
             trailerVehicleId
             truckVehicleId
           }
+          geoposition {
+            latitude
+            longitude
+            accuracy
+            altitude
+            heading
+            speed
+            altitudeAccuracy
+            timestamp
+            mocked
+            provider
+          }
         }
         needAcknowledge
         shipperContactId
@@ -1226,6 +1238,18 @@ export const contractsByOwnerArrivalDate = /* GraphQL */ `
             trailerVehicleId
             truckVehicleId
           }
+          geoposition {
+            latitude
+            longitude
+            accuracy
+            altitude
+            heading
+            speed
+            altitudeAccuracy
+            timestamp
+            mocked
+            provider
+          }
         }
         needAcknowledge
         shipperContactId
@@ -1544,6 +1568,18 @@ export const contractsByCarrierArrivalDate = /* GraphQL */ `
             deliveryContactId
             trailerVehicleId
             truckVehicleId
+          }
+          geoposition {
+            latitude
+            longitude
+            accuracy
+            altitude
+            heading
+            speed
+            altitudeAccuracy
+            timestamp
+            mocked
+            provider
           }
         }
         needAcknowledge
@@ -1864,6 +1900,18 @@ export const contractsByOwnerUpdatedAt = /* GraphQL */ `
             trailerVehicleId
             truckVehicleId
           }
+          geoposition {
+            latitude
+            longitude
+            accuracy
+            altitude
+            heading
+            speed
+            altitudeAccuracy
+            timestamp
+            mocked
+            provider
+          }
         }
         needAcknowledge
         shipperContactId
@@ -2182,6 +2230,18 @@ export const contractsByCarrierUpdatedAt = /* GraphQL */ `
             deliveryContactId
             trailerVehicleId
             truckVehicleId
+          }
+          geoposition {
+            latitude
+            longitude
+            accuracy
+            altitude
+            heading
+            speed
+            altitudeAccuracy
+            timestamp
+            mocked
+            provider
           }
         }
         needAcknowledge
@@ -2502,6 +2562,18 @@ export const ordersByOwnerCreatedAt = /* GraphQL */ `
             trailerVehicleId
             truckVehicleId
           }
+          geoposition {
+            latitude
+            longitude
+            accuracy
+            altitude
+            heading
+            speed
+            altitudeAccuracy
+            timestamp
+            mocked
+            provider
+          }
         }
         needAcknowledge
         shipperContactId
@@ -2821,6 +2893,18 @@ export const ordersByCarrierCreatedAt = /* GraphQL */ `
             trailerVehicleId
             truckVehicleId
           }
+          geoposition {
+            latitude
+            longitude
+            accuracy
+            altitude
+            heading
+            speed
+            altitudeAccuracy
+            timestamp
+            mocked
+            provider
+          }
         }
         needAcknowledge
         shipperContactId
@@ -3131,6 +3215,18 @@ export const getContract = /* GraphQL */ `
           trailerVehicleId
           truckVehicleId
         }
+        geoposition {
+          latitude
+          longitude
+          accuracy
+          altitude
+          heading
+          speed
+          altitudeAccuracy
+          timestamp
+          mocked
+          provider
+        }
       }
       needAcknowledge
       shipperContactId
@@ -3437,6 +3533,18 @@ export const listContracts = /* GraphQL */ `
             deliveryContactId
             trailerVehicleId
             truckVehicleId
+          }
+          geoposition {
+            latitude
+            longitude
+            accuracy
+            altitude
+            heading
+            speed
+            altitudeAccuracy
+            timestamp
+            mocked
+            provider
           }
         }
         needAcknowledge

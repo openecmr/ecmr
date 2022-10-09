@@ -122,7 +122,8 @@ class AddPhotos extends Component {
             item: this.state.contract,
             site: this.state.site,
             photos: this.state.photos.filter(photo => photo.uri),
-            oldLoads: this.props.route.params.oldLoads
+            oldLoads: this.props.route.params.oldLoads,
+            position: this.props.route.params.position
         });
     }
 }

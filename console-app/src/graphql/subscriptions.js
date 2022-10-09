@@ -560,6 +560,18 @@ export const onCreateContract = /* GraphQL */ `
           trailerVehicleId
           truckVehicleId
         }
+        geoposition {
+          latitude
+          longitude
+          accuracy
+          altitude
+          heading
+          speed
+          altitudeAccuracy
+          timestamp
+          mocked
+          provider
+        }
       }
       needAcknowledge
       shipperContactId
@@ -878,6 +890,18 @@ export const onUpdateContract = /* GraphQL */ `
           trailerVehicleId
           truckVehicleId
         }
+        geoposition {
+          latitude
+          longitude
+          accuracy
+          altitude
+          heading
+          speed
+          altitudeAccuracy
+          timestamp
+          mocked
+          provider
+        }
       }
       needAcknowledge
       shipperContactId
@@ -1195,6 +1219,18 @@ export const onDeleteContract = /* GraphQL */ `
           deliveryContactId
           trailerVehicleId
           truckVehicleId
+        }
+        geoposition {
+          latitude
+          longitude
+          accuracy
+          altitude
+          heading
+          speed
+          altitudeAccuracy
+          timestamp
+          mocked
+          provider
         }
       }
       needAcknowledge

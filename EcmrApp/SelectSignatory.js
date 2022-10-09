@@ -99,7 +99,8 @@ class SelectSignatory extends Component {
             signatoryEmail: contact.email,
             signatoryName: contact.name,
             photos: this.props.route.params.photos,
-            oldLoads: this.props.route.params.oldLoads
+            oldLoads: this.props.route.params.oldLoads,
+            position: this.props.route.params.position
         });
     }
 

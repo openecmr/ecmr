@@ -340,6 +340,20 @@ type Event @aws_api_key @aws_cognito_user_pools @aws_iam {
     newLoads: [Load!]
     newAttributes: ContractAttributes
     oldAttributes: ContractAttributes
+    geoposition: GeoPosition
+}
+
+type GeoPosition {
+    latitude: Float!
+    longitude: Float!
+    accuracy: Float
+    altitude: Float
+    heading: Float
+    speed: Float
+    altitudeAccuracy: Float
+    timestamp: AWSTimestamp
+    mocked: Boolean
+    provider: String
 }
 
 type Attachment @aws_api_key @aws_cognito_user_pools @aws_iam {

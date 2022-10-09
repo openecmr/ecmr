@@ -1,5 +1,14 @@
 import React, {Component} from "react";
-import {ActivityIndicator, Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import {
+    ActivityIndicator,
+    Alert,
+    PermissionsAndroid,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View
+} from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import {Address, ArrivalDate, LicensePlates, LoadDetailText, MyText, Sizes} from "./Components";
 import {API, Auth, graphqlOperation, I18n, Storage} from 'aws-amplify';
@@ -7,10 +16,13 @@ import * as queries from "./graphql/queries";
 import moment from "moment/min/moment-with-locales";
 import {S3Image} from "aws-amplify-react-native";
 import ContractModel from "./ContractModel";
-import {createUpdateContractInput, updateContract} from "./DataUtil";
+import {createUpdateContractInput, geoUtil, updateContract} from "./DataUtil";
 import RNFetchBlob from 'rn-fetch-blob'
 import {Button, Divider} from "react-native-elements";
 import openMap from 'react-native-open-maps';
+import Geolocation from 'react-native-geolocation-service';
+import MapView, {Circle, Marker} from "react-native-maps";
+import CollapsibleView from "@eliav2/react-native-collapsible-view";
 
 const Header = ({children}) => <MyText style={styles.header}>{children}</MyText>;
 
@@ -118,6 +130,32 @@ const ActionButton = ({ onPress, disabled, label, icon }) => (
         </View>
     </TouchableOpacity>
 );
+
+function EventLocation({item}) {
+    return <CollapsibleView title={"Location details"} style={{ borderWidth: 0, alignItems: "flex-start", margin: 0, padding: 0, marginHorizontal: 0}}
+                            activeOpacityFeedback={1}
+                            titleStyle={{textAlign: "left", color: "black"}}>
+        <MapView
+            liteMode={true}
+            toolbarEnabled={false}
+            style={{height: 150, width: 150, borderWidth: 1, borderStyle: "solid", borderColor: "black"}}
+            region={{
+                latitude: item.geoposition.latitude,
+                longitude: item.geoposition.longitude,
+                latitudeDelta: 0.1,
+                longitudeDelta: 0.1
+            }}>
+            <Marker coordinate={{
+                latitude: item.geoposition.latitude,
+                longitude: item.geoposition.longitude
+            }}/>
+            <Circle center={{
+                latitude: item.geoposition.latitude,
+                longitude: item.geoposition.longitude
+            }} radius={item.geoposition.accuracy}/>
+        </MapView>
+    </CollapsibleView>;
+}
 
 class Transport extends Component {
     constructor(props) {
@@ -319,6 +357,9 @@ class Transport extends Component {
                                                 signatoryObservation={item.signatoryObservation}
                                                 photos={item.photos || []} oldLoads={item.oldLoads}/>
                             }
+                            {
+                                item.geoposition && <EventLocation item={item}/>
+                            }
                         </View>))
                     }
                 </View>
@@ -428,12 +469,20 @@ class Transport extends Component {
         }
     }
 
-    confirmLoading() {
+    async confirmLoading() {
+        this.setState({
+            loading: true
+        })
+        const position = await geoUtil.getCurrentPosition();
         const {navigate} = this.props.navigation;
         navigate('ConfirmLoading', {
             item: this.state.item,
-            site: this.state.site
+            site: this.state.site,
+            position: position
         });
+        this.setState({
+            loading: false
+        })
     }
 
     confirmAcknowledge() {
@@ -512,6 +561,12 @@ class Transport extends Component {
         this.setState({
             loading: true
         });
+
+        const position = await geoUtil.getCurrentPosition();
+        await this.finishNotifyArrival(position);
+    }
+
+    async finishNotifyArrival(geoposition) {
         const contract = this.props.route.params.item;
         const update = createUpdateContractInput(contract);
         const now = moment().format();
@@ -520,14 +575,21 @@ class Transport extends Component {
         if (!update.events) {
             update.events = [];
         }
-        update.events.push({
+
+        const event = {
             type: 'ArrivalOnSite',
             site: this.state.site,
             createdAt: now,
             author: {
                 username: user.username
             }
-        });
+        };
+
+        if (geoposition) {
+            event.geoposition = geoUtil.toGeoPosition(geoposition);
+        }
+
+        update.events.push(event);
         update.status = 'IN_PROGRESS';
         if (contract.orderStatus) {
             update.orderStatus = 'IN_PROGRESS';
@@ -541,7 +603,7 @@ class Transport extends Component {
                 ...this.setContract(result, this.state.site)
             });
         } catch (ex) {
-            console.log(ex);
+            console.warn(ex);
         } finally {
             this.setState({
                 loading: false

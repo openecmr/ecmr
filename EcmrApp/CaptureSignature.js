@@ -13,7 +13,7 @@ import SignatureCapture from 'react-native-signature-capture';
 import UUIDGenerator from "react-native-uuid-generator";
 import {Buffer} from "buffer";
 import moment from "moment/min/moment-with-locales";
-import {createUpdateContractInput, updateContract, uploadPhotos} from "./DataUtil";
+import {createUpdateContractInput, geoUtil, updateContract, uploadPhotos} from "./DataUtil";
 
 
 class CaptureSignature extends Component {
@@ -120,6 +120,10 @@ class CaptureSignature extends Component {
                 sendCopy: sendCopy,
                 photos
             };
+            if (this.props.route.params.position) {
+                event.geoposition = geoUtil.toGeoPosition(this.props.route.params.position);
+            }
+
             const update = createUpdateContractInput(this.state.contract);
             update.events.push(event);
             update.status = this.state.site === 'pickup' ? 'IN_PROGRESS' : 'DONE';

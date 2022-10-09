@@ -86,6 +86,7 @@ class ConfirmLoading extends Component {
             navigate('AddPhotos', {
                 item: this.state.contract,
                 site: this.state.site,
+                position: this.props.route.params.position,
                 ...(loadsChanged && {
                     oldLoads: this.state.oldLoads
                 })

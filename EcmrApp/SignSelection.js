@@ -41,7 +41,8 @@ class SignSelection extends Component {
             item: this.state.contract,
             site: this.state.site,
             photos: this.props.route.params.photos,
-            oldLoads: this.props.route.params.oldLoads
+            oldLoads: this.props.route.params.oldLoads,
+            position: this.props.route.params.position
         });
     }
 

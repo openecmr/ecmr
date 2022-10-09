@@ -141,7 +141,8 @@ class Signature extends Component {
             signatoryObservation: this.state.signatoryObservation,
             photos: this.props.route.params.photos,
             sendCopy: this.state.sendCopy,
-            oldLoads: this.props.route.params.oldLoads
+            oldLoads: this.props.route.params.oldLoads,
+            position: this.props.route.params.position
         });
     }
 }
