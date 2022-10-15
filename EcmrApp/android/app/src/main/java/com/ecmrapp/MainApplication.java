@@ -11,7 +11,6 @@ import java.lang.reflect.InvocationTargetException;
 import androidx.multidex.MultiDexApplication;
 import java.util.List;
 import com.facebook.react.bridge.JSIModulePackage;
-import com.swmansion.reanimated.ReanimatedJSIModulePackage;
 
 public class MainApplication extends MultiDexApplication implements ReactApplication {
 
@@ -34,11 +33,6 @@ public class MainApplication extends MultiDexApplication implements ReactApplica
                 @Override
                 protected String getJSMainModuleName() {
                     return "index";
-                }
-
-                @Override
-                protected JSIModulePackage getJSIModulePackage() {
-                    return new ReanimatedJSIModulePackage();
                 }
             };
 

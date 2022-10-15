@@ -1,12 +1,10 @@
-import React, {Component} from "react";
+import React, {Component, useState} from "react";
 import {
     ActivityIndicator,
     Alert,
-    PermissionsAndroid,
     ScrollView,
     StyleSheet,
-    Text,
-    TouchableOpacity,
+    Text, TouchableOpacity, TouchableWithoutFeedback,
     View
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome5";
@@ -20,9 +18,7 @@ import {createUpdateContractInput, geoUtil, updateContract} from "./DataUtil";
 import RNFetchBlob from 'rn-fetch-blob'
 import {Button, Divider} from "react-native-elements";
 import openMap from 'react-native-open-maps';
-import Geolocation from 'react-native-geolocation-service';
 import MapView, {Circle, Marker} from "react-native-maps";
-import CollapsibleView from "@eliav2/react-native-collapsible-view";
 
 const Header = ({children}) => <MyText style={styles.header}>{children}</MyText>;
 
@@ -132,10 +128,15 @@ const ActionButton = ({ onPress, disabled, label, icon }) => (
 );
 
 function EventLocation({item}) {
-    return <CollapsibleView title={"Location details"} style={{ borderWidth: 0, alignItems: "flex-start", margin: 0, padding: 0, marginHorizontal: 0}}
-                            activeOpacityFeedback={1}
-                            titleStyle={{textAlign: "left", color: "black"}}>
-        <MapView
+    const [visible, setVisible] = useState(false);
+    return <View>
+        <TouchableWithoutFeedback onPress={() => setVisible(!visible)}>
+            <View style={{flexDirection: "row", alignItems: "center"}}>
+                <Icon name={visible ? "caret-down" : "caret-right"} size={25} style={{paddingRight: 5, color: "grey"}}/>
+                <MyText style={{color: "grey", textDecorationLine: "underline"}}>{I18n.get("Location details")}</MyText>
+            </View>
+        </TouchableWithoutFeedback>
+        {visible && <MapView
             liteMode={true}
             toolbarEnabled={false}
             style={{height: 150, width: 150, borderWidth: 1, borderStyle: "solid", borderColor: "black"}}
@@ -153,8 +154,8 @@ function EventLocation({item}) {
                 latitude: item.geoposition.latitude,
                 longitude: item.geoposition.longitude
             }} radius={item.geoposition.accuracy}/>
-        </MapView>
-    </CollapsibleView>;
+        </MapView>}
+    </View>;
 }
 
 class Transport extends Component {
