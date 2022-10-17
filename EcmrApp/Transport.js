@@ -127,7 +127,7 @@ const ActionButton = ({ onPress, disabled, label, icon }) => (
     </TouchableOpacity>
 );
 
-function EventLocation({item}) {
+function EventLocation({item, item: {geoposition: {latitude, longitude}}}) {
     const [visible, setVisible] = useState(false);
     return <View>
         <TouchableWithoutFeedback onPress={() => setVisible(!visible)}>
@@ -140,19 +140,26 @@ function EventLocation({item}) {
             liteMode={true}
             toolbarEnabled={false}
             style={{height: 150, width: 150, borderWidth: 1, borderStyle: "solid", borderColor: "black"}}
-            region={{
-                latitude: item.geoposition.latitude,
-                longitude: item.geoposition.longitude,
-                latitudeDelta: 0.1,
-                longitudeDelta: 0.1
+            onPress={() => openMap({
+                query: `${latitude},${longitude}`
+            })}
+            camera={{
+                center: {
+                    latitude: latitude,
+                    longitude: longitude
+                },
+                heading: 0,
+                zoom: 15,
+                altitude: 15,
+                pitch: 0
             }}>
             <Marker coordinate={{
-                latitude: item.geoposition.latitude,
-                longitude: item.geoposition.longitude
+                latitude: latitude,
+                longitude: longitude
             }}/>
             <Circle center={{
-                latitude: item.geoposition.latitude,
-                longitude: item.geoposition.longitude
+                latitude: latitude,
+                longitude: longitude
             }} radius={item.geoposition.accuracy}/>
         </MapView>}
     </View>;

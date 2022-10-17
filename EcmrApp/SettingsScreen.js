@@ -39,7 +39,7 @@ class SettingsScreen extends Component {
                     <Button title={I18n.get("Link to company")} color={"rgb(60,176,60)"} onPress={() => this.linkToCompany()}/>
                 </View>
                 <View style={{flexDirection: "row", marginTop: 25}}>
-                    <MyText style={{flex: 1}}>Allow Open eCMR to add your current location to events</MyText><Switch value={allowLocation} onChange={this.toggleAllowLocation}/>
+                    <MyText style={{flex: 1}}>{I18n.get("Allow Open eCMR to add your current location to events")}</MyText><Switch value={allowLocation} onChange={this.toggleAllowLocation}/>
                 </View>
                 <View style={{marginTop: 25}}>
                     <Button title={I18n.get("Visit the Open e-CMR portal")} color={"rgb(60,176,60)"} onPress={() => {Linking.openURL("https://app.openecmr.com/?utm_source=app")}} containerStyle={{marginTop: 25}} />

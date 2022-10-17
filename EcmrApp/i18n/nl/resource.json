@@ -240,5 +240,14 @@
   "Actions": "Acties",
   "Add a photo": "Foto toevoegen",
   "You cannot add more attachments to this transport. The maximum number of attachments has been reached.": "U kunt geen documenten meer toevoegen aan dit transport. Het maximum aantal bijlagen is bereikt.",
-  "${name} added attachment ${filename}\n\nDescription: ${description}": "${name} heeft bijlage ${filename} toegevoegd.\n\nBeschrijving: ${description}"
+  "${name} added attachment ${filename}\n\nDescription: ${description}": "${name} heeft bijlage ${filename} toegevoegd.\n\nBeschrijving: ${description}",
+  "Location permissions": "Toegang tot locatie",
+  "Do you want to share your current location in the confirmation? You can always change this in the settings menu.": "Huidige locatie delen met anderen die toegang hebben tot dit transport? Je kunt deze instelling altijd wijzigen in het instellingen menu.",
+  "No": "Nee",
+  "Share location": "Locatie delen",
+  "Do you want to share your current location in the confirmation?": "Huidige locatie delen met alle personen die toegang hebben tot dit transport",
+  "Ask Me Later": "Later vragen",
+  "Allow Open eCMR to add your current location to events": "Open eCMR toestaan om je huidige locatie toe te voegen aan transport gerelateerde gebeurtenissen",
+  "Session": "Sessie",
+  "Location details": "Locatie"
 }

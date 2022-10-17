@@ -89,9 +89,9 @@ async function locationPermissions() {
             title: I18n.get("Location permissions"),
             message:
                 I18n.get("Do you want to share your current location in the confirmation?"),
-            buttonNeutral: "Ask Me Later",
-            buttonNegative: "Cancel",
-            buttonPositive: "OK"
+            buttonNeutral: I18n.get("Ask Me Later"),
+            buttonNegative: I18n.get("Cancel"),
+            buttonPositive: I18n.get("OK")
         }
     ) === PermissionsAndroid.RESULTS.GRANTED;
 }
@@ -110,7 +110,7 @@ const geoUtil = {
                         console.warn("cannot get geoposition", error);
                         resolve();
                     },
-                    {enableHighAccuracy: true, timeout: 1500, maximumAge: 10000, showLocationDialog: true}
+                    {enableHighAccuracy: true, timeout: 15000, maximumAge: 0, showLocationDialog: true}
                 );
             });
         } else {
