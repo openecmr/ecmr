@@ -37,7 +37,7 @@
     "react-native-image-resizer": "^1.4.5",
     "react-native-open-maps": "^0.4.0",
     "react-native-pager-view": "^5.4.9",
-    "react-native-reanimated": "^2.4.0",
+    "react-native-reanimated": "^2.10.0",
     "react-native-safe-area-context": "^3.3.2",
     "react-native-screens": "^3.10.2",
     "react-native-signature-capture": "^0.4.12",
