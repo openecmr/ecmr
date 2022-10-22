@@ -17,8 +17,9 @@ import {S3Image} from "aws-amplify-react";
 import {DriverPicker, VehiclePicker} from "./NewTransport";
 import { v4 as uuidv4 } from 'uuid';
 import {Link} from "react-router-dom";
-import {doUpdateContract, MAPS_API_KEY} from "./ConsoleUtils";
+import {doUpdateContract} from "./ConsoleUtils";
 import {Wrapper} from "@googlemaps/react-wrapper";
+import {MAPS_API_KEY} from "./secrets";
 
 const MAX_FILE_SIZE = 1024 * 1024;
 const Address = ({address, label, icon}) => (

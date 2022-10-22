@@ -39,3 +39,5 @@ cypress/videos
 cypress/screenshots
 cypress/report
 TODO
+
+secrets.js

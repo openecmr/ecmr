@@ -3,8 +3,6 @@ import {API, graphqlOperation} from "aws-amplify";
 import * as mutations from "./graphql/mutations";
 import * as queries from "./graphql/queries";
 
-const MAPS_API_KEY = 'AIzaSyDcUA1gqET_eCZ7RfputlniK-np3fOXsO8';
-
 const generateAssociationSecret = () => {
     const random = new Uint8Array(6);
     window.crypto.getRandomValues(random);
@@ -44,6 +42,5 @@ const doUpdateContract = async (contract) => {
 export {
     generateAssociationSecret,
     trackEvent,
-    doUpdateContract,
-    MAPS_API_KEY
+    doUpdateContract
 }
