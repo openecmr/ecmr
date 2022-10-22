@@ -1,4 +1,4 @@
-import {Component, useState} from "react";
+import {Component, useEffect, useRef, useState} from "react";
 import React from "react";
 import {
     Button,
@@ -16,10 +16,9 @@ import * as mutations from "./graphql/mutations";
 import {S3Image} from "aws-amplify-react";
 import {DriverPicker, VehiclePicker} from "./NewTransport";
 import { v4 as uuidv4 } from 'uuid';
-import * as PropTypes from "prop-types";
-import {act} from "react-dom/test-utils";
 import {Link} from "react-router-dom";
-import {doUpdateContract} from "./ConsoleUtils";
+import {doUpdateContract, MAPS_API_KEY} from "./ConsoleUtils";
+import {Wrapper} from "@googlemaps/react-wrapper";
 
 const MAX_FILE_SIZE = 1024 * 1024;
 const Address = ({address, label, icon}) => (
@@ -322,7 +321,45 @@ function isContractStatusOrAfter(actual, compare) {
     return contractStatuses.indexOf(actual) >= contractStatuses.indexOf(compare);
 }
 
+function EcmrMap({contract}) {
+    const ref = useRef();
 
+    useEffect(() => {
+        const google = window.google;
+        const map = new google.maps.Map(ref.current);
+        const bounds = new google.maps.LatLngBounds();
+        const markerLength = contract.events
+            .filter(e => e.geoposition)
+            .map(e => {
+                const {geoposition: {latitude, longitude}} = e;
+                const marker = new google.maps.Marker({
+                    position: new google.maps.LatLng({
+                        lat: latitude,
+                        lng: longitude
+                    }),
+                    map: map,
+                    title: eventText(e),
+                    label: e.site === 'pickup' ? "1" : "2"
+                });
+                bounds.extend(marker.position);
+            }).length;
+
+        google.maps.event.addListenerOnce(map, 'bounds_changed', function (event) {
+            map.setZoom(Math.min(15, map.getZoom()));
+        });
+
+
+        map.fitBounds(bounds);
+    });
+
+    return <div ref={ref} id="map" style={{width: "100%", height: "150px"}}/>;
+}
+
+function OptionalEcmrMap({contract}) {
+    const hasGeoinfo = (contract.events || []).findIndex(e => !!e.geoposition) !== -1;
+
+    return hasGeoinfo ? <EcmrMap contract={contract}/> : <div/>
+}
 
 class Transport extends Component {
     fileInputRef = React.createRef()
@@ -464,7 +501,7 @@ class Transport extends Component {
 
                 <Segment>
 
-                    <Grid columns={3} stackable>
+                    <Grid columns={16} stackable>
                         <Grid.Row>
                             <Grid.Column width={4}>
                                 <Address address={contract.shipper} icon={'building'} label={I18n.get('Shipper')}/>
@@ -472,15 +509,23 @@ class Transport extends Component {
                             <Grid.Column width={4}>
                                 <Address address={contract.carrier} icon={'truck'} label={I18n.get('Carrier')}/>
                             </Grid.Column>
-                            {contract.orderStatus && <Grid.Column width={8}>
-                                {/*Transport code*/}
+                            <Grid.Column width={4}>
+                            </Grid.Column>
+                            <Grid.Column width={4}>
+                                <Wrapper apiKey={MAPS_API_KEY}>
+                                    <OptionalEcmrMap contract={contract}/>
+                                </Wrapper>
+                            </Grid.Column>
+                        </Grid.Row>
+                        {contract.orderStatus && <Grid.Row>
+                            <Grid.Column width={8}>
                                 <Header as={'h5'}>
                                     <Icon name={"check circle outline"}/>
                                     <Header.Content>{I18n.get("Order status")}</Header.Content>
                                 </Header>
                                 <OrderStatus contract={contract} />
-                            </Grid.Column>}
-                        </Grid.Row>
+                            </Grid.Column>
+                        </Grid.Row>}
                     </Grid>
                 </Segment>
                 <Segment>

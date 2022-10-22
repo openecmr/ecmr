@@ -5,6 +5,7 @@
   "dependencies": {
     "@aws-amplify/cli": "^4.5.0",
     "@formkit/auto-animate": "^1.0.0-beta.1",
+    "@googlemaps/react-wrapper": "^1.1.35",
     "@types/jest": "^26.0.14",
     "@types/node": "^14.11.8",
     "@types/react": "^16.8.12",
