@@ -17,7 +17,7 @@
     "handlebars": "^4.7.6",
     "interactjs": "^1.10.2",
     "lodash": "^4.17.15",
-    "moment": "^2.24.0",
+    "moment": "^2.29.4",
     "react": "^16.5.0",
     "react-calendar-timeline": "^0.27.0",
     "react-dom": "^16.5.0",
