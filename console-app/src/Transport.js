@@ -489,8 +489,8 @@ class Transport extends Component {
                 }
 
                 <Header as={'h1'}>
-                    {viewOrder && <Header.Content>{I18n.get('Order {number}').replace('{number}', contract.id.substring(0, 8))}</Header.Content>}
-                    {viewTransport && <Header.Content>{I18n.get('Transport {number}').replace('{number}', contract.id.substring(0, 8))}</Header.Content>}
+                    {viewOrder && <Header.Content>{I18n.get('Order {number}').replace('{number}', contract.openecmrId ||  contract.id.substring(0, 8))}</Header.Content>}
+                    {viewTransport && <Header.Content>{I18n.get('Transport {number}').replace('{number}', contract.openecmrId || contract.id.substring(0, 8))}</Header.Content>}
                     <Header.Subheader>
                         {I18n.get('Created by {creator} on {date}')
                             .replace('{creator}', contract.creator ? contract.creator.name : contract.owner)
@@ -699,7 +699,7 @@ class Transport extends Component {
     }
 
     getCmrId(contract) {
-        return contract.openecmrId ? contract.openecmrId : contract.id.substring(0, 8);
+        return contract.openecmrId || contract.id.substring(0, 8);
     }
 
     copy() {

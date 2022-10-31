@@ -53,7 +53,7 @@ class ContractsList extends Component {
 
                         return (<View style={styles.card}>
                             <View style={{...styles.transportCardHeader}}>
-                                <MyText style={styles.transportCardHeaderId}>{I18n.get("TRANSPORT")} {contract.id.substring(0, 8)}</MyText>
+                                <MyText style={styles.transportCardHeaderId}>{I18n.get("TRANSPORT")} {contract.openecmrId || contract.id.substring(0, 8)}</MyText>
                                 <MyText style={styles.transportCardHeaderProgress}>{this.progressText(contract)}</MyText>
                             </View>
                             <TouchableOpacity onPress={() => this.props.open(contract, 'pickup')}>

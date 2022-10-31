@@ -48,11 +48,11 @@ const TextCell = ({text}) => {
     )
 };
 
-const IdCell = ({id, path}) => {
-    const text = id.substring(0, 8);
+const IdCell = ({contract, path}) => {
+    const text = contract.openecmrId || contract.id.substring(0, 8);
     return (
         <Table.Cell width="1" verticalAlign="top">
-            <Link to={`${path ? path : "/transports"}/${id}`}>{text}</Link>
+            <Link to={`${path ? path : "/transports"}/${contract.id}`}>{text}</Link>
         </Table.Cell>
     )
 };
@@ -322,7 +322,7 @@ class Transports extends SortableTable {
             this.state.notes.map((e) =>
                 <Table.Row key={e.id}>
                     {/*<TextCell text={moment(e.updatedAt).format("ll")}/>*/}
-                    <IdCell id={e.id}/>
+                    <IdCell contract={e}/>
                     <Status status={e.status} lastUpdate={e.updatedAt}/>
                     <AddressCell address={e.pickup}/>
                     <DateCell date={e.arrivalDate}/>
