@@ -23,7 +23,7 @@
   "dependencies": {
     "@react-pdf/renderer": "2.0.15",
     "aws-sdk": "^2.936.0",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "express-async-handler": "^1.1.4",
     "express-validator": "^6.10.0",
     "moment": "^2.24.0",
