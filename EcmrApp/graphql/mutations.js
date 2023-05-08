@@ -1286,6 +1286,51 @@ export const deleteContract = /* GraphQL */ `
     }
   }
 `;
+export const createUserProfile = /* GraphQL */ `
+  mutation CreateUserProfile($input: CreateUserProfileInput!) {
+    createUserProfile(input: $input) {
+      id
+      owner
+      updatedAt
+      signatureImage {
+        bucket
+        region
+        key
+      }
+      createdAt
+    }
+  }
+`;
+export const updateUserProfile = /* GraphQL */ `
+  mutation UpdateUserProfile($input: UpdateUserProfileInput!) {
+    updateUserProfile(input: $input) {
+      id
+      owner
+      updatedAt
+      signatureImage {
+        bucket
+        region
+        key
+      }
+      createdAt
+    }
+  }
+`;
+export const deleteUserProfile = /* GraphQL */ `
+  mutation DeleteUserProfile($input: DeleteUserProfileInput!) {
+    deleteUserProfile(input: $input) {
+      id
+      owner
+      updatedAt
+      signatureImage {
+        bucket
+        region
+        key
+      }
+      createdAt
+    }
+  }
+`;
 export const createVehicle = /* GraphQL */ `
   mutation CreateVehicle($input: CreateVehicleInput!) {
     createVehicle(input: $input) {

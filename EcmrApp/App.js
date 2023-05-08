@@ -39,6 +39,7 @@ import AddVehicle from "./AddVehicle";
 import {NavigationContainer, useNavigationContainerRef} from "@react-navigation/native";
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 import AddDocumentOrPhoto from "./AddDocumentOrPhoto";
+import {EditMySignature} from "./EditMySignature";
 
 const deviceLanguage =
     Platform.OS === 'ios'
@@ -100,6 +101,7 @@ const MainNavigator = () => <Stack.Navigator screenOptions={{
                   options={{title: I18n.get("Select submitter company")}} />
 
     <Stack.Screen name={"LinkAccount"} component={LinkAccount} options={{title: I18n.get('Link account')}}/>
+    <Stack.Screen name={"EditMySignature"} component={EditMySignature} options={{title: I18n.get('Edit my signature')}}/>
 </Stack.Navigator>
 
 

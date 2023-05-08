@@ -142,9 +142,17 @@ const geoUtil = {
     }
 }
 
+async function getDriverSignatureImage(user) {
+    const userProfile = await API.graphql(graphqlOperation(queries.userProfileByOwner, {
+        owner: user.username
+    }));
+    return userProfile.data.userProfileByOwner.items.length !== 0 && userProfile.data.userProfileByOwner.items[0].signatureImage;
+}
+
 export {
     geoUtil,
     createUpdateContractInput,
     updateContract,
-    uploadPhotos
+    uploadPhotos,
+    getDriverSignatureImage
 }

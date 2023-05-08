@@ -1,11 +1,15 @@
 import {Component} from "react";
 import React from "react";
 import {MyText} from "./Components";
-import {Button, View, Modal, TouchableHighlight, Linking, Switch} from "react-native";
-import {Auth, I18n} from 'aws-amplify';
+import {View, Modal, TouchableHighlight, Linking, Switch, StyleSheet} from "react-native";
+import {Button} from "react-native-elements";
+import {API, Auth, graphqlOperation, I18n} from 'aws-amplify';
 import {resetCompanyCheck} from "./Transports";
 import DefaultPreference from "react-native-default-preference";
-import {geoUtil} from "./DataUtil";
+import {getDriverSignatureImage, geoUtil} from "./DataUtil";
+import {actionButtonColor} from "./Transport";
+import {S3Image} from "aws-amplify-react-native/src/Storage";
+import * as queries from "./graphql/queries";
 
 
 class SettingsScreen extends Component {
@@ -22,7 +26,7 @@ class SettingsScreen extends Component {
     }
 
     render() {
-        const {user, allowLocation} = this.state;
+        const {user, allowLocation, mySignatureImage} = this.state;
 
         return (
             <View style={{padding: 10}}>
@@ -36,26 +40,40 @@ class SettingsScreen extends Component {
 
                 <MyText style={{marginBottom: 10}}>{I18n.get('Settings')}</MyText>
                 <View>
-                    <Button title={I18n.get("Link to company")} color={"rgb(60,176,60)"} onPress={() => this.linkToCompany()}/>
+                    <Button title={I18n.get("Link to company")} buttonStyle={styles.actionButton} onPress={() => this.linkToCompany()}/>
                 </View>
                 <View style={{flexDirection: "row", marginTop: 25}}>
                     <MyText style={{flex: 1}}>{I18n.get("Allow Open eCMR to add your current location to events")}</MyText><Switch value={allowLocation} onChange={this.toggleAllowLocation}/>
                 </View>
+                <View style={{marginTop: 10}}>
+                    <MyText style={{fontSize: 15}}>{I18n.get("My signature")}</MyText>
+                    <View style={{alignItems: "center"}}>
+                        {mySignatureImage && <S3Image style={{width: 150, height: 150, marginTop: 10, marginBottom: 10, borderRadius: 5, borderWidth: 2, borderColor: 'rgb(187,187,187)'}}
+                                                         resizeMode={'center'}
+                                                         level={"public"}
+                                                         imgKey={mySignatureImage.key} />}
+                        {!mySignatureImage && <MyText style={{fontStyle: 'italic'}}>{I18n.get("No signature set")}</MyText>}
+                    </View>
+                    <Button title={I18n.get("Edit my signature")} buttonStyle={styles.actionButton} onPress={() => this.editSignature()}/>
+                </View>
                 <View style={{marginTop: 25}}>
-                    <Button title={I18n.get("Visit the Open e-CMR portal")} color={"rgb(60,176,60)"} onPress={() => {Linking.openURL("https://app.openecmr.com/?utm_source=app")}} containerStyle={{marginTop: 25}} />
+                    <Button title={I18n.get("Visit the Open e-CMR portal")} buttonStyle={styles.actionButton} onPress={() => {Linking.openURL("https://app.openecmr.com/?utm_source=app")}} containerStyle={{marginTop: 25}} />
                 </View>
                 <MyText style={{marginBottom: 10, marginTop: 25}}>{I18n.get('Session')}</MyText>
                 <View>
-                    <Button title={I18n.get("Logout")} color={"rgb(60,176,60)"} onPress={() => this.logout()} containerStyle={{marginTop: 25}} />
+                    <Button title={I18n.get("Logout")} buttonStyle={styles.actionButton} onPress={() => this.logout()} containerStyle={{marginTop: 25}} />
                 </View>
             </View>);
     }
 
     async componentDidMount() {
+        const user = await Auth.currentAuthenticatedUser();
+        const mySignatureImage = await getDriverSignatureImage(user);
         this.setState({
-            user: await Auth.currentAuthenticatedUser(),
-            allowLocation: (await DefaultPreference.get('allowLocation')) === 'true'
-        })
+            user,
+            allowLocation: (await DefaultPreference.get('allowLocation')) === 'true',
+            mySignatureImage
+        });
     }
 
     async logout() {
@@ -84,9 +102,20 @@ class SettingsScreen extends Component {
         navigate('LinkAccount');
     }
 
+    editSignature() {
+        const {navigate} = this.props.navigation;
+        navigate('EditMySignature');
+    }
+
     setModalVisible(visible) {
         this.setState({modalVisible: visible});
     }
 }
+
+const styles = StyleSheet.create({
+    actionButton: {
+        backgroundColor: actionButtonColor
+    }
+});
 
 export default SettingsScreen;

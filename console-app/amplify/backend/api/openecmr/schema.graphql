@@ -114,6 +114,19 @@ enum VehicleType {
     TRUCK
 }
 
+type UserProfile
+    @model
+    @auth(rules: [
+        { allow: owner }
+    ])
+    @key(name: "Owner", fields: ["owner"], queryField: "userProfileByOwner")
+{
+    id: ID!
+    owner: String!
+    updatedAt: String!
+    signatureImage: S3Object
+}
+
 type Vehicle
     @model
     @auth(rules: [

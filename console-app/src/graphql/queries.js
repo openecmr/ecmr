@@ -342,6 +342,43 @@ export const contractsByFilterCustom = /* GraphQL */ `
     }
   }
 `;
+export const getUserProfile = /* GraphQL */ `
+  query GetUserProfile($id: ID!) {
+    getUserProfile(id: $id) {
+      id
+      owner
+      updatedAt
+      signatureImage {
+        bucket
+        region
+        key
+      }
+      createdAt
+    }
+  }
+`;
+export const listUserProfiles = /* GraphQL */ `
+  query ListUserProfiles(
+    $filter: ModelUserProfileFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listUserProfiles(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        owner
+        updatedAt
+        signatureImage {
+          bucket
+          region
+          key
+        }
+        createdAt
+      }
+      nextToken
+    }
+  }
+`;
 export const getVehicle = /* GraphQL */ `
   query GetVehicle($id: ID!) {
     getVehicle(id: $id) {
@@ -659,6 +696,36 @@ export const listCompanys = /* GraphQL */ `
         allowedSendingEmail
         createdAt
         updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const userProfileByOwner = /* GraphQL */ `
+  query UserProfileByOwner(
+    $owner: String
+    $sortDirection: ModelSortDirection
+    $filter: ModelUserProfileFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    userProfileByOwner(
+      owner: $owner
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        owner
+        updatedAt
+        signatureImage {
+          bucket
+          region
+          key
+        }
+        createdAt
       }
       nextToken
     }

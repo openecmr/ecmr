@@ -23,7 +23,7 @@ import MapView, {Circle, Marker} from "react-native-maps";
 const Header = ({children}) => <MyText style={styles.header}>{children}</MyText>;
 
 const activityDoneColor = 'rgb(5, 172, 5)';
-const actionButtonColor = 'rgb(60,176,60)';
+export const actionButtonColor = 'rgb(60,176,60)';
 
 const formatInt = int => {
     if (int < 10) {
