@@ -7,7 +7,7 @@ import {
     Header,
     Icon,
     Step,
-    List, Label, Segment, Comment, Loader, Modal, Form, Message, Card, Confirm
+    List, Label, Segment, Comment, Loader, Modal, Form, Message, Card, Confirm, Divider
 } from "semantic-ui-react";
 import {API, graphqlOperation, Storage, Auth, I18n} from 'aws-amplify';
 import moment from 'moment/min/moment-with-locales';
@@ -120,52 +120,84 @@ const Events = ({names, events}) => {
 const SignatureEvent = ({event: { signature, signatoryObservation, driverObservation, photos }, showPhoto}) =>
     <div>
         {
-            <List style={{paddingTop: "10px", marginLeft: "20px"}}>
-                {
-                    signature.signatoryName &&
-                    <List.Item>
-                        <List.Icon name='user' verticalAlign={"middle"}/>
-                        <List.Content>
-                            <List.Header>{I18n.get('Signed by')}</List.Header>
-                            <List.Description>{signature.signatoryName} {signature.signatoryEmail && `(${signature.signatoryEmail})`}</List.Description>
-                        </List.Content>
-                    </List.Item>
-                }
-                {
-                    signatoryObservation &&
-                    <List.Item>
-                        <List.Icon name='warning sign' verticalAlign={"middle"} />
-                        <List.Content>
-                            <List.Header>{I18n.get('Signatory observation')}</List.Header>
-                            <List.Description>{signatoryObservation}</List.Description>
-                        </List.Content>
-                    </List.Item>
-                }
-                {
-                    <List.Item>
-                        <List.Icon name={'pencil'} verticalAlign={"middle"}/>
-                        <List.Content>
-                            <S3Image
-                                theme={{photoImg: {width: '100px', height: '100px'}}}
-                                resizeMode={'center'}
-                                level={"public"}
-                                imgKey={signature.signatureImageSignatory.key}/>
-                        </List.Content>
-                    </List.Item>
-                }
+            <div style={{paddingTop: "10px", marginLeft: "20px"}}>
+                <List>
+                    {
+                        signature.signatoryName &&
+                        <List.Item>
+                            <List.Icon name='user' verticalAlign={"middle"}/>
+                            <List.Content>
+                                <List.Header>{I18n.get('Signed by')}</List.Header>
+                                <List.Description>{signature.signatoryName} {signature.signatoryEmail && `(${signature.signatoryEmail})`}</List.Description>
+                            </List.Content>
+                        </List.Item>
+                    }
+                    {
+                        signatoryObservation &&
+                        <List.Item>
+                            <List.Icon name='warning sign' verticalAlign={"middle"}/>
+                            <List.Content>
+                                <List.Header>{I18n.get('Signatory observation')}</List.Header>
+                                <List.Description>{signatoryObservation}</List.Description>
+                            </List.Content>
+                        </List.Item>
+                    }
+                    {
+                        <List.Item>
+                            <List.Icon name={'pencil'} verticalAlign={"middle"}/>
+                            <List.Content>
+                                <S3Image
+                                    theme={{photoImg: {width: '100px', height: '100px'}}}
+                                    resizeMode={'center'}
+                                    level={"public"}
+                                    imgKey={signature.signatureImageSignatory.key}/>
+                            </List.Content>
+                        </List.Item>
+                    }
+
 
                     <div style={{display: "flex", flexDirection: "row"}}>
-                    {
-                        (photos || []).map(photo =>
-                            <S3Image
-                                onClick={() => showPhoto(photo)}
-                                theme={{photoImg: {width: '100px', height: '100px', marginRight: 5, cursor: "pointer"}}}
-                                resizeMode={'center'}
-                                level={"public"}
-                                imgKey={photo.key}/>)
-                    }
+                        {
+                            (photos || []).map(photo =>
+                                <S3Image
+                                    onClick={() => showPhoto(photo)}
+                                    theme={{
+                                        photoImg: {
+                                            width: '100px',
+                                            height: '100px',
+                                            marginRight: 5,
+                                            cursor: "pointer"
+                                        }
+                                    }}
+                                    resizeMode={'center'}
+                                    level={"public"}
+                                    imgKey={photo.key}/>)
+                        }
                     </div>
-            </List>
+                </List>
+                {
+                    signature.signatureImageDriver &&
+                    <List>
+                        <List.Item>
+                            <List.Icon name='user' verticalAlign={"middle"}/>
+                            <List.Content>
+                                <List.Header>{I18n.get('Driver signature')}</List.Header>
+                                <List.Description></List.Description>
+                            </List.Content>
+                        </List.Item>
+                        <List.Item>
+                            <List.Icon name={'pencil'} verticalAlign={"middle"}/>
+                            <List.Content>
+                                <S3Image
+                                    theme={{photoImg: {width: '100px', height: '100px'}}}
+                                    resizeMode={'center'}
+                                    level={"public"}
+                                    imgKey={signature.signatureImageDriver.key}/>
+                            </List.Content>
+                        </List.Item>
+                    </List>
+                }
+            </div>
         }
     </div>;
 
