@@ -1,6 +1,7 @@
 import React, {Component} from "react";
-import {Button, Form, Header, Icon, Image, List, Modal, Popup, Table} from "semantic-ui-react";
-import {API, Auth, graphqlOperation, I18n} from "aws-amplify";
+import {Button, Form, Header, Icon, List, Modal, Popup, Table} from "semantic-ui-react";
+import {API, Auth, graphqlOperation} from "aws-amplify";
+import {I18n} from 'aws-amplify/utils';
 import * as queries from "./graphql/queries";
 import * as mutations from "./graphql/mutations";
 import * as ConsoleUtils from "./ConsoleUtils";

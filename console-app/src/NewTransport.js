@@ -11,7 +11,8 @@ import {
     Modal, List, Dropdown
 } from "semantic-ui-react";
 import React from "react";
-import {API, Auth, graphqlOperation, I18n} from 'aws-amplify';
+import {API, Auth, graphqlOperation} from 'aws-amplify';
+import {I18n} from 'aws-amplify/utils';
 import * as mutations from './graphql/mutations'
 import * as queries from "./graphql/queries";
 import moment from "moment";

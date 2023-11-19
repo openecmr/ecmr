@@ -1,5 +1,6 @@
 import {Button, Container, Header, Icon} from "semantic-ui-react";
-import {API, Auth, graphqlOperation, I18n} from "aws-amplify";
+import {API, Auth, graphqlOperation} from "aws-amplify";
+import {I18n} from 'aws-amplify/utils';
 import React, {useEffect, useState} from "react";
 import Timeline, {TimelineMarkers, TodayMarker, TimelineHeaders, DateHeader, CursorMarker} from 'react-calendar-timeline'
 import moment from 'moment/min/moment-with-locales';

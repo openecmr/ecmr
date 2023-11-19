@@ -1,34 +1,15 @@
 {
-  "auth": {
-    "openecmr83cee658": {
-      "service": "Cognito",
-      "providerPlugin": "awscloudformation",
-      "dependsOn": [
-        {
-          "category": "function",
-          "resourceName": "openecmr83cee658PostAuthentication",
-          "triggerProvider": "Cognito",
-          "attributes": [
-            "Arn",
-            "Name"
-          ]
-        }
-      ]
-    }
-  },
   "api": {
     "openecmr": {
-      "service": "AppSync",
-      "providerPlugin": "awscloudformation",
       "output": {
         "authConfig": {
           "additionalAuthenticationProviders": [
             {
-              "authenticationType": "API_KEY",
               "apiKeyConfig": {
-                "description": "backend",
-                "apiKeyExpirationDays": 7
-              }
+                "apiKeyExpirationDays": 7,
+                "description": "backend"
+              },
+              "authenticationType": "API_KEY"
             },
             {
               "authenticationType": "AWS_IAM"
@@ -41,100 +22,245 @@
             }
           }
         }
-      }
+      },
+      "providerPlugin": "awscloudformation",
+      "service": "AppSync"
     }
   },
-  "storage": {
-    "attachments": {
-      "service": "S3",
-      "providerPlugin": "awscloudformation"
+  "auth": {
+    "openecmr83cee658": {
+      "dependsOn": [
+        {
+          "attributes": [
+            "Arn",
+            "Name"
+          ],
+          "category": "function",
+          "resourceName": "openecmr83cee658PostAuthentication",
+          "triggerProvider": "Cognito"
+        }
+      ],
+      "frontendAuthConfig": {
+        "mfaConfiguration": "OFF",
+        "mfaTypes": [
+          "SMS"
+        ],
+        "passwordProtectionSettings": {
+          "passwordPolicyCharacters": [],
+          "passwordPolicyMinLength": 8
+        },
+        "signupAttributes": [
+          "EMAIL"
+        ],
+        "socialProviders": [
+          "GOOGLE"
+        ],
+        "usernameAttributes": [],
+        "verificationMechanisms": [
+          "EMAIL"
+        ]
+      },
+      "providerPlugin": "awscloudformation",
+      "service": "Cognito"
     }
   },
   "function": {
     "activatefunction": {
-      "service": "Lambda",
-      "providerPlugin": "awscloudformation",
       "build": true,
       "dependsOn": [
         {
-          "category": "api",
-          "resourceName": "openecmr",
           "attributes": [
             "GraphQLAPIIdOutput",
             "GraphQLAPIEndpointOutput"
-          ]
-        }
-      ]
-    },
-    "pdfexport": {
-      "service": "Lambda",
-      "providerPlugin": "awscloudformation",
-      "build": true,
-      "dependsOn": [
-        {
-          "category": "auth",
-          "resourceName": "openecmr83cee658",
-          "attributes": [
-            "UserPoolId"
-          ]
-        },
-        {
+          ],
           "category": "api",
-          "resourceName": "openecmr",
-          "attributes": [
-            "GraphQLAPIIdOutput",
-            "GraphQLAPIEndpointOutput"
-          ]
-        },
-        {
-          "category": "storage",
-          "resourceName": "attachments",
-          "attributes": [
-            "BucketName"
-          ]
+          "resourceName": "openecmr"
         }
-      ]
-    },
-    "openecmr83cee658PostAuthentication": {
-      "service": "Lambda",
+      ],
       "providerPlugin": "awscloudformation",
-      "build": true
+      "service": "Lambda"
     },
     "emailtrigger": {
       "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda",
       "dependsOn": [
         {
-          "category": "api",
-          "resourceName": "openecmr",
           "attributes": [
             "GraphQLAPIIdOutput",
             "GraphQLAPIEndpointOutput"
-          ]
+          ],
+          "category": "api",
+          "resourceName": "openecmr"
         }
-      ]
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "openecmr83cee658PostAuthentication": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "pdfexport": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "UserPoolId"
+          ],
+          "category": "auth",
+          "resourceName": "openecmr83cee658"
+        },
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput"
+          ],
+          "category": "api",
+          "resourceName": "openecmr"
+        },
+        {
+          "attributes": [
+            "BucketName"
+          ],
+          "category": "storage",
+          "resourceName": "attachments"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
     },
     "rpdfexport": {
       "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda",
       "dependsOn": [
         {
-          "category": "storage",
-          "resourceName": "attachments",
           "attributes": [
             "BucketName"
-          ]
+          ],
+          "category": "storage",
+          "resourceName": "attachments"
         },
         {
-          "category": "api",
-          "resourceName": "openecmr",
           "attributes": [
             "GraphQLAPIIdOutput"
-          ]
+          ],
+          "category": "api",
+          "resourceName": "openecmr"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    }
+  },
+  "parameters": {
+    "AMPLIFY_auth_openecmr83cee658_googleClientId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "openecmr83cee658"
         }
       ]
+    },
+    "AMPLIFY_auth_openecmr83cee658_useCustomDomain": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "openecmr83cee658"
+        }
+      ]
+    },
+    "AMPLIFY_function_activatefunction_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "activatefunction"
+        }
+      ]
+    },
+    "AMPLIFY_function_activatefunction_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "activatefunction"
+        }
+      ]
+    },
+    "AMPLIFY_function_emailtrigger_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "emailtrigger"
+        }
+      ]
+    },
+    "AMPLIFY_function_emailtrigger_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "emailtrigger"
+        }
+      ]
+    },
+    "AMPLIFY_function_openecmr83cee658PostAuthentication_apiopenecmrGraphQLAPIIdOutput": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "openecmr83cee658PostAuthentication"
+        }
+      ]
+    },
+    "AMPLIFY_function_openecmr83cee658PostAuthentication_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "openecmr83cee658PostAuthentication"
+        }
+      ]
+    },
+    "AMPLIFY_function_openecmr83cee658PostAuthentication_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "openecmr83cee658PostAuthentication"
+        }
+      ]
+    },
+    "AMPLIFY_function_pdfexport_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "pdfexport"
+        }
+      ]
+    },
+    "AMPLIFY_function_pdfexport_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "pdfexport"
+        }
+      ]
+    },
+    "AMPLIFY_function_rpdfexport_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "rpdfexport"
+        }
+      ]
+    },
+    "AMPLIFY_function_rpdfexport_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "rpdfexport"
+        }
+      ]
+    }
+  },
+  "storage": {
+    "attachments": {
+      "providerPlugin": "awscloudformation",
+      "service": "S3"
     }
   }
 }

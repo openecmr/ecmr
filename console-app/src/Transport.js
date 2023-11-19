@@ -9,7 +9,8 @@ import {
     Step,
     List, Label, Segment, Comment, Loader, Modal, Form, Message, Card, Confirm, Divider
 } from "semantic-ui-react";
-import {API, graphqlOperation, Storage, Auth, I18n} from 'aws-amplify';
+import {graphqlOperation, Storage, Auth} from 'aws-amplify';
+import {I18n} from 'aws-amplify/utils';
 import moment from 'moment/min/moment-with-locales';
 import * as queries from "./graphql/queries";
 import * as mutations from "./graphql/mutations";

@@ -5,16 +5,14 @@ import Transports from "./Transports";
 import {BrowserRouter as Router, Route, Link, withRouter, Redirect, Switch} from "react-router-dom";
 import {NewTransport} from "./NewTransport";
 
-import Amplify, {API, graphqlOperation} from 'aws-amplify';
-import { Auth, Hub, I18n } from 'aws-amplify';
-import awsmobile from './aws-exports';
+import {Amplify } from 'aws-amplify';
+import { Hub, I18n } from 'aws-amplify/utils';
+import amplifyconfig from './amplifyconfiguration.json';
 import {
-    Greetings,
     ConfirmSignIn,
     ConfirmSignUp,
     Container, ForgotPassword,
     Loading, RequireNewPassword, SignIn,
-    SignUp,
     VerifyContact,
     withAuthenticator
 } from 'aws-amplify-react';
@@ -36,19 +34,21 @@ import '@aws-amplify/ui/dist/style.css';
 import Settings from "./Settings";
 import Planner from "./Planner";
 import Orders from "./Orders";
+import {client} from "./ConsoleUtils";
+import {getCurrentUser} from "aws-amplify/auth";
 
 let config;
 const pdfServiceKey = window.location.hash.substr(1);
 if (pdfServiceKey) {
     config = {
-        ...awsmobile,
+        ...amplifyconfig,
         'aws_appsync_authenticationType': 'API_KEY',
         'aws_appsync_apiKey': pdfServiceKey,
     };
     // delete config["oauth"];
     window.location.hash = '#';
 } else {
-    config = awsmobile;
+    config = amplifyconfig;
     config['oauth']['domain'] = "auth.openecmr.com";
 }
 
@@ -94,44 +94,59 @@ class CompanyDialog extends Component {
             saving: true
         });
 
-        const username = (await Auth.currentAuthenticatedUser()).getUsername();
-        const companyResult = await API.graphql(graphqlOperation(mutations.createCompany, {input: {
-            owner: username,
-            name: this.state.name
-        }}));
+        const username = (await getCurrentUser()).getUsername();
+        const companyResult = await client.graphql({
+            query: mutations.createCompany,
+            variables: {
+                input: {
+                    owner: username,
+                    name: this.state.name
+                }
+            }
+        });
         const companyId = companyResult.data.createCompany.id;
-        await API.graphql(graphqlOperation(mutations.createContact, {
-            input: {
-                owner: username,
-                name: this.state.name
+        await client.graphql({
+            query: mutations.createContact, variables: {
+                input: {
+                    owner: username,
+                    name: this.state.name
+                }
             }
-        }));
-        await API.graphql(graphqlOperation(mutations.createDriver, {
-            input: {
-                owner: username,
-                name: this.state.name + " driver",
-                carrier: username
+        });
+        await client.graphql({
+            query: mutations.createDriver,
+            variables: {
+                input: {
+                    owner: username,
+                    name: this.state.name + " driver",
+                    carrier: username
+                }
             }
-        }));
-        await API.graphql(graphqlOperation(mutations.createVehicle, {
-            input: {
-                companyId: companyId,
-                owner: username,
-                licensePlateNumber: "ab-12-34",
-                type: "TRUCK",
-                description: this.state.name + " truck"
+        });
+        await client.graphql({
+            query: mutations.createVehicle,
+            variables: {
+                input: {
+                    companyId: companyId,
+                    owner: username,
+                    licensePlateNumber: "ab-12-34",
+                    type: "TRUCK",
+                    description: this.state.name + " truck"
+                }
             }
-        }));
-        await API.graphql(graphqlOperation(mutations.createVehicle, {
-            input: {
-                companyId: companyId,
-                owner: username,
-                licensePlateNumber: "ab-12-35",
-                type: "TRAILER",
-                description: this.state.name + " trailer"
+        });
+        await client.graphql({
+            query: mutations.createVehicle,
+            variables: {
+                input: {
+                    companyId: companyId,
+                    owner: username,
+                    licensePlateNumber: "ab-12-35",
+                    type: "TRAILER",
+                    description: this.state.name + " trailer"
+                }
             }
-        }));
-
+        });
         this.props.onCompanyUpdated();
     }
 

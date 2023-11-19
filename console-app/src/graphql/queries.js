@@ -39,6 +39,7 @@ export const contractsByFilterCustom = /* GraphQL */ `
         orderDate
         creator {
           name
+          __typename
         }
         shipper {
           name
@@ -48,6 +49,7 @@ export const contractsByFilterCustom = /* GraphQL */ `
           country
           phone
           email
+          __typename
         }
         carrier {
           name
@@ -57,6 +59,7 @@ export const contractsByFilterCustom = /* GraphQL */ `
           country
           phone
           email
+          __typename
         }
         delivery {
           name
@@ -66,16 +69,19 @@ export const contractsByFilterCustom = /* GraphQL */ `
           country
           phone
           email
+          __typename
         }
         arrivalDate
         arrivalTime {
           start
           end
+          __typename
         }
         deliveryDate
         deliveryTime {
           start
           end
+          __typename
         }
         pickup {
           name
@@ -85,6 +91,7 @@ export const contractsByFilterCustom = /* GraphQL */ `
           country
           phone
           email
+          __typename
         }
         loads {
           category
@@ -95,22 +102,27 @@ export const contractsByFilterCustom = /* GraphQL */ `
           description
           hazardousGoodsItems {
             hazardLabel
+            __typename
           }
+          __typename
         }
         driver {
           name
           username
+          __typename
         }
         trailer
         truck
         references {
           carrier
+          __typename
         }
         updatedAt
         createdAt
         events {
           author {
             username
+            __typename
           }
           type
           site
@@ -123,14 +135,17 @@ export const contractsByFilterCustom = /* GraphQL */ `
               bucket
               region
               key
+              __typename
             }
             signatureImageSignatory {
               bucket
               region
               key
+              __typename
             }
             signatoryName
             signatoryEmail
+            __typename
           }
           driverObservation
           signatoryObservation
@@ -138,22 +153,26 @@ export const contractsByFilterCustom = /* GraphQL */ `
           assignedDriver {
             name
             username
+            __typename
           }
           photos {
             bucket
             region
             key
+            __typename
           }
           attachments {
             location {
               bucket
               region
               key
+              __typename
             }
             size
             filename
             mimeType
             extension
+            __typename
           }
           attachmentType
           attachmentDescription
@@ -167,7 +186,9 @@ export const contractsByFilterCustom = /* GraphQL */ `
             description
             hazardousGoodsItems {
               hazardLabel
+              __typename
             }
+            __typename
           }
           newLoads {
             category
@@ -178,7 +199,9 @@ export const contractsByFilterCustom = /* GraphQL */ `
             description
             hazardousGoodsItems {
               hazardLabel
+              __typename
             }
+            __typename
           }
           newAttributes {
             shipper {
@@ -189,6 +212,7 @@ export const contractsByFilterCustom = /* GraphQL */ `
               country
               phone
               email
+              __typename
             }
             carrier {
               name
@@ -198,6 +222,7 @@ export const contractsByFilterCustom = /* GraphQL */ `
               country
               phone
               email
+              __typename
             }
             delivery {
               name
@@ -207,16 +232,19 @@ export const contractsByFilterCustom = /* GraphQL */ `
               country
               phone
               email
+              __typename
             }
             arrivalDate
             arrivalTime {
               start
               end
+              __typename
             }
             deliveryDate
             deliveryTime {
               start
               end
+              __typename
             }
             pickup {
               name
@@ -226,6 +254,7 @@ export const contractsByFilterCustom = /* GraphQL */ `
               country
               phone
               email
+              __typename
             }
             loads {
               category
@@ -234,11 +263,13 @@ export const contractsByFilterCustom = /* GraphQL */ `
               loadMeters
               netWeight
               description
+              __typename
             }
             trailer
             truck
             references {
               carrier
+              __typename
             }
             shipperContactId
             carrierContactId
@@ -246,6 +277,7 @@ export const contractsByFilterCustom = /* GraphQL */ `
             deliveryContactId
             trailerVehicleId
             truckVehicleId
+            __typename
           }
           oldAttributes {
             shipper {
@@ -256,6 +288,7 @@ export const contractsByFilterCustom = /* GraphQL */ `
               country
               phone
               email
+              __typename
             }
             carrier {
               name
@@ -265,6 +298,7 @@ export const contractsByFilterCustom = /* GraphQL */ `
               country
               phone
               email
+              __typename
             }
             delivery {
               name
@@ -274,16 +308,19 @@ export const contractsByFilterCustom = /* GraphQL */ `
               country
               phone
               email
+              __typename
             }
             arrivalDate
             arrivalTime {
               start
               end
+              __typename
             }
             deliveryDate
             deliveryTime {
               start
               end
+              __typename
             }
             pickup {
               name
@@ -293,6 +330,7 @@ export const contractsByFilterCustom = /* GraphQL */ `
               country
               phone
               email
+              __typename
             }
             loads {
               category
@@ -301,11 +339,13 @@ export const contractsByFilterCustom = /* GraphQL */ `
               loadMeters
               netWeight
               description
+              __typename
             }
             trailer
             truck
             references {
               carrier
+              __typename
             }
             shipperContactId
             carrierContactId
@@ -313,6 +353,7 @@ export const contractsByFilterCustom = /* GraphQL */ `
             deliveryContactId
             trailerVehicleId
             truckVehicleId
+            __typename
           }
           geoposition {
             latitude
@@ -325,7 +366,9 @@ export const contractsByFilterCustom = /* GraphQL */ `
             timestamp
             mocked
             provider
+            __typename
           }
+          __typename
         }
         needAcknowledge
         shipperContactId
@@ -337,8 +380,10 @@ export const contractsByFilterCustom = /* GraphQL */ `
         trailerVehicleId
         truckVehicleId
         openecmrId
+        __typename
       }
       nextToken
+      __typename
     }
   }
 `;
@@ -352,8 +397,10 @@ export const getUserProfile = /* GraphQL */ `
         bucket
         region
         key
+        __typename
       }
       createdAt
+      __typename
     }
   }
 `;
@@ -372,10 +419,13 @@ export const listUserProfiles = /* GraphQL */ `
           bucket
           region
           key
+          __typename
         }
         createdAt
+        __typename
       }
       nextToken
+      __typename
     }
   }
 `;
@@ -391,6 +441,7 @@ export const getVehicle = /* GraphQL */ `
       description
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -411,8 +462,10 @@ export const listVehicles = /* GraphQL */ `
         description
         createdAt
         updatedAt
+        __typename
       }
       nextToken
+      __typename
     }
   }
 `;
@@ -450,9 +503,11 @@ export const getContact = /* GraphQL */ `
             email
             contactPersons {
               nextToken
+              __typename
             }
             createdAt
             updatedAt
+            __typename
           }
           addedByDriverDriverId
           createdAt
@@ -465,12 +520,16 @@ export const getContact = /* GraphQL */ `
             associationSecret
             createdAt
             updatedAt
+            __typename
           }
+          __typename
         }
         nextToken
+        __typename
       }
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -513,6 +572,7 @@ export const listContacts = /* GraphQL */ `
               email
               createdAt
               updatedAt
+              __typename
             }
             addedByDriverDriverId
             createdAt
@@ -525,14 +585,19 @@ export const listContacts = /* GraphQL */ `
               associationSecret
               createdAt
               updatedAt
+              __typename
             }
+            __typename
           }
           nextToken
+          __typename
         }
         createdAt
         updatedAt
+        __typename
       }
       nextToken
+      __typename
     }
   }
 `;
@@ -577,6 +642,7 @@ export const getContactPerson = /* GraphQL */ `
               email
               createdAt
               updatedAt
+              __typename
             }
             addedByDriverDriverId
             createdAt
@@ -589,12 +655,16 @@ export const getContactPerson = /* GraphQL */ `
               associationSecret
               createdAt
               updatedAt
+              __typename
             }
+            __typename
           }
           nextToken
+          __typename
         }
         createdAt
         updatedAt
+        __typename
       }
       addedByDriverDriverId
       createdAt
@@ -607,7 +677,9 @@ export const getContactPerson = /* GraphQL */ `
         associationSecret
         createdAt
         updatedAt
+        __typename
       }
+      __typename
     }
   }
 `;
@@ -647,11 +719,14 @@ export const listContactPersons = /* GraphQL */ `
               addedByDriverDriverId
               createdAt
               updatedAt
+              __typename
             }
             nextToken
+            __typename
           }
           createdAt
           updatedAt
+          __typename
         }
         addedByDriverDriverId
         createdAt
@@ -664,9 +739,12 @@ export const listContactPersons = /* GraphQL */ `
           associationSecret
           createdAt
           updatedAt
+          __typename
         }
+        __typename
       }
       nextToken
+      __typename
     }
   }
 `;
@@ -679,6 +757,7 @@ export const getCompany = /* GraphQL */ `
       allowedSendingEmail
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -696,8 +775,10 @@ export const listCompanys = /* GraphQL */ `
         allowedSendingEmail
         createdAt
         updatedAt
+        __typename
       }
       nextToken
+      __typename
     }
   }
 `;
@@ -724,10 +805,13 @@ export const userProfileByOwner = /* GraphQL */ `
           bucket
           region
           key
+          __typename
         }
         createdAt
+        __typename
       }
       nextToken
+      __typename
     }
   }
 `;
@@ -758,8 +842,10 @@ export const vehicleByOwner = /* GraphQL */ `
         description
         createdAt
         updatedAt
+        __typename
       }
       nextToken
+      __typename
     }
   }
 `;
@@ -812,6 +898,7 @@ export const contactByOwner = /* GraphQL */ `
               email
               createdAt
               updatedAt
+              __typename
             }
             addedByDriverDriverId
             createdAt
@@ -824,14 +911,19 @@ export const contactByOwner = /* GraphQL */ `
               associationSecret
               createdAt
               updatedAt
+              __typename
             }
+            __typename
           }
           nextToken
+          __typename
         }
         createdAt
         updatedAt
+        __typename
       }
       nextToken
+      __typename
     }
   }
 `;
@@ -881,11 +973,14 @@ export const contactPersonByContact = /* GraphQL */ `
               addedByDriverDriverId
               createdAt
               updatedAt
+              __typename
             }
             nextToken
+            __typename
           }
           createdAt
           updatedAt
+          __typename
         }
         addedByDriverDriverId
         createdAt
@@ -898,9 +993,12 @@ export const contactPersonByContact = /* GraphQL */ `
           associationSecret
           createdAt
           updatedAt
+          __typename
         }
+        __typename
       }
       nextToken
+      __typename
     }
   }
 `;
@@ -950,11 +1048,14 @@ export const contactPersonByOwner = /* GraphQL */ `
               addedByDriverDriverId
               createdAt
               updatedAt
+              __typename
             }
             nextToken
+            __typename
           }
           createdAt
           updatedAt
+          __typename
         }
         addedByDriverDriverId
         createdAt
@@ -967,9 +1068,12 @@ export const contactPersonByOwner = /* GraphQL */ `
           associationSecret
           createdAt
           updatedAt
+          __typename
         }
+        __typename
       }
       nextToken
+      __typename
     }
   }
 `;
@@ -997,8 +1101,10 @@ export const companyByOwner = /* GraphQL */ `
         allowedSendingEmail
         createdAt
         updatedAt
+        __typename
       }
       nextToken
+      __typename
     }
   }
 `;
@@ -1030,6 +1136,7 @@ export const contractsByOwnerArrivalDate = /* GraphQL */ `
         orderDate
         creator {
           name
+          __typename
         }
         shipper {
           name
@@ -1039,6 +1146,7 @@ export const contractsByOwnerArrivalDate = /* GraphQL */ `
           country
           phone
           email
+          __typename
         }
         carrier {
           name
@@ -1048,6 +1156,7 @@ export const contractsByOwnerArrivalDate = /* GraphQL */ `
           country
           phone
           email
+          __typename
         }
         delivery {
           name
@@ -1057,16 +1166,19 @@ export const contractsByOwnerArrivalDate = /* GraphQL */ `
           country
           phone
           email
+          __typename
         }
         arrivalDate
         arrivalTime {
           start
           end
+          __typename
         }
         deliveryDate
         deliveryTime {
           start
           end
+          __typename
         }
         pickup {
           name
@@ -1076,6 +1188,7 @@ export const contractsByOwnerArrivalDate = /* GraphQL */ `
           country
           phone
           email
+          __typename
         }
         loads {
           category
@@ -1086,22 +1199,27 @@ export const contractsByOwnerArrivalDate = /* GraphQL */ `
           description
           hazardousGoodsItems {
             hazardLabel
+            __typename
           }
+          __typename
         }
         driver {
           name
           username
+          __typename
         }
         trailer
         truck
         references {
           carrier
+          __typename
         }
         updatedAt
         createdAt
         events {
           author {
             username
+            __typename
           }
           type
           site
@@ -1114,14 +1232,17 @@ export const contractsByOwnerArrivalDate = /* GraphQL */ `
               bucket
               region
               key
+              __typename
             }
             signatureImageSignatory {
               bucket
               region
               key
+              __typename
             }
             signatoryName
             signatoryEmail
+            __typename
           }
           driverObservation
           signatoryObservation
@@ -1129,22 +1250,26 @@ export const contractsByOwnerArrivalDate = /* GraphQL */ `
           assignedDriver {
             name
             username
+            __typename
           }
           photos {
             bucket
             region
             key
+            __typename
           }
           attachments {
             location {
               bucket
               region
               key
+              __typename
             }
             size
             filename
             mimeType
             extension
+            __typename
           }
           attachmentType
           attachmentDescription
@@ -1158,7 +1283,9 @@ export const contractsByOwnerArrivalDate = /* GraphQL */ `
             description
             hazardousGoodsItems {
               hazardLabel
+              __typename
             }
+            __typename
           }
           newLoads {
             category
@@ -1169,7 +1296,9 @@ export const contractsByOwnerArrivalDate = /* GraphQL */ `
             description
             hazardousGoodsItems {
               hazardLabel
+              __typename
             }
+            __typename
           }
           newAttributes {
             shipper {
@@ -1180,6 +1309,7 @@ export const contractsByOwnerArrivalDate = /* GraphQL */ `
               country
               phone
               email
+              __typename
             }
             carrier {
               name
@@ -1189,6 +1319,7 @@ export const contractsByOwnerArrivalDate = /* GraphQL */ `
               country
               phone
               email
+              __typename
             }
             delivery {
               name
@@ -1198,16 +1329,19 @@ export const contractsByOwnerArrivalDate = /* GraphQL */ `
               country
               phone
               email
+              __typename
             }
             arrivalDate
             arrivalTime {
               start
               end
+              __typename
             }
             deliveryDate
             deliveryTime {
               start
               end
+              __typename
             }
             pickup {
               name
@@ -1217,6 +1351,7 @@ export const contractsByOwnerArrivalDate = /* GraphQL */ `
               country
               phone
               email
+              __typename
             }
             loads {
               category
@@ -1225,11 +1360,13 @@ export const contractsByOwnerArrivalDate = /* GraphQL */ `
               loadMeters
               netWeight
               description
+              __typename
             }
             trailer
             truck
             references {
               carrier
+              __typename
             }
             shipperContactId
             carrierContactId
@@ -1237,6 +1374,7 @@ export const contractsByOwnerArrivalDate = /* GraphQL */ `
             deliveryContactId
             trailerVehicleId
             truckVehicleId
+            __typename
           }
           oldAttributes {
             shipper {
@@ -1247,6 +1385,7 @@ export const contractsByOwnerArrivalDate = /* GraphQL */ `
               country
               phone
               email
+              __typename
             }
             carrier {
               name
@@ -1256,6 +1395,7 @@ export const contractsByOwnerArrivalDate = /* GraphQL */ `
               country
               phone
               email
+              __typename
             }
             delivery {
               name
@@ -1265,16 +1405,19 @@ export const contractsByOwnerArrivalDate = /* GraphQL */ `
               country
               phone
               email
+              __typename
             }
             arrivalDate
             arrivalTime {
               start
               end
+              __typename
             }
             deliveryDate
             deliveryTime {
               start
               end
+              __typename
             }
             pickup {
               name
@@ -1284,6 +1427,7 @@ export const contractsByOwnerArrivalDate = /* GraphQL */ `
               country
               phone
               email
+              __typename
             }
             loads {
               category
@@ -1292,11 +1436,13 @@ export const contractsByOwnerArrivalDate = /* GraphQL */ `
               loadMeters
               netWeight
               description
+              __typename
             }
             trailer
             truck
             references {
               carrier
+              __typename
             }
             shipperContactId
             carrierContactId
@@ -1304,6 +1450,7 @@ export const contractsByOwnerArrivalDate = /* GraphQL */ `
             deliveryContactId
             trailerVehicleId
             truckVehicleId
+            __typename
           }
           geoposition {
             latitude
@@ -1316,7 +1463,9 @@ export const contractsByOwnerArrivalDate = /* GraphQL */ `
             timestamp
             mocked
             provider
+            __typename
           }
+          __typename
         }
         needAcknowledge
         shipperContactId
@@ -1328,8 +1477,10 @@ export const contractsByOwnerArrivalDate = /* GraphQL */ `
         trailerVehicleId
         truckVehicleId
         openecmrId
+        __typename
       }
       nextToken
+      __typename
     }
   }
 `;
@@ -1361,6 +1512,7 @@ export const contractsByCarrierArrivalDate = /* GraphQL */ `
         orderDate
         creator {
           name
+          __typename
         }
         shipper {
           name
@@ -1370,6 +1522,7 @@ export const contractsByCarrierArrivalDate = /* GraphQL */ `
           country
           phone
           email
+          __typename
         }
         carrier {
           name
@@ -1379,6 +1532,7 @@ export const contractsByCarrierArrivalDate = /* GraphQL */ `
           country
           phone
           email
+          __typename
         }
         delivery {
           name
@@ -1388,16 +1542,19 @@ export const contractsByCarrierArrivalDate = /* GraphQL */ `
           country
           phone
           email
+          __typename
         }
         arrivalDate
         arrivalTime {
           start
           end
+          __typename
         }
         deliveryDate
         deliveryTime {
           start
           end
+          __typename
         }
         pickup {
           name
@@ -1407,6 +1564,7 @@ export const contractsByCarrierArrivalDate = /* GraphQL */ `
           country
           phone
           email
+          __typename
         }
         loads {
           category
@@ -1417,22 +1575,27 @@ export const contractsByCarrierArrivalDate = /* GraphQL */ `
           description
           hazardousGoodsItems {
             hazardLabel
+            __typename
           }
+          __typename
         }
         driver {
           name
           username
+          __typename
         }
         trailer
         truck
         references {
           carrier
+          __typename
         }
         updatedAt
         createdAt
         events {
           author {
             username
+            __typename
           }
           type
           site
@@ -1445,14 +1608,17 @@ export const contractsByCarrierArrivalDate = /* GraphQL */ `
               bucket
               region
               key
+              __typename
             }
             signatureImageSignatory {
               bucket
               region
               key
+              __typename
             }
             signatoryName
             signatoryEmail
+            __typename
           }
           driverObservation
           signatoryObservation
@@ -1460,22 +1626,26 @@ export const contractsByCarrierArrivalDate = /* GraphQL */ `
           assignedDriver {
             name
             username
+            __typename
           }
           photos {
             bucket
             region
             key
+            __typename
           }
           attachments {
             location {
               bucket
               region
               key
+              __typename
             }
             size
             filename
             mimeType
             extension
+            __typename
           }
           attachmentType
           attachmentDescription
@@ -1489,7 +1659,9 @@ export const contractsByCarrierArrivalDate = /* GraphQL */ `
             description
             hazardousGoodsItems {
               hazardLabel
+              __typename
             }
+            __typename
           }
           newLoads {
             category
@@ -1500,7 +1672,9 @@ export const contractsByCarrierArrivalDate = /* GraphQL */ `
             description
             hazardousGoodsItems {
               hazardLabel
+              __typename
             }
+            __typename
           }
           newAttributes {
             shipper {
@@ -1511,6 +1685,7 @@ export const contractsByCarrierArrivalDate = /* GraphQL */ `
               country
               phone
               email
+              __typename
             }
             carrier {
               name
@@ -1520,6 +1695,7 @@ export const contractsByCarrierArrivalDate = /* GraphQL */ `
               country
               phone
               email
+              __typename
             }
             delivery {
               name
@@ -1529,16 +1705,19 @@ export const contractsByCarrierArrivalDate = /* GraphQL */ `
               country
               phone
               email
+              __typename
             }
             arrivalDate
             arrivalTime {
               start
               end
+              __typename
             }
             deliveryDate
             deliveryTime {
               start
               end
+              __typename
             }
             pickup {
               name
@@ -1548,6 +1727,7 @@ export const contractsByCarrierArrivalDate = /* GraphQL */ `
               country
               phone
               email
+              __typename
             }
             loads {
               category
@@ -1556,11 +1736,13 @@ export const contractsByCarrierArrivalDate = /* GraphQL */ `
               loadMeters
               netWeight
               description
+              __typename
             }
             trailer
             truck
             references {
               carrier
+              __typename
             }
             shipperContactId
             carrierContactId
@@ -1568,6 +1750,7 @@ export const contractsByCarrierArrivalDate = /* GraphQL */ `
             deliveryContactId
             trailerVehicleId
             truckVehicleId
+            __typename
           }
           oldAttributes {
             shipper {
@@ -1578,6 +1761,7 @@ export const contractsByCarrierArrivalDate = /* GraphQL */ `
               country
               phone
               email
+              __typename
             }
             carrier {
               name
@@ -1587,6 +1771,7 @@ export const contractsByCarrierArrivalDate = /* GraphQL */ `
               country
               phone
               email
+              __typename
             }
             delivery {
               name
@@ -1596,16 +1781,19 @@ export const contractsByCarrierArrivalDate = /* GraphQL */ `
               country
               phone
               email
+              __typename
             }
             arrivalDate
             arrivalTime {
               start
               end
+              __typename
             }
             deliveryDate
             deliveryTime {
               start
               end
+              __typename
             }
             pickup {
               name
@@ -1615,6 +1803,7 @@ export const contractsByCarrierArrivalDate = /* GraphQL */ `
               country
               phone
               email
+              __typename
             }
             loads {
               category
@@ -1623,11 +1812,13 @@ export const contractsByCarrierArrivalDate = /* GraphQL */ `
               loadMeters
               netWeight
               description
+              __typename
             }
             trailer
             truck
             references {
               carrier
+              __typename
             }
             shipperContactId
             carrierContactId
@@ -1635,6 +1826,7 @@ export const contractsByCarrierArrivalDate = /* GraphQL */ `
             deliveryContactId
             trailerVehicleId
             truckVehicleId
+            __typename
           }
           geoposition {
             latitude
@@ -1647,7 +1839,9 @@ export const contractsByCarrierArrivalDate = /* GraphQL */ `
             timestamp
             mocked
             provider
+            __typename
           }
+          __typename
         }
         needAcknowledge
         shipperContactId
@@ -1659,8 +1853,10 @@ export const contractsByCarrierArrivalDate = /* GraphQL */ `
         trailerVehicleId
         truckVehicleId
         openecmrId
+        __typename
       }
       nextToken
+      __typename
     }
   }
 `;
@@ -1692,6 +1888,7 @@ export const contractsByOwnerUpdatedAt = /* GraphQL */ `
         orderDate
         creator {
           name
+          __typename
         }
         shipper {
           name
@@ -1701,6 +1898,7 @@ export const contractsByOwnerUpdatedAt = /* GraphQL */ `
           country
           phone
           email
+          __typename
         }
         carrier {
           name
@@ -1710,6 +1908,7 @@ export const contractsByOwnerUpdatedAt = /* GraphQL */ `
           country
           phone
           email
+          __typename
         }
         delivery {
           name
@@ -1719,16 +1918,19 @@ export const contractsByOwnerUpdatedAt = /* GraphQL */ `
           country
           phone
           email
+          __typename
         }
         arrivalDate
         arrivalTime {
           start
           end
+          __typename
         }
         deliveryDate
         deliveryTime {
           start
           end
+          __typename
         }
         pickup {
           name
@@ -1738,6 +1940,7 @@ export const contractsByOwnerUpdatedAt = /* GraphQL */ `
           country
           phone
           email
+          __typename
         }
         loads {
           category
@@ -1748,22 +1951,27 @@ export const contractsByOwnerUpdatedAt = /* GraphQL */ `
           description
           hazardousGoodsItems {
             hazardLabel
+            __typename
           }
+          __typename
         }
         driver {
           name
           username
+          __typename
         }
         trailer
         truck
         references {
           carrier
+          __typename
         }
         updatedAt
         createdAt
         events {
           author {
             username
+            __typename
           }
           type
           site
@@ -1776,14 +1984,17 @@ export const contractsByOwnerUpdatedAt = /* GraphQL */ `
               bucket
               region
               key
+              __typename
             }
             signatureImageSignatory {
               bucket
               region
               key
+              __typename
             }
             signatoryName
             signatoryEmail
+            __typename
           }
           driverObservation
           signatoryObservation
@@ -1791,22 +2002,26 @@ export const contractsByOwnerUpdatedAt = /* GraphQL */ `
           assignedDriver {
             name
             username
+            __typename
           }
           photos {
             bucket
             region
             key
+            __typename
           }
           attachments {
             location {
               bucket
               region
               key
+              __typename
             }
             size
             filename
             mimeType
             extension
+            __typename
           }
           attachmentType
           attachmentDescription
@@ -1820,7 +2035,9 @@ export const contractsByOwnerUpdatedAt = /* GraphQL */ `
             description
             hazardousGoodsItems {
               hazardLabel
+              __typename
             }
+            __typename
           }
           newLoads {
             category
@@ -1831,7 +2048,9 @@ export const contractsByOwnerUpdatedAt = /* GraphQL */ `
             description
             hazardousGoodsItems {
               hazardLabel
+              __typename
             }
+            __typename
           }
           newAttributes {
             shipper {
@@ -1842,6 +2061,7 @@ export const contractsByOwnerUpdatedAt = /* GraphQL */ `
               country
               phone
               email
+              __typename
             }
             carrier {
               name
@@ -1851,6 +2071,7 @@ export const contractsByOwnerUpdatedAt = /* GraphQL */ `
               country
               phone
               email
+              __typename
             }
             delivery {
               name
@@ -1860,16 +2081,19 @@ export const contractsByOwnerUpdatedAt = /* GraphQL */ `
               country
               phone
               email
+              __typename
             }
             arrivalDate
             arrivalTime {
               start
               end
+              __typename
             }
             deliveryDate
             deliveryTime {
               start
               end
+              __typename
             }
             pickup {
               name
@@ -1879,6 +2103,7 @@ export const contractsByOwnerUpdatedAt = /* GraphQL */ `
               country
               phone
               email
+              __typename
             }
             loads {
               category
@@ -1887,11 +2112,13 @@ export const contractsByOwnerUpdatedAt = /* GraphQL */ `
               loadMeters
               netWeight
               description
+              __typename
             }
             trailer
             truck
             references {
               carrier
+              __typename
             }
             shipperContactId
             carrierContactId
@@ -1899,6 +2126,7 @@ export const contractsByOwnerUpdatedAt = /* GraphQL */ `
             deliveryContactId
             trailerVehicleId
             truckVehicleId
+            __typename
           }
           oldAttributes {
             shipper {
@@ -1909,6 +2137,7 @@ export const contractsByOwnerUpdatedAt = /* GraphQL */ `
               country
               phone
               email
+              __typename
             }
             carrier {
               name
@@ -1918,6 +2147,7 @@ export const contractsByOwnerUpdatedAt = /* GraphQL */ `
               country
               phone
               email
+              __typename
             }
             delivery {
               name
@@ -1927,16 +2157,19 @@ export const contractsByOwnerUpdatedAt = /* GraphQL */ `
               country
               phone
               email
+              __typename
             }
             arrivalDate
             arrivalTime {
               start
               end
+              __typename
             }
             deliveryDate
             deliveryTime {
               start
               end
+              __typename
             }
             pickup {
               name
@@ -1946,6 +2179,7 @@ export const contractsByOwnerUpdatedAt = /* GraphQL */ `
               country
               phone
               email
+              __typename
             }
             loads {
               category
@@ -1954,11 +2188,13 @@ export const contractsByOwnerUpdatedAt = /* GraphQL */ `
               loadMeters
               netWeight
               description
+              __typename
             }
             trailer
             truck
             references {
               carrier
+              __typename
             }
             shipperContactId
             carrierContactId
@@ -1966,6 +2202,7 @@ export const contractsByOwnerUpdatedAt = /* GraphQL */ `
             deliveryContactId
             trailerVehicleId
             truckVehicleId
+            __typename
           }
           geoposition {
             latitude
@@ -1978,7 +2215,9 @@ export const contractsByOwnerUpdatedAt = /* GraphQL */ `
             timestamp
             mocked
             provider
+            __typename
           }
+          __typename
         }
         needAcknowledge
         shipperContactId
@@ -1990,8 +2229,10 @@ export const contractsByOwnerUpdatedAt = /* GraphQL */ `
         trailerVehicleId
         truckVehicleId
         openecmrId
+        __typename
       }
       nextToken
+      __typename
     }
   }
 `;
@@ -2023,6 +2264,7 @@ export const contractsByCarrierUpdatedAt = /* GraphQL */ `
         orderDate
         creator {
           name
+          __typename
         }
         shipper {
           name
@@ -2032,6 +2274,7 @@ export const contractsByCarrierUpdatedAt = /* GraphQL */ `
           country
           phone
           email
+          __typename
         }
         carrier {
           name
@@ -2041,6 +2284,7 @@ export const contractsByCarrierUpdatedAt = /* GraphQL */ `
           country
           phone
           email
+          __typename
         }
         delivery {
           name
@@ -2050,16 +2294,19 @@ export const contractsByCarrierUpdatedAt = /* GraphQL */ `
           country
           phone
           email
+          __typename
         }
         arrivalDate
         arrivalTime {
           start
           end
+          __typename
         }
         deliveryDate
         deliveryTime {
           start
           end
+          __typename
         }
         pickup {
           name
@@ -2069,6 +2316,7 @@ export const contractsByCarrierUpdatedAt = /* GraphQL */ `
           country
           phone
           email
+          __typename
         }
         loads {
           category
@@ -2079,22 +2327,27 @@ export const contractsByCarrierUpdatedAt = /* GraphQL */ `
           description
           hazardousGoodsItems {
             hazardLabel
+            __typename
           }
+          __typename
         }
         driver {
           name
           username
+          __typename
         }
         trailer
         truck
         references {
           carrier
+          __typename
         }
         updatedAt
         createdAt
         events {
           author {
             username
+            __typename
           }
           type
           site
@@ -2107,14 +2360,17 @@ export const contractsByCarrierUpdatedAt = /* GraphQL */ `
               bucket
               region
               key
+              __typename
             }
             signatureImageSignatory {
               bucket
               region
               key
+              __typename
             }
             signatoryName
             signatoryEmail
+            __typename
           }
           driverObservation
           signatoryObservation
@@ -2122,22 +2378,26 @@ export const contractsByCarrierUpdatedAt = /* GraphQL */ `
           assignedDriver {
             name
             username
+            __typename
           }
           photos {
             bucket
             region
             key
+            __typename
           }
           attachments {
             location {
               bucket
               region
               key
+              __typename
             }
             size
             filename
             mimeType
             extension
+            __typename
           }
           attachmentType
           attachmentDescription
@@ -2151,7 +2411,9 @@ export const contractsByCarrierUpdatedAt = /* GraphQL */ `
             description
             hazardousGoodsItems {
               hazardLabel
+              __typename
             }
+            __typename
           }
           newLoads {
             category
@@ -2162,7 +2424,9 @@ export const contractsByCarrierUpdatedAt = /* GraphQL */ `
             description
             hazardousGoodsItems {
               hazardLabel
+              __typename
             }
+            __typename
           }
           newAttributes {
             shipper {
@@ -2173,6 +2437,7 @@ export const contractsByCarrierUpdatedAt = /* GraphQL */ `
               country
               phone
               email
+              __typename
             }
             carrier {
               name
@@ -2182,6 +2447,7 @@ export const contractsByCarrierUpdatedAt = /* GraphQL */ `
               country
               phone
               email
+              __typename
             }
             delivery {
               name
@@ -2191,16 +2457,19 @@ export const contractsByCarrierUpdatedAt = /* GraphQL */ `
               country
               phone
               email
+              __typename
             }
             arrivalDate
             arrivalTime {
               start
               end
+              __typename
             }
             deliveryDate
             deliveryTime {
               start
               end
+              __typename
             }
             pickup {
               name
@@ -2210,6 +2479,7 @@ export const contractsByCarrierUpdatedAt = /* GraphQL */ `
               country
               phone
               email
+              __typename
             }
             loads {
               category
@@ -2218,11 +2488,13 @@ export const contractsByCarrierUpdatedAt = /* GraphQL */ `
               loadMeters
               netWeight
               description
+              __typename
             }
             trailer
             truck
             references {
               carrier
+              __typename
             }
             shipperContactId
             carrierContactId
@@ -2230,6 +2502,7 @@ export const contractsByCarrierUpdatedAt = /* GraphQL */ `
             deliveryContactId
             trailerVehicleId
             truckVehicleId
+            __typename
           }
           oldAttributes {
             shipper {
@@ -2240,6 +2513,7 @@ export const contractsByCarrierUpdatedAt = /* GraphQL */ `
               country
               phone
               email
+              __typename
             }
             carrier {
               name
@@ -2249,6 +2523,7 @@ export const contractsByCarrierUpdatedAt = /* GraphQL */ `
               country
               phone
               email
+              __typename
             }
             delivery {
               name
@@ -2258,16 +2533,19 @@ export const contractsByCarrierUpdatedAt = /* GraphQL */ `
               country
               phone
               email
+              __typename
             }
             arrivalDate
             arrivalTime {
               start
               end
+              __typename
             }
             deliveryDate
             deliveryTime {
               start
               end
+              __typename
             }
             pickup {
               name
@@ -2277,6 +2555,7 @@ export const contractsByCarrierUpdatedAt = /* GraphQL */ `
               country
               phone
               email
+              __typename
             }
             loads {
               category
@@ -2285,11 +2564,13 @@ export const contractsByCarrierUpdatedAt = /* GraphQL */ `
               loadMeters
               netWeight
               description
+              __typename
             }
             trailer
             truck
             references {
               carrier
+              __typename
             }
             shipperContactId
             carrierContactId
@@ -2297,6 +2578,7 @@ export const contractsByCarrierUpdatedAt = /* GraphQL */ `
             deliveryContactId
             trailerVehicleId
             truckVehicleId
+            __typename
           }
           geoposition {
             latitude
@@ -2309,7 +2591,9 @@ export const contractsByCarrierUpdatedAt = /* GraphQL */ `
             timestamp
             mocked
             provider
+            __typename
           }
+          __typename
         }
         needAcknowledge
         shipperContactId
@@ -2321,8 +2605,10 @@ export const contractsByCarrierUpdatedAt = /* GraphQL */ `
         trailerVehicleId
         truckVehicleId
         openecmrId
+        __typename
       }
       nextToken
+      __typename
     }
   }
 `;
@@ -2354,6 +2640,7 @@ export const ordersByOwnerCreatedAt = /* GraphQL */ `
         orderDate
         creator {
           name
+          __typename
         }
         shipper {
           name
@@ -2363,6 +2650,7 @@ export const ordersByOwnerCreatedAt = /* GraphQL */ `
           country
           phone
           email
+          __typename
         }
         carrier {
           name
@@ -2372,6 +2660,7 @@ export const ordersByOwnerCreatedAt = /* GraphQL */ `
           country
           phone
           email
+          __typename
         }
         delivery {
           name
@@ -2381,16 +2670,19 @@ export const ordersByOwnerCreatedAt = /* GraphQL */ `
           country
           phone
           email
+          __typename
         }
         arrivalDate
         arrivalTime {
           start
           end
+          __typename
         }
         deliveryDate
         deliveryTime {
           start
           end
+          __typename
         }
         pickup {
           name
@@ -2400,6 +2692,7 @@ export const ordersByOwnerCreatedAt = /* GraphQL */ `
           country
           phone
           email
+          __typename
         }
         loads {
           category
@@ -2410,22 +2703,27 @@ export const ordersByOwnerCreatedAt = /* GraphQL */ `
           description
           hazardousGoodsItems {
             hazardLabel
+            __typename
           }
+          __typename
         }
         driver {
           name
           username
+          __typename
         }
         trailer
         truck
         references {
           carrier
+          __typename
         }
         updatedAt
         createdAt
         events {
           author {
             username
+            __typename
           }
           type
           site
@@ -2438,14 +2736,17 @@ export const ordersByOwnerCreatedAt = /* GraphQL */ `
               bucket
               region
               key
+              __typename
             }
             signatureImageSignatory {
               bucket
               region
               key
+              __typename
             }
             signatoryName
             signatoryEmail
+            __typename
           }
           driverObservation
           signatoryObservation
@@ -2453,22 +2754,26 @@ export const ordersByOwnerCreatedAt = /* GraphQL */ `
           assignedDriver {
             name
             username
+            __typename
           }
           photos {
             bucket
             region
             key
+            __typename
           }
           attachments {
             location {
               bucket
               region
               key
+              __typename
             }
             size
             filename
             mimeType
             extension
+            __typename
           }
           attachmentType
           attachmentDescription
@@ -2482,7 +2787,9 @@ export const ordersByOwnerCreatedAt = /* GraphQL */ `
             description
             hazardousGoodsItems {
               hazardLabel
+              __typename
             }
+            __typename
           }
           newLoads {
             category
@@ -2493,7 +2800,9 @@ export const ordersByOwnerCreatedAt = /* GraphQL */ `
             description
             hazardousGoodsItems {
               hazardLabel
+              __typename
             }
+            __typename
           }
           newAttributes {
             shipper {
@@ -2504,6 +2813,7 @@ export const ordersByOwnerCreatedAt = /* GraphQL */ `
               country
               phone
               email
+              __typename
             }
             carrier {
               name
@@ -2513,6 +2823,7 @@ export const ordersByOwnerCreatedAt = /* GraphQL */ `
               country
               phone
               email
+              __typename
             }
             delivery {
               name
@@ -2522,16 +2833,19 @@ export const ordersByOwnerCreatedAt = /* GraphQL */ `
               country
               phone
               email
+              __typename
             }
             arrivalDate
             arrivalTime {
               start
               end
+              __typename
             }
             deliveryDate
             deliveryTime {
               start
               end
+              __typename
             }
             pickup {
               name
@@ -2541,6 +2855,7 @@ export const ordersByOwnerCreatedAt = /* GraphQL */ `
               country
               phone
               email
+              __typename
             }
             loads {
               category
@@ -2549,11 +2864,13 @@ export const ordersByOwnerCreatedAt = /* GraphQL */ `
               loadMeters
               netWeight
               description
+              __typename
             }
             trailer
             truck
             references {
               carrier
+              __typename
             }
             shipperContactId
             carrierContactId
@@ -2561,6 +2878,7 @@ export const ordersByOwnerCreatedAt = /* GraphQL */ `
             deliveryContactId
             trailerVehicleId
             truckVehicleId
+            __typename
           }
           oldAttributes {
             shipper {
@@ -2571,6 +2889,7 @@ export const ordersByOwnerCreatedAt = /* GraphQL */ `
               country
               phone
               email
+              __typename
             }
             carrier {
               name
@@ -2580,6 +2899,7 @@ export const ordersByOwnerCreatedAt = /* GraphQL */ `
               country
               phone
               email
+              __typename
             }
             delivery {
               name
@@ -2589,16 +2909,19 @@ export const ordersByOwnerCreatedAt = /* GraphQL */ `
               country
               phone
               email
+              __typename
             }
             arrivalDate
             arrivalTime {
               start
               end
+              __typename
             }
             deliveryDate
             deliveryTime {
               start
               end
+              __typename
             }
             pickup {
               name
@@ -2608,6 +2931,7 @@ export const ordersByOwnerCreatedAt = /* GraphQL */ `
               country
               phone
               email
+              __typename
             }
             loads {
               category
@@ -2616,11 +2940,13 @@ export const ordersByOwnerCreatedAt = /* GraphQL */ `
               loadMeters
               netWeight
               description
+              __typename
             }
             trailer
             truck
             references {
               carrier
+              __typename
             }
             shipperContactId
             carrierContactId
@@ -2628,6 +2954,7 @@ export const ordersByOwnerCreatedAt = /* GraphQL */ `
             deliveryContactId
             trailerVehicleId
             truckVehicleId
+            __typename
           }
           geoposition {
             latitude
@@ -2640,7 +2967,9 @@ export const ordersByOwnerCreatedAt = /* GraphQL */ `
             timestamp
             mocked
             provider
+            __typename
           }
+          __typename
         }
         needAcknowledge
         shipperContactId
@@ -2652,8 +2981,10 @@ export const ordersByOwnerCreatedAt = /* GraphQL */ `
         trailerVehicleId
         truckVehicleId
         openecmrId
+        __typename
       }
       nextToken
+      __typename
     }
   }
 `;
@@ -2685,6 +3016,7 @@ export const ordersByCarrierCreatedAt = /* GraphQL */ `
         orderDate
         creator {
           name
+          __typename
         }
         shipper {
           name
@@ -2694,6 +3026,7 @@ export const ordersByCarrierCreatedAt = /* GraphQL */ `
           country
           phone
           email
+          __typename
         }
         carrier {
           name
@@ -2703,6 +3036,7 @@ export const ordersByCarrierCreatedAt = /* GraphQL */ `
           country
           phone
           email
+          __typename
         }
         delivery {
           name
@@ -2712,16 +3046,19 @@ export const ordersByCarrierCreatedAt = /* GraphQL */ `
           country
           phone
           email
+          __typename
         }
         arrivalDate
         arrivalTime {
           start
           end
+          __typename
         }
         deliveryDate
         deliveryTime {
           start
           end
+          __typename
         }
         pickup {
           name
@@ -2731,6 +3068,7 @@ export const ordersByCarrierCreatedAt = /* GraphQL */ `
           country
           phone
           email
+          __typename
         }
         loads {
           category
@@ -2741,22 +3079,27 @@ export const ordersByCarrierCreatedAt = /* GraphQL */ `
           description
           hazardousGoodsItems {
             hazardLabel
+            __typename
           }
+          __typename
         }
         driver {
           name
           username
+          __typename
         }
         trailer
         truck
         references {
           carrier
+          __typename
         }
         updatedAt
         createdAt
         events {
           author {
             username
+            __typename
           }
           type
           site
@@ -2769,14 +3112,17 @@ export const ordersByCarrierCreatedAt = /* GraphQL */ `
               bucket
               region
               key
+              __typename
             }
             signatureImageSignatory {
               bucket
               region
               key
+              __typename
             }
             signatoryName
             signatoryEmail
+            __typename
           }
           driverObservation
           signatoryObservation
@@ -2784,22 +3130,26 @@ export const ordersByCarrierCreatedAt = /* GraphQL */ `
           assignedDriver {
             name
             username
+            __typename
           }
           photos {
             bucket
             region
             key
+            __typename
           }
           attachments {
             location {
               bucket
               region
               key
+              __typename
             }
             size
             filename
             mimeType
             extension
+            __typename
           }
           attachmentType
           attachmentDescription
@@ -2813,7 +3163,9 @@ export const ordersByCarrierCreatedAt = /* GraphQL */ `
             description
             hazardousGoodsItems {
               hazardLabel
+              __typename
             }
+            __typename
           }
           newLoads {
             category
@@ -2824,7 +3176,9 @@ export const ordersByCarrierCreatedAt = /* GraphQL */ `
             description
             hazardousGoodsItems {
               hazardLabel
+              __typename
             }
+            __typename
           }
           newAttributes {
             shipper {
@@ -2835,6 +3189,7 @@ export const ordersByCarrierCreatedAt = /* GraphQL */ `
               country
               phone
               email
+              __typename
             }
             carrier {
               name
@@ -2844,6 +3199,7 @@ export const ordersByCarrierCreatedAt = /* GraphQL */ `
               country
               phone
               email
+              __typename
             }
             delivery {
               name
@@ -2853,16 +3209,19 @@ export const ordersByCarrierCreatedAt = /* GraphQL */ `
               country
               phone
               email
+              __typename
             }
             arrivalDate
             arrivalTime {
               start
               end
+              __typename
             }
             deliveryDate
             deliveryTime {
               start
               end
+              __typename
             }
             pickup {
               name
@@ -2872,6 +3231,7 @@ export const ordersByCarrierCreatedAt = /* GraphQL */ `
               country
               phone
               email
+              __typename
             }
             loads {
               category
@@ -2880,11 +3240,13 @@ export const ordersByCarrierCreatedAt = /* GraphQL */ `
               loadMeters
               netWeight
               description
+              __typename
             }
             trailer
             truck
             references {
               carrier
+              __typename
             }
             shipperContactId
             carrierContactId
@@ -2892,6 +3254,7 @@ export const ordersByCarrierCreatedAt = /* GraphQL */ `
             deliveryContactId
             trailerVehicleId
             truckVehicleId
+            __typename
           }
           oldAttributes {
             shipper {
@@ -2902,6 +3265,7 @@ export const ordersByCarrierCreatedAt = /* GraphQL */ `
               country
               phone
               email
+              __typename
             }
             carrier {
               name
@@ -2911,6 +3275,7 @@ export const ordersByCarrierCreatedAt = /* GraphQL */ `
               country
               phone
               email
+              __typename
             }
             delivery {
               name
@@ -2920,16 +3285,19 @@ export const ordersByCarrierCreatedAt = /* GraphQL */ `
               country
               phone
               email
+              __typename
             }
             arrivalDate
             arrivalTime {
               start
               end
+              __typename
             }
             deliveryDate
             deliveryTime {
               start
               end
+              __typename
             }
             pickup {
               name
@@ -2939,6 +3307,7 @@ export const ordersByCarrierCreatedAt = /* GraphQL */ `
               country
               phone
               email
+              __typename
             }
             loads {
               category
@@ -2947,11 +3316,13 @@ export const ordersByCarrierCreatedAt = /* GraphQL */ `
               loadMeters
               netWeight
               description
+              __typename
             }
             trailer
             truck
             references {
               carrier
+              __typename
             }
             shipperContactId
             carrierContactId
@@ -2959,6 +3330,7 @@ export const ordersByCarrierCreatedAt = /* GraphQL */ `
             deliveryContactId
             trailerVehicleId
             truckVehicleId
+            __typename
           }
           geoposition {
             latitude
@@ -2971,7 +3343,9 @@ export const ordersByCarrierCreatedAt = /* GraphQL */ `
             timestamp
             mocked
             provider
+            __typename
           }
+          __typename
         }
         needAcknowledge
         shipperContactId
@@ -2983,8 +3357,10 @@ export const ordersByCarrierCreatedAt = /* GraphQL */ `
         trailerVehicleId
         truckVehicleId
         openecmrId
+        __typename
       }
       nextToken
+      __typename
     }
   }
 `;
@@ -3001,6 +3377,7 @@ export const getContract = /* GraphQL */ `
       orderDate
       creator {
         name
+        __typename
       }
       shipper {
         name
@@ -3010,6 +3387,7 @@ export const getContract = /* GraphQL */ `
         country
         phone
         email
+        __typename
       }
       carrier {
         name
@@ -3019,6 +3397,7 @@ export const getContract = /* GraphQL */ `
         country
         phone
         email
+        __typename
       }
       delivery {
         name
@@ -3028,16 +3407,19 @@ export const getContract = /* GraphQL */ `
         country
         phone
         email
+        __typename
       }
       arrivalDate
       arrivalTime {
         start
         end
+        __typename
       }
       deliveryDate
       deliveryTime {
         start
         end
+        __typename
       }
       pickup {
         name
@@ -3047,6 +3429,7 @@ export const getContract = /* GraphQL */ `
         country
         phone
         email
+        __typename
       }
       loads {
         category
@@ -3057,22 +3440,27 @@ export const getContract = /* GraphQL */ `
         description
         hazardousGoodsItems {
           hazardLabel
+          __typename
         }
+        __typename
       }
       driver {
         name
         username
+        __typename
       }
       trailer
       truck
       references {
         carrier
+        __typename
       }
       updatedAt
       createdAt
       events {
         author {
           username
+          __typename
         }
         type
         site
@@ -3085,14 +3473,17 @@ export const getContract = /* GraphQL */ `
             bucket
             region
             key
+            __typename
           }
           signatureImageSignatory {
             bucket
             region
             key
+            __typename
           }
           signatoryName
           signatoryEmail
+          __typename
         }
         driverObservation
         signatoryObservation
@@ -3100,22 +3491,26 @@ export const getContract = /* GraphQL */ `
         assignedDriver {
           name
           username
+          __typename
         }
         photos {
           bucket
           region
           key
+          __typename
         }
         attachments {
           location {
             bucket
             region
             key
+            __typename
           }
           size
           filename
           mimeType
           extension
+          __typename
         }
         attachmentType
         attachmentDescription
@@ -3129,7 +3524,9 @@ export const getContract = /* GraphQL */ `
           description
           hazardousGoodsItems {
             hazardLabel
+            __typename
           }
+          __typename
         }
         newLoads {
           category
@@ -3140,7 +3537,9 @@ export const getContract = /* GraphQL */ `
           description
           hazardousGoodsItems {
             hazardLabel
+            __typename
           }
+          __typename
         }
         newAttributes {
           shipper {
@@ -3151,6 +3550,7 @@ export const getContract = /* GraphQL */ `
             country
             phone
             email
+            __typename
           }
           carrier {
             name
@@ -3160,6 +3560,7 @@ export const getContract = /* GraphQL */ `
             country
             phone
             email
+            __typename
           }
           delivery {
             name
@@ -3169,16 +3570,19 @@ export const getContract = /* GraphQL */ `
             country
             phone
             email
+            __typename
           }
           arrivalDate
           arrivalTime {
             start
             end
+            __typename
           }
           deliveryDate
           deliveryTime {
             start
             end
+            __typename
           }
           pickup {
             name
@@ -3188,6 +3592,7 @@ export const getContract = /* GraphQL */ `
             country
             phone
             email
+            __typename
           }
           loads {
             category
@@ -3198,12 +3603,15 @@ export const getContract = /* GraphQL */ `
             description
             hazardousGoodsItems {
               hazardLabel
+              __typename
             }
+            __typename
           }
           trailer
           truck
           references {
             carrier
+            __typename
           }
           shipperContactId
           carrierContactId
@@ -3211,6 +3619,7 @@ export const getContract = /* GraphQL */ `
           deliveryContactId
           trailerVehicleId
           truckVehicleId
+          __typename
         }
         oldAttributes {
           shipper {
@@ -3221,6 +3630,7 @@ export const getContract = /* GraphQL */ `
             country
             phone
             email
+            __typename
           }
           carrier {
             name
@@ -3230,6 +3640,7 @@ export const getContract = /* GraphQL */ `
             country
             phone
             email
+            __typename
           }
           delivery {
             name
@@ -3239,16 +3650,19 @@ export const getContract = /* GraphQL */ `
             country
             phone
             email
+            __typename
           }
           arrivalDate
           arrivalTime {
             start
             end
+            __typename
           }
           deliveryDate
           deliveryTime {
             start
             end
+            __typename
           }
           pickup {
             name
@@ -3258,6 +3672,7 @@ export const getContract = /* GraphQL */ `
             country
             phone
             email
+            __typename
           }
           loads {
             category
@@ -3268,12 +3683,15 @@ export const getContract = /* GraphQL */ `
             description
             hazardousGoodsItems {
               hazardLabel
+              __typename
             }
+            __typename
           }
           trailer
           truck
           references {
             carrier
+            __typename
           }
           shipperContactId
           carrierContactId
@@ -3281,6 +3699,7 @@ export const getContract = /* GraphQL */ `
           deliveryContactId
           trailerVehicleId
           truckVehicleId
+          __typename
         }
         geoposition {
           latitude
@@ -3293,7 +3712,9 @@ export const getContract = /* GraphQL */ `
           timestamp
           mocked
           provider
+          __typename
         }
+        __typename
       }
       needAcknowledge
       shipperContactId
@@ -3305,6 +3726,7 @@ export const getContract = /* GraphQL */ `
       trailerVehicleId
       truckVehicleId
       openecmrId
+      __typename
     }
   }
 `;
@@ -3326,6 +3748,7 @@ export const listContracts = /* GraphQL */ `
         orderDate
         creator {
           name
+          __typename
         }
         shipper {
           name
@@ -3335,6 +3758,7 @@ export const listContracts = /* GraphQL */ `
           country
           phone
           email
+          __typename
         }
         carrier {
           name
@@ -3344,6 +3768,7 @@ export const listContracts = /* GraphQL */ `
           country
           phone
           email
+          __typename
         }
         delivery {
           name
@@ -3353,16 +3778,19 @@ export const listContracts = /* GraphQL */ `
           country
           phone
           email
+          __typename
         }
         arrivalDate
         arrivalTime {
           start
           end
+          __typename
         }
         deliveryDate
         deliveryTime {
           start
           end
+          __typename
         }
         pickup {
           name
@@ -3372,6 +3800,7 @@ export const listContracts = /* GraphQL */ `
           country
           phone
           email
+          __typename
         }
         loads {
           category
@@ -3382,22 +3811,27 @@ export const listContracts = /* GraphQL */ `
           description
           hazardousGoodsItems {
             hazardLabel
+            __typename
           }
+          __typename
         }
         driver {
           name
           username
+          __typename
         }
         trailer
         truck
         references {
           carrier
+          __typename
         }
         updatedAt
         createdAt
         events {
           author {
             username
+            __typename
           }
           type
           site
@@ -3410,14 +3844,17 @@ export const listContracts = /* GraphQL */ `
               bucket
               region
               key
+              __typename
             }
             signatureImageSignatory {
               bucket
               region
               key
+              __typename
             }
             signatoryName
             signatoryEmail
+            __typename
           }
           driverObservation
           signatoryObservation
@@ -3425,22 +3862,26 @@ export const listContracts = /* GraphQL */ `
           assignedDriver {
             name
             username
+            __typename
           }
           photos {
             bucket
             region
             key
+            __typename
           }
           attachments {
             location {
               bucket
               region
               key
+              __typename
             }
             size
             filename
             mimeType
             extension
+            __typename
           }
           attachmentType
           attachmentDescription
@@ -3454,7 +3895,9 @@ export const listContracts = /* GraphQL */ `
             description
             hazardousGoodsItems {
               hazardLabel
+              __typename
             }
+            __typename
           }
           newLoads {
             category
@@ -3465,7 +3908,9 @@ export const listContracts = /* GraphQL */ `
             description
             hazardousGoodsItems {
               hazardLabel
+              __typename
             }
+            __typename
           }
           newAttributes {
             shipper {
@@ -3476,6 +3921,7 @@ export const listContracts = /* GraphQL */ `
               country
               phone
               email
+              __typename
             }
             carrier {
               name
@@ -3485,6 +3931,7 @@ export const listContracts = /* GraphQL */ `
               country
               phone
               email
+              __typename
             }
             delivery {
               name
@@ -3494,16 +3941,19 @@ export const listContracts = /* GraphQL */ `
               country
               phone
               email
+              __typename
             }
             arrivalDate
             arrivalTime {
               start
               end
+              __typename
             }
             deliveryDate
             deliveryTime {
               start
               end
+              __typename
             }
             pickup {
               name
@@ -3513,6 +3963,7 @@ export const listContracts = /* GraphQL */ `
               country
               phone
               email
+              __typename
             }
             loads {
               category
@@ -3521,11 +3972,13 @@ export const listContracts = /* GraphQL */ `
               loadMeters
               netWeight
               description
+              __typename
             }
             trailer
             truck
             references {
               carrier
+              __typename
             }
             shipperContactId
             carrierContactId
@@ -3533,6 +3986,7 @@ export const listContracts = /* GraphQL */ `
             deliveryContactId
             trailerVehicleId
             truckVehicleId
+            __typename
           }
           oldAttributes {
             shipper {
@@ -3543,6 +3997,7 @@ export const listContracts = /* GraphQL */ `
               country
               phone
               email
+              __typename
             }
             carrier {
               name
@@ -3552,6 +4007,7 @@ export const listContracts = /* GraphQL */ `
               country
               phone
               email
+              __typename
             }
             delivery {
               name
@@ -3561,16 +4017,19 @@ export const listContracts = /* GraphQL */ `
               country
               phone
               email
+              __typename
             }
             arrivalDate
             arrivalTime {
               start
               end
+              __typename
             }
             deliveryDate
             deliveryTime {
               start
               end
+              __typename
             }
             pickup {
               name
@@ -3580,6 +4039,7 @@ export const listContracts = /* GraphQL */ `
               country
               phone
               email
+              __typename
             }
             loads {
               category
@@ -3588,11 +4048,13 @@ export const listContracts = /* GraphQL */ `
               loadMeters
               netWeight
               description
+              __typename
             }
             trailer
             truck
             references {
               carrier
+              __typename
             }
             shipperContactId
             carrierContactId
@@ -3600,6 +4062,7 @@ export const listContracts = /* GraphQL */ `
             deliveryContactId
             trailerVehicleId
             truckVehicleId
+            __typename
           }
           geoposition {
             latitude
@@ -3612,7 +4075,9 @@ export const listContracts = /* GraphQL */ `
             timestamp
             mocked
             provider
+            __typename
           }
+          __typename
         }
         needAcknowledge
         shipperContactId
@@ -3624,8 +4089,10 @@ export const listContracts = /* GraphQL */ `
         trailerVehicleId
         truckVehicleId
         openecmrId
+        __typename
       }
       nextToken
+      __typename
     }
   }
 `;
@@ -3639,6 +4106,7 @@ export const getDriver = /* GraphQL */ `
       associationSecret
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -3657,8 +4125,10 @@ export const listDrivers = /* GraphQL */ `
         associationSecret
         createdAt
         updatedAt
+        __typename
       }
       nextToken
+      __typename
     }
   }
 `;
@@ -3685,8 +4155,10 @@ export const driverByAssociationSecret = /* GraphQL */ `
         associationSecret
         createdAt
         updatedAt
+        __typename
       }
       nextToken
+      __typename
     }
   }
 `;
@@ -3715,8 +4187,10 @@ export const driverByOwner = /* GraphQL */ `
         associationSecret
         createdAt
         updatedAt
+        __typename
       }
       nextToken
+      __typename
     }
   }
 `;
@@ -3743,8 +4217,10 @@ export const driverByCarrier = /* GraphQL */ `
         associationSecret
         createdAt
         updatedAt
+        __typename
       }
       nextToken
+      __typename
     }
   }
 `;

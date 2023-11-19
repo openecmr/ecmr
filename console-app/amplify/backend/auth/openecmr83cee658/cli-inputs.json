@@ -1,0 +1,90 @@
+{
+  "version": "1",
+  "cognitoConfig": {
+    "identityPoolName": "openecmr83cee658_identitypool_83cee658",
+    "allowUnauthenticatedIdentities": false,
+    "resourceNameTruncated": "openec83cee658",
+    "userPoolName": "openecmr83cee658_userpool_83cee658",
+    "autoVerifiedAttributes": [
+      "email"
+    ],
+    "mfaConfiguration": "OFF",
+    "mfaTypes": [
+      "SMS Text Message"
+    ],
+    "smsAuthenticationMessage": "Your authentication code is {####}",
+    "smsVerificationMessage": "Your verification code is {####}",
+    "emailVerificationSubject": "Your verification code",
+    "emailVerificationMessage": "Your verification code is {####}",
+    "defaultPasswordPolicy": false,
+    "passwordPolicyMinLength": 8,
+    "passwordPolicyCharacters": [],
+    "requiredAttributes": [
+      "email"
+    ],
+    "aliasAttributes": [],
+    "userpoolClientGenerateSecret": true,
+    "userpoolClientRefreshTokenValidity": 30,
+    "userpoolClientWriteAttributes": [
+      "email"
+    ],
+    "userpoolClientReadAttributes": [
+      "email"
+    ],
+    "userpoolClientLambdaRole": "openec83cee658_userpoolclient_lambda_role",
+    "userpoolClientSetAttributes": true,
+    "authSelections": "identityPoolAndUserPool",
+    "resourceName": "openecmr83cee658",
+    "useDefault": "defaultSocial",
+    "userPoolGroupList": [],
+    "userPoolGroups": false,
+    "adminQueries": false,
+    "hostedUI": true,
+    "hostedUIDomainName": "openecmr",
+    "hostedUIProviderMeta": "[{\"ProviderName\":\"Google\",\"authorize_scopes\":\"openid email profile\",\"AttributeMapping\":{\"email\":\"email\",\"username\":\"sub\"}}]",
+    "authProvidersUserPool": [
+      "Google"
+    ],
+    "triggers": {
+      "PostAuthentication": [
+        "custom"
+      ]
+    },
+    "authRoleArn": {
+      "Fn::GetAtt": [
+        "AuthRole",
+        "Arn"
+      ]
+    },
+    "unauthRoleArn": {
+      "Fn::GetAtt": [
+        "UnauthRole",
+        "Arn"
+      ]
+    },
+    "breakCircularDependency": false,
+    "useEnabledMfas": false,
+    "dependsOn": [
+      {
+        "category": "function",
+        "resourceName": "openecmr83cee658PostAuthentication",
+        "triggerProvider": "Cognito",
+        "attributes": [
+          "Arn",
+          "Name"
+        ]
+      }
+    ],
+    "permissions": [],
+    "authTriggerConnections": [
+      "{\"triggerType\":\"PostAuthentication\",\"lambdaFunctionName\":\"openecmr83cee658PostAuthentication\"}"
+    ],
+    "useCustomDomain": "false",
+    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"https://app.openecmr.com/\",\"openecmr://main\"],\"LogoutURLs\":[\"https://www.openecmr.com/\",\"openecmr://main\"]}",
+    "serviceName": "Cognito",
+    "authProviders": [],
+    "parentStack": {
+      "Ref": "AWS::StackId"
+    }
+  }
+}        

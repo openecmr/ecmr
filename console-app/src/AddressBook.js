@@ -1,8 +1,10 @@
-import {Button, Dropdown, Form, Header, Icon, Modal, Table} from "semantic-ui-react";
+import {Button, Form, Header, Icon, Modal, Table} from "semantic-ui-react";
 import React, {Component} from "react";
-import {API, Auth, graphqlOperation, I18n} from "aws-amplify";
+import { getCurrentUser } from 'aws-amplify/auth';
+import {I18n} from 'aws-amplify/utils';
 import * as queries from "./graphql/queries";
 import * as mutations from "./graphql/mutations";
+import {client} from "./ConsoleUtils";
 
 const TextCell = ({text}) => {
     return (
@@ -67,9 +69,9 @@ class AddAddressModal extends Component {
     async add() {
         try {
             if (this.state.contact.id) {
-                const response = await API.graphql(graphqlOperation(mutations.updateContact, {input: this.state.contact}));
+                const response = await client.graphql({query: mutations.updateContact, variables: {input: this.state.contact}});
             } else {
-                const response = await API.graphql(graphqlOperation(mutations.createContact, {input: this.state.contact}));
+                const response = await client.graphql({query: mutations.createContact, variables: {input: this.state.contact}});
             }
         } catch(ex) {
             console.warn(ex);
@@ -163,11 +165,13 @@ class AddressBook extends Component {
     }
 
     async componentDidMount() {
-        const user = await Auth.currentAuthenticatedUser();
-        const response = await API.graphql(graphqlOperation(queries.contactByOwner, {
-            limit: 50,
-            owner: user.getUsername()
-        }));
+        const user = await getCurrentUser();
+        const response = await client.graphql({
+            query: queries.contactByOwner, variables: {
+                limit: 50,
+                owner: user.getUsername()
+            }
+        });
         const contacts = response.data.contactByOwner.items;
 
         this.setState({

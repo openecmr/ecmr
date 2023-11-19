@@ -1,5 +1,6 @@
 import React, {Component} from "react";
-import {API, graphqlOperation, I18n} from "aws-amplify";
+import {API, graphqlOperation} from "aws-amplify";
+import {I18n} from 'aws-amplify/utils';
 import * as queries from "./graphql/queries";
 import "./TransportPdf.css"
 import {Header, Icon, List, Table} from "semantic-ui-react";

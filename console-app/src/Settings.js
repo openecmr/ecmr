@@ -1,9 +1,9 @@
 import {Grid, Header, Button, Form, Segment, Menu, Icon, Label} from "semantic-ui-react";
-import {API, graphqlOperation, I18n} from "aws-amplify";
+import {API, graphqlOperation} from "aws-amplify";
 import React, {useState} from "react";
 import * as mutations from "./graphql/mutations";
 import {trackEvent} from "./ConsoleUtils";
-
+import {I18n} from 'aws-amplify/utils';
 export default function Settings({company, onCompanyUpdated, customerPortal}) {
     const [selected, setSelected] = useState("company");
     const [name, setName] = useState(company && company.name);

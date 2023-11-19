@@ -1,11 +1,7 @@
-import {Component} from "react";
 import React from "react";
 import {
-    Header,
     Button,
-    Dimmer,
     Form,
-    Grid,
     Icon,
     Loader,
     Menu,
@@ -16,10 +12,10 @@ import {
 } from "semantic-ui-react";
 import {Link} from "react-router-dom";
 import * as queries from "./graphql/queries";
-import {API, Auth, graphqlOperation, I18n} from 'aws-amplify';
+import {API, Auth, graphqlOperation} from 'aws-amplify';
+import {I18n} from 'aws-amplify/utils';
 import moment from 'moment/min/moment-with-locales';
-import {ContactPicker, DriverPicker} from "./NewTransport";
-import ReactGA from "react-ga";
+import {ContactPicker} from "./NewTransport";
 import {trackEvent} from "./ConsoleUtils";
 import * as PropTypes from "prop-types";
 import SortableTable from "./SortableTable";

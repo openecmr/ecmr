@@ -1,6 +1,7 @@
 import {Button, Icon, Loader, Menu, Popup, Progress, Table} from "semantic-ui-react";
 import {Link} from "react-router-dom";
-import {API, Auth, graphqlOperation, I18n} from "aws-amplify";
+import {API, Auth, graphqlOperation} from "aws-amplify";
+import {I18n} from 'aws-amplify/utils';
 import React, {Component} from "react";
 import {AddressCell, ConsignmentCell, DateCell, IdCell, Pagination} from "./Transports";
 import {trackEvent} from "./ConsoleUtils";

@@ -1,7 +1,7 @@
 import ReactGA from "react-ga";
-import {API, graphqlOperation} from "aws-amplify";
 import * as mutations from "./graphql/mutations";
 import * as queries from "./graphql/queries";
+import { generateClient } from 'aws-amplify/api';
 
 const generateAssociationSecret = () => {
     const random = new Uint8Array(6);
@@ -39,8 +39,11 @@ const doUpdateContract = async (contract) => {
     }));
 }
 
+const client = generateClient();
+
 export {
     generateAssociationSecret,
     trackEvent,
-    doUpdateContract
+    doUpdateContract,
+    client
 }
