@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import {Button, Form, Header, Icon, List, Modal, Popup, Table} from "semantic-ui-react";
-import {API, Auth, graphqlOperation} from "aws-amplify";
+import { getCurrentUser } from 'aws-amplify/auth';
+import {client} from "./ConsoleUtils";
 import {I18n} from 'aws-amplify/utils';
 import * as queries from "./graphql/queries";
 import * as mutations from "./graphql/mutations";
@@ -89,14 +90,14 @@ class AddDriverModal extends Component {
     async add() {
         try {
             if (this.state.driver.id) {
-                const response = await API.graphql(graphqlOperation(mutations.updateDriver, {input: this.state.driver}));
+                const response = await client.graphql({query: mutations.updateDriver, variables: {input: this.state.driver}});
             } else {
                 let associationSecret = ConsoleUtils.generateAssociationSecret();
-                const response = await API.graphql(graphqlOperation(mutations.createDriver, {input: {
+                const response = await client.graphql({query: mutations.createDriver, variables: {input: {
                         ...this.state.driver,
                         associationSecret
                     }
-                }));
+                }});
             }
         } catch(ex) {
             console.warn(ex);
@@ -191,11 +192,11 @@ class Drivers extends Component {
     }
 
     async deleteDriver() {
-        await API.graphql(graphqlOperation(mutations.deleteDriver, {
+        await client.graphql({ query: mutations.deleteDriver, variables: {
             input: {
                 id: this.state.selectedDriver.id
             }
-        }));
+        }});
         this.setState({
            selectedDriver: null
         });
@@ -203,11 +204,11 @@ class Drivers extends Component {
     }
 
     async componentDidMount() {
-        const user = await Auth.currentAuthenticatedUser();
-        const response = await API.graphql(graphqlOperation(queries.driverByOwner, {
+        const user = await getCurrentUser();
+        const response = await client.graphql({query: queries.driverByOwner, variables: {
             limit: 50,
-            owner: user.getUsername()
-        }));
+            owner: user.username
+        }});
         const drivers = response.data.driverByOwner.items;
 
         this.setState({

@@ -169,7 +169,7 @@ class AddressBook extends Component {
         const response = await client.graphql({
             query: queries.contactByOwner, variables: {
                 limit: 50,
-                owner: user.getUsername()
+                owner: user.username
             }
         });
         const contacts = response.data.contactByOwner.items;

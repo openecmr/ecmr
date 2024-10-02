@@ -9,18 +9,19 @@ import {
     Step,
     List, Label, Segment, Comment, Loader, Modal, Form, Message, Card, Confirm, Divider
 } from "semantic-ui-react";
-import {graphqlOperation, Storage, Auth} from 'aws-amplify';
+import { getCurrentUser } from 'aws-amplify/auth';
+import {client} from "./ConsoleUtils";
 import {I18n} from 'aws-amplify/utils';
 import moment from 'moment/min/moment-with-locales';
 import * as queries from "./graphql/queries";
 import * as mutations from "./graphql/mutations";
-import {S3Image} from "aws-amplify-react";
 import {DriverPicker, VehiclePicker} from "./NewTransport";
 import { v4 as uuidv4 } from 'uuid';
 import {Link} from "react-router-dom";
 import {doUpdateContract} from "./ConsoleUtils";
 import {Wrapper} from "@googlemaps/react-wrapper";
 import {MAPS_API_KEY} from "./secrets";
+import {StorageImage} from "@aws-amplify/ui-react-storage";
 
 const MAX_FILE_SIZE = 1024 * 1024;
 const Address = ({address, label, icon}) => (
@@ -74,7 +75,7 @@ const ViewPhoto = ({photo, open, close}) => (<Modal open={open} onClose={close} 
     <Header icon={'archive'} content={`Photo ${photo && photo.key}`} />
     <Modal.Content>
         <div style={{textAlign: "center"}}>
-        {photo && <S3Image
+        {photo && <StorageImage
             // theme={{photoImg: {width: '100px', height: '100px', marginRight: 5}}}
             resizeMode={'center'}
             level={"public"}
@@ -147,7 +148,7 @@ const SignatureEvent = ({event: { signature, signatoryObservation, driverObserva
                         <List.Item>
                             <List.Icon name={'pencil'} verticalAlign={"middle"}/>
                             <List.Content>
-                                <S3Image
+                                <StorageImage
                                     theme={{photoImg: {width: '100px', height: '100px'}}}
                                     resizeMode={'center'}
                                     level={"public"}
@@ -160,7 +161,7 @@ const SignatureEvent = ({event: { signature, signatoryObservation, driverObserva
                     <div style={{display: "flex", flexDirection: "row"}}>
                         {
                             (photos || []).map(photo =>
-                                <S3Image
+                                <StorageImage
                                     onClick={() => showPhoto(photo)}
                                     theme={{
                                         photoImg: {
@@ -189,7 +190,7 @@ const SignatureEvent = ({event: { signature, signatoryObservation, driverObserva
                         <List.Item>
                             <List.Icon name={'pencil'} verticalAlign={"middle"}/>
                             <List.Content>
-                                <S3Image
+                                <StorageImage
                                     theme={{photoImg: {width: '100px', height: '100px'}}}
                                     resizeMode={'center'}
                                     level={"public"}
@@ -410,11 +411,11 @@ class Transport extends Component {
     }
 
     async componentDidMount() {
-        const username = (await Auth.currentAuthenticatedUser()).getUsername();
+        const username = (await getCurrentUser()).username;
 
-        const response = await API.graphql(graphqlOperation(queries.getContract, {
+        const response = await client.graphql({query: queries.getContract, variables: {
             "id": this.props.match.params.id
-        }));
+        }});
         const contract = response.data.getContract;
 
         this.setState({
@@ -756,7 +757,7 @@ class Transport extends Component {
             id: contract.id,
             orderStatus: 'ORDER_ACCEPTED',
             status: 'CREATED',
-            owner: (await Auth.currentAuthenticatedUser()).getUsername()
+            owner: (await getCurrentUser()).username
         });
 
         this.setState({
@@ -835,7 +836,7 @@ class Transport extends Component {
             const now = moment().toISOString();
             contract.events.push({
                 author: {
-                    username: (await Auth.currentAuthenticatedUser()).getUsername()
+                    username: (await getCurrentUser()).username
                 },
                 type: 'AddAttachment',
                 createdAt: now,
@@ -864,7 +865,7 @@ class Transport extends Component {
         const now = moment().toISOString();
         contract.events.push({
             author: {
-                username: (await Auth.currentAuthenticatedUser()).getUsername()
+                username: (await getCurrentUser()).username
             },
             type: 'DeleteAttachment',
             createdAt: now,
@@ -901,7 +902,7 @@ class Transport extends Component {
 
         const {contract} = this.state;
         const now = moment().toISOString();
-        const username = (await Auth.currentAuthenticatedUser()).getUsername()
+        const username = (await getCurrentUser()).username
 
         const update = {};
         const events = contract.events ? [...contract.events] : [];
@@ -983,11 +984,11 @@ class Transport extends Component {
 
     async delete() {
         const {history} = this.props;
-        await API.graphql(graphqlOperation(mutations.deleteContract, {
+        await client.graphql({query: mutations.deleteContract, variables: {
             "input": {
                 "id": this.props.match.params.id
             }
-        }));
+        }});
 
         history.push('/transports');
     }
@@ -999,9 +1000,9 @@ class Transport extends Component {
         this.setState({
             downloadingPdf: true
         });
-        const response = await API.graphql(graphqlOperation(queries.rpdfexport, {
+        const response = await client.graphql({query: queries.rpdfexport, variables: {
             "id": this.props.match.params.id
-        }));
+        }});
         this.setState({
             downloadingPdf: false
         });

@@ -1,6 +1,7 @@
 import {Button, Dropdown, Form, Header, Icon, Modal, Table} from "semantic-ui-react";
 import React, {Component} from "react";
-import {API, Auth, graphqlOperation} from "aws-amplify";
+import { getCurrentUser } from 'aws-amplify/auth';
+import {client} from "./ConsoleUtils";
 import {I18n} from 'aws-amplify/utils';
 import * as queries from "./graphql/queries";
 import * as mutations from "./graphql/mutations";
@@ -23,11 +24,11 @@ class AddressPicker extends Component {
     }
 
     async loadAddresses() {
-        const user = await Auth.currentAuthenticatedUser();
-        const response = await API.graphql(graphqlOperation(queries.contactByOwner, {
+        const user = await getCurrentUser();
+        const response = await client.graphql({query: queries.contactByOwner, variables: {
             limit: 50,
-            owner: user.getUsername()
-        }));
+            owner: user.username
+        }});
         this.setState({
             options: response.data.contactByOwner.items.map(e => ({text: `${e.name}`, key: e.id, value: e.id})),
             addresses: response.data.contactByOwner.items.reduce((map, obj) => {
@@ -130,9 +131,9 @@ class AddContactModal extends Component {
 
         try {
             if (this.state.contact.id) {
-                const response = await API.graphql(graphqlOperation(mutations.updateContactPerson, {input: this.state.contact}));
+                const response = await client.graphql({query: mutations.updateContactPerson, variables: {input: this.state.contact}});
             } else {
-                const response = await API.graphql(graphqlOperation(mutations.createContactPerson, {input: this.state.contact}));
+                const response = await client.graphql({query: mutations.createContactPerson, variables: {input: this.state.contact}});
             }
         } catch(ex) {
             console.warn(ex);
@@ -170,7 +171,7 @@ class AddContactModal extends Component {
     }
 
     async delete() {
-        await API.graphql(graphqlOperation(mutations.deleteContactPerson, {input: {id: this.state.contact.id}}));
+        await client.graphql({query: mutations.deleteContactPerson, variables: {input: {id: this.state.contact.id}}});
         this.props.hide(true);
     }
 }
@@ -261,11 +262,11 @@ class Contacts extends Component {
     }
 
     async deleteContact() {
-        await API.graphql(graphqlOperation(mutations.deleteContactPerson, {
+        await client.graphql({query: mutations.deleteContactPerson, variables: {
             input: {
                 id: this.state.selectedContact.id
             }
-        }));
+        }});
         this.setState({
             selectedContact: null
         });
@@ -273,11 +274,11 @@ class Contacts extends Component {
     }
 
     async componentDidMount() {
-        const user = await Auth.currentAuthenticatedUser();
-        const response = await API.graphql(graphqlOperation(queries.contactPersonByOwner, {
+        const user = await getCurrentUser();
+        const response = await client.graphql({query: queries.contactPersonByOwner, variables: {
             limit: 100,
-            owner: user.getUsername()
-        }));
+            owner: user.username
+        }});
         const contacts = response.data.contactPersonByOwner.items;
 
         this.setState({

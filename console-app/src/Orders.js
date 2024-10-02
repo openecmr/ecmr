@@ -1,6 +1,7 @@
 import {Button, Icon, Loader, Menu, Popup, Progress, Table} from "semantic-ui-react";
 import {Link} from "react-router-dom";
-import {API, Auth, graphqlOperation} from "aws-amplify";
+import { getCurrentUser } from 'aws-amplify/auth';
+import {client} from "./ConsoleUtils";
 import {I18n} from 'aws-amplify/utils';
 import React, {Component} from "react";
 import {AddressCell, ConsignmentCell, DateCell, IdCell, Pagination} from "./Transports";
@@ -169,14 +170,14 @@ class Orders extends SortableTable {
         const queryName = direction === "received" ? "ordersByCarrierCreatedAt" : "ordersByOwnerCreatedAt"
         const ownerField = direction === "received" ? "orderCarrier" : "orderOwner";
 
-        const user = await Auth.currentAuthenticatedUser();
-        const response = await API.graphql(graphqlOperation(
-            queries[queryName], {
+        const user = await getCurrentUser();
+        const response = await client.graphql({query: 
+            queries[queryName], variables: {
                 limit: 10,
-                [ownerField]: user.getUsername(),
+                [ownerField]: user.username,
                 sortDirection: this.state.sortOrder === 'descending' ? "DESC" : "ASC",
                 ...token && {nextToken: token},
-            }));
+            }});
 
         console.warn("response", response);
 

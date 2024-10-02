@@ -23,9 +23,9 @@ const trackEvent = ({category, action, label}) => {
 
 const doUpdateContract = async (contract) => {
     if (contract.events) {
-        const response = await API.graphql(graphqlOperation(queries.getContract, {
+        const response = await client.graphql({query: queries.getContract, variables: {
             "id": contract.id
-        }));
+        }});
         const currentContract = response.data.getContract;
         const currentEvents = currentContract.events || [];
         contract.events = [
@@ -34,9 +34,9 @@ const doUpdateContract = async (contract) => {
         ];
     }
 
-    await API.graphql(graphqlOperation(mutations.updateContract, {
+    await client.graphql({query: mutations.updateContract, variables: {
         "input": contract
-    }));
+    }});
 }
 
 const client = generateClient();

@@ -3,15 +3,17 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@aws-amplify/cli": "^12.8.2",
+    "@aws-amplify/cli-extensibility-helper": "^3.0.34",
+    "@aws-amplify/ui-react": "^6.5.1",
+    "@aws-amplify/ui-react-storage": "^3.3.5",
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@formkit/auto-animate": "^0.8.1",
     "@googlemaps/react-wrapper": "^1.1.35",
     "@types/jest": "^29.5.8",
     "@types/node": "^20.9.2",
     "@types/react": "^18.2.37",
     "@types/react-dom": "^18.2.15",
-    "aws-amplify": "^6.0.3",
-    "aws-amplify-react": "^4.2.7",
+    "aws-amplify": "^6.6.2",
     "email-validator": "^2.0.4",
     "graphql-tag": "^2.12.6",
     "handlebars": "^4.7.8",
@@ -22,7 +24,7 @@
     "react-calendar-timeline": "^0.28.0",
     "react-dom": "^18.2.0",
     "react-ga": "^3.3.1",
-    "react-router-dom": "^6.19.0",
+    "react-router-dom": "^5.3.4",
     "react-scripts": "5.0.1",
     "semantic-ui-css": "^2.5.0",
     "semantic-ui-react": "^2.1.4",
@@ -59,5 +61,6 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "packageManager": "yarn@4.5.0"
 }

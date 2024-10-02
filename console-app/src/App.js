@@ -5,17 +5,10 @@ import Transports from "./Transports";
 import {BrowserRouter as Router, Route, Link, withRouter, Redirect, Switch} from "react-router-dom";
 import {NewTransport} from "./NewTransport";
 
-import {Amplify } from 'aws-amplify';
+import {Amplify} from 'aws-amplify';
 import { Hub, I18n } from 'aws-amplify/utils';
 import amplifyconfig from './amplifyconfiguration.json';
-import {
-    ConfirmSignIn,
-    ConfirmSignUp,
-    Container, ForgotPassword,
-    Loading, RequireNewPassword, SignIn,
-    VerifyContact,
-    withAuthenticator
-} from 'aws-amplify-react';
+import {withAuthenticator} from '@aws-amplify/ui-react';
 import Transport from "./Transport";
 import style from "./Style"
 import AddressBook from "./AddressBook";
@@ -28,14 +21,14 @@ import * as ConsoleUtils from "./ConsoleUtils"
 import ReactGA from 'react-ga';
 import i18nDictionaryNl from './i18n/nl/resource';
 import moment from 'moment/min/moment-with-locales';
-import SignUpWithLanguage from "./SignUpWithLanguage";
+// import SignUpWithLanguage from "./SignUpWithLanguage";
 import Contacts from "./Contacts";
-import '@aws-amplify/ui/dist/style.css';
+// import '@aws-amplify/ui/dist/style.css';
 import Settings from "./Settings";
 import Planner from "./Planner";
 import Orders from "./Orders";
 import {client} from "./ConsoleUtils";
-import {getCurrentUser} from "aws-amplify/auth";
+import {getCurrentUser, fetchUserAttributes, updateUserAttribute} from "aws-amplify/auth";
 
 let config;
 const pdfServiceKey = window.location.hash.substr(1);
@@ -53,6 +46,7 @@ if (pdfServiceKey) {
 }
 
 Amplify.configure(config);
+console.log("init code here!!!!")
 
 window.onunhandledrejection = (err) => {
     console.error(err);
@@ -94,7 +88,7 @@ class CompanyDialog extends Component {
             saving: true
         });
 
-        const username = (await getCurrentUser()).getUsername();
+        const username = (await getCurrentUser()).username;
         const companyResult = await client.graphql({
             query: mutations.createCompany,
             variables: {
@@ -254,24 +248,32 @@ const Main = withRouter(({location, onLogout, user, company, noCompany, onCompan
     const [menuVisible, setMenuVisible] = useState(true);
     const [language, setLanguage] = useState();
     const [transportState, setTransportState] = useState({});
+    const [currentUserInfo, setCurrentUserInfo] = useState(null);
 
     async function changeLanguage(language) {
-        const user = await Auth.currentAuthenticatedUser();
-        await Auth.updateUserAttributes(user, {
-            "custom:language": language
+        await updateUserAttribute({
+            userAttribute: {
+                attributeKey: "custom:language",
+                value: language
+            }
         });
         window.location.reload();
     }
 
     useEffect(() => {
         async function getLanguage() {
-            const currentUserInfo = await Auth.currentUserInfo()
+            const currentUserInfo = await getCurrentUser();
+            console.log(currentUserInfo)
             if (currentUserInfo) {
+                const attributes = await fetchUserAttributes();
+                console.log("these atre attributes", attributes);
+                currentUserInfo.attributes = attributes;
                 const userLanguage = currentUserInfo.attributes['custom:language'];
                 if (userLanguage) {
                     I18n.setLanguage(userLanguage);
                     setLanguage(userLanguage);
                 }
+                setCurrentUserInfo(currentUserInfo);
             }
         }
 
@@ -293,7 +295,7 @@ const Main = withRouter(({location, onLogout, user, company, noCompany, onCompan
                     <Menu.Item header position={"right"}>
                         <Icon name={'user'}/>
                         {company && company.name}
-                        {user && ` (${user.attributes['email']})`}
+                        {user && ` (${currentUserInfo && currentUserInfo.attributes['email']})`}
                         <Icon name={"angle down"}/>
                     </Menu.Item>
                 }>
@@ -417,20 +419,7 @@ let MainWithAuth;
 if (pdfServiceKey) {
     MainWithAuth = Main;
 } else {
-    MainWithAuth = withAuthenticator(Main, false,
-        [
-            <SignUpWithLanguage hide={false} override={'SignUp'} signUpConfig={signUpConfig}/>,
-            <SignIn/>,
-            <Loading/>,
-            <ConfirmSignIn/>,
-            <VerifyContact/>,
-            <ConfirmSignUp/>,
-            <ForgotPassword/>,
-            <RequireNewPassword/>
-        ],
-        {
-            signUpConfig
-        })
+    MainWithAuth = withAuthenticator(Main)
 }
 
 const MyContainer = ({company, children, customerPortal}) =>
@@ -486,7 +475,8 @@ class App extends Component {
 
     async componentDidMount() {
         try {
-            const user = await Auth.currentAuthenticatedUser();
+            console.log("Component did mount!!")
+            const user = await getCurrentUser();
             this.setState({
                 user: user
             });
@@ -503,10 +493,10 @@ class App extends Component {
     }
 
     async checkCompany() {
-        const response = await API.graphql(graphqlOperation(queries.companyByOwner, {
+        const response = await client.graphql({query: queries.companyByOwner, variables: {
             owner: this.state.user.username,
             "limit": 1
-        }));
+        }});
 
         if (response.data.companyByOwner.items.length > 0) {
             this.setState({

@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import {Button, Dropdown, Form, Header, Icon, Modal, Table} from "semantic-ui-react";
-import {API, Auth, graphqlOperation} from "aws-amplify";
+import { getCurrentUser } from 'aws-amplify/auth';
+import {client} from "./ConsoleUtils";
 import {I18n} from 'aws-amplify/utils';
 import * as queries from "./graphql/queries";
 import * as mutations from "./graphql/mutations";
@@ -86,16 +87,16 @@ class AddVehicleModal extends Component {
     async add() {
         try {
             if (this.state.vehicle.id) {
-                const response = await API.graphql(graphqlOperation(mutations.updateVehicle, {input: this.state.vehicle}));
+                const response = await client.graphql({query: mutations.updateVehicle, variables: {input: this.state.vehicle}});
             } else {
                 let vehicle = {
                     ...this.state.vehicle,
                     companyId: this.props.company.id
                 };
                 console.warn(vehicle);
-                const response = await API.graphql(graphqlOperation(mutations.createVehicle, {
+                const response = await client.graphql({query: mutations.createVehicle, variables: {
                     input: vehicle
-                }));
+                }});
             }
         } catch(ex) {
             console.warn(ex);
@@ -191,11 +192,11 @@ class Vehicles extends Component {
     }
 
     async deleteVehicle() {
-        await API.graphql(graphqlOperation(mutations.deleteVehicle, {
+        await client.graphql({query: mutations.deleteVehicle, variables: {
             input: {
                 id: this.state.selectedVehicle.id
             }
-        }));
+        }});
         this.setState({
             selectedVehicle: null
         });
@@ -203,11 +204,11 @@ class Vehicles extends Component {
     }
 
     async componentDidMount() {
-        const user = await Auth.currentAuthenticatedUser();
-        const response = await API.graphql(graphqlOperation(queries.vehicleByOwner, {
+        const user = await getCurrentUser();
+        const response = await client.graphql({query: queries.vehicleByOwner, variables: {
             limit: 50,
-            owner: user.getUsername()
-        }));
+            owner: user.username
+        }});
         const vehicles = response.data.vehicleByOwner.items;
 
         this.setState({

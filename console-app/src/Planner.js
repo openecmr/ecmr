@@ -1,5 +1,6 @@
 import {Button, Container, Header, Icon} from "semantic-ui-react";
-import {API, Auth, graphqlOperation} from "aws-amplify";
+import { getCurrentUser } from 'aws-amplify/auth';
+import {client} from "./ConsoleUtils";
 import {I18n} from 'aws-amplify/utils';
 import React, {useEffect, useState} from "react";
 import Timeline, {TimelineMarkers, TodayMarker, TimelineHeaders, DateHeader, CursorMarker} from 'react-calendar-timeline'
@@ -134,14 +135,14 @@ export default function Planner({}) {
                 });
             }
 
-            const response = await API.graphql(graphqlOperation(
-                queries.contractsByOwnerArrivalDate, {
+            const response = await client.graphql({query: 
+                queries.contractsByOwnerArrivalDate, variables: {
                     arrivalDate: {
                         between: [canvasStartDate, canvasEndDate]
                     },
                     limit: 100,
-                    owner: user.getUsername()
-                }));
+                    owner: user.username
+                }});
             const existing = transports.map(x => x.id);
             const newTransports = response.data.contractsByOwnerArrivalDate.items
                 .filter(x => existing.indexOf(x.id) === -1)
@@ -163,13 +164,13 @@ export default function Planner({}) {
     useEffect(function() {
 
         (async function() {
-            user = await Auth.currentAuthenticatedUser();
+            user = await getCurrentUser();
 
-            const driversResponse = await API.graphql(graphqlOperation(
-                queries.driverByOwner, {
+            const driversResponse = await client.graphql({query:
+                queries.driverByOwner, variables: {
                     limit: 50,
-                    owner: user.getUsername()
-                }));
+                    owner: user.username
+                }});
             await onBoundsChange(start, end);
 
             setDrivers([

@@ -2,7 +2,7 @@ import {Grid, Header, Button, Form, Segment, Menu, Icon, Label} from "semantic-u
 import {API, graphqlOperation} from "aws-amplify";
 import React, {useState} from "react";
 import * as mutations from "./graphql/mutations";
-import {trackEvent} from "./ConsoleUtils";
+import {client, trackEvent} from "./ConsoleUtils";
 import {I18n} from 'aws-amplify/utils';
 export default function Settings({company, onCompanyUpdated, customerPortal}) {
     const [selected, setSelected] = useState("company");
@@ -27,12 +27,12 @@ export default function Settings({company, onCompanyUpdated, customerPortal}) {
 
     async function save() {
         setLoading(true);
-        await API.graphql(graphqlOperation(mutations.updateCompany, {
+        await client.graphql({query: mutations.updateCompany, variables: {
             input: {
                 id: company.id,
                 name: name
             }
-        }));
+        }});
         onCompanyUpdated();
         setLoading(false);
     }

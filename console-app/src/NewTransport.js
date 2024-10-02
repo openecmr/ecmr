@@ -11,7 +11,8 @@ import {
     Modal, List, Dropdown
 } from "semantic-ui-react";
 import React from "react";
-import {API, Auth, graphqlOperation} from 'aws-amplify';
+import { getCurrentUser } from 'aws-amplify/auth';
+import {client} from "./ConsoleUtils";
 import {I18n} from 'aws-amplify/utils';
 import * as mutations from './graphql/mutations'
 import * as queries from "./graphql/queries";
@@ -72,11 +73,11 @@ class ContactPicker extends Component {
     }
 
     async loadContacts() {
-        const user = await Auth.currentAuthenticatedUser();
-        const response = await API.graphql(graphqlOperation(queries.contactByOwner, {
+        const user = await getCurrentUser();
+        const response = await client.graphql({query: queries.contactByOwner, variables: {
             limit: 50,
-            owner: user.getUsername()
-        }));
+            owner: user.username
+        }});
         this.setState({
             loading: false,
             options: response.data.contactByOwner.items.map(e => ({text: [e.name, e.address, e.city, e.country].filter(Boolean).join(", "), key: e.id, value: e.id}))
@@ -134,11 +135,11 @@ class DriverPicker extends Component {
     }
 
     async loadDrivers() {
-        const user = await Auth.currentAuthenticatedUser();
-        const response = await API.graphql(graphqlOperation(queries.driverByOwner, {
+        const user = await getCurrentUser();
+        const response = await client.graphql({query: queries.driverByOwner, variables: {
             limit: 50,
-            owner: user.getUsername()
-        }));
+            owner: user.username
+        }});
         const drivers = response.data.driverByOwner.items.reduce((map, obj) => {
             map[obj.id] = obj;
             return map;
@@ -181,16 +182,16 @@ class VehiclePicker extends Component {
     }
 
     async loadVehicles() {
-        const user = await Auth.currentAuthenticatedUser();
-        const response = await API.graphql(graphqlOperation(queries.vehicleByOwner, {
+        const user = await getCurrentUser();
+        const response = await client.graphql({query: queries.vehicleByOwner, variables: {
             limit: 50,
-            owner: user.getUsername(),
+            owner: user.username,
             filter: {
                 type: {
                     eq: this.props.type
                 }
             }
-        }));
+        }});
         const vehicles = response.data.vehicleByOwner.items.reduce((map, obj) => {
             map[obj.id] = obj;
             return map;
@@ -663,9 +664,9 @@ class NewTransport extends Component {
     }
 
     async copyFromExisting(id) {
-        const response = await API.graphql(graphqlOperation(queries.getContract, {
+        const response = await client.graphql({query: queries.getContract, variables:{
             "id": id
-        }));
+        }});
         const contract = response.data.getContract;
 
         this.setState({
@@ -913,7 +914,7 @@ class NewTransport extends Component {
             trailer: this.state.trailer,
             truck: this.state.truck,
             carrierUsername: this.state.carrierUsername,
-            owner: (await Auth.currentAuthenticatedUser()).getUsername(),
+            owner: (await getCurrentUser()).username,
             shipperContactId: this.state.shipperContactId,
             carrierContactId: this.state.carrierContactId,
             deliveryContactId: this.state.delivery.contactId,
@@ -942,7 +943,7 @@ class NewTransport extends Component {
 
             input.events.push({
                 author: {
-                    username: (await Auth.currentAuthenticatedUser()).getUsername()
+                    username: (await getCurrentUser()).username
                 },
                 type: 'AssignDriver',
                 createdAt: now,
@@ -962,7 +963,7 @@ class NewTransport extends Component {
         if (edit) {
             input.events.push({
                 author: {
-                    username: (await Auth.currentAuthenticatedUser()).getUsername()
+                    username: (await getCurrentUser()).username
                 },
                 type: 'Edited',
                 createdAt: now
@@ -970,7 +971,7 @@ class NewTransport extends Component {
             await doUpdateContract(input);
             this.props.history.push('/transports/' + editId);
         } else {
-            let result = await API.graphql(graphqlOperation(mutations.createContractCustom, {input: input}));
+            let result = await client.graphql({query: mutations.createContractCustom, variables: {input: input}});
             this.props.history.push(`/transports/${result.data.createContractCustom.id}`);
         }
     }
@@ -987,7 +988,7 @@ class NewTransport extends Component {
                 name: this.props.portal.carrierName,
             },
             orderCarrier: this.props.portal.carrierOwner,
-            orderOwner: (await Auth.currentAuthenticatedUser()).getUsername(),
+            orderOwner: (await getCurrentUser()).username,
             orderDate: now
         }
 
@@ -1010,7 +1011,7 @@ class NewTransport extends Component {
                 label: "created"
             });
 
-            await API.graphql(graphqlOperation(mutations.createContractCustom, {input: input}));
+            await client.graphql({query: mutations.createContractCustom, variables: {input: input}});
             this.props.history.push('/portal/sent-orders');
         }
     }
@@ -1029,9 +1030,9 @@ class NewTransport extends Component {
 
 const copyContactToAddress = async (contactId, nonAddressBookContact) => {
     if (contactId) {
-        const address = (await API.graphql(graphqlOperation(queries.getContact, {
+        const address = (await client.graphql({query: queries.getContact, variables: {
             id: contactId
-        }))).data.getContact;
+        }})).data.getContact;
         return {
             name: address.name,
             postalCode: address.postalCode,
@@ -1050,9 +1051,9 @@ const copyContactToAddress = async (contactId, nonAddressBookContact) => {
 };
 
 const copyToDriverDetail = async (driverId) => {
-    const driver = (await API.graphql(graphqlOperation(queries.getDriver, {
+    const driver = (await client.graphql({query: queries.getDriver, variables: {
         id: driverId
-    }))).data.getDriver;
+    }})).data.getDriver;
     return {
         name: driver.name
     };

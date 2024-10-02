@@ -16,9 +16,10 @@ import {API, Auth, graphqlOperation} from 'aws-amplify';
 import {I18n} from 'aws-amplify/utils';
 import moment from 'moment/min/moment-with-locales';
 import {ContactPicker} from "./NewTransport";
-import {trackEvent} from "./ConsoleUtils";
+import {client, trackEvent} from "./ConsoleUtils";
 import * as PropTypes from "prop-types";
 import SortableTable from "./SortableTable";
+import {getCurrentUser} from "aws-amplify/auth";
 
 const AddressCell = ({address}) => {
     return (
@@ -366,7 +367,7 @@ class Transports extends SortableTable {
         this.setState({
             loading: true
         });
-        const user = await Auth.currentAuthenticatedUser();
+        const user = await getCurrentUser();
 
         let key;
         let filterParam = {};
@@ -399,19 +400,19 @@ class Transports extends SortableTable {
         } else if (contactId) {
             key = 'contractsByFilterCustom'
             filterParam.contactId = contactId;
-            filterParam.owner = (await Auth.currentAuthenticatedUser()).getUsername();
+            filterParam.owner = (await getCurrentUser()).username
         } else {
             key = sort === 'pickupDate' ? 'contractsByOwnerArrivalDate' : 'contractsByOwnerUpdatedAt';
         }
 
-        const response = await API.graphql(graphqlOperation(
-            queries[key], {
+        const response = await client.graphql({query: 
+            queries[key], variables: {
                 limit: 10,
-                owner: user.getUsername(),
+                owner: user.username,
                 sortDirection: this.state.sortOrder === 'descending' ? "DESC" : "ASC",
                 ...token && {nextToken: token},
                 ...filterParam
-            }));
+            }});
 
         const nextToken = response.data[key].nextToken;
         this.setState({

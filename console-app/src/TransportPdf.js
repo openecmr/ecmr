@@ -4,8 +4,9 @@ import {I18n} from 'aws-amplify/utils';
 import * as queries from "./graphql/queries";
 import "./TransportPdf.css"
 import {Header, Icon, List, Table} from "semantic-ui-react";
-import {S3Image} from "aws-amplify-react";
 import moment from "moment/min/moment-with-locales.min";
+import {client} from "./ConsoleUtils";
+import {StorageImage} from "@aws-amplify/ui-react-storage";
 
 const PdfHeader = ({label, icon}) => (
     <Header as={'h5'}>
@@ -111,7 +112,7 @@ const Signature = ({event, label}) => (
         <PdfHeader icon={'building'} label={label}/>
         {event &&
             <React.Fragment>
-                <S3Image
+                <StorageImage
                     theme={{photoImg: {width: '100px', height: '100px'}}}
                     resizeMode={'center'}
                     level={"public"}
@@ -136,9 +137,9 @@ export default class TransportPdf extends Component {
     }
 
     async componentDidMount() {
-        const response = await API.graphql(graphqlOperation(queries.getContract, {
+        const response = await client.graphql({query: queries.getContract, variables: {
             "id": this.props.match.params.id
-        }));
+        }});
         const contract = response.data.getContract;
 
         this.setState({
