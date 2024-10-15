@@ -1,12 +1,12 @@
 import React, {Component, useEffect, useState} from 'react';
 import './App.css';
-import {Dropdown, Menu, Image, Icon, Header, Modal, Form, Button, Popup} from "semantic-ui-react";
+import {Button, Dropdown, Form, Header, Icon, Image, Menu, Modal, Popup} from "semantic-ui-react";
 import Transports from "./Transports";
-import {BrowserRouter as Router, Route, Link, withRouter, Redirect, Switch} from "react-router-dom";
+import {BrowserRouter as Router, Link, Redirect, Route, Switch, withRouter} from "react-router-dom";
 import {NewTransport} from "./NewTransport";
 
 import {Amplify} from 'aws-amplify';
-import { Hub, I18n } from 'aws-amplify/utils';
+import {Hub, I18n} from 'aws-amplify/utils';
 import amplifyconfig from './amplifyconfiguration.json';
 import {withAuthenticator} from '@aws-amplify/ui-react';
 import Transport from "./Transport";
@@ -17,7 +17,7 @@ import TransportPdf from "./TransportPdf";
 import * as queries from "./graphql/queries";
 import * as mutations from "./graphql/mutations";
 import Vehicles from "./Vehicles";
-import * as ConsoleUtils from "./ConsoleUtils"
+import {client} from "./ConsoleUtils"
 import ReactGA from 'react-ga';
 import i18nDictionaryNl from './i18n/nl/resource';
 import moment from 'moment/min/moment-with-locales';
@@ -27,8 +27,7 @@ import Contacts from "./Contacts";
 import Settings from "./Settings";
 import Planner from "./Planner";
 import Orders from "./Orders";
-import {client} from "./ConsoleUtils";
-import {getCurrentUser, fetchUserAttributes, updateUserAttribute} from "aws-amplify/auth";
+import {fetchUserAttributes, getCurrentUser, updateUserAttribute} from "aws-amplify/auth";
 
 let config;
 const pdfServiceKey = window.location.hash.substr(1);
@@ -469,22 +468,23 @@ class App extends Component {
     }
 
     async logout() {
-        await Auth.signOut()
+        await signOut();
         window.location.reload();
     }
 
     async componentDidMount() {
         try {
-            console.log("Component did mount!!")
             const user = await getCurrentUser();
+            user.attributes = await fetchUserAttributes();
             this.setState({
                 user: user
             });
             ReactGA.set({
                 userId: user.attributes['sub']
             });
-            this.checkCompany();
+            await this.checkCompany();
         } catch (ex) {
+            console.log("sometin", ex)
             ReactGA.set({
                 userId: null
             });
@@ -493,10 +493,13 @@ class App extends Component {
     }
 
     async checkCompany() {
+        console.log("start checkiing companyOwner");
         const response = await client.graphql({query: queries.companyByOwner, variables: {
             owner: this.state.user.username,
             "limit": 1
         }});
+
+        console.log("companyByOwner", response);
 
         if (response.data.companyByOwner.items.length > 0) {
             this.setState({

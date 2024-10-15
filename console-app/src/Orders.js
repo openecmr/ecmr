@@ -147,7 +147,7 @@ class Orders extends SortableTable {
             this.state.orders.map((e) =>
                 <Table.Row key={e.id}>
                     {/*<TextCell text={moment(e.updatedAt).format("ll")}/>*/}
-                    <IdCell id={e.id} path={`${this.props.routerPrefix ? this.props.routerPrefix : ""}/orders`}/>
+                    <IdCell contract={e} path={`${this.props.routerPrefix ? this.props.routerPrefix : ""}/orders`}/>
                     <Status status={e.orderStatus} lastUpdate={e.updatedAt}/>
                     <AddressCell address={e.shipper}/>
                     <AddressCell address={e.pickup}/>
